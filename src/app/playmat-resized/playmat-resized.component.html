@@ -1,0 +1,22 @@
+<div class="container" fxLayout="row" fxLayoutAlign="center" fxFlex="100">
+  <div fxLayout="column" fxLayoutAlign="end center" fxFlex="100" cdkDropListGroup>
+    <div fxLayout="row" fxFlex="100" fxLayoutAlign="center">
+      <div class="playmat-user" fxLayout="row wrap" fxLayoutAlign="start start">
+        <div *ngFor="let spot of user_playmat" class="mtg-card-holder-user"
+             cdkDropList [cdkDropListData]="spot" (cdkDropListDropped)="moveCard($event)">
+          <div *ngFor="let card of spot; let i = index">
+            <img *ngIf="i == 0" class="mtg-card-user stack-1" src="{{card.image}}" alt="{{card.name}}" cdkDrag (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null">
+            <img *ngIf="i == 1" class="mtg-card-user stack-2" src="{{card.image}}" alt="{{card.name}}" cdkDrag (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null">
+            <img *ngIf="i == 2" class="mtg-card-user stack-3" src="{{card.image}}" alt="{{card.name}}" cdkDrag (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div fxLayout="row" fxFlex="100" fxLayoutAlign="center">
+      <div class="user-hand" cdkDropList cdkDropListOrientation="horizontal" fxFlex="100"
+           [cdkDropListData]="user_hand" (cdkDropListDropped)="moveCard($event)" fxLayoutAlign="center">
+        <img *ngFor="let card of user_hand" class="mtg-card-user" src="{{card.image}}" alt="{{card.name}}" cdkDrag (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null">
+      </div>
+    </div>
+  </div>
+</div>

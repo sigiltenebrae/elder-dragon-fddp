@@ -1,0 +1,75 @@
+@use '@angular/material' as mat;
+@import '../node_modules/@angular/material/theming';
+
+@include mat.core();
+
+$fddp-p-dark: (
+  50 : #e0e3f1,
+  100 : #b3b9dc,
+  200 : #808ac5,
+  300 : #4d5bae,
+  400 : #26389c,
+  500 : #00158b,
+  600 : #001283,
+  700 : #000f78,
+  800 : #000c6e,
+  900 : #00065b,
+  A100 : #8c8eff,
+  A200 : #595cff,
+  A400 : #262aff,
+  A700 : #0d11ff,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #ffffff,
+    400 : #ffffff,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #ffffff,
+    A400 : #ffffff,
+    A700 : #ffffff,
+  )
+);
+
+$fddp-a-dark: (
+  50 : #e0eff0,
+  100 : #b3d6d9,
+  200 : #80bbc0,
+  300 : #4da0a6,
+  400 : #268b93,
+  500 : #007780,
+  600 : #006f78,
+  700 : #00646d,
+  800 : #005a63,
+  900 : #004750,
+  A100 : #83eeff,
+  A200 : #50e6ff,
+  A400 : #1ddfff,
+  A700 : #03dcff,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #ffffff,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);
+
+$fddp-palette-primary-dark: mat.define-palette($fddp-p-dark);
+$fddp-palette-accent-dark: mat.define-palette($fddp-a-dark);
+
+$fddp-theme-dark: mat.define-dark-theme($fddp-palette-primary-dark, $fddp-palette-accent-dark);

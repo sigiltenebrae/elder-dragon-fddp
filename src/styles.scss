@@ -1,0 +1,127 @@
+@use '@angular/material' as mat;
+@import '../node_modules/@angular/material/theming';
+@include mat.core();
+
+html, body { height: 100%; padding: 0; }
+body { margin: 0; font-family: Beleren, "Helvetica Neue", sans-serif; }
+
+a, h1, h2, h3, h4, h5, h6 .nav-button{
+  font-family: Beleren, "Helvetica Neue", sans-serif !important;
+}
+
+@import 'src/dark-theme';
+@import 'src/light-theme';
+
+.dark-theme {
+  @include mat.all-component-themes($fddp-theme-dark);
+}
+
+.light-theme {
+  @include mat.all-component-themes($fddp-theme-light)
+}
+
+@include mat.all-component-themes($fddp-theme-dark);
+
+.mtg-card-full {
+  width: 1500px;
+  height: 2100px;
+}
+
+.mtg-card-user {
+  min-width: 75px;
+  min-height: 105px;
+  max-width: 75px;
+  max-height: 105px;
+}
+
+.mtg-card-holder-user {
+  position: relative;
+  float: left;
+  overflow: hidden;
+  width: 95px;
+  max-width: 95px;
+  height: 135px;
+  max-height: 135px;
+  background-color: rgba(255, 0, 0, 0.1);
+  box-shadow:0 0 0 1px black inset;
+}
+
+.playmat-user {
+  min-width: 1144px;
+  max-width: 1144px;
+  width: 1144px !important;
+  min-height: 409px;
+  max-height: 409px;
+  height: 409px !important;
+  padding: 0 !important;
+  margin: 0;
+}
+
+.mtg-card-holder-user .stack-1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.mtg-card-holder-user .stack-2 {
+  position: absolute;
+  top: 15px;
+  left: 10px;
+  z-index: 3;
+}
+
+.mtg-card-holder-user .stack-3 {
+  position: absolute;
+  top: 30px;
+  left: 20px;
+  z-index: 4;
+}
+
+.mtg-card-opponent {
+  width: 40px;
+  height: 56px;
+}
+
+.mtg-card-holder-opponent {
+  position: relative;
+  float: left;
+  overflow: hidden;
+  width: 50px !important;
+  max-width: 50px !important;
+  height: 70px !important;
+  max-height: 70px !important;
+  background-color: rgba(0, 0, 255, 0.1);
+  border: solid black 1px;
+}
+
+.playmat-user {
+  border: dotted #ccc 2px;
+  width: 750px;
+  height: 210px;
+}
+
+.mtg-card-holder-opponent .stack-1 {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 2;
+}
+
+.mtg-card-holder-opponent .stack-2 {
+  position: absolute;
+  bottom: 7px;
+  right: 5px;
+  z-index: 3;
+}
+
+.mtg-card-holder-opponent .stack-3 {
+  position: absolute;
+  bottom: 14px;
+  right: 10px;
+  z-index: 4;
+}
+
+.stack-1:hover, .stack-2:hover, .stack-3:hover {
+  z-index: 10;
+}

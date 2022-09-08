@@ -5,7 +5,10 @@
   "projects": {
     "elder-dragon-fddp": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+        "style": "scss"
+      }},
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -23,7 +26,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.scss"
             ],
             "scripts": []
           },
@@ -90,12 +93,15 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.scss"
             ],
             "scripts": []
           }
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "db347e8b-6294-4f9f-bd91-3fb81105d23d"
   }
 }

@@ -1,0 +1,128 @@
+
+.playmat {
+  border: dotted #ccc 2px;
+  height: 180px;
+  width: 548px;
+}
+
+.playmat-opponent {
+  border: dotted #ccc 2px;
+  height: 180px;
+  width: 548px;
+  margin: 5px;
+}
+
+.opponent-holder {
+  width: 1140px;
+}
+
+.opponent-playmat-holder {
+  height: 382px;
+  overflow-y: scroll;
+}
+
+.user-hand {
+  border: dotted #ccc 2px;
+  height: 130px;
+  flex-direction: row;
+  min-width: 548px
+}
+
+.mtg-card {
+  height: 130px;
+  width: 93px;
+  border-radius: 5px;
+  background-color: black;
+}
+
+.mtg-card-tiny {
+  height: 65px;
+  width: 46px;
+  border-radius: 5px;
+  background-color: black;
+}
+
+.mtg-card-opponent {
+  transform: rotate(180deg);
+}
+
+.mtg-card-holder {
+  position: relative;
+  float: left;
+  overflow: hidden;
+  height: 160px;
+  width: 113px;
+  background-color: rgba(255, 0, 0, 0.1);
+  border: solid black 1px;
+}
+
+.mtg-card-holder-opponent, .mtg-card-holder-user{
+  position: relative;
+  float: left;
+  overflow: hidden;
+  height: 79px;
+  width: 56px;
+  background-color: rgba(255, 0, 0, 0.1);
+  border: solid black 1px;
+}
+
+.mtg-card-holder-user .stack-1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.mtg-card-holder-opponent .stack-1 {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  z-index: 2;
+}
+
+.stack-1:hover {
+  z-index: 10;
+}
+
+.mtg-card-holder-user .stack-2 {
+  position: absolute;
+  top: 7px;
+  left: 5px;
+  z-index: 3;
+}
+
+.mtg-card-holder-opponent .stack-2 {
+  position: absolute;
+  bottom: 7px;
+  right: 5px;
+  z-index: 3;
+}
+
+.stack-2:hover {
+  z-index: 10;
+}
+
+.mtg-card-holder-user .stack-3 {
+  position: absolute;
+  top: 14px;
+  left: 10px;
+  z-index: 4;
+}
+
+.mtg-card-holder-opponent .stack-3 {
+  position: absolute;
+  bottom: 14px;
+  right: 10px;
+  z-index: 4;
+}
+
+.stack-3:hover {
+  z-index: 10;
+}
+
+.preview-card {
+  height: 279px;
+  width: 200px;
+  border-radius: 10px;
+  background-color: black;
+}
