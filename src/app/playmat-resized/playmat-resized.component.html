@@ -28,7 +28,7 @@
       <div class="opponent-holder" fxLayout="row" fxLayoutAlign="end center">
         <div class="opponent-playmat-holder" fxLayout="row wrap" fxLayout.lt-md="column" fxLayoutAlign="center">
           <div *ngFor="let player of players">
-            <div *ngIf="isOpponent(player)" class="playmat-opponent" fxLayout="row wrap" fxLayoutAlign="center center">
+            <div *ngIf="isOpponent(player)" class="playmat-opponent" [ngClass]="{'playmat-opponent-selected': player.selected}" fxLayout="row wrap" fxLayoutAlign="center center">
               <div *ngFor="let spot of reverse(user_playmat)" class="mtg-card-holder-opponent">
                 <div *ngFor="let card of spot; let i = index">
                   <img
@@ -103,6 +103,19 @@
         <h5 style="margin: 10px; white-space: pre-line">{{hovered_card.text}}</h5>
       </div>
     </div>
+  </div>
+  <div class="player-list">
+    <mat-selection-list multiple="false" (selectionChange)="selectPlayer($event)">
+      <div *ngFor="let player of players; let j = index">
+        <mat-list-option [value]="player">
+          <div fxLayout="row" fxLayoutAlign="space-between" fxFlex="100">
+            <div fxLayout="column"><h1 style="margin-top: 15px;">{{player.name}}</h1></div>
+            <div fxLayout="column"><h1 style="margin-top: 15px;">{{player.life}}</h1></div>
+          </div>
+        </mat-list-option>
+        <mat-divider *ngIf="j != players.length - 1"></mat-divider>
+      </div>
+    </mat-selection-list>
   </div>
 </div>
 

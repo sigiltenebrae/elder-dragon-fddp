@@ -3,6 +3,7 @@ import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {MatMenuTrigger} from "@angular/material/menu";
 import { RightclickHandlerServiceService } from "../../services/rightclick-handler-service.service";
+import {MatSelectionListChange} from "@angular/material/list";
 
 @Component({
   selector: 'app-playmat-resized',
@@ -32,6 +33,7 @@ export class PlaymatResizedComponent implements OnInit {
     name: "Christian",
     life: 40,
     hand: [],
+    deck_name: "Enrage",
     deck: [
       {
         name: "Gishath, Sun's Avatar",
@@ -64,27 +66,29 @@ export class PlaymatResizedComponent implements OnInit {
 
   players: any[] = [
     {
-      name: "Christian"
-    },
-    {
       name: "David",
-      life: 40
+      life: 40,
+      selected: false
     },
     {
       name: "Liam",
-      life: 40
+      life: 40,
+      selected: false,
     },
     {
       name: "George",
-      life: 40
+      life: 40,
+      selected: false,
     },
     {
       name: "Ray",
-      life: 40
+      life: 40,
+      selected: false,
     },
     {
       name: "Ryan",
-      life: 40
+      life: 40,
+      selected: false,
     },
   ]
 
@@ -168,6 +172,13 @@ export class PlaymatResizedComponent implements OnInit {
       }
     }
     this.current_draw = 1;
+  }
+
+  selectPlayer(event: MatSelectionListChange) {
+    for (let player of this.players) {
+      player.selected = false;
+    }
+    event.options[0].value.selected = true;
   }
 
   menuTopLeftPosition =  {x: '0', y: '0'}
