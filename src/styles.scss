@@ -28,6 +28,9 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 }
 
 .mtg-card-user {
+  animation-name: untap-card;
+  animation-duration: 0.5s;
+  animation-fill-mode: forwards;
   min-width: 75px;
   min-height: 105px;
   max-width: 75px;
@@ -37,7 +40,6 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 .mtg-card-holder-user {
   position: relative;
   float: left;
-  overflow: hidden;
   width: 95px;
   max-width: 95px;
   height: 135px;
@@ -55,6 +57,7 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   height: 409px !important;
   padding: 0 !important;
   margin: 0;
+  border: dotted #ccc 2px;
 }
 
 .mtg-card-holder-user .stack-1 {
@@ -86,19 +89,32 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 .mtg-card-holder-opponent {
   position: relative;
   float: left;
-  overflow: hidden;
   width: 50px !important;
   max-width: 50px !important;
   height: 70px !important;
   max-height: 70px !important;
   background-color: rgba(0, 0, 255, 0.1);
-  border: solid black 1px;
+  box-shadow:0 0 0 1px black inset;
 }
 
-.playmat-user {
+.playmat-opponent {
   border: dotted #ccc 2px;
-  width: 750px;
-  height: 210px;
+  width: 604px;
+  height: 214px;
+}
+
+.opponent-holder {
+  max-width: 1250px;
+  min-width: 1250px;
+}
+
+.opponent-playmat-holder {
+  max-height: 450px;
+  overflow-y: scroll;
+}
+
+.mtg-card-opponent {
+  transform: rotate(180deg);
 }
 
 .mtg-card-holder-opponent .stack-1 {
