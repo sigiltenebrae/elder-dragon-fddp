@@ -1,4 +1,28 @@
-<div cdkDropListGroup fxFlexFill>
+<div style="visibility: hidden; position: fixed"
+     [style.left]="menuTopLeftPosition.x"
+     [style.top]="menuTopLeftPosition.y"
+     [matMenuTriggerFor]="rightMenu">
+</div>
+
+<mat-menu #rightMenu="matMenu">
+  <div (click) = "$event.stopPropagation()">
+    <ng-template matMenuContent>
+      <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'deck'">
+        <div>
+          <button mat-button (click)="drawCard(current_draw)">Draw</button>
+          <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white" [(ngModel)]="current_draw">
+        </div>
+        <button mat-menu-item>Shuffle</button>
+      </div>
+      <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'hand'">
+        <button mat-menu-item>Send to Field</button>
+        <button mat-menu-item>Send to Deck</button>
+      </div>
+    </ng-template>
+  </div>
+</mat-menu>
+
+<div cdkDropListGroup fxFlexFill (contextmenu)="onRightClick($event, {type: 'none'})">
   <div class="container" fxLayout="row" fxLayoutAlign="center" fxFlexFill>
     <div fxLayout="column" fxLayoutAlign="end center" fxFlex="100" style="margin: 10px;">
       <div class="opponent-holder" fxLayout="row" fxLayoutAlign="end center">
@@ -51,14 +75,24 @@
       </div>
       <div fxLayout="row" fxFlex="100"></div>
       <div fxLayout="row" fxFlex="100" fxLayoutAlign="center">
-        <div class="user-hand" cdkDropList cdkDropListOrientation="horizontal" fxFlex="100"
+        <div class="user-hand"
+             cdkDropList cdkDropListOrientation="horizontal" fxFlex="100"
              [cdkDropListData]="user.hand" (cdkDropListDropped)="moveCardToHand($event)" fxLayoutAlign="center">
-          <img *ngFor="let card of user.hand" class="mtg-card-user" src="{{card.image}}" alt="{{card.name}}" cdkDrag (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null">
+          <img *ngFor="let card of user.hand"
+               class="mtg-card-user"
+               src="{{card.image}}" alt="{{card.name}}"
+               (contextmenu)="onRightClick($event, {type: 'hand', data: card})"
+               (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
+               cdkDrag>
         </div>
       </div>
     </div>
   </div>
-  <div class="user-deck" (dblclick)="drawCard(1);" cdkDropList [cdkDropListData]="user.deck" (cdkDropListDropped)="moveCardToDeck($event)">
+  <div class="user-deck"
+       (dblclick)="drawCard(1);"
+       (contextmenu)="onRightClick($event, {type: 'deck'})"
+       cdkDropList [cdkDropListData]="user.deck"
+       (cdkDropListDropped)="moveCardToDeck($event)">
     <img class="mtg-card-user" src="https://c1.scryfall.com/file/scryfall-card-backs/large/59/597b79b3-7d77-4261-871a-60dd17403388.jpg?1561757129" cdkDrag>
   </div>
   <div class="card-preview" *ngIf="hovered_card">

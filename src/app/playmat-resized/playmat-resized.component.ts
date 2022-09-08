@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {animate, state, style, transition, trigger} from "@angular/animations";
+import {MatMenuTrigger} from "@angular/material/menu";
+import { RightclickHandlerServiceService } from "../../services/rightclick-handler-service.service";
 
 @Component({
   selector: 'app-playmat-resized',
@@ -28,6 +30,7 @@ export class PlaymatResizedComponent implements OnInit {
 
   user: any = {
     name: "Christian",
+    life: 40,
     hand: [],
     deck: [
       {
@@ -64,30 +67,38 @@ export class PlaymatResizedComponent implements OnInit {
       name: "Christian"
     },
     {
-      name: "David"
+      name: "David",
+      life: 40
     },
     {
-      name: "Liam"
+      name: "Liam",
+      life: 40
     },
     {
-      name: "George"
+      name: "George",
+      life: 40
     },
     {
-      name: "Ray"
+      name: "Ray",
+      life: 40
     },
     {
-      name: "Ryan"
+      name: "Ryan",
+      life: 40
     },
   ]
 
   hovered_card: any = null;
+  rightclicked_item: any = null;
+  current_draw = 1;
 
-  constructor() { }
+  constructor(private rightClickHandler: RightclickHandlerServiceService) { }
 
   ngOnInit(): void {
     for (let i = 0; i < 36; i++) {
       this.user_playmat.push([])
     }
+    this.rightClickHandler.overrideRightClick();
   }
 
   moveCardToPlay(event: CdkDragDrop<any>) {
@@ -155,6 +166,20 @@ export class PlaymatResizedComponent implements OnInit {
         this.user.hand.push(this.user.deck[0]);
         this.user.deck.splice(0, 1);
       }
+    }
+    this.current_draw = 1;
+  }
+
+  menuTopLeftPosition =  {x: '0', y: '0'}
+  @ViewChild(MatMenuTrigger, {static: true}) matMenuTrigger: any;
+
+  onRightClick(event: MouseEvent, item: any) {
+    event.preventDefault();
+    if (item.type && item.type !== 'none') {
+      this.rightclicked_item = item;
+      this.menuTopLeftPosition.x = event.clientX + 'px';
+      this.menuTopLeftPosition.y = event.clientY + 'px';
+      this.matMenuTrigger.openMenu();
     }
   }
 }

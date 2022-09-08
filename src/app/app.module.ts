@@ -28,6 +28,8 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import { PlaymatResizedComponent } from './playmat-resized/playmat-resized.component';
+import {MatMenuModule} from "@angular/material/menu";
+import {FormsModule} from "@angular/forms";
 
 
 @NgModule({
@@ -65,7 +67,9 @@ import { PlaymatResizedComponent } from './playmat-resized/playmat-resized.compo
       {path: '', component: PlaymatResizedComponent},
     ]),
     FlexLayoutModule,
-    DragDropModule
+    DragDropModule,
+    MatMenuModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
