@@ -23,7 +23,7 @@
 </mat-menu>
 
 <div cdkDropListGroup fxFlexFill (contextmenu)="onRightClick($event, {type: 'none'})">
-  <div class="container" fxLayout="row" fxLayoutAlign="center" fxFlexFill>
+  <div class="container" fxLayout="row" fxLayoutAlign="center end" fxFlexFill>
     <div fxLayout="column" fxLayoutAlign="end center" fxFlex="100" style="margin: 10px;">
       <div class="opponent-holder" fxLayout="row" fxLayoutAlign="end center">
         <div class="opponent-playmat-holder" fxLayout="row wrap" fxLayout.lt-md="column" fxLayoutAlign="center">
@@ -39,7 +39,7 @@
                   'stack-3': i == 2
                 }"
                     [@opponentTappedState]="card.tapped"
-                    class="mtg-card-opponent"
+                    class="mtg-card-opponent mtg-card-opponent-play"
                     src="{{card.image}}"
                     alt="{{card.name}}"
                     (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null">
@@ -74,6 +74,17 @@
         </div>
       </div>
       <div fxLayout="row" fxFlex="100"></div>
+      <div fxLayout="row" fxFlex="100" fxLayoutAlign="center">
+        <div class="opponent-hand">
+          <div *ngIf="selected_player != null" fxFlex="100" fxLayoutAlign="center">
+            <img *ngFor="let card of selected_player.hand"
+                 class="mtg-card-opponent"
+                 src="{{card.image}}" alt="{{card.name}}"
+                 (contextmenu)="onRightClick($event, {type: 'opponent_hand', data: card})"
+                 (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null">
+          </div>
+        </div>
+      </div>
       <div fxLayout="row" fxFlex="100" fxLayoutAlign="center">
         <div class="user-hand"
              cdkDropList cdkDropListOrientation="horizontal" fxFlex="100"
@@ -125,6 +136,7 @@
   </div>
   <div class="player-list">
     <mat-selection-list multiple="false" (selectionChange)="selectPlayer($event)">
+      <mat-divider></mat-divider>
       <div *ngFor="let player of players; let j = index">
         <mat-list-option [value]="player">
           <div fxLayout="row" fxLayoutAlign="space-between" fxFlex="100">

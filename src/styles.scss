@@ -38,6 +38,8 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   border: dotted #ccc 2px;
   min-height: 105px;
   min-width: 525px;
+  max-height: 105px;
+  max-width: 525px;
   margin: 5px;
 }
 
@@ -90,6 +92,15 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   height: 56px;
 }
 
+.opponent-hand {
+  border: dotted #ccc 2px;
+  min-height: 56px;
+  min-width: 280px;
+  max-height: 56px;
+  max-width: 280px;
+  margin: 5px;
+}
+
 .mtg-card-holder-opponent {
   position: relative;
   float: left;
@@ -116,7 +127,7 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   overflow-y: scroll;
 }
 
-.mtg-card-opponent {
+.mtg-card-opponent-play {
   transform: rotate(180deg);
 }
 
