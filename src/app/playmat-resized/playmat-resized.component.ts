@@ -73,6 +73,9 @@ export class PlaymatResizedComponent implements OnInit {
     {
       name: "Ray"
     },
+    {
+      name: "Ryan"
+    },
   ]
 
   hovered_card: any = null;

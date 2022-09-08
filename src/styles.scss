@@ -41,6 +41,7 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   border: dotted #ccc 2px;
   min-height: 105px;
   min-width: 525px;
+  margin: 5px;
 }
 
 .mtg-card-holder-user {
@@ -107,15 +108,15 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   border: dotted #ccc 2px;
   width: 604px;
   height: 214px;
+  margin: 5px;
 }
 
 .opponent-holder {
-  max-width: 1250px;
-  min-width: 1250px;
+
 }
 
 .opponent-playmat-holder {
-  max-height: 450px;
+  max-height: 475px;
   overflow-y: scroll;
 }
 
@@ -146,4 +147,30 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 
 .stack-1:hover, .stack-2:hover, .stack-3:hover {
   z-index: 10;
+}
+
+.user-deck {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 10px;
+}
+
+.card-preview {
+  position: absolute;
+  bottom: 120px;
+  right: 20px;
+  margin: 10px;
+  height: 575px;
+  width: 350px;
+  border: dotted #ccc 2px;
+  background: rgba(0,0,0,0.3);
+}
+
+.mtg-card-preview {
+  height: 279px;
+  width: 200px;
+  border-radius: 10px;
+  background-color: black;
+  margin: 10px;
 }
