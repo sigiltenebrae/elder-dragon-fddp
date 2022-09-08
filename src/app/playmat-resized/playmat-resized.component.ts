@@ -36,6 +36,7 @@ export class PlaymatResizedComponent implements OnInit {
     {
       name: "David",
       life: 40,
+      infect: 0,
       selected: false,
       hand: [
         {
@@ -54,6 +55,7 @@ export class PlaymatResizedComponent implements OnInit {
     {
       name: "Christian",
       life: 40,
+      infect: 0,
       hand: [
         {
           name: "Rakdos, Lord of Riots",
@@ -101,6 +103,7 @@ export class PlaymatResizedComponent implements OnInit {
     {
       name: "Liam",
       life: 40,
+      infect: 0,
       selected: false,
       hand: [
         {
@@ -121,6 +124,7 @@ export class PlaymatResizedComponent implements OnInit {
     {
       name: "George",
       life: 40,
+      infect: 0,
       selected: false,
       hand: [
         {
@@ -284,6 +288,9 @@ export class PlaymatResizedComponent implements OnInit {
     if (item.type && item.type !== 'none') {
       if (item.type === 'life') {
         item.player.life --;
+      }
+      else if (item.type === 'infect') {
+        item.player.infect --;
       }
       else {
         this.rightclicked_item = item;
