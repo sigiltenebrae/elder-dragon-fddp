@@ -15,8 +15,8 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
       transition('untapped => tapped', animate('250ms ease-in'))
     ]),
     trigger('opponentTappedState', [
-      state('untapped', style({ transform: 'rotate(180)' })),
-      state('tapped', style({ transform: 'rotate(90deg)' })),
+      state('untapped', style({ transform: 'rotate(180deg)' })),
+      state('tapped', style({ transform: 'rotate(270deg)' })),
       transition('tapped => untapped', animate('250ms ease-out')),
       transition('untapped => tapped', animate('250ms ease-in'))
     ])

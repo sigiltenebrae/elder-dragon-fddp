@@ -37,6 +37,12 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   max-height: 105px;
 }
 
+.user-hand {
+  border: dotted #ccc 2px;
+  min-height: 105px;
+  min-width: 525px;
+}
+
 .mtg-card-holder-user {
   position: relative;
   float: left;
