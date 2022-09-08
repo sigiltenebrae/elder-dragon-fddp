@@ -92,8 +92,27 @@
        (dblclick)="drawCard(1);"
        (contextmenu)="onRightClick($event, {type: 'deck'})"
        cdkDropList [cdkDropListData]="user.deck"
+       cdkDropListOrientation="horizontal"
        (cdkDropListDropped)="moveCardToDeck($event)">
     <img class="mtg-card-user" src="https://c1.scryfall.com/file/scryfall-card-backs/large/59/597b79b3-7d77-4261-871a-60dd17403388.jpg?1561757129" cdkDrag>
+  </div>
+  <div class="user-grave"
+       (contextmenu)="onRightClick($event, {type: 'grave'})"
+       cdkDropList [cdkDropListData]="user.grave"
+       cdkDropListOrientation="horizontal" cdk
+       (cdkDropListDropped)="moveCardToGrave($event)">
+    <div *ngIf="user.grave.length == 0" class="mtg-card-user"></div>
+    <img *ngIf="user.grave.length > 0" class="mtg-card-user" src="{{user.grave[0].image}}"
+         (pointerleave)="hovered_card=null" cdkDrag>
+  </div>
+  <div class="user-exile"
+       (contextmenu)="onRightClick($event, {type: 'exile'})"
+       cdkDropList [cdkDropListData]="user.exile"
+       cdkDropListOrientation="horizontal"
+       (cdkDropListDropped)="moveCardToExile($event)">
+    <div *ngIf="user.exile.length == 0" class="mtg-card-user"></div>
+    <img *ngIf="user.exile.length > 0" class="mtg-card-user" src="{{user.exile[0].image}}"
+         (pointerleave)="hovered_card=null" cdkDrag>
   </div>
   <div class="card-preview" *ngIf="hovered_card">
     <div fxLayout="row" fxLayoutAlign="start start" fxFlex="100">

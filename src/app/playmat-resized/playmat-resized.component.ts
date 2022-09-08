@@ -60,8 +60,9 @@ export class PlaymatResizedComponent implements OnInit {
         mana: "(3){W}{W}",
         tapped: 'untapped'
       }
-    ]
-
+    ],
+    grave: [],
+    exile: []
   }
 
   players: any[] = [
@@ -119,6 +120,9 @@ export class PlaymatResizedComponent implements OnInit {
         if (event.container.data.length > 0) {
           event.previousContainer.data[event.previousIndex].tapped = event.container.data[0].tapped
         }
+        else {
+          event.previousContainer.data[event.previousIndex].tapped = 'untapped';
+        }
         transferArrayItem(
           event.previousContainer.data,
           event.container.data,
@@ -144,6 +148,28 @@ export class PlaymatResizedComponent implements OnInit {
   }
 
   moveCardToDeck(event: CdkDragDrop<any>) {
+    if (event.previousContainer !== event.container) {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        0,
+      );
+    }
+  }
+
+  moveCardToGrave(event: CdkDragDrop<any>) {
+    if (event.previousContainer !== event.container) {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        0,
+      );
+    }
+  }
+
+  moveCardToExile(event: CdkDragDrop<any>) {
     if (event.previousContainer !== event.container) {
       transferArrayItem(
         event.previousContainer.data,
