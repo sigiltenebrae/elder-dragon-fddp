@@ -90,6 +90,11 @@ export class PlaymatResizedComponent implements OnInit {
       life: 40,
       selected: false,
     },
+    {
+      name: "Carl",
+      life: 40,
+      selected: false,
+    }
   ]
 
   hovered_card: any = null;
