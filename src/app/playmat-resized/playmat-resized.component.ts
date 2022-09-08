@@ -28,7 +28,8 @@ export class PlaymatResizedComponent implements OnInit {
 
   user: any = {
     name: "Christian",
-    hand:  [
+    hand: [],
+    deck: [
       {
         name: "Gishath, Sun's Avatar",
         image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
@@ -55,6 +56,7 @@ export class PlaymatResizedComponent implements OnInit {
         tapped: 'untapped'
       }
     ]
+
   }
 
   players: any[] = [
@@ -88,7 +90,7 @@ export class PlaymatResizedComponent implements OnInit {
     }
   }
 
-  moveCard(event: CdkDragDrop<any>) {
+  moveCardToPlay(event: CdkDragDrop<any>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     }
@@ -107,6 +109,32 @@ export class PlaymatResizedComponent implements OnInit {
     }
   }
 
+  moveCardToHand(event: CdkDragDrop<any>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    }
+    else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+    }
+  }
+
+  moveCardToDeck(event: CdkDragDrop<any>) {
+    if (event.previousContainer !== event.container) {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        0,
+      );
+    }
+  }
+
+
   reverse(array: any[]){
     return array.map((item,idx) => array[array.length-1-idx])
   }
@@ -118,6 +146,15 @@ export class PlaymatResizedComponent implements OnInit {
   tapSpot(spot: any) {
     for (let card of spot) {
       card.tapped = card.tapped === 'tapped'? 'untapped': 'tapped';
+    }
+  }
+
+  drawCard(count: number) {
+    for (let i = 0; i < count; i++) {
+      if(this.user.deck.length > 0) {
+        this.user.hand.push(this.user.deck[0]);
+        this.user.deck.splice(0, 1);
+      }
     }
   }
 }
