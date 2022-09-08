@@ -13,6 +13,7 @@
           <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white" [(ngModel)]="current_draw">
         </div>
         <button mat-menu-item>Shuffle</button>
+        <button mat-menu-item (click)="nextTurn()">Next Turn</button>
       </div>
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'hand'">
         <button mat-menu-item>Send to Field</button>
@@ -141,7 +142,8 @@
     <mat-list>
       <mat-divider></mat-divider>
       <div *ngFor="let player of players; let j = index">
-        <mat-list-item [ngClass]="{'player-button-selected': player.selected}">
+        <mat-list-item [ngClass]="{'player-button-selected': player.selected,
+                                  'player-button-turn': player.turn == current_turn}">
           <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
             <div fxLayout="column" fxFlex="100">
               <button class="player-button" mat-button (click)="selectPlayer(player)">

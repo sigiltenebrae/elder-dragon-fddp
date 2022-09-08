@@ -205,10 +205,6 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   left: 0;
 }
 
-.player-list mat-list-option[aria-selected="true"] {
-  background: mat.get-color-from-palette($fddp-palette-accent-dark, 500);
-}
-
 .player-button {
   max-height: 48px;
   min-height: 48px;
@@ -219,3 +215,8 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 .player-button-selected {
   background: mat.get-color-from-palette($fddp-palette-accent-dark, 500);
 }
+
+.player-button-turn {
+  box-shadow:0 0 3px 2px mat.get-color-from-palette($fddp-palette-primary-dark, 500) inset;
+}
+

@@ -31,6 +31,7 @@ export class PlaymatResizedComponent implements OnInit {
 
   user: any = null;
   selected_player: any = null;
+  current_turn = 0;
 
   players: any[] = [
     {
@@ -38,6 +39,7 @@ export class PlaymatResizedComponent implements OnInit {
       life: 40,
       infect: 0,
       selected: false,
+      turn: 0,
       hand: [
         {
           name: "Mayael the Anima",
@@ -56,6 +58,8 @@ export class PlaymatResizedComponent implements OnInit {
       name: "Christian",
       life: 40,
       infect: 0,
+      selected: false,
+      turn: 1,
       hand: [
         {
           name: "Rakdos, Lord of Riots",
@@ -105,6 +109,7 @@ export class PlaymatResizedComponent implements OnInit {
       life: 40,
       infect: 0,
       selected: false,
+      turn: 2,
       hand: [
         {
           name: "Alela, Artful Provocateur",
@@ -126,6 +131,7 @@ export class PlaymatResizedComponent implements OnInit {
       life: 40,
       infect: 0,
       selected: false,
+      turn: 3,
       hand: [
         {
           name: "Muldrotha, the Gravetide",
@@ -277,6 +283,27 @@ export class PlaymatResizedComponent implements OnInit {
     }
     else {
       this.selected_player = null;
+    }
+  }
+
+  nextTurn() {
+    this.current_turn ++;
+    let max_turn = 0;
+    let max_player = null;
+    for (let player of this.players) {
+      if (player.turn > max_turn) {
+        max_turn = player.turn;
+        max_player = player;
+      }
+    }
+    if (this.current_turn > max_turn) {
+      this.current_turn = 0;
+      for (let player of this.players) {
+        if (player.turn == 0) {
+          max_player = player;
+          break;
+        }
+      }
     }
   }
 
