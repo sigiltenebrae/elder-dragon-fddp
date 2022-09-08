@@ -24,8 +24,9 @@
 
 <div cdkDropListGroup fxFlexFill (contextmenu)="onRightClick($event, {type: 'none'})">
   <div class="container" fxLayout="row" fxLayoutAlign="center end" fxFlexFill>
-    <div fxLayout="column" fxLayoutAlign="end center" fxFlex="100" style="margin: 10px;">
-      <div class="opponent-holder" fxLayout="row" fxLayoutAlign="end center">
+    <div fxLayout="column" fxLayoutAlign="start center" fxFlexFill style="margin: 10px;">
+      <!-- Opponents -->
+      <div class="opponent-holder" fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
         <div class="opponent-playmat-holder" fxLayout="row wrap" fxLayout.lt-md="column" fxLayoutAlign="center">
           <div *ngFor="let player of players">
             <div *ngIf="isOpponent(player)" class="playmat-opponent" [ngClass]="{'playmat-opponent-selected': player.selected}" fxLayout="row wrap" fxLayoutAlign="center center">
@@ -49,7 +50,8 @@
           </div>
         </div>
       </div>
-      <div fxLayout="row" fxFlex="100" fxLayoutAlign="center">
+      <!-- User Playmat -->
+      <div fxLayout="row" fxFlex fxLayoutAlign="center">
         <div class="playmat-user" fxLayout="row wrap" fxLayoutAlign="start start">
           <div *ngFor="let spot of user_playmat"
                class="mtg-card-holder-user"
@@ -73,10 +75,10 @@
           </div>
         </div>
       </div>
-      <div fxLayout="row" fxFlex="100"></div>
-      <div fxLayout="row" fxFlex="100" fxLayoutAlign="center">
-        <div class="opponent-hand">
-          <div *ngIf="selected_player != null" fxFlex="100" fxLayoutAlign="center">
+      <!-- Opponent Hand -->
+      <div fxLayout="row" fxFlex fxLayoutAlign="center">
+        <div class="opponent-hand" fxFlex>
+          <div *ngIf="selected_player != null" fxLayoutAlign="center">
             <img *ngFor="let card of selected_player.hand"
                  class="mtg-card-opponent"
                  src="{{card.image}}" alt="{{card.name}}"
@@ -85,7 +87,8 @@
           </div>
         </div>
       </div>
-      <div fxLayout="row" fxFlex="100" fxLayoutAlign="center">
+      <!-- User Hand -->
+      <div fxLayout="row" fxFlex fxLayoutAlign="center">
         <div class="user-hand"
              cdkDropList cdkDropListOrientation="horizontal" fxFlex="100"
              [cdkDropListData]="user.hand" (cdkDropListDropped)="moveCardToHand($event)" fxLayoutAlign="center">
@@ -105,7 +108,7 @@
        cdkDropList [cdkDropListData]="user.deck"
        cdkDropListOrientation="horizontal"
        (cdkDropListDropped)="moveCardToDeck($event)">
-    <img class="mtg-card-user" src="https://c1.scryfall.com/file/scryfall-card-backs/large/59/597b79b3-7d77-4261-871a-60dd17403388.jpg?1561757129" cdkDrag>
+    <img class="mtg-card-user" src="https://c1.scryfall.com/file/scryfall-card-backs/large/59/597b79b3-7d77-4261-871a-60dd17403388.jpg?1561757129" (pointerleave)="hovered_card=null" cdkDrag>
   </div>
   <div class="user-grave"
        (contextmenu)="onRightClick($event, {type: 'grave'})"
