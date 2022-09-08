@@ -138,18 +138,30 @@
     </div>
   </div>
   <div class="player-list">
-    <mat-selection-list multiple="false" (selectionChange)="selectPlayer($event)">
+    <mat-list>
       <mat-divider></mat-divider>
       <div *ngFor="let player of players; let j = index">
-        <mat-list-option [value]="player">
-          <div fxLayout="row" fxLayoutAlign="space-between" fxFlex="100">
-            <div fxLayout="column"><h1 style="margin-top: 15px;">{{player.name}}</h1></div>
-            <div fxLayout="column"><h1 style="margin-top: 15px;">{{player.life}}</h1></div>
+        <mat-list-item [ngClass]="{'player-button-selected': player.selected}">
+          <div fxLayout="row" fxLayoutAlign="space-between center" fxFlex>
+            <div fxLayout="column" fxFlex="100">
+              <button class="player-button" mat-button (click)="selectPlayer(player)">
+                {{player.name}}
+              </button>
+            </div>
+            <div fxLayout="column" fxFlex>
+              <button *ngIf="isOpponent(player)" class="player-button" mat-button disabled style="color: white">
+                {{player.life}}
+              </button>
+              <button *ngIf="!isOpponent(player)" class="player-button" mat-button
+                      (click)="player.life = player.life + 1" (contextmenu)="onRightClick($event, {type: 'life', player: player})">
+                {{player.life}}
+              </button>
+            </div>
           </div>
-        </mat-list-option>
+        </mat-list-item>
         <mat-divider *ngIf="j != players.length - 1"></mat-divider>
       </div>
-    </mat-selection-list>
+    </mat-list>
   </div>
 </div>
 

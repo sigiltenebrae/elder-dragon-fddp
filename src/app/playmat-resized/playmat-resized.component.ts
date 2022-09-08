@@ -250,13 +250,26 @@ export class PlaymatResizedComponent implements OnInit {
     this.current_draw = 1;
   }
 
-  selectPlayer(event: MatSelectionListChange) {
+  /*selectPlayer(event: MatSelectionListChange) {
     for (let player of this.players) {
       player.selected = false;
     }
     event.options[0].value.selected = true;
     if (this.isOpponent(event.options[0].value)) {
       this.selected_player = event.options[0].value
+    }
+    else {
+      this.selected_player = null;
+    }
+  }*/
+
+  selectPlayer(selector: any) {
+    for (let player of this.players) {
+      player.selected = false;
+    }
+    selector.selected = true;
+    if (this.isOpponent(selector)) {
+      this.selected_player = selector;
     }
     else {
       this.selected_player = null;
@@ -269,10 +282,15 @@ export class PlaymatResizedComponent implements OnInit {
   onRightClick(event: MouseEvent, item: any) {
     event.preventDefault();
     if (item.type && item.type !== 'none') {
-      this.rightclicked_item = item;
-      this.menuTopLeftPosition.x = event.clientX + 'px';
-      this.menuTopLeftPosition.y = event.clientY + 'px';
-      this.matMenuTrigger.openMenu();
+      if (item.type === 'life') {
+        item.player.life --;
+      }
+      else {
+        this.rightclicked_item = item;
+        this.menuTopLeftPosition.x = event.clientX + 'px';
+        this.menuTopLeftPosition.y = event.clientY + 'px';
+        this.matMenuTrigger.openMenu();
+      }
     }
   }
 }
