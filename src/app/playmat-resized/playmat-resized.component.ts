@@ -4,6 +4,7 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 import {MatMenuTrigger} from "@angular/material/menu";
 import { RightclickHandlerServiceService } from "../../services/rightclick-handler-service.service";
 import {MatSelectionListChange} from "@angular/material/list";
+import {MatSidenav} from "@angular/material/sidenav";
 
 @Component({
   selector: 'app-playmat-resized',
@@ -31,6 +32,7 @@ export class PlaymatResizedComponent implements OnInit {
 
   user: any = null;
   selected_player: any = null;
+  sidenav_selected_player: any = null;
   current_turn = 0;
 
   players: any[] = [
@@ -197,6 +199,7 @@ export class PlaymatResizedComponent implements OnInit {
 
   hovered_card: any = null;
   rightclicked_item: any = null;
+  sidenav_type: any = null;
   current_draw = 1;
   current_drawto = 1;
   selected_cards: any[] = [];
@@ -296,7 +299,10 @@ export class PlaymatResizedComponent implements OnInit {
   }
 
   moveCardToGrave(event: CdkDragDrop<any>) {
-    if (event.previousContainer !== event.container) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    }
+    else {
       let cur_card = event.previousContainer.data[event.previousIndex];
       cur_card.tapped = 'untapped';
       transferArrayItem(
@@ -320,7 +326,10 @@ export class PlaymatResizedComponent implements OnInit {
   }
 
   moveCardToExile(event: CdkDragDrop<any>) {
-    if (event.previousContainer !== event.container) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    }
+    else {
       let cur_card = event.previousContainer.data[event.previousIndex];
       cur_card.tapped = 'untapped';
       transferArrayItem(
@@ -344,7 +353,10 @@ export class PlaymatResizedComponent implements OnInit {
   }
 
   moveCardToTempZone(event: CdkDragDrop<any>) {
-    if (event.previousContainer !== event.container) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    }
+    else {
       let cur_card = event.previousContainer.data[event.previousIndex];
       cur_card.tapped = 'untapped';
       transferArrayItem(
@@ -535,6 +547,20 @@ export class PlaymatResizedComponent implements OnInit {
     card.selected = true;
 
   }
+
+  @ViewChild('fddp_sidenav') fddp_sidenav: any;
+  openSideNav(type: string) {
+    this.sidenav_selected_player = this.user;
+    this.sidenav_type = type;
+    this.fddp_sidenav.open()
+  }
+
+  closeSideNav() {
+    this.sidenav_selected_player = null;
+    this.sidenav_type = null;
+    this.fddp_sidenav.close();
+  }
+
 
   menuTopLeftPosition =  {x: '0', y: '0'}
   @ViewChild(MatMenuTrigger, {static: true}) matMenuTrigger: any;

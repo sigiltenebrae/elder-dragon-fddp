@@ -46,24 +46,45 @@
         <button mat-menu-item (click)="sendToTempZone(rightclicked_item.card, rightclicked_item.spot, selected_player)">Send to Selected</button>
       </div>
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'grave'">
-        <button mat-menu-item (click)="fddp_sidenav.open()">View Graveyards</button>
+        <button mat-menu-item (click)="openSideNav('grave')">View Graveyards</button>
       </div>
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'exile'">
-        <button mat-menu-item (click)="fddp_sidenav.open()">View Exiles</button>
+        <button mat-menu-item (click)="openSideNav('exile')">View Exiles</button>
       </div>
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'temp-zone'">
-        <button mat-menu-item (click)="fddp_sidenav.open()">View Temp Zones</button>
+        <button mat-menu-item (click)="openSideNav('temp_zone')">View Temp Zones</button>
       </div>
     </ng-template>
   </div>
 </mat-menu>
 
-<mat-sidenav-container class="fddp-sidenav-container" fxFlexFill>
-  <mat-sidenav #fddp_sidenav (keydown.escape)="fddp_sidenav.close()">
-    <p>laskdfghlkajsdhlafksdhfdkjhsakjlfhsdkjahfdksjlhl</p>
+<mat-sidenav-container fxFlexFill cdkDropListGroup hasBackdrop="false">
+  <mat-sidenav #fddp_sidenav (keydown.escape)="fddp_sidenav.close()" disableClose>
+    <mat-toolbar color="primary">
+      <div fxFlex fxLayout fxLayoutAlign="end">
+        <button mat-icon-button (click)="closeSideNav()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </mat-toolbar>
+    <div *ngIf="sidenav_type === 'grave'"
+         class="sidenav-list" cdkDropList
+         (cdkDropListDropped)="moveCardToGrave($event)"
+         [cdkDropListData]="sidenav_selected_player.grave">
+      <div *ngFor="let card of sidenav_selected_player.grave"
+           class="sidenav-list-item"
+           [ngClass]="{'sidenav-list-item-selected': card.selected}"
+           (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
+           (cdkDragStarted)="hovered_card=null"
+           (click)="toggleCardSelect(card, sidenav_selected_player.grave)"
+           cdkDrag>
+        {{card.name}}
+        <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="mtg-card-user">
+        <img *cdkDragPlaceholder class="mtg-card-user" [src]="card.image" [alt]="card.name">
+      </div>
+    </div>
   </mat-sidenav>
   <mat-sidenav-content>
-
     <div class="card-preview" *ngIf="hovered_card">
       <mat-card fxLayout="row" fxLayoutAlign="start start" fxFlexFill>
         <div fxLayout="column" fxLayoutAlign="start center" fxFlex="100">
@@ -74,7 +95,6 @@
         </div>
       </mat-card>
     </div>
-
     <div class="player-list">
       <mat-list>
         <mat-divider></mat-divider>
@@ -122,7 +142,7 @@
       </mat-list>
     </div>
 
-    <div cdkDropListGroup fxFlexFill (contextmenu)="onRightClick($event, {type: 'none'})">
+    <div fxFlexFill (contextmenu)="onRightClick($event, {type: 'none'})">
       <div class="container" fxLayout="row" fxLayoutAlign="center end" fxFlexFill>
         <div fxLayout="column" fxLayoutAlign="start center" fxFlexFill style="margin: 10px;">
           <!-- Opponents -->

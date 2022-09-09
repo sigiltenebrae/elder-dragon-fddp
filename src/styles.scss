@@ -40,7 +40,7 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   max-width: 75px;
   max-height: 105px;
   border-radius: 5px;
-  background-color: mat.get-color-from-palette($fddp-palette-primary-dark, 500);
+  background-color: mat.get-color-from-palette($fddp-palette-accent-dark, 500);
 }
 
 .mtg-card-user-selected {
@@ -400,4 +400,28 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   min-width: 254px;
   min-height: 105px;
   max-height: 105px;
+}
+
+.sidenav-list {
+  min-width: 500px;
+  max-width: 100%;
+  display: block;
+  overflow-y: scroll;
+  min-height: 60px;
+}
+
+.sidenav-list-item {
+  padding: 20px 10px;
+  border-bottom: solid 1px #ccc;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  cursor: move;
+  font-size: 14px;
+}
+
+.sidenav-list-item-selected {
+  box-shadow:0 0 0 3px mat.get-color-from-palette($fddp-palette-accent-dark, 500) inset;
 }
