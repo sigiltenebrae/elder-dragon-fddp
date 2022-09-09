@@ -22,7 +22,7 @@
         <button mat-menu-item>Send to Deck</button>
       </div>
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'inPlayUser'">
-        <button mat-menu-item (click)="tapSpot(rightclicked_item.spot)">Tap Stack</button>
+        <button mat-menu-item (click)="tapSpot(rightclicked_item.spot)">(un)Tap Stack</button>
       </div>
     </ng-template>
   </div>
