@@ -403,6 +403,7 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 }
 
 .sidenav-list {
+  border-top: solid 1px #ccc;
   min-width: 500px;
   max-width: 100%;
   display: block;
@@ -420,6 +421,11 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   box-sizing: border-box;
   cursor: move;
   font-size: 14px;
+}
+
+.sidenav-list-item.cdk-drag-disabled {
+  background: #222;
+  cursor: default;
 }
 
 .sidenav-list-item-selected {

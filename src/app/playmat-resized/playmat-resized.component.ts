@@ -100,6 +100,7 @@ export class PlaymatResizedComponent implements OnInit {
       ],
       deck_name: "Enrage",
       deck: [
+
       ],
       grave: [
         {
@@ -203,7 +204,7 @@ export class PlaymatResizedComponent implements OnInit {
   current_draw = 1;
   current_drawto = 1;
   selected_cards: any[] = [];
-
+  sidenav_sort = '';
 
   constructor(private rightClickHandler: RightclickHandlerServiceService) { }
 
@@ -532,33 +533,45 @@ export class PlaymatResizedComponent implements OnInit {
     }
   }
 
-  toggleCardSelect(card: any, from: any) {
-    for (let selected of this.selected_cards) {
-      if (selected.card == card && selected.from == from) {
-        this.selected_cards.splice(this.selected_cards.indexOf(selected), 1);
-        card.selected = false;
-        return;
+  toggleCardSelect(card: any, from: any, enable?: boolean) {
+    if (typeof enable === 'undefined' || enable) {
+      for (let selected of this.selected_cards) {
+        if (selected.card == card && selected.from == from) {
+          this.selected_cards.splice(this.selected_cards.indexOf(selected), 1);
+          card.selected = false;
+          return;
+        }
       }
+      this.selected_cards.push({
+        card: card,
+        from: from
+      });
+      card.selected = true;
     }
-    this.selected_cards.push({
-      card: card,
-      from: from
-    });
-    card.selected = true;
-
   }
 
   @ViewChild('fddp_sidenav') fddp_sidenav: any;
   openSideNav(type: string) {
     this.sidenav_selected_player = this.user;
+    this.getSidenavSort(this.user.deck)
+    this.getSidenavSort(this.user.grave);
+    this.getSidenavSort(this.user.exile);
+    this.getSidenavSort(this.user.temp_zone);
     this.sidenav_type = type;
-    this.fddp_sidenav.open()
+    this.fddp_sidenav.open();
   }
 
   closeSideNav() {
     this.sidenav_selected_player = null;
     this.sidenav_type = null;
     this.fddp_sidenav.close();
+    this.sidenav_sort = '';
+  }
+
+  getSidenavSort(items: any[]) {
+    for (let item of items) {
+      item.sidenav_visible = item.name.toLowerCase().includes(this.sidenav_sort.toLowerCase());
+    }
   }
 
 

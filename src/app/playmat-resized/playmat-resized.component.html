@@ -61,26 +61,103 @@
 <mat-sidenav-container fxFlexFill cdkDropListGroup hasBackdrop="false">
   <mat-sidenav #fddp_sidenav (keydown.escape)="fddp_sidenav.close()" disableClose>
     <mat-toolbar color="primary">
-      <div fxFlex fxLayout fxLayoutAlign="end">
+      <div fxFlex fxLayout="row">
         <button mat-icon-button (click)="closeSideNav()">
           <mat-icon>close</mat-icon>
         </button>
       </div>
     </mat-toolbar>
-    <div *ngIf="sidenav_type === 'grave'"
-         class="sidenav-list" cdkDropList
-         (cdkDropListDropped)="moveCardToGrave($event)"
-         [cdkDropListData]="sidenav_selected_player.grave">
-      <div *ngFor="let card of sidenav_selected_player.grave"
-           class="sidenav-list-item"
-           [ngClass]="{'sidenav-list-item-selected': card.selected}"
-           (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
-           (cdkDragStarted)="hovered_card=null"
-           (click)="toggleCardSelect(card, sidenav_selected_player.grave)"
-           cdkDrag>
-        {{card.name}}
-        <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="mtg-card-user">
-        <img *cdkDragPlaceholder class="mtg-card-user" [src]="card.image" [alt]="card.name">
+    <div *ngIf="sidenav_type === 'grave'">
+      <div fxLayout="column">
+        <mat-form-field fxFlex style="margin: 5px;" appearance="outline">
+          <mat-label>Search</mat-label>
+          <input type="text" placeholder="Card Name"
+                 matInput [matAutocomplete]="card_name"
+                 [(ngModel)]="sidenav_sort" (ngModelChange)="getSidenavSort(sidenav_selected_player.grave)">
+          <mat-autocomplete #card_name>
+            <mat-option *ngFor="let card of sidenav_selected_player.grave" [value]="card.name">
+              {{card.name}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <div class="sidenav-list" cdkDropList
+             (cdkDropListDropped)="moveCardToGrave($event)"
+             [cdkDropListData]="sidenav_selected_player.grave">
+          <div *ngFor="let card of sidenav_selected_player.grave"
+               class="sidenav-list-item"
+               [ngClass]="{'sidenav-list-item-selected': card.selected}"
+               (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
+               (cdkDragStarted)="hovered_card=null"
+               (click)="toggleCardSelect(card, sidenav_selected_player.grave, card.sidenav_visible)"
+               [cdkDragDisabled]="!card.sidenav_visible"
+               cdkDrag>
+            {{card.name}}
+            <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="mtg-card-user">
+            <img *cdkDragPlaceholder class="mtg-card-user" [src]="card.image" [alt]="card.name">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="sidenav_type === 'exile'">
+      <div fxLayout="column">
+        <mat-form-field fxFlex style="margin: 5px;" appearance="outline">
+          <mat-label>Search</mat-label>
+          <input type="text" placeholder="Card Name"
+                 matInput [matAutocomplete]="card_name"
+                 [(ngModel)]="sidenav_sort" (ngModelChange)="getSidenavSort(sidenav_selected_player.exile)">
+          <mat-autocomplete #card_name>
+            <mat-option *ngFor="let card of sidenav_selected_player.exile" [value]="card.name">
+              {{card.name}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <div class="sidenav-list" cdkDropList
+             (cdkDropListDropped)="moveCardToExile($event)"
+             [cdkDropListData]="sidenav_selected_player.exile">
+          <div *ngFor="let card of sidenav_selected_player.exile"
+               class="sidenav-list-item"
+               [ngClass]="{'sidenav-list-item-selected': card.selected}"
+               (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
+               (cdkDragStarted)="hovered_card=null"
+               (click)="toggleCardSelect(card, sidenav_selected_player.exile, card.sidenav_visible)"
+               [cdkDragDisabled]="!card.sidenav_visible"
+               cdkDrag>
+            {{card.name}}
+            <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="mtg-card-user">
+            <img *cdkDragPlaceholder class="mtg-card-user" [src]="card.image" [alt]="card.name">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="sidenav_type === 'temp_zone'">
+      <div fxLayout="column">
+        <mat-form-field fxFlex style="margin: 5px;" appearance="outline">
+          <mat-label>Search</mat-label>
+          <input type="text" placeholder="Card Name"
+                 matInput [matAutocomplete]="card_name"
+                 [(ngModel)]="sidenav_sort" (ngModelChange)="getSidenavSort(sidenav_selected_player.grave)">
+          <mat-autocomplete #card_name>
+            <mat-option *ngFor="let card of sidenav_selected_player.temp_zone" [value]="card.name">
+              {{card.name}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <div class="sidenav-list" cdkDropList
+             (cdkDropListDropped)="moveCardToTempZone($event)"
+             [cdkDropListData]="sidenav_selected_player.temp_zone">
+          <div *ngFor="let card of sidenav_selected_player.temp_zone"
+               class="sidenav-list-item"
+               [ngClass]="{'sidenav-list-item-selected': card.selected}"
+               (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
+               (cdkDragStarted)="hovered_card=null"
+               (click)="toggleCardSelect(card, sidenav_selected_player.temp_zone, card.sidenav_visible)"
+               [cdkDragDisabled]="!card.sidenav_visible"
+               cdkDrag>
+            {{card.name}}
+            <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="mtg-card-user">
+            <img *cdkDragPlaceholder class="mtg-card-user" [src]="card.image" [alt]="card.name">
+          </div>
+        </div>
       </div>
     </div>
   </mat-sidenav>

@@ -30,6 +30,7 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
 import { PlaymatResizedComponent } from './playmat-resized/playmat-resized.component';
 import {MatMenuModule} from "@angular/material/menu";
 import {FormsModule} from "@angular/forms";
+import {MatAutocompleteModule} from "@angular/material/autocomplete";
 
 
 @NgModule({
@@ -69,7 +70,8 @@ import {FormsModule} from "@angular/forms";
     FlexLayoutModule,
     DragDropModule,
     MatMenuModule,
-    FormsModule
+    FormsModule,
+    MatAutocompleteModule
   ],
   providers: [],
   bootstrap: [AppComponent]
