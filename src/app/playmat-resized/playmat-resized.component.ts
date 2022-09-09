@@ -98,126 +98,8 @@ export class PlaymatResizedComponent implements OnInit {
       ],
       deck_name: "Enrage",
       deck: [
-        {
-          name: "Gishath, Sun's Avatar",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
-          text: "Vigilance, trample, haste\n" +
-            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
-          mana: "(5){R}{G}{W}",
-          tapped: 'untapped',
-        },
-        {
-          name: "Gishath, Sun's Avatar",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
-          text: "Vigilance, trample, haste\n" +
-            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
-          mana: "(5){R}{G}{W}",
-          tapped: 'untapped',
-        },
-        {
-          name: "Gishath, Sun's Avatar",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
-          text: "Vigilance, trample, haste\n" +
-            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
-          mana: "(5){R}{G}{W}",
-          tapped: 'untapped',
-        },
-        {
-          name: "Gishath, Sun's Avatar",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
-          text: "Vigilance, trample, haste\n" +
-            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
-          mana: "(5){R}{G}{W}",
-          tapped: 'untapped',
-        },
-        {
-          name: "Gishath, Sun's Avatar",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
-          text: "Vigilance, trample, haste\n" +
-            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
-          mana: "(5){R}{G}{W}",
-          tapped: 'untapped',
-        },
-        {
-          name: "Gishath, Sun's Avatar",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
-          text: "Vigilance, trample, haste\n" +
-            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
-          mana: "(5){R}{G}{W}",
-          tapped: 'untapped',
-        },
-        {
-          name: "Gishath, Sun's Avatar",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
-          text: "Vigilance, trample, haste\n" +
-            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
-          mana: "(5){R}{G}{W}",
-          tapped: 'untapped',
-        },
-        {
-          name: "Gishath, Sun's Avatar",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
-          text: "Vigilance, trample, haste\n" +
-            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
-          mana: "(5){R}{G}{W}",
-          tapped: 'untapped',
-        },
-        {
-          name: "Gishath, Sun's Avatar",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
-          text: "Vigilance, trample, haste\n" +
-            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
-          mana: "(5){R}{G}{W}",
-          tapped: 'untapped',
-        },
-        {
-          name: "Gishath, Sun's Avatar",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
-          text: "Vigilance, trample, haste\n" +
-            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
-          mana: "(5){R}{G}{W}",
-          tapped: 'untapped',
-        },
-        {
-          name: "Gishath, Sun's Avatar",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
-          text: "Vigilance, trample, haste\n" +
-            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
-          mana: "(5){R}{G}{W}",
-          tapped: 'untapped',
-        },
-        {
-          name: "Gishath, Sun's Avatar",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
-          text: "Vigilance, trample, haste\n" +
-            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
-          mana: "(5){R}{G}{W}",
-          tapped: 'untapped',
-        },
-        {
-          name: "Gishath, Sun's Avatar",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
-          text: "Vigilance, trample, haste\n" +
-            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
-          mana: "(5){R}{G}{W}",
-          tapped: 'untapped',
-        },
-        {
-          name: "Gishath, Sun's Avatar",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
-          text: "Vigilance, trample, haste\n" +
-            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
-          mana: "(5){R}{G}{W}",
-          tapped: 'untapped',
-        },
-        {
-          name: "Gishath, Sun's Avatar",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
-          text: "Vigilance, trample, haste\n" +
-            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
-          mana: "(5){R}{G}{W}",
-          tapped: 'untapped',
-        },
+      ],
+      grave: [
         {
           name: "Gishath, Sun's Avatar",
           image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
@@ -244,7 +126,6 @@ export class PlaymatResizedComponent implements OnInit {
           tapped: 'untapped'
         }
       ],
-      grave: [],
       exile: [],
       temp_zone: []
     },
@@ -318,7 +199,8 @@ export class PlaymatResizedComponent implements OnInit {
   rightclicked_item: any = null;
   current_draw = 1;
   current_drawto = 1;
-  sidenav_open = true;
+  selected_cards: any[] = [];
+
 
   constructor(private rightClickHandler: RightclickHandlerServiceService) { }
 
@@ -339,19 +221,23 @@ export class PlaymatResizedComponent implements OnInit {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     }
     else {
+      let cur_card = event.previousContainer.data[event.previousIndex];
       if (event.container.data.length < 3) {
-        /*if (event.container.data.length > 0) {
-          event.previousContainer.data[event.previousIndex].tapped = event.container.data[0].tapped
-        }
-        else {
-          event.previousContainer.data[event.previousIndex].tapped = 'untapped';
-        }*/
         transferArrayItem(
           event.previousContainer.data,
           event.container.data,
           event.previousIndex,
           event.currentIndex,
         );
+        if (this.selected_cards.length > 0) {
+          for (let card of this.selected_cards) {
+            if (card.card != cur_card) {
+              this.sendToField(card.card, card.from);
+            }
+            card.card.selected = false;
+          }
+          this.selected_cards = []
+        }
       }
     }
   }
@@ -361,56 +247,111 @@ export class PlaymatResizedComponent implements OnInit {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     }
     else {
+      let cur_card = event.previousContainer.data[event.previousIndex];
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         event.currentIndex,
       );
+      if (this.selected_cards.length > 0) {
+        for (let card of this.selected_cards) {
+          if (card.card != cur_card) {
+            this.user.hand.push(card.card);
+            card.from.splice(card.from.indexOf(card.card), 1);
+          }
+          card.card.selected = false;
+        }
+        this.selected_cards = []
+      }
     }
   }
 
   moveCardToDeck(event: CdkDragDrop<any>) {
     if (event.previousContainer !== event.container) {
+      let cur_card = event.previousContainer.data[event.previousIndex];
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         0,
       );
+      if (this.selected_cards.length > 0) {
+        for (let card of this.selected_cards) {
+          if (card.card != cur_card) {
+            this.user.deck.push(card.card);
+            card.from.splice(card.from.indexOf(card.card), 1);
+          }
+          card.card.selected = false;
+        }
+        this.selected_cards = []
+      }
     }
   }
 
   moveCardToGrave(event: CdkDragDrop<any>) {
     if (event.previousContainer !== event.container) {
+      let cur_card = event.previousContainer.data[event.previousIndex];
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         0,
       );
+      if (this.selected_cards.length > 0) {
+        for (let card of this.selected_cards) {
+          if (card.card != cur_card) {
+            this.user.grave.push(card.card);
+            card.from.splice(card.from.indexOf(card.card), 1);
+          }
+          card.card.selected = false;
+        }
+        this.selected_cards = []
+      }
     }
   }
 
   moveCardToExile(event: CdkDragDrop<any>) {
     if (event.previousContainer !== event.container) {
+      let cur_card = event.previousContainer.data[event.previousIndex];
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         0,
       );
+      if (this.selected_cards.length > 0) {
+        for (let card of this.selected_cards) {
+          if (card.card != cur_card) {
+            this.user.exile.push(card.card);
+            card.from.splice(card.from.indexOf(card.card), 1);
+          }
+          card.card.selected = false;
+        }
+        this.selected_cards = []
+      }
     }
   }
 
   moveCardToTempZone(event: CdkDragDrop<any>) {
     if (event.previousContainer !== event.container) {
+      let cur_card = event.previousContainer.data[event.previousIndex];
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         0,
       );
+      if (this.selected_cards.length > 0) {
+        for (let card of this.selected_cards) {
+          if (card.card != cur_card) {
+            this.user.temp_zone.push(card.card);
+            card.from.splice(card.from.indexOf(card.card), 1);
+          }
+          card.card.selected = false;
+        }
+        this.selected_cards = []
+      }
     }
   }
 
@@ -458,7 +399,6 @@ export class PlaymatResizedComponent implements OnInit {
       player.temp_zone.push(card);
       let old_loc = from.indexOf(card);
       from.splice(old_loc, 1);
-      console.log(this.players);
     }
   }
 
@@ -554,21 +494,28 @@ export class PlaymatResizedComponent implements OnInit {
     }
   }
 
-  drawToActive() {
-    if (this.selected_player != null) {
-      if(this.user.deck.length > 0) {
-        this.selected_player.hand.push(this.user.deck[0]);
-        this.user.deck.splice(0, 1);
-      }
-    }
-  }
-
   untapAll() {
     for (let spot of this.user_playmat) {
       for (let card of spot) {
         card.tapped = 'untapped';
       }
     }
+  }
+
+  toggleCardSelect(card: any, from: any) {
+    for (let selected of this.selected_cards) {
+      if (selected.card == card && selected.from == from) {
+        this.selected_cards.splice(this.selected_cards.indexOf(selected), 1);
+        card.selected = false;
+        return;
+      }
+    }
+    this.selected_cards.push({
+      card: card,
+      from: from
+    });
+    card.selected = true;
+
   }
 
   menuTopLeftPosition =  {x: '0', y: '0'}

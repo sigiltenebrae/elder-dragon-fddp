@@ -34,6 +34,19 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   max-height: 105px;
 }
 
+.mtg-card-user-container {
+  min-width: 75px;
+  min-height: 105px;
+  max-width: 75px;
+  max-height: 105px;
+  border-radius: 5px;
+  background-color: mat.get-color-from-palette($fddp-palette-primary-dark, 500);
+}
+
+.mtg-card-user-selected {
+  clip-path: polygon(5% 5%, 95% 5%, 95% 95%, 5% 95%);
+}
+
 .user-hand {
   position: relative;
   border: dotted #ccc 2px;
@@ -132,6 +145,7 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   height: 32px;
   border-radius: 50%;
   text-align: center;
+  z-index: 20;
 }
 
 
