@@ -84,6 +84,126 @@ export class PlaymatResizedComponent implements OnInit {
           tapped: 'untapped',
         },
         {
+          name: "Gishath, Sun's Avatar",
+          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
+          text: "Vigilance, trample, haste\n" +
+            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
+          mana: "(5){R}{G}{W}",
+          tapped: 'untapped',
+        },
+        {
+          name: "Gishath, Sun's Avatar",
+          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
+          text: "Vigilance, trample, haste\n" +
+            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
+          mana: "(5){R}{G}{W}",
+          tapped: 'untapped',
+        },
+        {
+          name: "Gishath, Sun's Avatar",
+          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
+          text: "Vigilance, trample, haste\n" +
+            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
+          mana: "(5){R}{G}{W}",
+          tapped: 'untapped',
+        },
+        {
+          name: "Gishath, Sun's Avatar",
+          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
+          text: "Vigilance, trample, haste\n" +
+            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
+          mana: "(5){R}{G}{W}",
+          tapped: 'untapped',
+        },
+        {
+          name: "Gishath, Sun's Avatar",
+          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
+          text: "Vigilance, trample, haste\n" +
+            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
+          mana: "(5){R}{G}{W}",
+          tapped: 'untapped',
+        },
+        {
+          name: "Gishath, Sun's Avatar",
+          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
+          text: "Vigilance, trample, haste\n" +
+            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
+          mana: "(5){R}{G}{W}",
+          tapped: 'untapped',
+        },
+        {
+          name: "Gishath, Sun's Avatar",
+          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
+          text: "Vigilance, trample, haste\n" +
+            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
+          mana: "(5){R}{G}{W}",
+          tapped: 'untapped',
+        },
+        {
+          name: "Gishath, Sun's Avatar",
+          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
+          text: "Vigilance, trample, haste\n" +
+            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
+          mana: "(5){R}{G}{W}",
+          tapped: 'untapped',
+        },
+        {
+          name: "Gishath, Sun's Avatar",
+          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
+          text: "Vigilance, trample, haste\n" +
+            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
+          mana: "(5){R}{G}{W}",
+          tapped: 'untapped',
+        },
+        {
+          name: "Gishath, Sun's Avatar",
+          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
+          text: "Vigilance, trample, haste\n" +
+            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
+          mana: "(5){R}{G}{W}",
+          tapped: 'untapped',
+        },
+        {
+          name: "Gishath, Sun's Avatar",
+          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
+          text: "Vigilance, trample, haste\n" +
+            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
+          mana: "(5){R}{G}{W}",
+          tapped: 'untapped',
+        },
+        {
+          name: "Gishath, Sun's Avatar",
+          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
+          text: "Vigilance, trample, haste\n" +
+            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
+          mana: "(5){R}{G}{W}",
+          tapped: 'untapped',
+        },
+        {
+          name: "Gishath, Sun's Avatar",
+          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
+          text: "Vigilance, trample, haste\n" +
+            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
+          mana: "(5){R}{G}{W}",
+          tapped: 'untapped',
+        },
+        {
+          name: "Gishath, Sun's Avatar",
+          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
+          text: "Vigilance, trample, haste\n" +
+            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
+          mana: "(5){R}{G}{W}",
+          tapped: 'untapped',
+        },
+        {
+          name: "Gishath, Sun's Avatar",
+          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
+          text: "Vigilance, trample, haste\n" +
+            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
+          mana: "(5){R}{G}{W}",
+          tapped: 'untapped',
+        },
+        {
           name: "Hubris",
           image: "https://c1.scryfall.com/file/scryfall-cards/large/front/0/5/05f5b473-edad-43a9-b4e7-b6d3fc877cf2.jpg?1593095462",
           text: "Return target creature and all Auras attached to it to their owners' hands.",
@@ -259,19 +379,6 @@ export class PlaymatResizedComponent implements OnInit {
     }
     this.current_draw = 1;
   }
-
-  /*selectPlayer(event: MatSelectionListChange) {
-    for (let player of this.players) {
-      player.selected = false;
-    }
-    event.options[0].value.selected = true;
-    if (this.isOpponent(event.options[0].value)) {
-      this.selected_player = event.options[0].value
-    }
-    else {
-      this.selected_player = null;
-    }
-  }*/
 
   selectPlayer(selector: any) {
     for (let player of this.players) {
