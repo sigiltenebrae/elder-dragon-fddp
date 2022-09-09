@@ -286,3 +286,74 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   box-shadow:0 0 3px 2px mat.get-color-from-palette($fddp-palette-primary-dark, 500) inset;
 }
 
+.commander-viewer {
+  border: dotted #ccc 2px;
+  position: absolute;
+  bottom: 135px;
+  right: 105px;
+  max-width: 254px;
+  max-height: 355px;
+  min-width: 254px;
+  min-height: 355px;
+}
+
+.commander-viewer-partner-holder {
+  position: relative;
+  max-width: 254px;
+  max-height: 355px;
+  min-width: 254px;
+  min-height: 355px;
+}
+
+.commander-viewer-single {
+  max-width: 254px;
+  max-height: 355px;
+  min-width: 254px;
+  min-height: 355px;
+}
+
+.commander-viewer-partner-holder .commander-viewer-partner-1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: 229px;
+  max-height: 310px;
+  min-width: 229px;
+  min-height: 310px;
+  z-index: 1;
+}
+
+.commander-viewer-partner-holder .commander-viewer-partner-2 {
+  position: absolute;
+  top: 45px;
+  left: 25px;
+  max-width: 229px;
+  max-height: 310px;
+  min-width: 229px;
+  min-height: 310px;
+  z-index: 2;
+}
+
+.commander-viewer-partner-holder .commander-viewer-partner-1:hover,
+.commander-viewer-partner-holder .commander-viewer-partner-2:hover {
+  z-index: 3;
+}
+
+.commander-dashboard {
+  position: absolute;
+  bottom: 10px;
+  right: 105px;
+  max-width: 254px;
+  min-width: 254px;
+  min-height: 105px;
+  max-height: 105px;
+  border: dotted #ccc 2px;
+}
+
+.commander-dashboard-button-holder {
+  position: relative;
+  max-width: 254px;
+  min-width: 254px;
+  min-height: 105px;
+  max-height: 105px;
+}

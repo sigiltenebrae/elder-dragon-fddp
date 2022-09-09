@@ -180,6 +180,20 @@
            (pointerleave)="hovered_card=null" cdkDrag>
     </div>
   </div>
+  <div class="commander-viewer">
+    <div *ngIf="user.commander.length == 1">
+      <img class="commander-viewer-single" src="{{user.commander[0].image}}">
+    </div>
+    <div *ngIf="user.commander.length == 2" class="commander-viewer-partner-holder">
+      <img class="commander-viewer-partner-1" src="{{user.commander[0].image}}">
+      <img class="commander-viewer-partner-2" src="{{user.commander[1].image}}">
+    </div>
+  </div>
+  <div class="commander-dashboard">
+    <div class="commander-dashboard-button-holder">
+
+    </div>
+  </div>
   <div class="card-preview" *ngIf="hovered_card">
     <div fxLayout="row" fxLayoutAlign="start start" fxFlex="100">
       <div fxLayout="column" fxLayoutAlign="start center" fxFlex="100">
