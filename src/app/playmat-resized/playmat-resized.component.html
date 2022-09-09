@@ -214,8 +214,9 @@
     <div class="zone-data"
          (contextmenu)="onRightClick($event, {type: 'grave'})"
          cdkDropList [cdkDropListData]="user.grave"
-         cdkDropListOrientation="horizontal" cdk
+         cdkDropListOrientation="horizontal"
          (cdkDropListDropped)="moveCardToGrave($event)">
+      <div class="zone-title"><h5>Graveyard</h5></div>
       <h1 class="zone-count">{{user.grave.length}}</h1>
       <div *ngIf="user.grave.length == 0" class="mtg-card-user"></div>
       <img *ngIf="user.grave.length > 0" class="mtg-card-user" src="{{user.grave[0].image}}"
@@ -229,6 +230,7 @@
          cdkDropList [cdkDropListData]="user.exile"
          cdkDropListOrientation="horizontal"
          (cdkDropListDropped)="moveCardToExile($event)">
+      <div class="zone-title"><h5>Exile</h5></div>
       <h1 class="zone-count">{{user.exile.length}}</h1>
       <div *ngIf="user.exile.length == 0" class="mtg-card-user"></div>
       <img *ngIf="user.exile.length > 0" class="mtg-card-user" src="{{user.exile[0].image}}"
@@ -242,6 +244,7 @@
          cdkDropList [cdkDropListData]="user.temp_zone"
          cdkDropListOrientation="horizontal"
          (cdkDropListDropped)="moveCardToTempZone($event)">
+      <div class="zone-title"><h5>Temp</h5></div>
       <h1 class="zone-count">{{user.temp_zone.length}}</h1>
       <div *ngIf="user.temp_zone.length == 0" class="mtg-card-user"></div>
       <img *ngIf="user.temp_zone.length > 0" class="mtg-card-user" src="{{user.temp_zone[0].image}}"
