@@ -155,6 +155,7 @@
                alt="{{card.name}}"
                (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
                (dblclick)="tapCard(card)" (contextmenu)="onRightClick($event,{type: 'inPlayUser', card: card, spot: spot})"
+               (cdkDragStarted)="hovered_card=null"
                cdkDrag>
             </div>
           </div>
@@ -187,6 +188,7 @@
                  src="{{card.image}}" alt="{{card.name}}"
                  (contextmenu)="onRightClick($event, {type: 'hand', card: card, from: user.hand})"
                  (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
+                 (cdkDragStarted)="hovered_card=null"
                  cdkDrag>
           </div>
         </div>
@@ -201,7 +203,11 @@
          cdkDropListOrientation="horizontal"
          (cdkDropListDropped)="moveCardToDeck($event)">
       <h1 class="zone-count">{{user.deck.length}}</h1>
-      <img class="mtg-card-user" src="https://c1.scryfall.com/file/scryfall-card-backs/large/59/597b79b3-7d77-4261-871a-60dd17403388.jpg?1561757129" (pointerleave)="hovered_card=null" cdkDrag>
+      <img class="mtg-card-user"
+           src="https://c1.scryfall.com/file/scryfall-card-backs/large/59/597b79b3-7d77-4261-871a-60dd17403388.jpg?1561757129"
+           (pointerleave)="hovered_card=null"
+           (cdkDragStarted)="hovered_card=null"
+           cdkDrag>
     </div>
   </div>
   <div class="user-grave">
@@ -213,7 +219,9 @@
       <h1 class="zone-count">{{user.grave.length}}</h1>
       <div *ngIf="user.grave.length == 0" class="mtg-card-user"></div>
       <img *ngIf="user.grave.length > 0" class="mtg-card-user" src="{{user.grave[0].image}}"
-           (pointerleave)="hovered_card=null" cdkDrag>
+           (pointerleave)="hovered_card=null"
+           (cdkDragStarted)="hovered_card=null"
+           cdkDrag>
     </div>
   </div>
   <div class="user-exile">
@@ -224,7 +232,9 @@
       <h1 class="zone-count">{{user.exile.length}}</h1>
       <div *ngIf="user.exile.length == 0" class="mtg-card-user"></div>
       <img *ngIf="user.exile.length > 0" class="mtg-card-user" src="{{user.exile[0].image}}"
-           (pointerleave)="hovered_card=null" cdkDrag>
+           (pointerleave)="hovered_card=null"
+           (cdkDragStarted)="hovered_card=null"
+           cdkDrag>
     </div>
   </div>
   <div class="user-temp-zone">
@@ -235,7 +245,9 @@
       <h1 class="zone-count">{{user.temp_zone.length}}</h1>
       <div *ngIf="user.temp_zone.length == 0" class="mtg-card-user"></div>
       <img *ngIf="user.temp_zone.length > 0" class="mtg-card-user" src="{{user.temp_zone[0].image}}"
-           (pointerleave)="hovered_card=null" cdkDrag>
+           (pointerleave)="hovered_card=null"
+           (cdkDragStarted)="hovered_card=null"
+           cdkDrag>
     </div>
   </div>
   <div class="commander-viewer">
