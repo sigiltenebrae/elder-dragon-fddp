@@ -414,6 +414,15 @@ export class PlaymatResizedComponent implements OnInit {
     }
   }
 
+  drawToActive() {
+    if (this.selected_player != null) {
+      if(this.user.deck.length > 0) {
+        this.selected_player.hand.push(this.user.deck[0]);
+        this.user.deck.splice(0, 1);
+      }
+    }
+  }
+
   menuTopLeftPosition =  {x: '0', y: '0'}
   @ViewChild(MatMenuTrigger, {static: true}) matMenuTrigger: any;
 

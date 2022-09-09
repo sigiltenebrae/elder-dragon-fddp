@@ -13,6 +13,7 @@
           <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white" [(ngModel)]="current_draw">
         </div>
         <button mat-menu-item>Shuffle</button>
+        <button mat-menu-item (click)="drawToActive()">Draw to Active</button>
         <button mat-menu-item (click)="nextTurn()">Next Turn</button>
       </div>
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'hand'">
@@ -78,9 +79,11 @@
       </div>
       <!-- Opponent Hand -->
       <div fxLayout="row" fxFlex fxLayoutAlign="center">
-        <div class="opponent-hand" fxFlex>
-          <div *ngIf="selected_player != null" fxLayoutAlign="center">
-            <img *ngFor="let card of selected_player.hand"
+        <div class="opponent-hand" fxLayout="column" fxLayoutAlign="center">
+          <div *ngIf="selected_player != null" class="opponent-hand-list"
+               fxFlex fxLayout="row" fxLayoutAlign="start">
+            <h1 class="hand-count">{{selected_player.hand.length}}</h1>
+            <img *ngFor="let card of selected_player.hand" fxFlex fxLayout="column"
                  class="mtg-card-opponent"
                  src="{{card.image}}" alt="{{card.name}}"
                  (contextmenu)="onRightClick($event, {type: 'opponent_hand', data: card})"
@@ -95,6 +98,7 @@
                cdkDropListOrientation="horizontal"
                [cdkDropListData]="user.hand"
                (cdkDropListDropped)="moveCardToHand($event)" fxFlex fxLayout="row" fxLayoutAlign="start">
+            <h1 class="hand-count">{{user.hand.length}}</h1>
             <img *ngFor="let card of user.hand" fxFlex fxLayout="column"
                  class="mtg-card-user"
                  src="{{card.image}}" alt="{{card.name}}"
