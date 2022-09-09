@@ -135,7 +135,7 @@
           <mat-label>Search</mat-label>
           <input type="text" placeholder="Card Name"
                  matInput [matAutocomplete]="card_name"
-                 [(ngModel)]="sidenav_sort" (ngModelChange)="getSidenavSort(sidenav_selected_player.grave)">
+                 [(ngModel)]="sidenav_sort" (ngModelChange)="getSidenavSort(sidenav_selected_player.temp_zone)">
           <mat-autocomplete #card_name>
             <mat-option *ngFor="let card of sidenav_selected_player.temp_zone" [value]="card.name">
               {{card.name}}

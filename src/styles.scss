@@ -40,7 +40,7 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   max-width: 75px;
   max-height: 105px;
   border-radius: 5px;
-  background-color: mat.get-color-from-palette($fddp-palette-accent-dark, 500);
+  background-color: mat.get-color-from-palette($fddp-palette-primary-dark, 500);
 }
 
 .mtg-card-user-selected {
@@ -301,11 +301,11 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 }
 
 .player-button-selected {
-  background: mat.get-color-from-palette($fddp-palette-accent-dark, 500);
+  background: mat.get-color-from-palette($fddp-palette-primary-dark, 500);
 }
 
 .player-button-turn {
-  box-shadow:0 0 3px 2px mat.get-color-from-palette($fddp-palette-primary-dark, 500) inset;
+  box-shadow:0 0 3px 2px mat.get-color-from-palette($fddp-palette-accent-dark, 500) inset;
 }
 
 .commander-viewer {
