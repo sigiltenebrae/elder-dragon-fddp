@@ -198,21 +198,21 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 
 .user-grave {
   position: absolute;
-  bottom: 135px;
+  bottom: 125px;
   right: 10px;
   border: dotted #ccc 2px;
 }
 
 .user-exile {
   position: absolute;
-  bottom: 260px;
+  bottom: 250px;
   right: 10px;
   border: dotted #ccc 2px;
 }
 
 .user-temp-zone {
   position: absolute;
-  bottom: 385px;
+  bottom: 375px;
   right: 10px;
   border: dotted #ccc 2px;
 }
@@ -244,13 +244,11 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 
 .card-preview {
   position: absolute;
-  bottom: 120px;
-  right: 20px;
-  margin: 10px;
-  height: 575px;
+  bottom: 0;
+  right: 0;
+  margin: 0;
+  height: 100%;
   width: 350px;
-  border: dotted #ccc 2px;
-  background: rgba(0,0,0,0.3);
   z-index: 100;
   pointer-events: none;
 }
@@ -289,8 +287,8 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 .commander-viewer {
   border: dotted #ccc 2px;
   position: absolute;
-  bottom: 135px;
-  right: 105px;
+  bottom: 125px;
+  right: 95px;
   max-width: 254px;
   max-height: 355px;
   min-width: 254px;
@@ -342,7 +340,7 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 .commander-dashboard {
   position: absolute;
   bottom: 10px;
-  right: 105px;
+  right: 95px;
   max-width: 254px;
   min-width: 254px;
   min-height: 105px;
@@ -352,6 +350,28 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 
 .commander-dashboard-button-holder {
   position: relative;
+  max-width: 254px;
+  min-width: 254px;
+  min-height: 105px;
+  max-height: 105px;
+}
+
+.selected-commander-viewer {
+  border: dotted #ccc 2px;
+  position: absolute;
+  bottom: 490px;
+  right: 274px;
+  min-width: 75px;
+  min-height: 105px;
+  max-width: 75px;
+  max-height: 105px;
+}
+
+.selected-player-data {
+  border: dotted #ccc 2px;
+  position: absolute;
+  bottom: 490px;
+  right: 10px;
   max-width: 254px;
   min-width: 254px;
   min-height: 105px;

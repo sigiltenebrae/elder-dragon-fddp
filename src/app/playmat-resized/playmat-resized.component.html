@@ -49,6 +49,64 @@
   </div>
 </mat-menu>
 
+<div class="card-preview" *ngIf="hovered_card">
+    <mat-card fxLayout="row" fxLayoutAlign="start start" fxFlexFill>
+      <div fxLayout="column" fxLayoutAlign="start center" fxFlex="100">
+        <img class="mtg-card-preview" src="{{hovered_card.image}}" alt="{{hovered_card.name}}">
+        <h3 style="text-align: center">{{hovered_card.name}}</h3>
+        <h3 style="text-align: center">{{hovered_card.mana}}</h3>
+        <h3 style="margin: 10px; white-space: pre-line">{{hovered_card.text}}</h3>
+      </div>
+    </mat-card>
+</div>
+
+<div class="player-list">
+  <mat-list>
+    <mat-divider></mat-divider>
+    <div *ngFor="let player of players; let j = index">
+      <mat-list-item [ngClass]="{'player-button-selected': player.selected,
+                                  'player-button-turn': player.turn == current_turn}">
+        <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
+          <div fxLayout="column" fxFlex="100">
+            <button
+              class="player-button"
+              matTooltip="Hand: {{player.hand.length}} Deck: {{player.deck.length}} Grave: {{player.grave.length}} Exile: {{player.exile.length}}"
+              matTooltipPosition="right"
+              matTooltipShowDelay="1000"
+              mat-button
+              (click)="selectPlayer(player)">
+              {{player.name}}
+            </button>
+          </div>
+          <div fxLayout="column" fxFlex="100">
+            <div fxLayout="row" fxFlex>
+              <div class="column" fxFlex>
+                <button *ngIf="isOpponent(player)" class="player-button" mat-button disabled style="color: white">
+                  {{player.life}}
+                </button>
+                <button *ngIf="!isOpponent(player)" class="player-button" mat-button
+                        (click)="player.life = player.life + 1" (contextmenu)="onRightClick($event, {type: 'life', player: player})">
+                  {{player.life}}
+                </button>
+              </div>
+              <div class="column" fxFlex>
+                <button *ngIf="isOpponent(player)" class="player-button" mat-button disabled style="color: white">
+                  {{player.infect}}
+                </button>
+                <button *ngIf="!isOpponent(player)" class="player-button" mat-button
+                        (click)="player.infect = player.infect + 1" (contextmenu)="onRightClick($event, {type: 'infect', player: player})">
+                  {{player.infect}}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </mat-list-item>
+      <mat-divider *ngIf="j != players.length - 1"></mat-divider>
+    </div>
+  </mat-list>
+</div>
+
 <div cdkDropListGroup fxFlexFill (contextmenu)="onRightClick($event, {type: 'none'})">
   <div class="container" fxLayout="row" fxLayoutAlign="center end" fxFlexFill>
     <div fxLayout="column" fxLayoutAlign="start center" fxFlexFill style="margin: 10px;">
@@ -194,60 +252,13 @@
 
     </div>
   </div>
-  <div class="card-preview" *ngIf="hovered_card">
-    <div fxLayout="row" fxLayoutAlign="start start" fxFlex="100">
-      <div fxLayout="column" fxLayoutAlign="start center" fxFlex="100">
-        <img class="mtg-card-preview" src="{{hovered_card.image}}" alt="{{hovered_card.name}}">
-        <h5 style="text-align: center">{{hovered_card.mana}}</h5>
-        <h5 style="margin: 10px; white-space: pre-line">{{hovered_card.text}}</h5>
-      </div>
-    </div>
+  <div class="selected-commander-viewer">
+    <img *ngIf="selected_player"
+         class="mtg-card-user"
+         src="{{selected_player.commander[0].image}}" alt="{{selected_player.commander[0].name}}"
+         (pointerenter)="hovered_card=selected_player.commander[0]" (pointerleave)="hovered_card=null">
   </div>
-  <div class="player-list">
-    <mat-list>
-      <mat-divider></mat-divider>
-      <div *ngFor="let player of players; let j = index">
-        <mat-list-item [ngClass]="{'player-button-selected': player.selected,
-                                  'player-button-turn': player.turn == current_turn}">
-          <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
-            <div fxLayout="column" fxFlex="100">
-              <button
-                class="player-button"
-                matTooltip="Hand: {{player.hand.length}} Deck: {{player.deck.length}} Grave: {{player.grave.length}} Exile: {{player.exile.length}}"
-                matTooltipPosition="right"
-                matTooltipShowDelay="1000"
-                mat-button
-                (click)="selectPlayer(player)">
-                {{player.name}}
-              </button>
-            </div>
-            <div fxLayout="column" fxFlex="100">
-              <div fxLayout="row" fxFlex>
-                <div class="column" fxFlex>
-                  <button *ngIf="isOpponent(player)" class="player-button" mat-button disabled style="color: white">
-                    {{player.life}}
-                  </button>
-                  <button *ngIf="!isOpponent(player)" class="player-button" mat-button
-                          (click)="player.life = player.life + 1" (contextmenu)="onRightClick($event, {type: 'life', player: player})">
-                    {{player.life}}
-                  </button>
-                </div>
-                <div class="column" fxFlex>
-                  <button *ngIf="isOpponent(player)" class="player-button" mat-button disabled style="color: white">
-                    {{player.infect}}
-                  </button>
-                  <button *ngIf="!isOpponent(player)" class="player-button" mat-button
-                          (click)="player.infect = player.infect + 1" (contextmenu)="onRightClick($event, {type: 'infect', player: player})">
-                    {{player.infect}}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </mat-list-item>
-        <mat-divider *ngIf="j != players.length - 1"></mat-divider>
-      </div>
-    </mat-list>
+  <div class="selected-player-data">
+
   </div>
 </div>
-

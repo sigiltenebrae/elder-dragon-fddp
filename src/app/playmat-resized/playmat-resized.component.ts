@@ -95,14 +95,6 @@ export class PlaymatResizedComponent implements OnInit {
           mana: "{B}{B}{R}{R}",
           tapped: 'untapped',
         },
-        {
-          name: "Gishath, Sun's Avatar",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
-          text: "Vigilance, trample, haste\n" +
-            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
-          mana: "(5){R}{G}{W}",
-          tapped: 'untapped',
-        },
       ],
       deck_name: "Enrage",
       deck: [
