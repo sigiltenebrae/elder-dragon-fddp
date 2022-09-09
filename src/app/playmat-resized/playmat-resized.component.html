@@ -151,6 +151,17 @@
            (pointerleave)="hovered_card=null" cdkDrag>
     </div>
   </div>
+  <div class="user-temp-zone">
+    <div class="zone-data" (contextmenu)="onRightClick($event, {type: 'temp-zone'})"
+         cdkDropList [cdkDropListData]="user.temp_zone"
+         cdkDropListOrientation="horizontal"
+         (cdkDropListDropped)="moveCardToTempZone($event)">
+      <h1 class="zone-count">{{user.temp_zone.length}}</h1>
+      <div *ngIf="user.temp_zone.length == 0" class="mtg-card-user"></div>
+      <img *ngIf="user.temp_zone.length > 0" class="mtg-card-user" src="{{user.temp_zone[0].image}}"
+           (pointerleave)="hovered_card=null" cdkDrag>
+    </div>
+  </div>
   <div class="card-preview" *ngIf="hovered_card">
     <div fxLayout="row" fxLayoutAlign="start start" fxFlex="100">
       <div fxLayout="column" fxLayoutAlign="start center" fxFlex="100">

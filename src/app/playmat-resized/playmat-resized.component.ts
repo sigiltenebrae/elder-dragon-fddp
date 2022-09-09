@@ -52,7 +52,8 @@ export class PlaymatResizedComponent implements OnInit {
       deck_name: "Stompy",
       deck: [],
       grave: [],
-      exile: []
+      exile: [],
+      temp_zone: []
     },
     {
       name: "Christian",
@@ -222,7 +223,8 @@ export class PlaymatResizedComponent implements OnInit {
         }
       ],
       grave: [],
-      exile: []
+      exile: [],
+      temp_zone: []
     },
     {
       name: "Liam",
@@ -244,7 +246,8 @@ export class PlaymatResizedComponent implements OnInit {
       deck_name: "Artifacts",
       deck: [],
       grave: [],
-      exile: []
+      exile: [],
+      temp_zone: []
     },
     {
       name: "George",
@@ -264,7 +267,8 @@ export class PlaymatResizedComponent implements OnInit {
       deck_name: "Mill Stuff",
       deck: [],
       grave: [],
-      exile: []
+      exile: [],
+      temp_zone: []
     },
   ]
 
@@ -356,6 +360,17 @@ export class PlaymatResizedComponent implements OnInit {
     }
   }
 
+  moveCardToTempZone(event: CdkDragDrop<any>) {
+    if (event.previousContainer !== event.container) {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        0,
+      );
+    }
+  }
+
   sendToField(card: any, from: any[]) {
     for (let i = 0; i < this.user_playmat.length; i++) {
       if (this.user_playmat[i].length == 0) {
@@ -381,6 +396,24 @@ export class PlaymatResizedComponent implements OnInit {
         return;
       }
     }
+  }
+
+  sendToGrave(card: any, from: any[]) {
+    this.user.grave.push(card);
+    let old_loc = from.indexOf(card);
+    from.splice(old_loc, 1);
+  }
+
+  sendToExile(card: any, from: any[]) {
+    this.user.exile.push(card);
+    let old_loc = from.indexOf(card);
+    from.splice(old_loc, 1);
+  }
+
+  sendToTempZone(card: any, from: any[], player: any) {
+    player.temp_zone.push(card);
+    let old_loc = from.indexOf(card);
+    from.splice(old_loc, 1);
   }
 
   reverse(array: any[]){
