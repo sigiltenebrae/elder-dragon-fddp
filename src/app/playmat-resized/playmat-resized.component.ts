@@ -292,12 +292,12 @@ export class PlaymatResizedComponent implements OnInit {
     }
     else {
       if (event.container.data.length < 3) {
-        if (event.container.data.length > 0) {
+        /*if (event.container.data.length > 0) {
           event.previousContainer.data[event.previousIndex].tapped = event.container.data[0].tapped
         }
         else {
           event.previousContainer.data[event.previousIndex].tapped = 'untapped';
-        }
+        }*/
         transferArrayItem(
           event.previousContainer.data,
           event.container.data,
@@ -368,6 +368,10 @@ export class PlaymatResizedComponent implements OnInit {
     for (let card of spot) {
       card.tapped = card.tapped === 'tapped'? 'untapped': 'tapped';
     }
+  }
+
+  tapCard(card: any) {
+    card.tapped = card.tapped === 'tapped'? 'untapped': 'tapped';
   }
 
   drawCard(count: number) {

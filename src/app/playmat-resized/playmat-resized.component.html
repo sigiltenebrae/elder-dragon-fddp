@@ -20,6 +20,9 @@
         <button mat-menu-item>Send to Field</button>
         <button mat-menu-item>Send to Deck</button>
       </div>
+      <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'inPlayUser'">
+        <button mat-menu-item (click)="tapSpot(rightclicked_item.spot)">Tap Stack</button>
+      </div>
     </ng-template>
   </div>
 </mat-menu>
@@ -57,22 +60,22 @@
         <div class="playmat-user" fxLayout="row wrap" fxLayoutAlign="start start">
           <div *ngFor="let spot of user_playmat"
                class="mtg-card-holder-user"
-               (dblclick)="tapSpot(spot)"
                cdkDropList
                [cdkDropListData]="spot"
                (cdkDropListDropped)="moveCardToPlay($event)">
             <div *ngFor="let card of spot; let i = index">
               <img [ngClass]="{
-              'stack-1': i == 0,
-              'stack-2': i == 1,
-              'stack-3': i == 2
-            }"
-                   [@userTappedState]="card.tapped"
-                   class="mtg-card-user"
-                   src="{{card.image}}"
-                   alt="{{card.name}}"
-                   (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
-                   cdkDrag>
+                'stack-1': i == 0,
+                'stack-2': i == 1,
+                'stack-3': i == 2
+              }"
+               [@userTappedState]="card.tapped"
+               class="mtg-card-user"
+               src="{{card.image}}"
+               alt="{{card.name}}"
+               (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
+               (dblclick)="tapCard(card)" (contextmenu)="onRightClick($event,{type: 'inPlayUser', card: card, spot: spot})"
+               cdkDrag>
             </div>
           </div>
         </div>
