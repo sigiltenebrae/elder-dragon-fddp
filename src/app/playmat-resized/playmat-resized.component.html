@@ -7,6 +7,7 @@
 <mat-menu #rightMenu="matMenu">
   <div (click) = "$event.stopPropagation()">
     <ng-template matMenuContent>
+      <button mat-menu-item (click)="untapAll()">Untap All</button>
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'deck'">
         <div>
           <button mat-button (click)="drawCard(current_draw)">Draw</button>

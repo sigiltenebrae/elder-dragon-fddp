@@ -427,6 +427,14 @@ export class PlaymatResizedComponent implements OnInit {
     }
   }
 
+  untapAll() {
+    for (let spot of this.user_playmat) {
+      for (let card of spot) {
+        card.tapped = 'untapped';
+      }
+    }
+  }
+
   menuTopLeftPosition =  {x: '0', y: '0'}
   @ViewChild(MatMenuTrigger, {static: true}) matMenuTrigger: any;
 
