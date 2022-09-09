@@ -100,9 +100,6 @@ export class PlaymatResizedComponent implements OnInit {
       ],
       deck_name: "Enrage",
       deck: [
-
-      ],
-      grave: [
         {
           name: "Gishath, Sun's Avatar",
           image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
@@ -128,6 +125,8 @@ export class PlaymatResizedComponent implements OnInit {
           mana: "(3){W}{W}",
           tapped: 'untapped'
         }
+      ],
+      grave: [
       ],
       exile: [],
       temp_zone: []

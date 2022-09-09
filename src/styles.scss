@@ -256,6 +256,7 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   transform: translateX(-50%);
   margin: 0;
   filter: drop-shadow(0 0 5px black);
+  z-index: 5;
 }
 
 .zone-data .mtg-card-user {

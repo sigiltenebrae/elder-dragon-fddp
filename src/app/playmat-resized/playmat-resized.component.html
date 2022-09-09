@@ -33,6 +33,7 @@
           <button mat-button (click)="drawToOtherTempZone(current_drawto, selected_player)">Send to Selected</button>
           <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white" [(ngModel)]="current_drawto">
         </div>
+        <button mat-menu-item (click)="openSideNav('deck')">Search Deck</button>
         <button mat-menu-item>Shuffle</button>
         <button mat-menu-item (click)="nextTurn()">Next Turn</button>
       </div>
@@ -151,6 +152,37 @@
                (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
                (cdkDragStarted)="hovered_card=null"
                (click)="toggleCardSelect(card, sidenav_selected_player.temp_zone, card.sidenav_visible)"
+               [cdkDragDisabled]="!card.sidenav_visible"
+               cdkDrag>
+            {{card.name}}
+            <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="mtg-card-user">
+            <img *cdkDragPlaceholder class="mtg-card-user" [src]="card.image" [alt]="card.name">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="sidenav_type === 'deck'">
+      <div fxLayout="column">
+        <mat-form-field fxFlex style="margin: 5px;" appearance="outline">
+          <mat-label>Search</mat-label>
+          <input type="text" placeholder="Card Name"
+                 matInput [matAutocomplete]="card_name"
+                 [(ngModel)]="sidenav_sort" (ngModelChange)="getSidenavSort(sidenav_selected_player.deck)">
+          <mat-autocomplete #card_name>
+            <mat-option *ngFor="let card of sidenav_selected_player.deck" [value]="card.name">
+              {{card.name}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <div class="sidenav-list" cdkDropList
+             (cdkDropListDropped)="moveCardToDeck($event)"
+             [cdkDropListData]="sidenav_selected_player.deck">
+          <div *ngFor="let card of sidenav_selected_player.deck"
+               class="sidenav-list-item"
+               [ngClass]="{'sidenav-list-item-selected': card.selected}"
+               (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
+               (cdkDragStarted)="hovered_card=null"
+               (click)="toggleCardSelect(card, sidenav_selected_player.deck, card.sidenav_visible)"
                [cdkDragDisabled]="!card.sidenav_visible"
                cdkDrag>
             {{card.name}}
