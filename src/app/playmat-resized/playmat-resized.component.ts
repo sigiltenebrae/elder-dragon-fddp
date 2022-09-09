@@ -222,6 +222,7 @@ export class PlaymatResizedComponent implements OnInit {
     }
     else {
       let cur_card = event.previousContainer.data[event.previousIndex];
+      cur_card.tapped = 'untapped';
       if (event.container.data.length < 3) {
         transferArrayItem(
           event.previousContainer.data,
@@ -235,6 +236,7 @@ export class PlaymatResizedComponent implements OnInit {
               this.sendToField(card.card, card.from);
             }
             card.card.selected = false;
+            card.card.tapped = 'untapped';
           }
           this.selected_cards = []
         }
@@ -248,6 +250,7 @@ export class PlaymatResizedComponent implements OnInit {
     }
     else {
       let cur_card = event.previousContainer.data[event.previousIndex];
+      cur_card.tapped = 'untapped';
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -261,6 +264,7 @@ export class PlaymatResizedComponent implements OnInit {
             card.from.splice(card.from.indexOf(card.card), 1);
           }
           card.card.selected = false;
+          card.card.tapped = 'untapped';
         }
         this.selected_cards = []
       }
@@ -270,6 +274,7 @@ export class PlaymatResizedComponent implements OnInit {
   moveCardToDeck(event: CdkDragDrop<any>) {
     if (event.previousContainer !== event.container) {
       let cur_card = event.previousContainer.data[event.previousIndex];
+      cur_card.tapped = 'untapped';
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -283,6 +288,7 @@ export class PlaymatResizedComponent implements OnInit {
             card.from.splice(card.from.indexOf(card.card), 1);
           }
           card.card.selected = false;
+          card.card.tapped = 'untapped';
         }
         this.selected_cards = []
       }
@@ -292,6 +298,7 @@ export class PlaymatResizedComponent implements OnInit {
   moveCardToGrave(event: CdkDragDrop<any>) {
     if (event.previousContainer !== event.container) {
       let cur_card = event.previousContainer.data[event.previousIndex];
+      cur_card.tapped = 'untapped';
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -305,6 +312,7 @@ export class PlaymatResizedComponent implements OnInit {
             card.from.splice(card.from.indexOf(card.card), 1);
           }
           card.card.selected = false;
+          card.card.tapped = 'untapped';
         }
         this.selected_cards = []
       }
@@ -314,6 +322,7 @@ export class PlaymatResizedComponent implements OnInit {
   moveCardToExile(event: CdkDragDrop<any>) {
     if (event.previousContainer !== event.container) {
       let cur_card = event.previousContainer.data[event.previousIndex];
+      cur_card.tapped = 'untapped';
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -327,6 +336,7 @@ export class PlaymatResizedComponent implements OnInit {
             card.from.splice(card.from.indexOf(card.card), 1);
           }
           card.card.selected = false;
+          card.card.tapped = 'untapped';
         }
         this.selected_cards = []
       }
@@ -336,6 +346,7 @@ export class PlaymatResizedComponent implements OnInit {
   moveCardToTempZone(event: CdkDragDrop<any>) {
     if (event.previousContainer !== event.container) {
       let cur_card = event.previousContainer.data[event.previousIndex];
+      cur_card.tapped = 'untapped';
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -349,6 +360,7 @@ export class PlaymatResizedComponent implements OnInit {
             card.from.splice(card.from.indexOf(card.card), 1);
           }
           card.card.selected = false;
+          card.card.tapped = 'untapped';
         }
         this.selected_cards = []
       }
@@ -358,6 +370,7 @@ export class PlaymatResizedComponent implements OnInit {
   sendToField(card: any, from: any[]) {
     for (let i = 0; i < this.user_playmat.length; i++) {
       if (this.user_playmat[i].length == 0) {
+        card.tapped = 'untapped';
         this.user_playmat[i].push(card);
         let old_loc = from.indexOf(card);
         from.splice(old_loc, 1);
@@ -366,6 +379,7 @@ export class PlaymatResizedComponent implements OnInit {
     }
     for (let i = 0; i < this.user_playmat.length; i++) {
       if (this.user_playmat[i].length == 1) {
+        card.tapped = 'untapped';
         this.user_playmat[i].push(card);
         let old_loc = from.indexOf(card);
         from.splice(old_loc, 1);
@@ -374,6 +388,7 @@ export class PlaymatResizedComponent implements OnInit {
     }
     for (let i = 0; i < this.user_playmat.length; i++) {
       if (this.user_playmat[i].length == 2) {
+        card.tapped = 'untapped';
         this.user_playmat[i].push(card);
         let old_loc = from.indexOf(card);
         from.splice(old_loc, 1);
@@ -383,12 +398,14 @@ export class PlaymatResizedComponent implements OnInit {
   }
 
   sendToGrave(card: any, from: any[]) {
+    card.tapped = 'untapped';
     this.user.grave.push(card);
     let old_loc = from.indexOf(card);
     from.splice(old_loc, 1);
   }
 
   sendToExile(card: any, from: any[]) {
+    card.tapped = 'untapped';
     this.user.exile.push(card);
     let old_loc = from.indexOf(card);
     from.splice(old_loc, 1);
@@ -396,6 +413,7 @@ export class PlaymatResizedComponent implements OnInit {
 
   sendToTempZone(card: any, from: any[], player: any) {
     if (player) {
+      card.tapped = 'untapped';
       player.temp_zone.push(card);
       let old_loc = from.indexOf(card);
       from.splice(old_loc, 1);
