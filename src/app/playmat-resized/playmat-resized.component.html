@@ -162,7 +162,13 @@
                                   'player-button-turn': player.turn == current_turn}">
           <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
             <div fxLayout="column" fxFlex="100">
-              <button class="player-button" mat-button (click)="selectPlayer(player)">
+              <button
+                class="player-button"
+                matTooltip="Hand: {{player.hand.length}} Deck: {{player.deck.length}} Grave: {{player.grave.length}} Exile: {{player.exile.length}}"
+                matTooltipPosition="right"
+                matTooltipShowDelay="1000"
+                mat-button
+                (click)="selectPlayer(player)">
                 {{player.name}}
               </button>
             </div>
