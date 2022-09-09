@@ -318,6 +318,7 @@ export class PlaymatResizedComponent implements OnInit {
   rightclicked_item: any = null;
   current_draw = 1;
   current_drawto = 1;
+  sidenav_open = true;
 
   constructor(private rightClickHandler: RightclickHandlerServiceService) { }
 
