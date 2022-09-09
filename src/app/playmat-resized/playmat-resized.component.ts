@@ -411,9 +411,12 @@ export class PlaymatResizedComponent implements OnInit {
   }
 
   sendToTempZone(card: any, from: any[], player: any) {
-    player.temp_zone.push(card);
-    let old_loc = from.indexOf(card);
-    from.splice(old_loc, 1);
+    if (player) {
+      player.temp_zone.push(card);
+      let old_loc = from.indexOf(card);
+      from.splice(old_loc, 1);
+      console.log(this.players);
+    }
   }
 
   reverse(array: any[]){
@@ -444,10 +447,32 @@ export class PlaymatResizedComponent implements OnInit {
     this.current_draw = 1;
   }
 
-  drawToPlay(count: number) {
+  drawToZone(count: number, type: string) {
     for (let i = 0; i < count; i++) {
       if (this.user.deck.length > 0) {
-        this.sendToField(this.user.deck[0], this.user.deck);
+        if (type === 'play') {
+          this.sendToField(this.user.deck[0], this.user.deck);
+        }
+        else if (type === 'grave') {
+          this.sendToGrave(this.user.deck[0], this.user.deck);
+        }
+        else if (type === 'exile') {
+          this.sendToExile(this.user.deck[0], this.user.deck);
+        }
+        else if (type === 'temp_zone') {
+          this.sendToTempZone(this.user.deck[0], this.user.deck, this.user);
+        }
+      }
+    }
+    this.current_drawto = 1;
+  }
+
+  drawToOtherTempZone(count: number, player: any) {
+    if (player) {
+      for (let i = 0; i < count; i++) {
+        if (this.user.deck.length > 0) {
+          this.sendToTempZone(this.user.deck[0], this.user.deck, player);
+        }
       }
     }
   }
