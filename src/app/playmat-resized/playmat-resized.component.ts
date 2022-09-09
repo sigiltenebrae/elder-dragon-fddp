@@ -271,6 +271,7 @@ export class PlaymatResizedComponent implements OnInit {
   hovered_card: any = null;
   rightclicked_item: any = null;
   current_draw = 1;
+  current_drawto = 1;
 
   constructor(private rightClickHandler: RightclickHandlerServiceService) { }
 
@@ -355,6 +356,32 @@ export class PlaymatResizedComponent implements OnInit {
     }
   }
 
+  sendToField(card: any, from: any[]) {
+    for (let i = 0; i < this.user_playmat.length; i++) {
+      if (this.user_playmat[i].length == 0) {
+        this.user_playmat[i].push(card);
+        let old_loc = from.indexOf(card);
+        from.splice(old_loc, 1);
+        return;
+      }
+    }
+    for (let i = 0; i < this.user_playmat.length; i++) {
+      if (this.user_playmat[i].length == 1) {
+        this.user_playmat[i].push(card);
+        let old_loc = from.indexOf(card);
+        from.splice(old_loc, 1);
+        return;
+      }
+    }
+    for (let i = 0; i < this.user_playmat.length; i++) {
+      if (this.user_playmat[i].length == 2) {
+        this.user_playmat[i].push(card);
+        let old_loc = from.indexOf(card);
+        from.splice(old_loc, 1);
+        return;
+      }
+    }
+  }
 
   reverse(array: any[]){
     return array.map((item,idx) => array[array.length-1-idx])
@@ -382,6 +409,14 @@ export class PlaymatResizedComponent implements OnInit {
       }
     }
     this.current_draw = 1;
+  }
+
+  drawToPlay(count: number) {
+    for (let i = 0; i < count; i++) {
+      if (this.user.deck.length > 0) {
+        this.sendToField(this.user.deck[0], this.user.deck);
+      }
+    }
   }
 
   selectPlayer(selector: any) {
