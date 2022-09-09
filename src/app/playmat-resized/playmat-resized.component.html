@@ -14,6 +14,10 @@
           <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white" [(ngModel)]="current_draw">
         </div>
         <div>
+          <button mat-button (click)="openSideNav('scry')">Scry</button>
+          <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white" [(ngModel)]="current_draw">
+        </div>
+        <div>
           <button mat-button (click)="drawToZone(current_drawto, 'play')">Draw to Play</button>
           <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white" [(ngModel)]="current_drawto">
         </div>
@@ -161,7 +165,7 @@
         </div>
       </div>
     </div>
-    <div *ngIf="sidenav_type === 'deck'">
+    <div *ngIf="sidenav_type === 'deck' || sidenav_type === 'scry'">
       <div fxLayout="column">
         <mat-form-field fxFlex style="margin: 5px;" appearance="outline">
           <mat-label>Search</mat-label>
@@ -177,17 +181,18 @@
         <div class="sidenav-list" cdkDropList
              (cdkDropListDropped)="moveCardToDeck($event)"
              [cdkDropListData]="sidenav_selected_player.deck">
-          <div *ngFor="let card of sidenav_selected_player.deck"
-               class="sidenav-list-item"
-               [ngClass]="{'sidenav-list-item-selected': card.selected}"
-               (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
-               (cdkDragStarted)="hovered_card=null"
-               (click)="toggleCardSelect(card, sidenav_selected_player.deck, card.sidenav_visible)"
-               [cdkDragDisabled]="!card.sidenav_visible"
-               cdkDrag>
-            {{card.name}}
-            <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="mtg-card-user">
-            <img *cdkDragPlaceholder class="mtg-card-user" [src]="card.image" [alt]="card.name">
+          <div *ngFor="let card of sidenav_selected_player.deck; let c = index">
+            <div *ngIf="sidenav_type === 'deck' || (sidenav_type === 'scry' && c < sidenav_scry)" class="sidenav-list-item"
+              [ngClass]="{'sidenav-list-item-selected': card.selected}"
+              (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
+              (cdkDragStarted)="hovered_card=null"
+              (click)="toggleCardSelect(card, sidenav_selected_player.deck, card.sidenav_visible)"
+              [cdkDragDisabled]="!card.sidenav_visible"
+              cdkDrag>
+              {{card.name}}
+              <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="mtg-card-user">
+              <img *cdkDragPlaceholder class="mtg-card-user" [src]="card.image" [alt]="card.name">
+            </div>
           </div>
         </div>
       </div>

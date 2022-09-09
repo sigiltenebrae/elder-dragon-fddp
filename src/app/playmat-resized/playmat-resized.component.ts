@@ -204,6 +204,7 @@ export class PlaymatResizedComponent implements OnInit {
   current_drawto = 1;
   selected_cards: any[] = [];
   sidenav_sort = '';
+  sidenav_scry = 0;
 
   constructor(private rightClickHandler: RightclickHandlerServiceService) { }
 
@@ -275,7 +276,10 @@ export class PlaymatResizedComponent implements OnInit {
   }
 
   moveCardToDeck(event: CdkDragDrop<any>) {
-    if (event.previousContainer !== event.container) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    }
+    else {
       let cur_card = event.previousContainer.data[event.previousIndex];
       cur_card.tapped = 'untapped';
       transferArrayItem(
@@ -557,7 +561,9 @@ export class PlaymatResizedComponent implements OnInit {
     this.getSidenavSort(this.user.exile);
     this.getSidenavSort(this.user.temp_zone);
     this.sidenav_type = type;
+    this.sidenav_scry = this.current_draw;
     this.fddp_sidenav.open();
+    this.current_draw = 1;
   }
 
   closeSideNav() {
