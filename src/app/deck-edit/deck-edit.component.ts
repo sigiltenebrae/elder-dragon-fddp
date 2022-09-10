@@ -113,16 +113,16 @@ export class DeckEditComponent implements OnInit {
               });
           }
         }
+        this.deck.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+        this.deck.cards.forEach((card: any) => {
+          this.getCardImage(card).then(() => {
+            if (card.iscommander) {
+              this.deck.image = card.image;
+            }
+          });
+        });
       });
     }
-    this.deck.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
-    this.deck.cards.forEach((card: any) => {
-      this.getCardImage(card).then(() => {
-        if (card.iscommander) {
-          this.deck.image = card.image;
-        }
-      });
-    });
   }
 
   async getCardImage(card: any) {
