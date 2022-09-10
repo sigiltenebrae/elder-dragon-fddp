@@ -98,6 +98,7 @@ export class DeckEditComponent implements OnInit {
         }
       );
     }
+    this.deck.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
   }
 
   getCardImages() {

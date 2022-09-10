@@ -2,6 +2,10 @@
 @import '../node_modules/@angular/material/theming';
 @include mat.core();
 
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';
+
+
 html, body { height: 100%; padding: 0; }
 body { margin: 0; font-family: Beleren, "Helvetica Neue", sans-serif; }
 
@@ -533,6 +537,10 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   overflow-y: auto;
 }
 
+.deck-form-card-list-commander {
+  background: mat.get-color-from-palette($fddp-palette-primary-dark, 500);
+}
+
 .deck-form-card-display {
   min-height: 48px;
 }
@@ -545,6 +553,3 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   border-radius: 7px;
   cursor: pointer;
 }
-
-/* Importing Bootstrap SCSS file. */
-@import '~bootstrap/scss/bootstrap';
