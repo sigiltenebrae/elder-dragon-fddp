@@ -562,3 +562,21 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   border-radius: 7px;
   cursor: pointer;
 }
+
+.mtg-custom-card-preview {
+  max-width: 254px;
+  max-height: 355px;
+  min-width: 254px;
+  min-height: 355px;
+  border-radius: 12px;
+  border: dotted #ccc 2px;
+}
+
+.mtg-custom-card {
+  max-width: 254px;
+  max-height: 355px;
+  min-width: 254px;
+  min-height: 355px;
+  width: 254px;
+  height: 355px;
+}

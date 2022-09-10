@@ -34,13 +34,15 @@ import {FormsModule} from "@angular/forms";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import { DeckEditComponent } from './deck-edit/deck-edit.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CustomImagesComponent } from './custom-images/custom-images.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     PlaymatResizedComponent,
-    DeckEditComponent
+    DeckEditComponent,
+    CustomImagesComponent
   ],
   imports: [
     BrowserModule,
@@ -70,7 +72,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     HttpClientModule,
     RouterModule.forRoot([
       {path: '', component: PlaymatResizedComponent},
-      {path: 'decks/:deckid', component: DeckEditComponent}
+      {path: 'decks/:deckid', component: DeckEditComponent},
+      {path: 'upload', component: CustomImagesComponent}
     ]),
     FlexLayoutModule,
     DragDropModule,
