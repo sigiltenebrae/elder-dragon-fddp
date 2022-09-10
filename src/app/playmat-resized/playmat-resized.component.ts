@@ -79,7 +79,7 @@ export class PlaymatResizedComponent implements OnInit {
           })
 
           out_player.selected = false;
-
+          this.shuffleDeck(out_player.deck.cards);
           this.players.push(out_player);
           resolve();
         }
@@ -88,6 +88,16 @@ export class PlaymatResizedComponent implements OnInit {
         }
       });
     });
+  }
+
+  shuffleDeck(cards: any[]) {
+    for (let i = 0; i < cards.length; i++) {
+      let r = i + Math.floor(Math.random() * (cards.length - i));
+      let temp = cards[r];
+      cards[r] = cards[i];
+      cards[i] = temp;
+    }
+
   }
 
   ngOnInit(): void {
@@ -330,21 +340,21 @@ export class PlaymatResizedComponent implements OnInit {
     let old_loc = from.indexOf(card);
     from.splice(old_loc, 1);
     if (this.selected_cards.length > 0) {
-      for (let card of this.selected_cards) {
-        if (card.card != card) {
+      for (let cur_card of this.selected_cards) {
+        if (cur_card.card != card) {
           if (location == -1) { //going to bottom
-            this.user.deck.cards.push(card.card);
+            this.user.deck.cards.push(cur_card.card);
           }
           else if (location == 0) {
-            this.user.deck.cards.unshift(card.card);
+            this.user.deck.cards.unshift(cur_card.card);
           }
           else {
-            this.user.deck.cards.splice(this.user.deck.cards.length - (location - 1), 0, card.card); //this assumes # from the top
+            this.user.deck.cards.splice(this.user.deck.cards.length - (location - 1), 0, cur_card.card); //this assumes # from the top
           }
-          card.from.splice(card.from.indexOf(card.card), 1);
+          cur_card.from.splice(cur_card.from.indexOf(cur_card.card), 1);
         }
-        card.card.selected = false;
-        card.card.tapped = 'untapped';
+        cur_card.card.selected = false;
+        cur_card.card.tapped = 'untapped';
       }
       this.selected_cards = []
     }
