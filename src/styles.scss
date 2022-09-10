@@ -509,3 +509,7 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 .sidenav-list-item-selected {
   box-shadow:0 0 0 3px mat.get-color-from-palette($fddp-palette-accent-dark, 500) inset;
 }
+
+.sidenav-player-select {
+  min-height: 64px;
+}

@@ -86,7 +86,12 @@
 <mat-sidenav-container fxFlexFill cdkDropListGroup hasBackdrop="false">
   <mat-sidenav #fddp_sidenav (keydown.escape)="fddp_sidenav.close()" disableClose>
     <mat-toolbar color="primary">
-      <div fxFlex fxLayout="row">
+      <div fxFlex="100" fxLayout="row" fxLayoutAlign="space-between center">
+        <h2 fxFlex *ngIf="sidenav_type==='grave'">Graveyards</h2>
+        <h2 fxFlex *ngIf="sidenav_type==='exile'">Exile</h2>
+        <h2 fxFlex *ngIf="sidenav_type==='temp_zone'">Temp Zones</h2>
+        <h2 fxFlex *ngIf="sidenav_type==='deck'">Searching Deck</h2>
+        <h2 fxFlex *ngIf="sidenav_type==='scry'">Scrying</h2>
         <button mat-icon-button (click)="closeSideNav()">
           <mat-icon>close</mat-icon>
         </button>
@@ -94,6 +99,14 @@
     </mat-toolbar>
     <div *ngIf="sidenav_type === 'grave'">
       <div fxLayout="column">
+        <mat-form-field appearance="outline" fxFlex style="margin: 5px;">
+          <mat-label>Player</mat-label>
+          <mat-select [(ngModel)]="sidenav_selected_player" name="player_select_sidenav" (ngModelChange)="updateSidenav()">
+            <mat-option *ngFor="let player of players" [value]="player">
+              {{player.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
         <mat-form-field fxFlex style="margin: 5px;" appearance="outline">
           <mat-label>Search</mat-label>
           <input type="text" placeholder="Card Name"
@@ -125,6 +138,14 @@
     </div>
     <div *ngIf="sidenav_type === 'exile'">
       <div fxLayout="column">
+        <mat-form-field appearance="outline" fxFlex style="margin: 5px;">
+          <mat-label>Player</mat-label>
+          <mat-select [(ngModel)]="sidenav_selected_player" name="player_select_sidenav" (ngModelChange)="updateSidenav()">
+            <mat-option *ngFor="let player of players" [value]="player">
+              {{player.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
         <mat-form-field fxFlex style="margin: 5px;" appearance="outline">
           <mat-label>Search</mat-label>
           <input type="text" placeholder="Card Name"
@@ -157,6 +178,14 @@
     </div>
     <div *ngIf="sidenav_type === 'temp_zone'">
       <div fxLayout="column">
+        <mat-form-field appearance="outline" fxFlex style="margin: 5px;">
+          <mat-label>Player</mat-label>
+          <mat-select [(ngModel)]="sidenav_selected_player" name="player_select_sidenav" (ngModelChange)="updateSidenav()">
+            <mat-option *ngFor="let player of players" [value]="player">
+              {{player.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
         <mat-form-field fxFlex style="margin: 5px;" appearance="outline">
           <mat-label>Search</mat-label>
           <input type="text" placeholder="Card Name"

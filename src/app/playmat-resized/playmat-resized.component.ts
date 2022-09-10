@@ -43,13 +43,6 @@ export class PlaymatResizedComponent implements OnInit {
       selected: false,
       turn: 0,
       hand: [
-        {
-          name: "Mayael the Anima",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/3/0/309d95ad-e46c-4407-894d-d4cfdc7017f8.jpg?1562905228",
-          text: "{R}{G}{W}, {T}: Look at the top five cards of your library. You may put a creature card with power 5 or greater from among them onto the battlefield. Put the rest on the bottom of your library in any order.",
-          mana: "{R}{G}{W}",
-          tapped: 'untapped',
-        },
       ],
       commander: [
         {
@@ -62,7 +55,15 @@ export class PlaymatResizedComponent implements OnInit {
       ],
       deck_name: "Stompy",
       deck: [],
-      grave: [],
+      grave: [
+        {
+          name: "Mayael the Anima",
+          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/3/0/309d95ad-e46c-4407-894d-d4cfdc7017f8.jpg?1562905228",
+          text: "{R}{G}{W}, {T}: Look at the top five cards of your library. You may put a creature card with power 5 or greater from among them onto the battlefield. Put the rest on the bottom of your library in any order.",
+          mana: "{R}{G}{W}",
+          tapped: 'untapped',
+        },
+      ],
       exile: [],
       temp_zone: []
     },
@@ -100,6 +101,8 @@ export class PlaymatResizedComponent implements OnInit {
       ],
       deck_name: "Enrage",
       deck: [
+      ],
+      grave: [
         {
           name: "Gishath, Sun's Avatar",
           image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
@@ -126,8 +129,6 @@ export class PlaymatResizedComponent implements OnInit {
           tapped: 'untapped'
         }
       ],
-      grave: [
-      ],
       exile: [],
       temp_zone: []
     },
@@ -138,15 +139,6 @@ export class PlaymatResizedComponent implements OnInit {
       selected: false,
       turn: 2,
       hand: [
-        {
-          name: "Alela, Artful Provocateur",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/a/b/abc9e41e-fd03-4b6f-8f44-17ba94fa44f5.jpg?1650422625",
-          text: "Flying, deathtouch, lifelink +\n" +
-            "Other creatures you control with flying get +1/+0. + \n" +
-            "Whenever you cast an artifact or enchantment spell, create a 1/1 blue Faerie creature token with flying.",
-          mana: "(1){W}{U}{B}",
-          tapped: 'untapped',
-        },
       ],
       commander: [
         {
@@ -161,7 +153,17 @@ export class PlaymatResizedComponent implements OnInit {
       ],
       deck_name: "Artifacts",
       deck: [],
-      grave: [],
+      grave: [
+        {
+          name: "Alela, Artful Provocateur",
+          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/a/b/abc9e41e-fd03-4b6f-8f44-17ba94fa44f5.jpg?1650422625",
+          text: "Flying, deathtouch, lifelink +\n" +
+            "Other creatures you control with flying get +1/+0. + \n" +
+            "Whenever you cast an artifact or enchantment spell, create a 1/1 blue Faerie creature token with flying.",
+          mana: "(1){W}{U}{B}",
+          tapped: 'untapped',
+        },
+      ],
       exile: [],
       temp_zone: []
     },
@@ -172,13 +174,6 @@ export class PlaymatResizedComponent implements OnInit {
       selected: false,
       turn: 3,
       hand: [
-        {
-          name: "Muldrotha, the Gravetide",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/c/6/c654737d-34ac-42ff-ae27-3a3bbb930fc1.jpg?1591204580",
-          text: "During each of your turns, you may play a land and cast a permanent spell of each permanent type from your graveyard. ",
-          mana: "(3){B}{G}{U}",
-          tapped: 'untapped',
-        },
       ],
       commander: [
         {
@@ -191,7 +186,15 @@ export class PlaymatResizedComponent implements OnInit {
       ],
       deck_name: "Mill Stuff",
       deck: [],
-      grave: [],
+      grave: [
+        {
+          name: "Muldrotha, the Gravetide",
+          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/c/6/c654737d-34ac-42ff-ae27-3a3bbb930fc1.jpg?1591204580",
+          text: "During each of your turns, you may play a land and cast a permanent spell of each permanent type from your graveyard. ",
+          mana: "(3){B}{G}{U}",
+          tapped: 'untapped',
+        },
+      ],
       exile: [],
       temp_zone: []
     },
@@ -674,6 +677,21 @@ export class PlaymatResizedComponent implements OnInit {
     this.sidenav_type = null;
     this.fddp_sidenav.close();
     this.sidenav_sort = '';
+  }
+
+  updateSidenav() {
+    if (this.sidenav_type === 'grave') {
+      this.getSidenavSort(this.sidenav_selected_player.grave);
+    }
+    else if (this.sidenav_type === 'exile') {
+      this.getSidenavSort(this.sidenav_selected_player.exile);
+    }
+    else if (this.sidenav_type === 'temp_zone') {
+      this.getSidenavSort(this.sidenav_selected_player.temp_zone);
+    }
+    else if (this.sidenav_type === 'deck' || this.sidenav_type === 'scry') {
+      this.getSidenavSort(this.sidenav_selected_player.deck);
+    }
   }
 
   getSidenavSort(items: any[]) {
