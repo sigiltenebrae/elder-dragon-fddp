@@ -34,6 +34,15 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 
 @include mat.all-component-themes($fddp-theme-dark);
 
+.star { //for ngb-rating
+  font-size: 1.5rem;
+  color: rgba(mat.get-color-from-palette($fddp-palette-primary-dark, 500), 0.4);
+}
+
+.filled { //also for ngb-rating
+  color: mat.get-color-from-palette($fddp-palette-primary-dark, 500);
+}
+
 .mtg-card-full {
   width: 1500px;
   height: 2100px;

@@ -55,6 +55,7 @@ export class DeckEditComponent implements OnInit {
       this.deck.image = '';
       this.deck.sleeves = '';
       this.deck.link = '';
+      this.deck.rating = 3;
       this.deck.owner = 0;
       this.deck.cards = [];
     }
