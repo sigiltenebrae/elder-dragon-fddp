@@ -190,6 +190,7 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 .mtg-card-opponent {
   width: 40px;
   height: 56px;
+  border-radius: 3px;
 }
 
 .opponent-hand {
@@ -410,6 +411,7 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   max-height: 355px;
   min-width: 254px;
   min-height: 355px;
+  border-radius: 12px;
 }
 
 .commander-viewer-partner-holder .commander-viewer-partner-1 {
@@ -421,6 +423,7 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   min-width: 229px;
   min-height: 310px;
   z-index: 1;
+  border-radius: 12px;
 }
 
 .commander-viewer-partner-holder .commander-viewer-partner-2 {
@@ -432,6 +435,7 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   min-width: 229px;
   min-height: 310px;
   z-index: 2;
+  border-radius: 12px;
 }
 
 .commander-viewer-partner-holder .commander-viewer-partner-1:hover,
