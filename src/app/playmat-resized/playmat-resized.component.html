@@ -42,13 +42,23 @@
         <button mat-menu-item (click)="nextTurn()">Next Turn</button>
       </div>
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'hand'">
-        <button mat-menu-item (click)="sendToField(rightclicked_item.card, rightclicked_item.from)">Send to Field</button>
-        <button mat-menu-item>Send to Deck</button>
+        <button mat-menu-item (click)="sendToPlayWrapper(rightclicked_item.card, rightclicked_item.from)">Send to Play</button>
+        <button mat-menu-item (click)="sendToGrave(rightclicked_item.card, rightclicked_item.from)">Send to Grave</button>
+        <button mat-menu-item (click)="sendToExile(rightclicked_item.card, rightclicked_item.from)">Send to Exile</button>
+        <button mat-menu-item (click)="sendToDeck(rightclicked_item.card, rightclicked_item.from, 0)">Send to Deck Top</button>
+        <button mat-menu-item (click)="sendToDeck(rightclicked_item.card, rightclicked_item.from, -1)">Send to Deck Bottom</button>
+        <button mat-menu-item (click)="sendToTempZone(rightclicked_item.card, rightclicked_item.from, user)">Send to Temp</button>
         <button mat-menu-item (click)="sendToTempZone(rightclicked_item.card, rightclicked_item.from, selected_player)">Send to Selected</button>
       </div>
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'inPlayUser'">
         <button mat-menu-item (click)="tapSpot(rightclicked_item.spot)">(un)Tap Stack</button>
+        <button mat-menu-item (click)="sendToHand(rightclicked_item.card, rightclicked_item.spot)">Send to Hand</button>
+        <button mat-menu-item (click)="sendToGrave(rightclicked_item.card, rightclicked_item.spot)">Send to Grave</button>
+        <button mat-menu-item (click)="sendToExile(rightclicked_item.card, rightclicked_item.spot)">Send to Exile</button>
+        <button mat-menu-item (click)="sendToTempZone(rightclicked_item.card, rightclicked_item.spot, user)">Send to Temp</button>
         <button mat-menu-item (click)="sendToTempZone(rightclicked_item.card, rightclicked_item.spot, selected_player)">Send to Selected</button>
+        <button mat-menu-item (click)="sendToDeck(rightclicked_item.card, rightclicked_item.spot, 0)">Send to Deck Top</button>
+        <button mat-menu-item (click)="sendToDeck(rightclicked_item.card, rightclicked_item.spot, -1)">Send to Deck Bottom</button>
       </div>
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'grave'">
         <button mat-menu-item (click)="openSideNav('grave')">View Graveyards</button>
@@ -58,6 +68,16 @@
       </div>
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'temp-zone'">
         <button mat-menu-item (click)="openSideNav('temp_zone')">View Temp Zones</button>
+      </div>
+      <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'sidenav'">
+        <button mat-menu-item (click)="sendToPlayWrapper(rightclicked_item.card, rightclicked_item.from)">Send to Play</button>
+        <button mat-menu-item (click)="sendToGrave(rightclicked_item.card, rightclicked_item.from)">Send to Grave</button>
+        <button mat-menu-item (click)="sendToExile(rightclicked_item.card, rightclicked_item.from)">Send to Exile</button>
+        <button mat-menu-item (click)="sendToDeck(rightclicked_item.card, rightclicked_item.from, 0)">Send to Deck Top</button>
+        <button mat-menu-item (click)="sendToDeck(rightclicked_item.card, rightclicked_item.from, -1)">Send to Deck Bottom</button>
+        <button mat-menu-item (click)="sendToHand(rightclicked_item.card, rightclicked_item.from)">Send to Hand</button>
+        <button mat-menu-item (click)="sendToTempZone(rightclicked_item.card, rightclicked_item.from, user)">Send to Temp</button>
+        <button mat-menu-item (click)="sendToTempZone(rightclicked_item.card, rightclicked_item.from, selected_player)">Send to Selected</button>
       </div>
     </ng-template>
   </div>
@@ -94,7 +114,7 @@
                (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
                (cdkDragStarted)="hovered_card=null"
                (click)="toggleCardSelect(card, sidenav_selected_player.grave, card.sidenav_visible)"
-               [cdkDragDisabled]="!card.sidenav_visible"
+               [cdkDragDisabled]="!card.sidenav_visible" (contextmenu)="onRightClick($event, {type: 'sidenav', card: card, from: sidenav_selected_player.grave})"
                cdkDrag>
             {{card.name}}
             <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="mtg-card-user">
@@ -125,6 +145,7 @@
                (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
                (cdkDragStarted)="hovered_card=null"
                (click)="toggleCardSelect(card, sidenav_selected_player.exile, card.sidenav_visible)"
+               (contextmenu)="onRightClick($event, {type: 'hand', card: card, from: sidenav_selected_player.exile})"
                [cdkDragDisabled]="!card.sidenav_visible"
                cdkDrag>
             {{card.name}}
@@ -156,6 +177,7 @@
                (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
                (cdkDragStarted)="hovered_card=null"
                (click)="toggleCardSelect(card, sidenav_selected_player.temp_zone, card.sidenav_visible)"
+               (contextmenu)="onRightClick($event, {type: 'hand', card: card, from: sidenav_selected_player.temp_zone})"
                [cdkDragDisabled]="!card.sidenav_visible"
                cdkDrag>
             {{card.name}}
@@ -187,6 +209,7 @@
               (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
               (cdkDragStarted)="hovered_card=null"
               (click)="toggleCardSelect(card, sidenav_selected_player.deck, card.sidenav_visible)"
+              (contextmenu)="onRightClick($event, {type: 'hand', card: card, from: sidenav_selected_player.deck})"
               [cdkDragDisabled]="!card.sidenav_visible"
               cdkDrag>
               {{card.name}}

@@ -227,6 +227,7 @@ export class PlaymatResizedComponent implements OnInit {
     else {
       let cur_card = event.previousContainer.data[event.previousIndex];
       cur_card.tapped = 'untapped';
+      cur_card.selected = false;
       if (event.container.data.length < 3) {
         transferArrayItem(
           event.previousContainer.data,
@@ -234,16 +235,7 @@ export class PlaymatResizedComponent implements OnInit {
           event.previousIndex,
           event.currentIndex,
         );
-        if (this.selected_cards.length > 0) {
-          for (let card of this.selected_cards) {
-            if (card.card != cur_card) {
-              this.sendToField(card.card, card.from);
-            }
-            card.card.selected = false;
-            card.card.tapped = 'untapped';
-          }
-          this.selected_cards = []
-        }
+        this.sendSelectedToPlay(cur_card);
       }
     }
   }
@@ -383,10 +375,29 @@ export class PlaymatResizedComponent implements OnInit {
     }
   }
 
-  sendToField(card: any, from: any[]) {
+  sendToPlayWrapper(card: any, from: any) {
+    this.sendToPlay(card, from);
+    this.sendSelectedToPlay(card);
+  }
+
+  sendSelectedToPlay(card: any) {
+    if (this.selected_cards.length > 0) {
+      for (let cur_card of this.selected_cards) {
+        if (cur_card.card != card) {
+          this.sendToPlay(cur_card.card, cur_card.from);
+          cur_card.card.selected = false;
+          cur_card.card.tapped = 'untapped';
+        }
+      }
+      this.selected_cards = []
+    }
+  }
+
+  sendToPlay(card: any, from: any[]) {
     for (let i = 0; i < this.user_playmat.length; i++) {
       if (this.user_playmat[i].length == 0) {
         card.tapped = 'untapped';
+        card.selected = false;
         this.user_playmat[i].push(card);
         let old_loc = from.indexOf(card);
         from.splice(old_loc, 1);
@@ -396,6 +407,7 @@ export class PlaymatResizedComponent implements OnInit {
     for (let i = 0; i < this.user_playmat.length; i++) {
       if (this.user_playmat[i].length == 1) {
         card.tapped = 'untapped';
+        card.selected = false;
         this.user_playmat[i].push(card);
         let old_loc = from.indexOf(card);
         from.splice(old_loc, 1);
@@ -405,6 +417,7 @@ export class PlaymatResizedComponent implements OnInit {
     for (let i = 0; i < this.user_playmat.length; i++) {
       if (this.user_playmat[i].length == 2) {
         card.tapped = 'untapped';
+        card.selected = false;
         this.user_playmat[i].push(card);
         let old_loc = from.indexOf(card);
         from.splice(old_loc, 1);
@@ -413,26 +426,116 @@ export class PlaymatResizedComponent implements OnInit {
     }
   }
 
+  sendToDeck(card: any, from: any[], location: number) {
+    card.tapped = 'untapped';
+    card.selected = false;
+    if (location == -1) { //going to bottom
+      this.user.deck.push(card);
+    }
+    else if (location == 0) {
+      this.user.deck.unshift(card);
+    }
+    else {
+      this.user.deck.splice(this.user.deck.length - (location - 1), 0, card); //this assumes # from the top
+    }
+    let old_loc = from.indexOf(card);
+    from.splice(old_loc, 1);
+    if (this.selected_cards.length > 0) {
+      for (let card of this.selected_cards) {
+        if (card.card != card) {
+          if (location == -1) { //going to bottom
+            this.user.deck.push(card.card);
+          }
+          else if (location == 0) {
+            this.user.deck.unshift(card.card);
+          }
+          else {
+            this.user.deck.splice(this.user.deck.length - (location - 1), 0, card.card); //this assumes # from the top
+          }
+          card.from.splice(card.from.indexOf(card.card), 1);
+        }
+        card.card.selected = false;
+        card.card.tapped = 'untapped';
+      }
+      this.selected_cards = []
+    }
+  }
+
+  sendToHand(card: any, from: any[]) {
+    card.tapped = 'untapped';
+    card.selected = false;
+    this.user.hand.push(card);
+    let old_loc = from.indexOf(card);
+    from.splice(old_loc, 1);
+    if (this.selected_cards.length > 0) {
+      for (let cur_card of this.selected_cards) {
+        if (cur_card.card != card) {
+          this.user.hand.push(cur_card.card);
+          cur_card.from.splice(cur_card.from.indexOf(cur_card.card), 1);
+        }
+        cur_card.card.selected = false;
+        cur_card.card.tapped = 'untapped';
+      }
+      this.selected_cards = []
+    }
+  }
+
   sendToGrave(card: any, from: any[]) {
     card.tapped = 'untapped';
+    card.selected = false;
     this.user.grave.push(card);
     let old_loc = from.indexOf(card);
     from.splice(old_loc, 1);
+    if (this.selected_cards.length > 0) {
+      for (let cur_card of this.selected_cards) {
+        if (cur_card.card != card) {
+          this.user.grave.push(cur_card.card);
+          cur_card.from.splice(cur_card.from.indexOf(cur_card.card), 1);
+        }
+        cur_card.card.selected = false;
+        cur_card.card.tapped = 'untapped';
+      }
+      this.selected_cards = []
+    }
   }
 
   sendToExile(card: any, from: any[]) {
     card.tapped = 'untapped';
+    card.selected = false;
     this.user.exile.push(card);
     let old_loc = from.indexOf(card);
     from.splice(old_loc, 1);
+    if (this.selected_cards.length > 0) {
+      for (let cur_card of this.selected_cards) {
+        if (cur_card.card != cur_card) {
+          this.user.exile.push(cur_card.card);
+          cur_card.from.splice(cur_card.from.indexOf(cur_card.card), 1);
+        }
+        cur_card.card.selected = false;
+        cur_card.card.tapped = 'untapped';
+      }
+      this.selected_cards = []
+    }
   }
 
   sendToTempZone(card: any, from: any[], player: any) {
     if (player) {
       card.tapped = 'untapped';
+      card.selected = false;
       player.temp_zone.push(card);
       let old_loc = from.indexOf(card);
       from.splice(old_loc, 1);
+      if (this.selected_cards.length > 0) {
+        for (let cur_card of this.selected_cards) {
+          if (cur_card.card != card) {
+            player.temp_zone.push(cur_card.card);
+            cur_card.from.splice(cur_card.from.indexOf(cur_card.card), 1);
+          }
+          cur_card.card.selected = false;
+          cur_card.card.tapped = 'untapped';
+        }
+        this.selected_cards = []
+      }
     }
   }
 
@@ -468,7 +571,7 @@ export class PlaymatResizedComponent implements OnInit {
     for (let i = 0; i < count; i++) {
       if (this.user.deck.length > 0) {
         if (type === 'play') {
-          this.sendToField(this.user.deck[0], this.user.deck);
+          this.sendToPlay(this.user.deck[0], this.user.deck);
         }
         else if (type === 'grave') {
           this.sendToGrave(this.user.deck[0], this.user.deck);
