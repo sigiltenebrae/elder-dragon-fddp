@@ -32,6 +32,7 @@ import {MatMenuModule} from "@angular/material/menu";
 import {FormsModule} from "@angular/forms";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import { DeckEditComponent } from './deck-edit/deck-edit.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -74,7 +75,8 @@ import { DeckEditComponent } from './deck-edit/deck-edit.component';
     DragDropModule,
     MatMenuModule,
     FormsModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]

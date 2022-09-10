@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {map, Observable, startWith} from "rxjs";
+import {debounceTime, distinctUntilChanged, map, Observable, OperatorFunction, startWith, switchMap, tap} from "rxjs";
 import {FormControl} from "@angular/forms";
+import * as Scry from "scryfall-sdk";
 
 @Component({
   selector: 'app-deck-edit',
@@ -43,6 +44,7 @@ export class DeckEditComponent implements OnInit {
   selected_card: any = null;
   changing_image = false;
   image_options: any[] = []
+  new_card_temp: any = null;
 
   constructor() { }
 
@@ -59,6 +61,25 @@ export class DeckEditComponent implements OnInit {
     }
   }
 
+  searching = false;
+  /**
+   * OperatorFunction for Scryfall autocomplete on typeahead.
+   * @param text$ string to autocomplete
+   */
+    // @ts-ignore
+  public card_search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      tap(() => this.searching = true),
+      // @ts-ignore
+      switchMap(async term => {
+        this.searching = true;
+        return await Scry.Cards.autoCompleteName(term);
+      }),
+      tap(() => {
+        this.searching = false;
+      }));
 
   syncWithArchidekt() {
     //here will be a http get
@@ -81,6 +102,27 @@ export class DeckEditComponent implements OnInit {
 
   getCardImages() {
 
+  }
+
+  addCardToDeck() {
+    if (this.new_card_temp) {
+      for (let card of this.deck.cards) {
+        if (card.name === this.new_card_temp) {
+          card.count++;
+          this.new_card_temp = null;
+          return;
+        }
+      }
+      this.deck.cards.push(
+        {
+          name: this.new_card_temp,
+          image: '',
+          count: 1,
+          iscommander: false
+        }
+      );
+      this.new_card_temp = null;
+    }
   }
 
 }
