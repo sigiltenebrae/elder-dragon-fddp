@@ -82,6 +82,17 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
+.mtg-card-user-container .mtg-card-loyalty {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  font-family: Beleren, "Helvetica Neue", sans-serif !important;
+  margin: 0;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
 .mtg-card-user-container .mtg-counter-1 {
   position: absolute;
   bottom: 20px;

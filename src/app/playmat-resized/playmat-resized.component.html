@@ -59,6 +59,10 @@
         <button mat-menu-item (click)="sendToTempZone(rightclicked_item.card, rightclicked_item.spot, selected_player)">Send to Selected</button>
         <button mat-menu-item (click)="sendToDeck(rightclicked_item.card, rightclicked_item.spot, 0)">Send to Deck Top</button>
         <button mat-menu-item (click)="sendToDeck(rightclicked_item.card, rightclicked_item.spot, -1)">Send to Deck Bottom</button>
+        <button mat-menu-item (click)="rightclicked_item.card.counter_1 = !rightclicked_item.card.counter_1; rightclicked_item.card.counter_1_value=0">Toggle Counter 1</button>
+        <button mat-menu-item (click)="rightclicked_item.card.counter_2 = !rightclicked_item.card.counter_2; rightclicked_item.card.counter_2_value=0">Toggle Counter 2</button>
+        <button mat-menu-item (click)="rightclicked_item.card.counter_3 = !rightclicked_item.card.counter_3; rightclicked_item.card.counter_3_value=0">Toggle Counter 3</button>
+        <button mat-menu-item (click)="rightclicked_item.card.multiplier = !rightclicked_item.card.multiplier; rightclicked_item.card.multiplier_value=0">Toggle Multiplier</button>
       </div>
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'grave'">
         <button mat-menu-item (click)="openSideNav('grave')">View Graveyards</button>
@@ -355,11 +359,12 @@
                            alt="{{card.name}}"
                            (contextmenu)="onRightClick($event,{type: 'inPlayUser', card: card, spot: spot})"
                            (click)="toggleCardSelect(card, spot)" (dblclick)="tapCard(card)">
-                      <button class="mtg-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true"><p>10</p></button>
-                      <button class="mtg-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>10</p></button>
-                      <button class="mtg-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true"><p>10</p></button>
-                      <button class="mtg-multiplier-counter" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>10</p></button>
-                      <h4 class="mtg-card-power-tough">12/12</h4>
+                      <button *ngIf="card.counter_1" class="mtg-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true" (click)="card.counter_1_value = card.counter_1_value + 1" (contextmenu)="onRightClick($event, {type: 'counter_1', card: card})"><p>{{card.counter_1_value}}</p></button>
+                      <button *ngIf="card.counter_2" class="mtg-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true" (click)="card.counter_2_value = card.counter_2_value + 1" (contextmenu)="onRightClick($event, {type: 'counter_2', card: card})"><p>{{card.counter_2_value}}</p></button>
+                      <button *ngIf="card.counter_3" class="mtg-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true" (click)="card.counter_3_value = card.counter_3_value + 1" (contextmenu)="onRightClick($event, {type: 'counter_3', card: card})"><p>{{card.counter_3_value}}</p></button>
+                      <button *ngIf="card.multiplier" class="mtg-multiplier-counter" mat-fab color="accent" [class.mat-elevation-z8]="true" (click)="card.multiplier_value = card.multiplier_value + 1" (contextmenu)="onRightClick($event, {type: 'multiplier', card: card})"><p>{{card.multiplier_value}}</p></button>
+                      <h4 *ngIf="card.power && card.toughness" class="mtg-card-power-tough">{{card.power}}/{{card.toughness}}</h4>
+                      <h4 *ngIf="card.loyalty" class="mtg-card-loyalty">{{card.loyalty}}</h4>
                     </div>
 
                   </div>

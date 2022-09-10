@@ -34,105 +34,6 @@ export class PlaymatResizedComponent implements OnInit {
   sidenav_selected_player: any = null;
   current_turn = 0;
 
-  players_old: any[] = [
-    {
-      name: "David",
-      life: 40,
-      infect: 0,
-      selected: false,
-      turn: 0,
-      hand: [],
-      commander: [
-        {
-          name: "Mayael the Anima",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/3/0/309d95ad-e46c-4407-894d-d4cfdc7017f8.jpg?1562905228",
-          text: "{R}{G}{W}, {T}: Look at the top five cards of your library. You may put a creature card with power 5 or greater from among them onto the battlefield. Put the rest on the bottom of your library in any order.",
-          mana: "{R}{G}{W}",
-          tapped: 'untapped',
-        },
-      ],
-      deck_name: "Stompy",
-      deck: [],
-      grave: [
-        {
-          name: "Mayael the Anima",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/3/0/309d95ad-e46c-4407-894d-d4cfdc7017f8.jpg?1562905228",
-          text: "{R}{G}{W}, {T}: Look at the top five cards of your library. You may put a creature card with power 5 or greater from among them onto the battlefield. Put the rest on the bottom of your library in any order.",
-          mana: "{R}{G}{W}",
-          tapped: 'untapped',
-        },
-      ],
-      exile: [],
-      temp_zone: []
-    },
-    {
-      name: "Liam",
-      life: 40,
-      infect: 0,
-      selected: false,
-      turn: 2,
-      hand: [
-      ],
-      commander: [
-        {
-          name: "Alela, Artful Provocateur",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/a/b/abc9e41e-fd03-4b6f-8f44-17ba94fa44f5.jpg?1650422625",
-          text: "Flying, deathtouch, lifelink +\n" +
-            "Other creatures you control with flying get +1/+0. + \n" +
-            "Whenever you cast an artifact or enchantment spell, create a 1/1 blue Faerie creature token with flying.",
-          mana: "(1){W}{U}{B}",
-          tapped: 'untapped',
-        },
-      ],
-      deck_name: "Artifacts",
-      deck: [],
-      grave: [
-        {
-          name: "Alela, Artful Provocateur",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/a/b/abc9e41e-fd03-4b6f-8f44-17ba94fa44f5.jpg?1650422625",
-          text: "Flying, deathtouch, lifelink +\n" +
-            "Other creatures you control with flying get +1/+0. + \n" +
-            "Whenever you cast an artifact or enchantment spell, create a 1/1 blue Faerie creature token with flying.",
-          mana: "(1){W}{U}{B}",
-          tapped: 'untapped',
-        },
-      ],
-      exile: [],
-      temp_zone: []
-    },
-    {
-      name: "George",
-      life: 40,
-      infect: 0,
-      selected: false,
-      turn: 3,
-      hand: [
-      ],
-      commander: [
-        {
-          name: "Muldrotha, the Gravetide",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/c/6/c654737d-34ac-42ff-ae27-3a3bbb930fc1.jpg?1591204580",
-          text: "During each of your turns, you may play a land and cast a permanent spell of each permanent type from your graveyard. ",
-          mana: "(3){B}{G}{U}",
-          tapped: 'untapped',
-        },
-      ],
-      deck_name: "Mill Stuff",
-      deck: [],
-      grave: [
-        {
-          name: "Muldrotha, the Gravetide",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/c/6/c654737d-34ac-42ff-ae27-3a3bbb930fc1.jpg?1591204580",
-          text: "During each of your turns, you may play a land and cast a permanent spell of each permanent type from your graveyard. ",
-          mana: "(3){B}{G}{U}",
-          tapped: 'untapped',
-        },
-      ],
-      exile: [],
-      temp_zone: []
-    },
-  ]
-
   players: any = [];
 
   hovered_card: any = null;
@@ -165,8 +66,20 @@ export class PlaymatResizedComponent implements OnInit {
           out_player.grave = [];
           out_player.exile = [];
           out_player.temp_zone = [];
+          out_player.deck.cards.forEach((card: any) => {
+            card.counter_1 = false;
+            card.counter_2 = false;
+            card.counter_3 = false;
+            card.multiplier = false;
+            card.counter_1_value = 0;
+            card.counter_2_value = 0;
+            card.counter_3_value = 0;
+            card.multiplier_value = 0;
+
+          })
 
           out_player.selected = false;
+
           this.players.push(out_player);
           resolve();
         }
@@ -587,7 +500,6 @@ export class PlaymatResizedComponent implements OnInit {
   }
 
   nextTurn() {
-    console.log(this.current_turn);
     this.current_turn ++;
     let max_turn = 0;
     let max_player = null;
@@ -694,6 +606,18 @@ export class PlaymatResizedComponent implements OnInit {
       }
       else if (item.type === 'infect') {
         item.player.infect --;
+      }
+      else if (item.type === 'counter_1') {
+        item.card.counter_1_value --;
+      }
+      else if (item.type === 'counter_2') {
+        item.card.counter_2_value --;
+      }
+      else if (item.type === 'counter_3') {
+        item.card.counter_3_value --;
+      }
+      else if (item.type === 'multiplier') {
+        item.card.multiplier_value --;
       }
       else {
         this.rightclicked_item = item;
