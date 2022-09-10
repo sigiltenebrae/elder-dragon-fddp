@@ -53,7 +53,7 @@ export class DeckEditComponent implements OnInit {
       this.deck.id = this.deckid;
       this.deck.name = '';
       this.deck.image = '';
-      this.deck.sleeves = '';
+      this.deck.sleeves = 'https://c1.scryfall.com/file/scryfall-card-backs/large/59/597b79b3-7d77-4261-871a-60dd17403388.jpg?1561757129';
       this.deck.link = '';
       this.deck.rating = 3;
       this.deck.owner = 0;
@@ -100,8 +100,13 @@ export class DeckEditComponent implements OnInit {
     }
     this.deck.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
     this.deck.cards.forEach((card: any) => {
-      this.getCardImage(card);
-    })
+      this.getCardImage(card).then(() => {
+        if (card.iscommander) {
+          this.deck.image = card.image;
+        }
+      });
+    });
+    this.deck.name = archidekt_deck.name;
   }
 
   async getCardImage(card: any) {
@@ -134,6 +139,12 @@ export class DeckEditComponent implements OnInit {
     }
   }
 
+  saveDeck() {
+    if (this.deckid == -1) { //create
+      this.fddp_data.createDeck(this.deck);
+    }
+  }
+
   onRightClick(event: MouseEvent, item: any) {
     event.preventDefault();
     if (item.type && item.type !== 'none') {
@@ -145,5 +156,4 @@ export class DeckEditComponent implements OnInit {
       }
     }
   }
-
 }
