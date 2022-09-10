@@ -318,15 +318,20 @@
                 <div *ngFor="let card of spot; let i = index">
                   <div [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2}"
                        (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
-                       (contextmenu)="onRightClick($event,{type: 'inPlayUser', card: card, spot: spot})"
-                       (dblclick)="tapCard(card)"
-                       (cdkDragStarted)="hovered_card=null" (click)="toggleCardSelect(card, spot)"
+                       (cdkDragStarted)="hovered_card=null"
                        class="mtg-card-user-container" [@userTappedState]="card.tapped"
                        cdkDrag>
                     <img [ngClass]="{'mtg-card-user-selected': card.selected }"
                          class="mtg-card-user"
                          src="{{card.image}}"
-                         alt="{{card.name}}">
+                         alt="{{card.name}}"
+                         (contextmenu)="onRightClick($event,{type: 'inPlayUser', card: card, spot: spot})"
+                         (click)="toggleCardSelect(card, spot)" (dblclick)="tapCard(card)">
+                    <button class="mtg-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true"><p>10</p></button>
+                    <button class="mtg-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>10</p></button>
+                    <button class="mtg-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true"><p>10</p></button>
+                    <button class="mtg-multiplier-counter" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>10</p></button>
+                    <h4 class="mtg-card-power-tough">12/12</h4>
                   </div>
 
                 </div>
