@@ -70,7 +70,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     HttpClientModule,
     RouterModule.forRoot([
       {path: '', component: PlaymatResizedComponent},
-      {path: 'create', component: DeckEditComponent}
+      {path: 'decks/:deckid', component: DeckEditComponent}
     ]),
     FlexLayoutModule,
     DragDropModule,

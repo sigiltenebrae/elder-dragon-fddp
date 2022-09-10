@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { environment } from "../environments/environment";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +9,18 @@ import { environment } from "../environments/environment";
 export class FddpApiService {
 
   constructor(private http: HttpClient) { }
+
+  public getArchidektDeck(archidekt_deckid: number): Promise<any> {
+    return new Promise<any> ((resolve) => {
+      this.http.get('/archidekt/api/decks/' + archidekt_deckid + '/').subscribe((archidekt_data: any) => {
+        resolve(archidekt_data);
+      }, (error) => {
+        console.log('Error pulling data from archidekt');
+        console.log(error);
+        resolve(null);
+      })
+    })
+  }
 
   public getImagesForCard(card: string): Promise<any[]> {
     return new Promise<any[]>((resolve_images, reject) => {
@@ -39,4 +52,21 @@ export class FddpApiService {
       })
     })
   }
+
+  public getDeck(deckid: number): Promise<any> {
+    return new Promise<any>((resolve) => {
+      this.http.get(environment.fddp_api_url + '/decks/' + deckid).subscribe((deck:any) => {
+        if (deck.errors) {
+          console.log('Errors in getting deck');
+          console.log(deck.errors);
+        }
+        resolve(deck.deck);
+      }, (error) => {
+        console.log('Error getting deck with id: ' + deckid);
+        console.log(error);
+        resolve(null);
+      });
+    });
+  }
+
 }
