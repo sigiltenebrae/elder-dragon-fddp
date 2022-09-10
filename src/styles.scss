@@ -104,8 +104,8 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 
 .mtg-card-user-container .mtg-multiplier-counter {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: -10px;
+  right: -10px;
   min-height: 28px;
   max-height: 28px;
   min-width: 28px;
@@ -115,7 +115,7 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   justify-content: center;
 }
 
-.mtg-counter-1 p, .mtg-counter-2 p, .mtg-counter-3 p, .mtg-multiplier-counter p{
+.mtg-counter-1 p, .mtg-counter-2 p, .mtg-counter-3 p, .mtg-multiplier-counter p, .mtg-counter-1-alt p{
   font-family: Beleren, "Helvetica Neue", sans-serif !important;
   margin: 3px;
 }
@@ -139,8 +139,9 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 .user-hand-list {
   height: 110px;
   max-height: 110px;
-  overflow-x: scroll;
   display: block;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .mtg-card-holder-user {
