@@ -507,7 +507,7 @@ export class PlaymatResizedComponent implements OnInit {
     from.splice(old_loc, 1);
     if (this.selected_cards.length > 0) {
       for (let cur_card of this.selected_cards) {
-        if (cur_card.card != cur_card) {
+        if (cur_card.card != card) {
           this.user.exile.push(cur_card.card);
           cur_card.from.splice(cur_card.from.indexOf(cur_card.card), 1);
         }
