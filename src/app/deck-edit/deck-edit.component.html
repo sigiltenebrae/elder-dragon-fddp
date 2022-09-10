@@ -1,0 +1,60 @@
+<div *ngIf="loading" fxLayout="row" fxFlex="100" fxLayoutAlign="center center" style="margin: 20px;">
+  <mat-spinner></mat-spinner>
+</div>
+<div *ngIf="!loading && deck" fxFlexFill style="margin: 20px;" fxLayoutAlign="center center">
+  <mat-card fxFlex="80" fxLayout="row wrap" fxLayoutGap="20">
+    <div class="deck-form-input-holder" style="min-height: 640px; max-height: 640px;" fxLayout="column">
+      <mat-form-field appearance="fill">
+        <mat-label>Deck Name</mat-label>
+        <input matInput [type]="'text'" name="deckname" [(ngModel)]="deck.name" required minlength="1">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Deck Image</mat-label>
+        <input matInput [type]="'text'" name="deckimage" [(ngModel)]="deck.image" required minlength="1">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Deck Sleeves</mat-label>
+        <input matInput [type]="'text'" name="decksleeves" [(ngModel)]="deck.sleeves" required minlength="1">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Deck Link</mat-label>
+        <input matInput [type]="'text'" name="decklink" [(ngModel)]="deck.image" required minlength="1">
+        <button mat-icon-button matSuffix type="button" (click)="syncWithArchidekt()"><mat-icon>cached</mat-icon></button>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Owner</mat-label>
+        <mat-select>
+          <mat-option *ngFor="let user of users" [value]="user.id">
+            {{user.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Add Card</mat-label>
+        <input type="text" placeholder="Enter Card" matInput>
+
+      </mat-form-field>
+    </div>
+    <div fxLayout="column" style="min-height: 640px; max-height: 640px;" class="deck-form-card-list">
+      <mat-selection-list #cards [multiple]="false" [(ngModel)]="selected_card"
+                          (ngModelChange)="changing_image=false; image_options = [];">
+        <div *ngFor="let card of deck.cards; let i = index" class="deck-form-card-display">
+          <mat-list-option [value]="card">
+            {{card.name}}
+          </mat-list-option>
+          <mat-divider *ngIf="i != deck.cards.length - 1"></mat-divider>
+        </div>
+      </mat-selection-list>
+    </div>
+    <div *ngIf="selected_card && !changing_image" fxLayout="column" fxFlex fxLayoutAlign="center center" fxLayoutGap="20">
+      <img src="{{phelddagrif_images[0]}}" class="commander-viewer-single">
+      <button mat-raised-button color="primary" (click)="changing_image=true">Change Image</button>
+    </div>
+    <div *ngIf="selected_card && changing_image" fxLayout="column" fxFlex fxLayoutAlign="center center">
+      <div fxFlex fxLayout="row wrap" fxLayoutAlign="center" style="overflow-y: scroll; min-height: 640px; max-height: 640px;">
+        <img *ngFor="let card_image of phelddagrif_images" class="mtg-card-deck-form-select" src="{{card_image}}" (click)="selected_card.image=card_image; changing_image=false;" loading="lazy">
+      </div>
+      <button mat-raised-button color="warn" (click)="changing_image=false" style="margin-top: 10px;">Cancel</button>
+    </div>
+  </mat-card>
+</div>

@@ -31,12 +31,14 @@ import { PlaymatResizedComponent } from './playmat-resized/playmat-resized.compo
 import {MatMenuModule} from "@angular/material/menu";
 import {FormsModule} from "@angular/forms";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import { DeckEditComponent } from './deck-edit/deck-edit.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    PlaymatResizedComponent
+    PlaymatResizedComponent,
+    DeckEditComponent
   ],
   imports: [
     BrowserModule,
@@ -66,6 +68,7 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
 
     RouterModule.forRoot([
       {path: '', component: PlaymatResizedComponent},
+      {path: 'create', component: DeckEditComponent}
     ]),
     FlexLayoutModule,
     DragDropModule,
