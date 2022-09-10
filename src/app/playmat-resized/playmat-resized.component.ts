@@ -79,6 +79,7 @@ export class PlaymatResizedComponent implements OnInit {
             card.power_mod = 0;
             card.toughness_mod = 0;
             card.loyalty_mod = 0;
+            card.locked = false;
           })
           out_player.deck.commander.forEach((card: any) => {
             card.counter_1 = false;
@@ -93,6 +94,7 @@ export class PlaymatResizedComponent implements OnInit {
             card.power_mod = 0;
             card.toughness_mod = 0;
             card.loyalty_mod = 0;
+            card.locked = false;
           })
 
           out_player.selected = false;
@@ -151,6 +153,7 @@ export class PlaymatResizedComponent implements OnInit {
       cur_card.counter_2 = false;
       cur_card.counter_3 = false;
       cur_card.multiplier = false;
+      cur_card.locked = false;
       if (event.container.data.length < 3) {
         transferArrayItem(
           event.previousContainer.data,
@@ -177,6 +180,7 @@ export class PlaymatResizedComponent implements OnInit {
       cur_card.counter_2 = false;
       cur_card.counter_3 = false;
       cur_card.multiplier = false;
+      cur_card.locked = false;
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -198,6 +202,7 @@ export class PlaymatResizedComponent implements OnInit {
           card.card.counter_2 = false;
           card.card.counter_3 = false;
           card.card.multiplier = false;
+          card.card.locked = false;
         }
         this.selected_cards = []
       }
@@ -219,6 +224,7 @@ export class PlaymatResizedComponent implements OnInit {
         cur_card.counter_2 = false;
         cur_card.counter_3 = false;
         cur_card.multiplier = false;
+        cur_card.locked = false;
         transferArrayItem(
           event.previousContainer.data,
           event.container.data,
@@ -249,6 +255,7 @@ export class PlaymatResizedComponent implements OnInit {
       cur_card.counter_2 = false;
       cur_card.counter_3 = false;
       cur_card.multiplier = false;
+      cur_card.locked = false;
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -270,6 +277,7 @@ export class PlaymatResizedComponent implements OnInit {
           card.card.counter_2 = false;
           card.card.counter_3 = false;
           card.card.multiplier = false;
+          card.card.locked = false;
         }
         this.selected_cards = []
       }
@@ -290,6 +298,7 @@ export class PlaymatResizedComponent implements OnInit {
       cur_card.counter_2 = false;
       cur_card.counter_3 = false;
       cur_card.multiplier = false;
+      cur_card.locked = false;
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -311,6 +320,7 @@ export class PlaymatResizedComponent implements OnInit {
           card.card.counter_2 = false;
           card.card.counter_3 = false;
           card.card.multiplier = false;
+          card.card.locked = false;
         }
         this.selected_cards = []
       }
@@ -331,6 +341,7 @@ export class PlaymatResizedComponent implements OnInit {
       cur_card.counter_2 = false;
       cur_card.counter_3 = false;
       cur_card.multiplier = false;
+      cur_card.locked = false;
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -352,6 +363,7 @@ export class PlaymatResizedComponent implements OnInit {
           card.card.counter_2 = false;
           card.card.counter_3 = false;
           card.card.multiplier = false;
+          card.card.locked = false;
         }
         this.selected_cards = []
       }
@@ -446,6 +458,7 @@ export class PlaymatResizedComponent implements OnInit {
     card.counter_2 = false;
     card.counter_3 = false;
     card.multiplier = false;
+    card.locked = false;
     if (location == -1) { //going to bottom
       this.user.deck.cards.push(card);
     }
@@ -480,6 +493,7 @@ export class PlaymatResizedComponent implements OnInit {
         cur_card.counter_2 = false;
         cur_card.counter_3 = false;
         cur_card.multiplier = false;
+        cur_card.locked = false;
       }
       this.selected_cards = []
     }
@@ -495,6 +509,7 @@ export class PlaymatResizedComponent implements OnInit {
     card.counter_2 = false;
     card.counter_3 = false;
     card.multiplier = false;
+    card.locked = false;
     this.user.hand.push(card);
     let old_loc = from.indexOf(card);
     from.splice(old_loc, 1);
@@ -513,6 +528,7 @@ export class PlaymatResizedComponent implements OnInit {
         cur_card.counter_2 = false;
         cur_card.counter_3 = false;
         cur_card.multiplier = false;
+        cur_card.locked = false;
       }
       this.selected_cards = []
     }
@@ -528,6 +544,7 @@ export class PlaymatResizedComponent implements OnInit {
     card.counter_2 = false;
     card.counter_3 = false;
     card.multiplier = false;
+    card.locked = false;
     this.user.grave.push(card);
     let old_loc = from.indexOf(card);
     from.splice(old_loc, 1);
@@ -546,6 +563,7 @@ export class PlaymatResizedComponent implements OnInit {
         cur_card.counter_2 = false;
         cur_card.counter_3 = false;
         cur_card.multiplier = false;
+        cur_card.locked = false;
       }
       this.selected_cards = []
     }
@@ -561,6 +579,7 @@ export class PlaymatResizedComponent implements OnInit {
     card.counter_2 = false;
     card.counter_3 = false;
     card.multiplier = false;
+    card.locked = false;
     this.user.exile.push(card);
     let old_loc = from.indexOf(card);
     from.splice(old_loc, 1);
@@ -579,6 +598,7 @@ export class PlaymatResizedComponent implements OnInit {
         cur_card.counter_2 = false;
         cur_card.counter_3 = false;
         cur_card.multiplier = false;
+        cur_card.locked = false;
       }
       this.selected_cards = []
     }
@@ -775,10 +795,78 @@ export class PlaymatResizedComponent implements OnInit {
   getCount(player: any, type: string) {
     if (player) {
       let count = 0;
-      for (let spot of player.playmat) {
-        for (let card of spot) {
-          if (card.types.includes(type)) {
-            count++;
+      if(type.toLowerCase() === 'white') {
+        for (let spot of player.playmat) {
+          for (let card of spot) {
+            if (card.mana_cost) {
+              for(let mana of card.mana_cost) {
+                if(mana === 'W') {
+                  count++;
+                }
+              }
+            }
+          }
+        }
+      }
+      else if (type.toLowerCase() === 'blue') {
+        for (let spot of player.playmat) {
+          for (let card of spot) {
+            console.log(card);
+            if (card.mana_cost) {
+              for(let mana of card.mana_cost) {
+                if(mana === 'U') {
+                  count++;
+                }
+              }
+            }
+          }
+        }
+      }
+      else if (type.toLowerCase() === 'black') {
+        for (let spot of player.playmat) {
+          for (let card of spot) {
+            if (card.mana_cost) {
+              for(let mana of card.mana_cost) {
+                if(mana === 'B') {
+                  count++;
+                }
+              }
+            }
+          }
+        }
+      }
+      else if (type.toLowerCase() === 'red') {
+        for (let spot of player.playmat) {
+          for (let card of spot) {
+            if (card.mana_cost) {
+              for(let mana of card.mana_cost) {
+                if(mana === 'R') {
+                  count++;
+                }
+              }
+            }
+          }
+        }
+      }
+      else if (type.toLowerCase() === 'green') {
+        for (let spot of player.playmat) {
+          for (let card of spot) {
+            if (card.mana_cost) {
+              for(let mana of card.mana_cost) {
+                if(mana === 'G') {
+                  count++;
+                }
+              }
+            }
+          }
+        }
+      }
+      else {
+        for (let spot of player.playmat) {
+          for (let card of spot) {
+            if (card.types.includes(type)) {
+              count++;
+            }
           }
         }
       }

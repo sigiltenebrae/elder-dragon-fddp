@@ -484,14 +484,18 @@
         <div class="commander-dashboard">
           <div class="commander-dashboard-button-holder">
             <div fxFlex fxLayout="row" fxLayoutAlign="center center">
-              <div fxLayout="column" fxFlex>
+              <!--<div fxLayout="column" fxFlex>
                 <h3 style="margin: 0 0 0 4px;">Creatures: {{getCount(user, 'Creature')}}</h3>
                 <h3 style="margin: 0 0 0 4px;">Artifacts: {{getCount(user, 'Artifact')}}</h3>
                 <h3 style="margin: 0 0 0 4px;">Enchantments: {{getCount(user, 'Enchantment')}}</h3>
                 <h3 style="margin: 0 0 0 4px;">Lands: {{getCount(user, 'Land')}}</h3>
-              </div>
-              <div fxLayout="column" fxFlex>
-
+              </div>-->
+              <div fxLayout="column" fxFlex style="margin: 2px 15px 0 10px;">
+                <mat-form-field appearance="fill">
+                  <mat-label>Enter a Type</mat-label>
+                  <input #custom_search matInput>
+                </mat-form-field>
+                <h2 style="margin: 0 0 2px 10px">Count: {{getCount(user, custom_search.value)}}</h2>
               </div>
             </div>
           </div>
