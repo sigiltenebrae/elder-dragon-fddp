@@ -125,4 +125,16 @@ export class DeckEditComponent implements OnInit {
     }
   }
 
+  onRightClick(event: MouseEvent, item: any) {
+    event.preventDefault();
+    if (item.type && item.type !== 'none') {
+      if (item.type == 'card_count') {
+        item.card.count--;
+        if (item.card.count == 0) {
+          this.deck.cards.splice(this.deck.cards.indexOf(item.card), 1);
+        }
+      }
+    }
+  }
+
 }

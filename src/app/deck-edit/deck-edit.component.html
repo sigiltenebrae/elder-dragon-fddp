@@ -18,7 +18,7 @@
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Deck Link</mat-label>
-        <input matInput [type]="'text'" name="decklink" [(ngModel)]="deck.image" required minlength="1">
+        <input matInput [type]="'text'" name="decklink" [(ngModel)]="deck.image">
         <button mat-icon-button matSuffix type="button" (click)="syncWithArchidekt()"><mat-icon>cached</mat-icon></button>
       </mat-form-field>
       <mat-form-field appearance="fill">
@@ -37,15 +37,23 @@
       </mat-form-field>
     </div>
     <div fxLayout="column" style="min-height: 640px; max-height: 640px;" class="deck-form-card-list">
-      <mat-selection-list #cards [multiple]="false" [(ngModel)]="selected_card"
-                          (ngModelChange)="changing_image=false; image_options = [];">
+      <mat-list>
         <div *ngFor="let card of deck.cards; let i = index" class="deck-form-card-display">
-          <mat-list-option [value]="card">
-            {{card.name}}
-          </mat-list-option>
+          <mat-list-item>
+            <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
+              <div fxLayout="column" fxFlex="100">
+                <button mat-button style="text-align: start"
+                (click)="selected_card=card; changing_image=false;image_options=[]">{{card.name}}</button>
+              </div>
+              <div fxLayout="column" fxFlex>
+                <button mat-button (click)="card.count = card.count + 1;"
+                (contextmenu)="onRightClick($event, {type: 'card_count', card: card})">{{card.count}}</button>
+              </div>
+            </div>
+          </mat-list-item>
           <mat-divider *ngIf="i != deck.cards.length - 1"></mat-divider>
         </div>
-      </mat-selection-list>
+      </mat-list>
     </div>
     <div *ngIf="selected_card && !changing_image" fxLayout="column" fxFlex fxLayoutAlign="center center" fxLayoutGap="20">
       <img src="{{phelddagrif_images[0]}}" class="commander-viewer-single">
