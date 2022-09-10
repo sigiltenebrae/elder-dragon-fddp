@@ -56,16 +56,16 @@
       </mat-list>
     </div>
     <div *ngIf="selected_card && !changing_image" fxLayout="column" fxFlex fxLayoutAlign="center center" fxLayoutGap="20">
-      <img src="{{phelddagrif_images[0]}}" class="commander-viewer-single">
+      <img src="{{selected_card.image}}" class="commander-viewer-single">
       <div fxLayout="row">
         <button *ngIf="selected_card.iscommander" mat-raised-button color="accent" style="margin: 5px;" (click)="selected_card.iscommander=false">Unset Commander</button>
         <button *ngIf="!selected_card.iscommander" mat-raised-button color="accent" style="margin: 5px;" (click)="selected_card.iscommander=true">Set Commander</button>
-        <button mat-raised-button color="primary" style="margin: 5px;" (click)="changing_image=true">Change Image</button>
+        <button mat-raised-button color="primary" style="margin: 5px;" (click)="changing_image=true; getCardImages(selected_card)">Change Image</button>
       </div>
     </div>
     <div *ngIf="selected_card && changing_image" fxLayout="column" fxFlex fxLayoutAlign="center center">
       <div fxFlex fxLayout="row wrap" fxLayoutAlign="center" style="overflow-y: scroll; min-height: 640px; max-height: 640px;">
-        <img *ngFor="let card_image of phelddagrif_images" class="mtg-card-deck-form-select" src="{{card_image}}" (click)="selected_card.image=card_image; changing_image=false;" loading="lazy">
+        <img *ngFor="let card_image of image_options" class="mtg-card-deck-form-select" src="{{card_image}}" (click)="selected_card.image=card_image; changing_image=false;" loading="lazy">
       </div>
       <button mat-raised-button color="warn" (click)="changing_image=false" style="margin-top: 10px;">Cancel</button>
     </div>
