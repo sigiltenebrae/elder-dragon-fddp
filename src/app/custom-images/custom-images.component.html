@@ -3,7 +3,7 @@
     <mat-form-field appearance="fill" style="margin-top: 10px;">
       <mat-label>Add Card</mat-label>
       <input type="text" placeholder="Enter Card" matInput
-             [ngbTypeahead]="card_search" [(ngModel)]="card" [editable]="false">
+             [ngbTypeahead]="card_search" [(ngModel)]="name" [editable]="false">
     </mat-form-field>
     <mat-form-field appearance="fill" style="margin-top: 10px;">
       <mat-label>Custom Image Url</mat-label>
@@ -16,7 +16,7 @@
       </div>
     </div>
     <div fxLayout="row" fxFlex fxLayoutAlign="end">
-      <button mat-raised-button color="accent">Submit</button>
+      <button mat-raised-button color="accent" (click)="createCustomCard()">Submit</button>
     </div>
   </mat-card>
 </div>

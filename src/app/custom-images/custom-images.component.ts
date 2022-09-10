@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {debounceTime, distinctUntilChanged, Observable, OperatorFunction, switchMap, tap} from "rxjs";
 import * as Scry from "scryfall-sdk";
+import {FddpApiService} from "../../services/fddp-api.service";
 
 @Component({
   selector: 'app-custom-images',
@@ -9,14 +10,13 @@ import * as Scry from "scryfall-sdk";
 })
 export class CustomImagesComponent implements OnInit {
 
-  card: any = null;
+  name: any = null;
   image: string = '';
 
-  constructor() { }
+  constructor(private fddp_data: FddpApiService) { }
 
   ngOnInit(): void {
   }
-
 
   searching = false;
   /**
@@ -37,5 +37,14 @@ export class CustomImagesComponent implements OnInit {
       tap(() => {
         this.searching = false;
       }));
+
+  createCustomCard() {
+    if (this.name && this.image !== '') {
+      this.fddp_data.createCustomCard(this.name, this.image).then(() => {
+        this.image = '';
+        this.name = null;
+      })
+    }
+  }
 
 }

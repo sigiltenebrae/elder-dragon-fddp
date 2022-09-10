@@ -35,7 +35,6 @@ export class FddpApiService {
   }
 
   public createDeck(deck: any): Promise<any> {
-    console.log(deck);
     return new Promise<any>((resolve_deck, reject) => {
       this.http.post(environment.fddp_api_url + '/decks',
         JSON.stringify({deck: deck}),
@@ -44,11 +43,13 @@ export class FddpApiService {
             console.log('Error in deck creation: ');
             deck_response.errors.forEach((err: any) => {
               console.log(err);
-            })
+            });
           }
+          resolve_deck(null);
       }, (err) => {
           console.log('Error in deck creation: ');
           console.log(err);
+          resolve_deck(null);
       })
     })
   }
@@ -67,6 +68,26 @@ export class FddpApiService {
         resolve(null);
       });
     });
+  }
+
+  public createCustomCard(name: any, image: any): Promise<any> {
+    return new Promise<any>((resolve_card, reject) => {
+      this.http.post(environment.fddp_api_url + '/custom_cards',
+        JSON.stringify({name: name, image: image}),
+        {headers : new HttpHeaders({'Content-Type': 'application/json'})}).subscribe((card_response: any) => {
+        if (card_response.errors) {
+          console.log('Error in custom card creation: ');
+          card_response.errors.forEach((err: any) => {
+            console.log(err);
+          });
+          resolve_card(null);
+        }
+      }, (err) => {
+        console.log('Error in custom card creation: ');
+        console.log(err);
+        resolve_card(null);
+      })
+    })
   }
 
 }
