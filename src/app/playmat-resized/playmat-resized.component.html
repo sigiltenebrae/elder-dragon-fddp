@@ -483,7 +483,17 @@
         </div>
         <div class="commander-dashboard">
           <div class="commander-dashboard-button-holder">
+            <div fxFlex fxLayout="row" fxLayoutAlign="center center">
+              <div fxLayout="column" fxFlex>
+                <h3 style="margin: 0 0 0 4px;">Creatures: {{getCount(user, 'Creature')}}</h3>
+                <h3 style="margin: 0 0 0 4px;">Artifacts: {{getCount(user, 'Artifact')}}</h3>
+                <h3 style="margin: 0 0 0 4px;">Enchantments: {{getCount(user, 'Enchantment')}}</h3>
+                <h3 style="margin: 0 0 0 4px;">Lands: {{getCount(user, 'Land')}}</h3>
+              </div>
+              <div fxLayout="column" fxFlex>
 
+              </div>
+            </div>
           </div>
         </div>
         <div class="selected-commander-viewer">
@@ -493,7 +503,17 @@
                (pointerenter)="hovered_card=selected_player.deck.commander[0]" (pointerleave)="hovered_card=null">
         </div>
         <div class="selected-player-data">
+          <div fxFlex fxLayout="row" fxLayoutAlign="center center">
+            <div fxLayout="column" fxFlex>
+              <h3 style="margin: 0 0 0 4px;">Creatures: {{getCount(selected_player, 'Creature')}}</h3>
+              <h3 style="margin: 0 0 0 4px;">Artifacts: {{getCount(selected_player, 'Artifact')}}</h3>
+              <h3 style="margin: 0 0 0 4px;">Enchantments: {{getCount(selected_player, 'Enchantment')}}</h3>
+              <h3 style="margin: 0 0 0 4px;">Lands: {{getCount(selected_player, 'Land')}}</h3>
+            </div>
+            <div fxLayout="column" fxFlex>
 
+            </div>
+          </div>
         </div>
       </div>
   </mat-sidenav-content>

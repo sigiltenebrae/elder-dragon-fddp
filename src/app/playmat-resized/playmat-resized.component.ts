@@ -772,6 +772,25 @@ export class PlaymatResizedComponent implements OnInit {
   }
 
 
+  getCount(player: any, type: string) {
+    if (player) {
+      let count = 0;
+      for (let spot of player.playmat) {
+        for (let card of spot) {
+          if (card.types.includes(type)) {
+            count++;
+          }
+        }
+      }
+      return count;
+    }
+    else {
+      return 0;
+    }
+
+  }
+
+
   menuTopLeftPosition =  {x: '0', y: '0'}
   @ViewChild(MatMenuTrigger, {static: true}) matMenuTrigger: any;
 
