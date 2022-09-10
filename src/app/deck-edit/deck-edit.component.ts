@@ -33,6 +33,10 @@ export class DeckEditComponent implements OnInit {
     {
       id: 5,
       name: "Ryan"
+    },
+    {
+      id: 6,
+      name: "George"
     }
   ]
 
@@ -157,7 +161,9 @@ export class DeckEditComponent implements OnInit {
 
   saveDeck() {
     if (this.deckid == -1) { //create
-      this.fddp_data.createDeck(this.deck);
+      this.fddp_data.createDeck(this.deck).then(() => {
+        this.router.navigate(['/']);
+      });
     }
   }
 

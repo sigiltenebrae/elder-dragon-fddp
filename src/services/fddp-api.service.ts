@@ -41,10 +41,16 @@ export class FddpApiService {
         JSON.stringify({deck: deck}),
         {headers : new HttpHeaders({'Content-Type': 'application/json'})}).subscribe((deck_response: any) => {
           if (deck_response.errors) {
-            console.log('Error in deck creation: ');
-            deck_response.errors.forEach((err: any) => {
-              console.log(err);
-            });
+            if (deck_response.errors.length == 0) {
+              console.log('deck created');
+            }
+            else {
+              console.log('Error in deck creation: ');
+              deck_response.errors.forEach((err: any) => {
+                console.log(err);
+              });
+            }
+
           }
           resolve_deck(null);
       }, (err) => {

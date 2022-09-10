@@ -181,13 +181,17 @@ export class PlaymatResizedComponent implements OnInit {
     this.loading = true;
     this.rightClickHandler.overrideRightClick();
     let game_promises: any[] = [];
-    game_promises.push(this.loadPlayer("Christian", 8, 1));
+    game_promises.push(this.loadPlayer("Christian", 8, 0));
+    game_promises.push(this.loadPlayer("Liam", 10, 1));
+    game_promises.push(this.loadPlayer("David", 11, 2));
+    game_promises.push(this.loadPlayer("George", 12, 3));
     Promise.all(game_promises).then(() => {
       for (let player of this.players) {
         if (player.name === "Christian") {
           this.user = player;
         }
       }
+      this.players.sort((a: any, b: any) => (a.turn > b.turn) ? 1: -1);
       this.loading = false;
     });
   }
@@ -583,6 +587,7 @@ export class PlaymatResizedComponent implements OnInit {
   }
 
   nextTurn() {
+    console.log(this.current_turn);
     this.current_turn ++;
     let max_turn = 0;
     let max_player = null;
@@ -601,6 +606,14 @@ export class PlaymatResizedComponent implements OnInit {
         }
       }
     }
+
+    //DEBUG
+    for (let player of this.players) {
+      if (player.turn == this.current_turn) {
+        this.user = player;
+      }
+    }
+
   }
 
   untapAll() {
