@@ -76,6 +76,9 @@ export class PlaymatResizedComponent implements OnInit {
             card.counter_3_value = 0;
             card.multiplier_value = 0;
             card.owner = out_player.name;
+            card.power_mod = 0;
+            card.toughness_mod = 0;
+            card.loyalty_mod = 0;
           })
           out_player.deck.commander.forEach((card: any) => {
             card.counter_1 = false;
@@ -87,6 +90,9 @@ export class PlaymatResizedComponent implements OnInit {
             card.counter_3_value = 0;
             card.multiplier_value = 0;
             card.owner = out_player.name;
+            card.power_mod = 0;
+            card.toughness_mod = 0;
+            card.loyalty_mod = 0;
           })
 
           out_player.selected = false;
@@ -138,6 +144,13 @@ export class PlaymatResizedComponent implements OnInit {
       let cur_card = event.previousContainer.data[event.previousIndex];
       cur_card.tapped = 'untapped';
       cur_card.selected = false;
+      cur_card.power_mod = 0;
+      cur_card.toughness_mod = 0;
+      cur_card.loyalty_mod = 0;
+      cur_card.counter_1 = false;
+      cur_card.counter_2 = false;
+      cur_card.counter_3 = false;
+      cur_card.multiplier = false;
       if (event.container.data.length < 3) {
         transferArrayItem(
           event.previousContainer.data,
@@ -157,6 +170,13 @@ export class PlaymatResizedComponent implements OnInit {
     else {
       let cur_card = event.previousContainer.data[event.previousIndex];
       cur_card.tapped = 'untapped';
+      cur_card.power_mod = 0;
+      cur_card.toughness_mod = 0;
+      cur_card.loyalty_mod = 0;
+      cur_card.counter_1 = false;
+      cur_card.counter_2 = false;
+      cur_card.counter_3 = false;
+      cur_card.multiplier = false;
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -171,6 +191,13 @@ export class PlaymatResizedComponent implements OnInit {
           }
           card.card.selected = false;
           card.card.tapped = 'untapped';
+          card.card.power_mod = 0;
+          card.card.toughness_mod = 0;
+          card.card.loyalty_mod = 0;
+          card.card.counter_1 = false;
+          card.card.counter_2 = false;
+          card.card.counter_3 = false;
+          card.card.multiplier = false;
         }
         this.selected_cards = []
       }
@@ -185,6 +212,13 @@ export class PlaymatResizedComponent implements OnInit {
       let cur_card = event.previousContainer.data[event.previousIndex];
       if (cur_card.iscommander && cur_card.owner == this.user.name) {
         cur_card.tapped = 'untapped';
+        cur_card.power_mod = 0;
+        cur_card.toughness_mod = 0;
+        cur_card.loyalty_mod = 0;
+        cur_card.counter_1 = false;
+        cur_card.counter_2 = false;
+        cur_card.counter_3 = false;
+        cur_card.multiplier = false;
         transferArrayItem(
           event.previousContainer.data,
           event.container.data,
@@ -208,6 +242,13 @@ export class PlaymatResizedComponent implements OnInit {
     else {
       let cur_card = event.previousContainer.data[event.previousIndex];
       cur_card.tapped = 'untapped';
+      cur_card.power_mod = 0;
+      cur_card.toughness_mod = 0;
+      cur_card.loyalty_mod = 0;
+      cur_card.counter_1 = false;
+      cur_card.counter_2 = false;
+      cur_card.counter_3 = false;
+      cur_card.multiplier = false;
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -222,6 +263,13 @@ export class PlaymatResizedComponent implements OnInit {
           }
           card.card.selected = false;
           card.card.tapped = 'untapped';
+          card.card.power_mod = 0;
+          card.card.toughness_mod = 0;
+          card.card.loyalty_mod = 0;
+          card.card.counter_1 = false;
+          card.card.counter_2 = false;
+          card.card.counter_3 = false;
+          card.card.multiplier = false;
         }
         this.selected_cards = []
       }
@@ -235,6 +283,13 @@ export class PlaymatResizedComponent implements OnInit {
     else {
       let cur_card = event.previousContainer.data[event.previousIndex];
       cur_card.tapped = 'untapped';
+      cur_card.power_mod = 0;
+      cur_card.toughness_mod = 0;
+      cur_card.loyalty_mod = 0;
+      cur_card.counter_1 = false;
+      cur_card.counter_2 = false;
+      cur_card.counter_3 = false;
+      cur_card.multiplier = false;
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -249,6 +304,13 @@ export class PlaymatResizedComponent implements OnInit {
           }
           card.card.selected = false;
           card.card.tapped = 'untapped';
+          card.card.power_mod = 0;
+          card.card.toughness_mod = 0;
+          card.card.loyalty_mod = 0;
+          card.card.counter_1 = false;
+          card.card.counter_2 = false;
+          card.card.counter_3 = false;
+          card.card.multiplier = false;
         }
         this.selected_cards = []
       }
@@ -262,6 +324,13 @@ export class PlaymatResizedComponent implements OnInit {
     else {
       let cur_card = event.previousContainer.data[event.previousIndex];
       cur_card.tapped = 'untapped';
+      cur_card.power_mod = 0;
+      cur_card.toughness_mod = 0;
+      cur_card.loyalty_mod = 0;
+      cur_card.counter_1 = false;
+      cur_card.counter_2 = false;
+      cur_card.counter_3 = false;
+      cur_card.multiplier = false;
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -276,6 +345,13 @@ export class PlaymatResizedComponent implements OnInit {
           }
           card.card.selected = false;
           card.card.tapped = 'untapped';
+          card.card.power_mod = 0;
+          card.card.toughness_mod = 0;
+          card.card.loyalty_mod = 0;
+          card.card.counter_1 = false;
+          card.card.counter_2 = false;
+          card.card.counter_3 = false;
+          card.card.multiplier = false;
         }
         this.selected_cards = []
       }
@@ -363,6 +439,13 @@ export class PlaymatResizedComponent implements OnInit {
   sendToDeck(card: any, from: any[], location: number) {
     card.tapped = 'untapped';
     card.selected = false;
+    card.power_mod = 0;
+    card.toughness_mod = 0;
+    card.loyalty_mod = 0;
+    card.counter_1 = false;
+    card.counter_2 = false;
+    card.counter_3 = false;
+    card.multiplier = false;
     if (location == -1) { //going to bottom
       this.user.deck.cards.push(card);
     }
@@ -390,6 +473,13 @@ export class PlaymatResizedComponent implements OnInit {
         }
         cur_card.card.selected = false;
         cur_card.card.tapped = 'untapped';
+        cur_card.power_mod = 0;
+        cur_card.toughness_mod = 0;
+        cur_card.loyalty_mod = 0;
+        cur_card.counter_1 = false;
+        cur_card.counter_2 = false;
+        cur_card.counter_3 = false;
+        cur_card.multiplier = false;
       }
       this.selected_cards = []
     }
@@ -398,6 +488,13 @@ export class PlaymatResizedComponent implements OnInit {
   sendToHand(card: any, from: any[]) {
     card.tapped = 'untapped';
     card.selected = false;
+    card.power_mod = 0;
+    card.toughness_mod = 0;
+    card.loyalty_mod = 0;
+    card.counter_1 = false;
+    card.counter_2 = false;
+    card.counter_3 = false;
+    card.multiplier = false;
     this.user.hand.push(card);
     let old_loc = from.indexOf(card);
     from.splice(old_loc, 1);
@@ -409,6 +506,13 @@ export class PlaymatResizedComponent implements OnInit {
         }
         cur_card.card.selected = false;
         cur_card.card.tapped = 'untapped';
+        cur_card.power_mod = 0;
+        cur_card.toughness_mod = 0;
+        cur_card.loyalty_mod = 0;
+        cur_card.counter_1 = false;
+        cur_card.counter_2 = false;
+        cur_card.counter_3 = false;
+        cur_card.multiplier = false;
       }
       this.selected_cards = []
     }
@@ -417,6 +521,13 @@ export class PlaymatResizedComponent implements OnInit {
   sendToGrave(card: any, from: any[]) {
     card.tapped = 'untapped';
     card.selected = false;
+    card.power_mod = 0;
+    card.toughness_mod = 0;
+    card.loyalty_mod = 0;
+    card.counter_1 = false;
+    card.counter_2 = false;
+    card.counter_3 = false;
+    card.multiplier = false;
     this.user.grave.push(card);
     let old_loc = from.indexOf(card);
     from.splice(old_loc, 1);
@@ -428,6 +539,13 @@ export class PlaymatResizedComponent implements OnInit {
         }
         cur_card.card.selected = false;
         cur_card.card.tapped = 'untapped';
+        cur_card.power_mod = 0;
+        cur_card.toughness_mod = 0;
+        cur_card.loyalty_mod = 0;
+        cur_card.counter_1 = false;
+        cur_card.counter_2 = false;
+        cur_card.counter_3 = false;
+        cur_card.multiplier = false;
       }
       this.selected_cards = []
     }
@@ -436,6 +554,13 @@ export class PlaymatResizedComponent implements OnInit {
   sendToExile(card: any, from: any[]) {
     card.tapped = 'untapped';
     card.selected = false;
+    card.power_mod = 0;
+    card.toughness_mod = 0;
+    card.loyalty_mod = 0;
+    card.counter_1 = false;
+    card.counter_2 = false;
+    card.counter_3 = false;
+    card.multiplier = false;
     this.user.exile.push(card);
     let old_loc = from.indexOf(card);
     from.splice(old_loc, 1);
@@ -447,6 +572,13 @@ export class PlaymatResizedComponent implements OnInit {
         }
         cur_card.card.selected = false;
         cur_card.card.tapped = 'untapped';
+        cur_card.power_mod = 0;
+        cur_card.toughness_mod = 0;
+        cur_card.loyalty_mod = 0;
+        cur_card.counter_1 = false;
+        cur_card.counter_2 = false;
+        cur_card.counter_3 = false;
+        cur_card.multiplier = false;
       }
       this.selected_cards = []
     }
@@ -663,6 +795,15 @@ export class PlaymatResizedComponent implements OnInit {
       }
       else if (item.type === 'multiplier') {
         item.card.multiplier_value --;
+      }
+      else if (item.type === 'power') {
+        item.card.power_mod --;
+      }
+      else if (item.type === 'toughness') {
+        item.card.toughness_mod --;
+      }
+      else if (item.type === 'loyalty') {
+        item.card.loyalty_mod --;
       }
       else {
         this.rightclicked_item = item;

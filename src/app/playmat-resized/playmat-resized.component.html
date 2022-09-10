@@ -366,8 +366,10 @@
                       <button *ngIf="card.counter_2" class="mtg-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true" (click)="card.counter_2_value = card.counter_2_value + 1" (contextmenu)="onRightClick($event, {type: 'counter_2', card: card})"><p>{{card.counter_2_value}}</p></button>
                       <button *ngIf="card.counter_3" class="mtg-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true" (click)="card.counter_3_value = card.counter_3_value + 1" (contextmenu)="onRightClick($event, {type: 'counter_3', card: card})"><p>{{card.counter_3_value}}</p></button>
                       <button *ngIf="card.multiplier" class="mtg-multiplier-counter" mat-fab color="accent" [class.mat-elevation-z8]="true" (click)="card.multiplier_value = card.multiplier_value + 1" (contextmenu)="onRightClick($event, {type: 'multiplier', card: card})"><p>{{card.multiplier_value}}</p></button>
-                      <h4 *ngIf="card.power && card.toughness" class="mtg-card-power-tough">{{card.power}}/{{card.toughness}}</h4>
-                      <h4 *ngIf="card.loyalty" class="mtg-card-loyalty">{{card.loyalty}}</h4>
+                      <h4 *ngIf="card.power && card.toughness" class="mtg-card-power-tough">
+                        <a [ngClass]="{'mat-card-power-tough-text-up': card.power_mod > 0, 'mat-card-power-tough-text-down': card.power_mod < 0}" class="mat-card-power-tough-text" (click)="card.power_mod = card.power_mod + 1" (contextmenu)="onRightClick($event, {type: 'power', card: card})">{{card.power + card.power_mod}}</a>/
+                        <a [ngClass]="{'mat-card-power-tough-text-up': card.toughness_mod > 0, 'mat-card-power-tough-text-down': card.toughness_mod < 0}" class="mat-card-power-tough-text" (click)="card.toughness_mod = card.toughness_mod + 1" (contextmenu)="onRightClick($event, {type: 'toughness', card: card})">{{card.toughness + card.toughness_mod}}</a></h4>
+                      <h4 *ngIf="card.loyalty" class="mtg-card-loyalty"><a class="mat-card-power-tough-text" [ngClass]="{'mat-card-power-tough-text-up': card.loyalty_mod > 0, 'mat-card-power-tough-text-down': card.loyalty_mod < 0}" (click)="card.loyalty_mod = card.loyalty_mod + 1" (contextmenu)="onRightClick($event, {type: 'loyalty', card: card})">{{card.loyalty + card.loyalty_mod}}</a></h4>
                     </div>
 
                   </div>

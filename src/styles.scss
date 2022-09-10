@@ -82,6 +82,19 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
+.mat-card-power-tough-text {
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
+}
+
+.mat-card-power-tough-text-up {
+  color: mat.get-color-from-palette($fddp-palette-primary-dark, 500);
+}
+.mat-card-power-tough-text-down {
+  color: red;
+}
+
 .mtg-card-user-container .mtg-card-loyalty {
   position: absolute;
   bottom: 0;
