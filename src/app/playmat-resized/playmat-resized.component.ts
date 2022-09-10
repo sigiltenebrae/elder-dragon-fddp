@@ -5,6 +5,7 @@ import {MatMenuTrigger} from "@angular/material/menu";
 import { RightclickHandlerServiceService } from "../../services/rightclick-handler-service.service";
 import {MatSelectionListChange} from "@angular/material/list";
 import {MatSidenav} from "@angular/material/sidenav";
+import {FddpApiService} from "../../services/fddp-api.service";
 
 @Component({
   selector: 'app-playmat-resized',
@@ -28,22 +29,19 @@ import {MatSidenav} from "@angular/material/sidenav";
 })
 export class PlaymatResizedComponent implements OnInit {
 
-  user_playmat: any[] = []
-
   user: any = null;
   selected_player: any = null;
   sidenav_selected_player: any = null;
   current_turn = 0;
 
-  players: any[] = [
+  players_old: any[] = [
     {
       name: "David",
       life: 40,
       infect: 0,
       selected: false,
       turn: 0,
-      hand: [
-      ],
+      hand: [],
       commander: [
         {
           name: "Mayael the Anima",
@@ -63,71 +61,6 @@ export class PlaymatResizedComponent implements OnInit {
           mana: "{R}{G}{W}",
           tapped: 'untapped',
         },
-      ],
-      exile: [],
-      temp_zone: []
-    },
-    {
-      name: "Christian",
-      life: 40,
-      infect: 0,
-      selected: false,
-      turn: 1,
-      hand: [
-        {
-          name: "Rakdos, Lord of Riots",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/2/1/2143f275-6d3e-4040-a60e-8259a82befdb.jpg?1612280030",
-          text: "You can’t cast this spell unless an opponent lost life this turn.\n" +
-            "\n" +
-            "Flying, trample\n" +
-            "\n" +
-            "Creature spells you cast cost {1} less to cast for each 1 life your opponents have lost this turn.\n",
-          mana: "{B}{B}{R}{R}",
-          tapped: 'untapped',
-        },
-      ],
-      commander: [
-        {
-          name: "Rakdos, Lord of Riots",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/2/1/2143f275-6d3e-4040-a60e-8259a82befdb.jpg?1612280030",
-          text: "You can’t cast this spell unless an opponent lost life this turn.\n" +
-            "\n" +
-            "Flying, trample\n" +
-            "\n" +
-            "Creature spells you cast cost {1} less to cast for each 1 life your opponents have lost this turn.\n",
-          mana: "{B}{B}{R}{R}",
-          tapped: 'untapped',
-        },
-      ],
-      deck_name: "Enrage",
-      deck: [
-      ],
-      grave: [
-        {
-          name: "Gishath, Sun's Avatar",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/7/3/7335e500-342d-476d-975c-817512e6e3d6.jpg?1562558022",
-          text: "Vigilance, trample, haste\n" +
-            "Whenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
-          mana: "(5){R}{G}{W}",
-          tapped: 'untapped',
-        },
-        {
-          name: "Hubris",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/0/5/05f5b473-edad-43a9-b4e7-b6d3fc877cf2.jpg?1593095462",
-          text: "Return target creature and all Auras attached to it to their owners' hands.",
-          mana: "(1){U}",
-          tapped: 'untapped',
-        },
-        {
-          name: "Solitude",
-          image: "https://c1.scryfall.com/file/scryfall-cards/large/front/f/e/febad44a-eaf0-4122-87c5-a12d17f28392.jpg?1628337214",
-          text: "Flash\n" +
-            "Lifelink\n" +
-            "When Solitude enters the battlefield, exile up to one other target creature. That creature's controller gains life equal to its power.\n" +
-            "Evoke—Exile a white card from your hand.",
-          mana: "(3){W}{W}",
-          tapped: 'untapped'
-        }
       ],
       exile: [],
       temp_zone: []
@@ -200,6 +133,8 @@ export class PlaymatResizedComponent implements OnInit {
     },
   ]
 
+  players: any = [];
+
   hovered_card: any = null;
   rightclicked_item: any = null;
   sidenav_type: any = null;
@@ -208,19 +143,53 @@ export class PlaymatResizedComponent implements OnInit {
   selected_cards: any[] = [];
   sidenav_sort = '';
   sidenav_scry = 0;
+  loading = false;
 
-  constructor(private rightClickHandler: RightclickHandlerServiceService) { }
+  constructor(private rightClickHandler: RightclickHandlerServiceService, private fddp_data: FddpApiService) { }
+
+  loadPlayer(player: string, deckid: number, turn: number): Promise<void> {
+    return new Promise<void>((resolve) => {
+      this.fddp_data.getDeckForPlay(deckid).then((deck_data: any) => {
+        if (deck_data) {
+          let out_player: any = {};
+          out_player.deck = deck_data;
+          out_player.name = player;
+          out_player.life = 40;
+          out_player.infect = 0;
+          out_player.turn = turn;
+          out_player.playmat = []
+          for (let i = 0; i < 36; i++) {
+            out_player.playmat.push([])
+          }
+          out_player.hand = [];
+          out_player.grave = [];
+          out_player.exile = [];
+          out_player.temp_zone = [];
+
+          out_player.selected = false;
+          this.players.push(out_player);
+          resolve();
+        }
+        else{
+          resolve();
+        }
+      });
+    });
+  }
 
   ngOnInit(): void {
-    for (let i = 0; i < 36; i++) {
-      this.user_playmat.push([])
-    }
+    this.loading = true;
     this.rightClickHandler.overrideRightClick();
-    for (let player of this.players) {
-      if (player.name === "Christian") {
-        this.user = player;
+    let game_promises: any[] = [];
+    game_promises.push(this.loadPlayer("Christian", 8, 1));
+    Promise.all(game_promises).then(() => {
+      for (let player of this.players) {
+        if (player.name === "Christian") {
+          this.user = player;
+        }
       }
-    }
+      this.loading = false;
+    });
   }
 
   moveCardToPlay(event: CdkDragDrop<any>) {
@@ -286,7 +255,7 @@ export class PlaymatResizedComponent implements OnInit {
       if (this.selected_cards.length > 0) {
         for (let card of this.selected_cards) {
           if (card.card != cur_card) {
-            this.user.deck.push(card.card);
+            this.user.deck.cards.push(card.card);
             card.from.splice(card.from.indexOf(card.card), 1);
           }
           card.card.selected = false;
@@ -397,31 +366,31 @@ export class PlaymatResizedComponent implements OnInit {
   }
 
   sendToPlay(card: any, from: any[]) {
-    for (let i = 0; i < this.user_playmat.length; i++) {
-      if (this.user_playmat[i].length == 0) {
+    for (let i = 0; i < this.user.playmat.length; i++) {
+      if (this.user.playmat[i].length == 0) {
         card.tapped = 'untapped';
         card.selected = false;
-        this.user_playmat[i].push(card);
+        this.user.playmat[i].push(card);
         let old_loc = from.indexOf(card);
         from.splice(old_loc, 1);
         return;
       }
     }
-    for (let i = 0; i < this.user_playmat.length; i++) {
-      if (this.user_playmat[i].length == 1) {
+    for (let i = 0; i < this.user.playmat.length; i++) {
+      if (this.user.playmat[i].length == 1) {
         card.tapped = 'untapped';
         card.selected = false;
-        this.user_playmat[i].push(card);
+        this.user.playmat[i].push(card);
         let old_loc = from.indexOf(card);
         from.splice(old_loc, 1);
         return;
       }
     }
-    for (let i = 0; i < this.user_playmat.length; i++) {
-      if (this.user_playmat[i].length == 2) {
+    for (let i = 0; i < this.user.playmat.length; i++) {
+      if (this.user.playmat[i].length == 2) {
         card.tapped = 'untapped';
         card.selected = false;
-        this.user_playmat[i].push(card);
+        this.user.playmat[i].push(card);
         let old_loc = from.indexOf(card);
         from.splice(old_loc, 1);
         return;
@@ -433,13 +402,13 @@ export class PlaymatResizedComponent implements OnInit {
     card.tapped = 'untapped';
     card.selected = false;
     if (location == -1) { //going to bottom
-      this.user.deck.push(card);
+      this.user.deck.cards.push(card);
     }
     else if (location == 0) {
-      this.user.deck.unshift(card);
+      this.user.deck.cards.unshift(card);
     }
     else {
-      this.user.deck.splice(this.user.deck.length - (location - 1), 0, card); //this assumes # from the top
+      this.user.deck.cards.splice(this.user.deck.cards.length - (location - 1), 0, card); //this assumes # from the top
     }
     let old_loc = from.indexOf(card);
     from.splice(old_loc, 1);
@@ -447,13 +416,13 @@ export class PlaymatResizedComponent implements OnInit {
       for (let card of this.selected_cards) {
         if (card.card != card) {
           if (location == -1) { //going to bottom
-            this.user.deck.push(card.card);
+            this.user.deck.cards.push(card.card);
           }
           else if (location == 0) {
-            this.user.deck.unshift(card.card);
+            this.user.deck.cards.unshift(card.card);
           }
           else {
-            this.user.deck.splice(this.user.deck.length - (location - 1), 0, card.card); //this assumes # from the top
+            this.user.deck.cards.splice(this.user.deck.cards.length - (location - 1), 0, card.card); //this assumes # from the top
           }
           card.from.splice(card.from.indexOf(card.card), 1);
         }
@@ -562,9 +531,9 @@ export class PlaymatResizedComponent implements OnInit {
 
   drawCard(count: number) {
     for (let i = 0; i < count; i++) {
-      if(this.user.deck.length > 0) {
-        this.user.hand.push(this.user.deck[0]);
-        this.user.deck.splice(0, 1);
+      if(this.user.deck.cards.length > 0) {
+        this.user.hand.push(this.user.deck.cards[0]);
+        this.user.deck.cards.splice(0, 1);
       }
     }
     this.current_draw = 1;
@@ -572,18 +541,18 @@ export class PlaymatResizedComponent implements OnInit {
 
   drawToZone(count: number, type: string) {
     for (let i = 0; i < count; i++) {
-      if (this.user.deck.length > 0) {
+      if (this.user.deck.cards.length > 0) {
         if (type === 'play') {
-          this.sendToPlay(this.user.deck[0], this.user.deck);
+          this.sendToPlay(this.user.deck.cards[0], this.user.deck.cards);
         }
         else if (type === 'grave') {
-          this.sendToGrave(this.user.deck[0], this.user.deck);
+          this.sendToGrave(this.user.deck.cards[0], this.user.deck.cards);
         }
         else if (type === 'exile') {
-          this.sendToExile(this.user.deck[0], this.user.deck);
+          this.sendToExile(this.user.deck.cards[0], this.user.deck.cards);
         }
         else if (type === 'temp_zone') {
-          this.sendToTempZone(this.user.deck[0], this.user.deck, this.user);
+          this.sendToTempZone(this.user.deck.cards[0], this.user.deck, this.user.cards);
         }
       }
     }
@@ -593,8 +562,8 @@ export class PlaymatResizedComponent implements OnInit {
   drawToOtherTempZone(count: number, player: any) {
     if (player) {
       for (let i = 0; i < count; i++) {
-        if (this.user.deck.length > 0) {
-          this.sendToTempZone(this.user.deck[0], this.user.deck, player);
+        if (this.user.deck.cards.length > 0) {
+          this.sendToTempZone(this.user.deck.cards[0], this.user.deck.cards, player);
         }
       }
     }
@@ -635,7 +604,7 @@ export class PlaymatResizedComponent implements OnInit {
   }
 
   untapAll() {
-    for (let spot of this.user_playmat) {
+    for (let spot of this.user.playmat) {
       for (let card of spot) {
         card.tapped = 'untapped';
       }
@@ -662,7 +631,7 @@ export class PlaymatResizedComponent implements OnInit {
   @ViewChild('fddp_sidenav') fddp_sidenav: any;
   openSideNav(type: string) {
     this.sidenav_selected_player = this.user;
-    this.getSidenavSort(this.user.deck)
+    this.getSidenavSort(this.user.deck.cards)
     this.getSidenavSort(this.user.grave);
     this.getSidenavSort(this.user.exile);
     this.getSidenavSort(this.user.temp_zone);
@@ -690,7 +659,7 @@ export class PlaymatResizedComponent implements OnInit {
       this.getSidenavSort(this.sidenav_selected_player.temp_zone);
     }
     else if (this.sidenav_type === 'deck' || this.sidenav_type === 'scry') {
-      this.getSidenavSort(this.sidenav_selected_player.deck);
+      this.getSidenavSort(this.sidenav_selected_player.deck.cards);
     }
   }
 

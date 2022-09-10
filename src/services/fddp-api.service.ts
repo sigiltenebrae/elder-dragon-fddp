@@ -101,4 +101,14 @@ export class FddpApiService {
     })
   }
 
+  public getDeckForPlay(deckid: number): Promise<any> {
+    return new Promise<any>((resolve) => {
+      this.http.get(environment.fddp_api_url + '/game/deck/' + deckid).subscribe((deck_data) => {
+        resolve(deck_data);
+      }, () => {
+        resolve(null);
+      })
+    })
+  }
+
 }
