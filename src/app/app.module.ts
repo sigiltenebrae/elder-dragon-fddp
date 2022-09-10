@@ -35,6 +35,7 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import { DeckEditComponent } from './deck-edit/deck-edit.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CustomImagesComponent } from './custom-images/custom-images.component';
+import { CustomImageManagerComponent } from './custom-image-manager/custom-image-manager.component';
 
 
 @NgModule({
@@ -42,7 +43,8 @@ import { CustomImagesComponent } from './custom-images/custom-images.component';
     AppComponent,
     PlaymatResizedComponent,
     DeckEditComponent,
-    CustomImagesComponent
+    CustomImagesComponent,
+    CustomImageManagerComponent
   ],
   imports: [
     BrowserModule,
@@ -73,7 +75,8 @@ import { CustomImagesComponent } from './custom-images/custom-images.component';
     RouterModule.forRoot([
       {path: '', component: PlaymatResizedComponent},
       {path: 'decks/:deckid', component: DeckEditComponent},
-      {path: 'upload', component: CustomImagesComponent}
+      {path: 'upload', component: CustomImagesComponent},
+      {path: 'custom', component: CustomImageManagerComponent}
     ]),
     FlexLayoutModule,
     DragDropModule,

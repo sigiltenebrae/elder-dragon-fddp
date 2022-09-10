@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { environment } from "../environments/environment";
 import {ActivatedRoute, Router} from "@angular/router";
+import {end} from "@popperjs/core";
 
 @Injectable({
   providedIn: 'root'
@@ -86,6 +87,16 @@ export class FddpApiService {
         console.log('Error in custom card creation: ');
         console.log(err);
         resolve_card(null);
+      })
+    })
+  }
+
+  public getCustomCards(): Promise<any> {
+    return new Promise<any>((resolve) => {
+      this.http.get(environment.fddp_api_url + '/custom_cards').subscribe((cards: any) => {
+        resolve(cards);
+      }, () => {
+        resolve([]);
       })
     })
   }
