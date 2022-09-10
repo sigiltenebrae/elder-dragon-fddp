@@ -83,6 +83,9 @@
         <button mat-menu-item (click)="sendToTempZone(rightclicked_item.card, rightclicked_item.from, user)">Send to Temp</button>
         <button mat-menu-item (click)="sendToTempZone(rightclicked_item.card, rightclicked_item.from, selected_player)">Send to Selected</button>
       </div>
+      <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'commander'">
+
+      </div>
     </ng-template>
   </div>
 </mat-menu>
@@ -465,13 +468,15 @@
                  cdkDrag>
           </div>
         </div>
-        <div class="commander-viewer">
+        <div class="commander-viewer" cdkDropList
+             [cdkDropListData]="user.deck.commander"
+             (cdkDropListDropped)="moveCardToCommandZone($event)">
           <div *ngIf="user.deck.commander.length == 1">
-            <img class="commander-viewer-single" src="{{user.deck.commander[0].image}}">
+            <img class="commander-viewer-single" src="{{user.deck.commander[0].image}}" cdkDrag>
           </div>
           <div *ngIf="user.deck.commander.length == 2" class="commander-viewer-partner-holder">
-            <img class="commander-viewer-partner-1" src="{{user.deck.commander[0].image}}">
-            <img class="commander-viewer-partner-2" src="{{user.deck.commander[1].image}}">
+            <img class="commander-viewer-partner-1" src="{{user.deck.commander[0].image}}" cdkDrag>
+            <img class="commander-viewer-partner-2" src="{{user.deck.commander[1].image}}" cdkDrag>
           </div>
         </div>
         <div class="commander-dashboard">

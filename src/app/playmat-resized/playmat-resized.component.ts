@@ -1,5 +1,5 @@
 import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
-import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
+import {CdkDrag, CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {MatMenuTrigger} from "@angular/material/menu";
 import { RightclickHandlerServiceService } from "../../services/rightclick-handler-service.service";
@@ -75,7 +75,18 @@ export class PlaymatResizedComponent implements OnInit {
             card.counter_2_value = 0;
             card.counter_3_value = 0;
             card.multiplier_value = 0;
-
+            card.owner = out_player.name;
+          })
+          out_player.deck.commander.forEach((card: any) => {
+            card.counter_1 = false;
+            card.counter_2 = false;
+            card.counter_3 = false;
+            card.multiplier = false;
+            card.counter_1_value = 0;
+            card.counter_2_value = 0;
+            card.counter_3_value = 0;
+            card.multiplier_value = 0;
+            card.owner = out_player.name;
           })
 
           out_player.selected = false;
@@ -162,6 +173,30 @@ export class PlaymatResizedComponent implements OnInit {
           card.card.tapped = 'untapped';
         }
         this.selected_cards = []
+      }
+    }
+  }
+
+  moveCardToCommandZone(event: CdkDragDrop<any>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    }
+    else {
+      let cur_card = event.previousContainer.data[event.previousIndex];
+      if (cur_card.iscommander && cur_card.owner == this.user.name) {
+        cur_card.tapped = 'untapped';
+        transferArrayItem(
+          event.previousContainer.data,
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex,
+        );
+        if (this.selected_cards.length > 0) { //prevent multiple dragging to the command zone
+          for (let card of this.selected_cards) {
+            card.card.selected = false;
+          }
+          this.selected_cards = [];
+        }
       }
     }
   }
