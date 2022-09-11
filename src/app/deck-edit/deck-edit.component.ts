@@ -149,20 +149,22 @@ export class DeckEditComponent implements OnInit {
           return;
         }
       }
+      let temp_card = {
+        name: this.new_card_temp,
+        image: '',
+        count: 1,
+        iscommander: false
+      }
       this.deck.cards.push(
-        {
-          name: this.new_card_temp,
-          image: '',
-          count: 1,
-          iscommander: false
-        }
+        temp_card
       );
+      this.getCardImage(temp_card);
       this.new_card_temp = null;
+
     }
   }
 
   saveDeck() {
-    console.log(this.deck);
     if (this.deckid == -1) { //create
       this.fddp_data.createDeck(this.deck).then(() => {
         this.router.navigate(['/']);
