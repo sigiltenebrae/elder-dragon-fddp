@@ -699,7 +699,20 @@ $mtg-green: #087f23;
   border: dotted #ccc 2px;
 }
 
-.mtg-custom-card {
+.custom-card-holder {
+  position: relative;
+  max-width: 254px;
+  max-height: 355px;
+  min-width: 254px;
+  min-height: 355px;
+  width: 254px;
+  height: 355px;
+}
+
+.custom-card-holder .mtg-custom-card {
+  position: absolute;
+  top: 0;
+  left: 0;
   max-width: 254px;
   max-height: 355px;
   min-width: 254px;
@@ -707,6 +720,25 @@ $mtg-green: #087f23;
   width: 254px;
   height: 355px;
   border-radius: 12px;
+  z-index: 1;
+}
+
+.custom-card-holder .mtg-custom-card-delete {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%);
+  z-index: 2;
+  display: none;
+}
+
+.custom-card-holder:hover .mtg-custom-card {
+  opacity: 0.5;
+}
+
+.custom-card-holder:hover .mtg-custom-card-delete {
+  display: block;
 }
 
 .deck-edit-image {

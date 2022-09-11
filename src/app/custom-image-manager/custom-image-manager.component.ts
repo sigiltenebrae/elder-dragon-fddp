@@ -15,8 +15,15 @@ export class CustomImageManagerComponent implements OnInit {
   ngOnInit(): void {
     this.fddp_data.getCustomCards().then((cards: any) => {
       this.cards = cards;
-      this.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1)
+      this.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+      this.cards.forEach((card: any) => { card.deleting = false });
     })
+  }
+
+  deleteCustomCard(card: any) {
+    this.fddp_data.deleteCustomCard(card.id).then(() => {
+      location.reload();
+    });
   }
 
 }

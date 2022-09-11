@@ -1,3 +1,7 @@
 <div fxFlexFill fxLayout="row wrap">
-  <img class="mtg-custom-card" *ngFor="let card of cards" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
+  <div class="custom-card-holder" *ngFor="let card of cards">
+    <button *ngIf="!card.deleting" (click)="card.deleting=true" mat-raised-button color="warn" class="mtg-custom-card-delete">Delete</button>
+    <button *ngIf="card.deleting" (click)="deleteCustomCard(card)" mat-raised-button color="warn" class="mtg-custom-card-delete">Confirm</button>
+    <img (mouseleave)="card.deleting=false;" class="mtg-custom-card" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
+  </div>
 </div>

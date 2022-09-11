@@ -75,7 +75,8 @@ import { DeckManagerComponent } from './deck-manager/deck-manager.component';
     MatStepperModule,
     HttpClientModule,
     RouterModule.forRoot([
-      {path: '', component: PlaymatResizedComponent},
+      {path: '', component: DeckManagerComponent},
+      {path: 'game', component: PlaymatResizedComponent},
       {path: 'decks/:deckid', component: DeckEditComponent},
       {path: 'upload', component: CustomImagesComponent},
       {path: 'custom', component: CustomImageManagerComponent}

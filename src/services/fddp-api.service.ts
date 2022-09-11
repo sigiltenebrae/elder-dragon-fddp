@@ -107,7 +107,7 @@ export class FddpApiService {
 
   public deleteDeck(deckid: number): Promise<void> {
     return new Promise<void>((resolve) => {
-      return this.http.delete(environment.fddp_api_url + '/decks/' + deckid).subscribe(() => { resolve(); })
+      this.http.delete(environment.fddp_api_url + '/decks/' + deckid).subscribe(() => { resolve(); })
     });
   }
 
@@ -125,6 +125,16 @@ export class FddpApiService {
         resolve(null);
       });
     });
+  }
+
+  public getDeckForPlay(deckid: number): Promise<any> {
+    return new Promise<any>((resolve) => {
+      this.http.get(environment.fddp_api_url + '/game/deck/' + deckid).subscribe((deck_data) => {
+        resolve(deck_data);
+      }, () => {
+        resolve(null);
+      })
+    })
   }
 
   public createCustomCard(name: any, image: any): Promise<any> {
@@ -157,14 +167,12 @@ export class FddpApiService {
     })
   }
 
-  public getDeckForPlay(deckid: number): Promise<any> {
-    return new Promise<any>((resolve) => {
-      this.http.get(environment.fddp_api_url + '/game/deck/' + deckid).subscribe((deck_data) => {
-        resolve(deck_data);
-      }, () => {
-        resolve(null);
-      })
-    })
+  public deleteCustomCard(cardid: number): Promise<void> {
+    return new Promise<void>((resolve) => {
+      this.http.delete(environment.fddp_api_url + '/custom_cards/' + cardid).subscribe(() => { resolve(); })
+    });
   }
+
+
 
 }
