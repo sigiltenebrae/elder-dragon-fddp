@@ -29,12 +29,15 @@ import {FddpApiService} from "../../services/fddp-api.service";
 })
 export class PlaymatResizedComponent implements OnInit {
 
+  /**------------------------------------------------
+   *                  Variables                     *
+   ------------------------------------------------**/
+  players: any = [];
+
   user: any = null;
   selected_player: any = null;
   sidenav_selected_player: any = null;
   current_turn = 0;
-
-  players: any = [];
 
   hovered_card: any = null;
   rightclicked_item: any = null;
@@ -46,7 +49,30 @@ export class PlaymatResizedComponent implements OnInit {
   sidenav_scry = 0;
   loading = false;
 
+
+  /**------------------------------------------------
+   *              Game Setup Functions              *
+   ------------------------------------------------**/
   constructor(private rightClickHandler: RightclickHandlerServiceService, private fddp_data: FddpApiService) { }
+
+  ngOnInit(): void {
+    this.loading = true;
+    this.rightClickHandler.overrideRightClick();
+    let game_promises: any[] = [];
+    game_promises.push(this.loadPlayer("Christian", 8, 0));
+    game_promises.push(this.loadPlayer("Liam", 10, 1));
+    game_promises.push(this.loadPlayer("David", 11, 2));
+    game_promises.push(this.loadPlayer("George", 12, 3));
+    Promise.all(game_promises).then(() => {
+      for (let player of this.players) {
+        if (player.name === "Christian") {
+          this.user = player;
+        }
+      }
+      this.players.sort((a: any, b: any) => (a.turn > b.turn) ? 1: -1);
+      this.loading = false;
+    });
+  }
 
   loadPlayer(player: string, deckid: number, turn: number): Promise<void> {
     return new Promise<void>((resolve) => {
@@ -75,11 +101,14 @@ export class PlaymatResizedComponent implements OnInit {
             card.counter_2_value = 0;
             card.counter_3_value = 0;
             card.multiplier_value = 0;
-            card.owner = out_player.name;
+            //card.owner = out_player.name;
+            card.owner = 'Liam';
             card.power_mod = 0;
             card.toughness_mod = 0;
             card.loyalty_mod = 0;
             card.locked = false;
+            card.primed = false;
+            card.triggered = false;
           })
           out_player.deck.commander.forEach((card: any) => {
             card.counter_1 = false;
@@ -95,6 +124,8 @@ export class PlaymatResizedComponent implements OnInit {
             card.toughness_mod = 0;
             card.loyalty_mod = 0;
             card.locked = false;
+            card.primed = false;
+            card.triggered = false;
           })
 
           out_player.selected = false;
@@ -109,578 +140,12 @@ export class PlaymatResizedComponent implements OnInit {
     });
   }
 
-  shuffleDeck(cards: any[]) {
-    for (let i = 0; i < cards.length; i++) {
-      let r = i + Math.floor(Math.random() * (cards.length - i));
-      let temp = cards[r];
-      cards[r] = cards[i];
-      cards[i] = temp;
-    }
+  /**------------------------------------------------
+   *      Player-Interaction Helper Functions        *
+   ------------------------------------------------**/
 
-  }
-
-  ngOnInit(): void {
-    this.loading = true;
-    this.rightClickHandler.overrideRightClick();
-    let game_promises: any[] = [];
-    game_promises.push(this.loadPlayer("Christian", 8, 0));
-    game_promises.push(this.loadPlayer("Liam", 10, 1));
-    game_promises.push(this.loadPlayer("David", 11, 2));
-    game_promises.push(this.loadPlayer("George", 12, 3));
-    Promise.all(game_promises).then(() => {
-      for (let player of this.players) {
-        if (player.name === "Christian") {
-          this.user = player;
-        }
-      }
-      this.players.sort((a: any, b: any) => (a.turn > b.turn) ? 1: -1);
-      this.loading = false;
-    });
-  }
-
-  moveCardToPlay(event: CdkDragDrop<any>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    }
-    else {
-      let cur_card = event.previousContainer.data[event.previousIndex];
-      cur_card.tapped = 'untapped';
-      cur_card.selected = false;
-      cur_card.power_mod = 0;
-      cur_card.toughness_mod = 0;
-      cur_card.loyalty_mod = 0;
-      cur_card.counter_1 = false;
-      cur_card.counter_2 = false;
-      cur_card.counter_3 = false;
-      cur_card.multiplier = false;
-      cur_card.locked = false;
-      if (event.container.data.length < 3) {
-        transferArrayItem(
-          event.previousContainer.data,
-          event.container.data,
-          event.previousIndex,
-          event.currentIndex,
-        );
-        this.sendSelectedToPlay(cur_card);
-      }
-    }
-  }
-
-  moveCardToHand(event: CdkDragDrop<any>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    }
-    else {
-      let cur_card = event.previousContainer.data[event.previousIndex];
-      cur_card.tapped = 'untapped';
-      cur_card.power_mod = 0;
-      cur_card.toughness_mod = 0;
-      cur_card.loyalty_mod = 0;
-      cur_card.counter_1 = false;
-      cur_card.counter_2 = false;
-      cur_card.counter_3 = false;
-      cur_card.multiplier = false;
-      cur_card.locked = false;
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        event.currentIndex,
-      );
-      if (this.selected_cards.length > 0) {
-        for (let card of this.selected_cards) {
-          if (card.card != cur_card) {
-            this.user.hand.push(card.card);
-            card.from.splice(card.from.indexOf(card.card), 1);
-          }
-          card.card.selected = false;
-          card.card.tapped = 'untapped';
-          card.card.power_mod = 0;
-          card.card.toughness_mod = 0;
-          card.card.loyalty_mod = 0;
-          card.card.counter_1 = false;
-          card.card.counter_2 = false;
-          card.card.counter_3 = false;
-          card.card.multiplier = false;
-          card.card.locked = false;
-        }
-        this.selected_cards = []
-      }
-    }
-  }
-
-  moveCardToCommandZone(event: CdkDragDrop<any>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    }
-    else {
-      let cur_card = event.previousContainer.data[event.previousIndex];
-      if (cur_card.iscommander && cur_card.owner == this.user.name) {
-        cur_card.tapped = 'untapped';
-        cur_card.power_mod = 0;
-        cur_card.toughness_mod = 0;
-        cur_card.loyalty_mod = 0;
-        cur_card.counter_1 = false;
-        cur_card.counter_2 = false;
-        cur_card.counter_3 = false;
-        cur_card.multiplier = false;
-        cur_card.locked = false;
-        transferArrayItem(
-          event.previousContainer.data,
-          event.container.data,
-          event.previousIndex,
-          event.currentIndex,
-        );
-        if (this.selected_cards.length > 0) { //prevent multiple dragging to the command zone
-          for (let card of this.selected_cards) {
-            card.card.selected = false;
-          }
-          this.selected_cards = [];
-        }
-      }
-    }
-  }
-
-  moveCardToDeck(event: CdkDragDrop<any>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    }
-    else {
-      let cur_card = event.previousContainer.data[event.previousIndex];
-      cur_card.tapped = 'untapped';
-      cur_card.power_mod = 0;
-      cur_card.toughness_mod = 0;
-      cur_card.loyalty_mod = 0;
-      cur_card.counter_1 = false;
-      cur_card.counter_2 = false;
-      cur_card.counter_3 = false;
-      cur_card.multiplier = false;
-      cur_card.locked = false;
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        0,
-      );
-      if (this.selected_cards.length > 0) {
-        for (let card of this.selected_cards) {
-          if (card.card != cur_card) {
-            this.user.deck.cards.push(card.card);
-            card.from.splice(card.from.indexOf(card.card), 1);
-          }
-          card.card.selected = false;
-          card.card.tapped = 'untapped';
-          card.card.power_mod = 0;
-          card.card.toughness_mod = 0;
-          card.card.loyalty_mod = 0;
-          card.card.counter_1 = false;
-          card.card.counter_2 = false;
-          card.card.counter_3 = false;
-          card.card.multiplier = false;
-          card.card.locked = false;
-        }
-        this.selected_cards = []
-      }
-    }
-  }
-
-  moveCardToGrave(event: CdkDragDrop<any>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    }
-    else {
-      let cur_card = event.previousContainer.data[event.previousIndex];
-      cur_card.tapped = 'untapped';
-      cur_card.power_mod = 0;
-      cur_card.toughness_mod = 0;
-      cur_card.loyalty_mod = 0;
-      cur_card.counter_1 = false;
-      cur_card.counter_2 = false;
-      cur_card.counter_3 = false;
-      cur_card.multiplier = false;
-      cur_card.locked = false;
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        0,
-      );
-      if (this.selected_cards.length > 0) {
-        for (let card of this.selected_cards) {
-          if (card.card != cur_card) {
-            this.user.grave.push(card.card);
-            card.from.splice(card.from.indexOf(card.card), 1);
-          }
-          card.card.selected = false;
-          card.card.tapped = 'untapped';
-          card.card.power_mod = 0;
-          card.card.toughness_mod = 0;
-          card.card.loyalty_mod = 0;
-          card.card.counter_1 = false;
-          card.card.counter_2 = false;
-          card.card.counter_3 = false;
-          card.card.multiplier = false;
-          card.card.locked = false;
-        }
-        this.selected_cards = []
-      }
-    }
-  }
-
-  moveCardToExile(event: CdkDragDrop<any>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    }
-    else {
-      let cur_card = event.previousContainer.data[event.previousIndex];
-      cur_card.tapped = 'untapped';
-      cur_card.power_mod = 0;
-      cur_card.toughness_mod = 0;
-      cur_card.loyalty_mod = 0;
-      cur_card.counter_1 = false;
-      cur_card.counter_2 = false;
-      cur_card.counter_3 = false;
-      cur_card.multiplier = false;
-      cur_card.locked = false;
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        0,
-      );
-      if (this.selected_cards.length > 0) {
-        for (let card of this.selected_cards) {
-          if (card.card != cur_card) {
-            this.user.exile.push(card.card);
-            card.from.splice(card.from.indexOf(card.card), 1);
-          }
-          card.card.selected = false;
-          card.card.tapped = 'untapped';
-          card.card.power_mod = 0;
-          card.card.toughness_mod = 0;
-          card.card.loyalty_mod = 0;
-          card.card.counter_1 = false;
-          card.card.counter_2 = false;
-          card.card.counter_3 = false;
-          card.card.multiplier = false;
-          card.card.locked = false;
-        }
-        this.selected_cards = []
-      }
-    }
-  }
-
-  moveCardToTempZone(event: CdkDragDrop<any>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    }
-    else {
-      let cur_card = event.previousContainer.data[event.previousIndex];
-      cur_card.tapped = 'untapped';
-      transferArrayItem(
-        event.previousContainer.data,
-        event.container.data,
-        event.previousIndex,
-        0,
-      );
-      if (this.selected_cards.length > 0) {
-        for (let card of this.selected_cards) {
-          if (card.card != cur_card) {
-            this.user.temp_zone.push(card.card);
-            card.from.splice(card.from.indexOf(card.card), 1);
-          }
-          card.card.selected = false;
-          card.card.tapped = 'untapped';
-        }
-        this.selected_cards = []
-      }
-    }
-  }
-
-  sendToPlayWrapper(card: any, from: any) {
-    this.sendToPlay(card, from);
-    this.sendSelectedToPlay(card);
-  }
-
-  sendSelectedToPlay(card: any) {
-    if (this.selected_cards.length > 0) {
-      for (let cur_card of this.selected_cards) {
-        if (cur_card.card != card) {
-          this.sendToPlay(cur_card.card, cur_card.from);
-          cur_card.card.selected = false;
-          cur_card.card.tapped = 'untapped';
-        }
-      }
-      this.selected_cards = []
-    }
-  }
-
-  sendToPlay(card: any, from: any[]) {
-    for (let i = 0; i < this.user.playmat.length; i++) {
-      if (this.user.playmat[i].length == 0) {
-        card.tapped = 'untapped';
-        card.selected = false;
-        this.user.playmat[i].push(card);
-        let old_loc = from.indexOf(card);
-        from.splice(old_loc, 1);
-        return;
-      }
-    }
-    for (let i = 0; i < this.user.playmat.length; i++) {
-      if (this.user.playmat[i].length == 1) {
-        card.tapped = 'untapped';
-        card.selected = false;
-        this.user.playmat[i].push(card);
-        let old_loc = from.indexOf(card);
-        from.splice(old_loc, 1);
-        return;
-      }
-    }
-    for (let i = 0; i < this.user.playmat.length; i++) {
-      if (this.user.playmat[i].length == 2) {
-        card.tapped = 'untapped';
-        card.selected = false;
-        this.user.playmat[i].push(card);
-        let old_loc = from.indexOf(card);
-        from.splice(old_loc, 1);
-        return;
-      }
-    }
-  }
-
-  sendToDeck(card: any, from: any[], location: number) {
-    card.tapped = 'untapped';
-    card.selected = false;
-    card.power_mod = 0;
-    card.toughness_mod = 0;
-    card.loyalty_mod = 0;
-    card.counter_1 = false;
-    card.counter_2 = false;
-    card.counter_3 = false;
-    card.multiplier = false;
-    card.locked = false;
-    if (location == -1) { //going to bottom
-      this.user.deck.cards.push(card);
-    }
-    else if (location == 0) {
-      this.user.deck.cards.unshift(card);
-    }
-    else {
-      this.user.deck.cards.splice(this.user.deck.cards.length - (location - 1), 0, card); //this assumes # from the top
-    }
-    let old_loc = from.indexOf(card);
-    from.splice(old_loc, 1);
-    if (this.selected_cards.length > 0) {
-      for (let cur_card of this.selected_cards) {
-        if (cur_card.card != card) {
-          if (location == -1) { //going to bottom
-            this.user.deck.cards.push(cur_card.card);
-          }
-          else if (location == 0) {
-            this.user.deck.cards.unshift(cur_card.card);
-          }
-          else {
-            this.user.deck.cards.splice(this.user.deck.cards.length - (location - 1), 0, cur_card.card); //this assumes # from the top
-          }
-          cur_card.from.splice(cur_card.from.indexOf(cur_card.card), 1);
-        }
-        cur_card.card.selected = false;
-        cur_card.card.tapped = 'untapped';
-        cur_card.power_mod = 0;
-        cur_card.toughness_mod = 0;
-        cur_card.loyalty_mod = 0;
-        cur_card.counter_1 = false;
-        cur_card.counter_2 = false;
-        cur_card.counter_3 = false;
-        cur_card.multiplier = false;
-        cur_card.locked = false;
-      }
-      this.selected_cards = []
-    }
-  }
-
-  sendToHand(card: any, from: any[]) {
-    card.tapped = 'untapped';
-    card.selected = false;
-    card.power_mod = 0;
-    card.toughness_mod = 0;
-    card.loyalty_mod = 0;
-    card.counter_1 = false;
-    card.counter_2 = false;
-    card.counter_3 = false;
-    card.multiplier = false;
-    card.locked = false;
-    this.user.hand.push(card);
-    let old_loc = from.indexOf(card);
-    from.splice(old_loc, 1);
-    if (this.selected_cards.length > 0) {
-      for (let cur_card of this.selected_cards) {
-        if (cur_card.card != card) {
-          this.user.hand.push(cur_card.card);
-          cur_card.from.splice(cur_card.from.indexOf(cur_card.card), 1);
-        }
-        cur_card.card.selected = false;
-        cur_card.card.tapped = 'untapped';
-        cur_card.power_mod = 0;
-        cur_card.toughness_mod = 0;
-        cur_card.loyalty_mod = 0;
-        cur_card.counter_1 = false;
-        cur_card.counter_2 = false;
-        cur_card.counter_3 = false;
-        cur_card.multiplier = false;
-        cur_card.locked = false;
-      }
-      this.selected_cards = []
-    }
-  }
-
-  sendToGrave(card: any, from: any[]) {
-    card.tapped = 'untapped';
-    card.selected = false;
-    card.power_mod = 0;
-    card.toughness_mod = 0;
-    card.loyalty_mod = 0;
-    card.counter_1 = false;
-    card.counter_2 = false;
-    card.counter_3 = false;
-    card.multiplier = false;
-    card.locked = false;
-    this.user.grave.push(card);
-    let old_loc = from.indexOf(card);
-    from.splice(old_loc, 1);
-    if (this.selected_cards.length > 0) {
-      for (let cur_card of this.selected_cards) {
-        if (cur_card.card != card) {
-          this.user.grave.push(cur_card.card);
-          cur_card.from.splice(cur_card.from.indexOf(cur_card.card), 1);
-        }
-        cur_card.card.selected = false;
-        cur_card.card.tapped = 'untapped';
-        cur_card.power_mod = 0;
-        cur_card.toughness_mod = 0;
-        cur_card.loyalty_mod = 0;
-        cur_card.counter_1 = false;
-        cur_card.counter_2 = false;
-        cur_card.counter_3 = false;
-        cur_card.multiplier = false;
-        cur_card.locked = false;
-      }
-      this.selected_cards = []
-    }
-  }
-
-  sendToExile(card: any, from: any[]) {
-    card.tapped = 'untapped';
-    card.selected = false;
-    card.power_mod = 0;
-    card.toughness_mod = 0;
-    card.loyalty_mod = 0;
-    card.counter_1 = false;
-    card.counter_2 = false;
-    card.counter_3 = false;
-    card.multiplier = false;
-    card.locked = false;
-    this.user.exile.push(card);
-    let old_loc = from.indexOf(card);
-    from.splice(old_loc, 1);
-    if (this.selected_cards.length > 0) {
-      for (let cur_card of this.selected_cards) {
-        if (cur_card.card != card) {
-          this.user.exile.push(cur_card.card);
-          cur_card.from.splice(cur_card.from.indexOf(cur_card.card), 1);
-        }
-        cur_card.card.selected = false;
-        cur_card.card.tapped = 'untapped';
-        cur_card.power_mod = 0;
-        cur_card.toughness_mod = 0;
-        cur_card.loyalty_mod = 0;
-        cur_card.counter_1 = false;
-        cur_card.counter_2 = false;
-        cur_card.counter_3 = false;
-        cur_card.multiplier = false;
-        cur_card.locked = false;
-      }
-      this.selected_cards = []
-    }
-  }
-
-  sendToTempZone(card: any, from: any[], player: any) {
-    if (player) {
-      card.tapped = 'untapped';
-      card.selected = false;
-      player.temp_zone.push(card);
-      let old_loc = from.indexOf(card);
-      from.splice(old_loc, 1);
-      if (this.selected_cards.length > 0) {
-        for (let cur_card of this.selected_cards) {
-          if (cur_card.card != card) {
-            player.temp_zone.push(cur_card.card);
-            cur_card.from.splice(cur_card.from.indexOf(cur_card.card), 1);
-          }
-          cur_card.card.selected = false;
-          cur_card.card.tapped = 'untapped';
-        }
-        this.selected_cards = []
-      }
-    }
-  }
-
-  reverse(array: any[]){
+  reversePlaymat(array: any[]){
     return array.map((item,idx) => array[array.length-1-idx])
-  }
-
-  isOpponent(player: any) {
-    return player.name !== this.user.name
-  }
-
-  tapSpot(spot: any) {
-    for (let card of spot) {
-      card.tapped = card.tapped === 'tapped'? 'untapped': 'tapped';
-    }
-  }
-
-  tapCard(card: any) {
-    card.tapped = card.tapped === 'tapped'? 'untapped': 'tapped';
-  }
-
-  drawCard(count: number) {
-    for (let i = 0; i < count; i++) {
-      if(this.user.deck.cards.length > 0) {
-        this.user.hand.push(this.user.deck.cards[0]);
-        this.user.deck.cards.splice(0, 1);
-      }
-    }
-    this.current_draw = 1;
-  }
-
-  drawToZone(count: number, type: string) {
-    for (let i = 0; i < count; i++) {
-      if (this.user.deck.cards.length > 0) {
-        if (type === 'play') {
-          this.sendToPlay(this.user.deck.cards[0], this.user.deck.cards);
-        }
-        else if (type === 'grave') {
-          this.sendToGrave(this.user.deck.cards[0], this.user.deck.cards);
-        }
-        else if (type === 'exile') {
-          this.sendToExile(this.user.deck.cards[0], this.user.deck.cards);
-        }
-        else if (type === 'temp_zone') {
-          this.sendToTempZone(this.user.deck.cards[0], this.user.deck, this.user.cards);
-        }
-      }
-    }
-    this.current_drawto = 1;
-  }
-
-  drawToOtherTempZone(count: number, player: any) {
-    if (player) {
-      for (let i = 0; i < count; i++) {
-        if (this.user.deck.cards.length > 0) {
-          this.sendToTempZone(this.user.deck.cards[0], this.user.deck.cards, player);
-        }
-      }
-    }
   }
 
   selectPlayer(selector: any) {
@@ -694,6 +159,15 @@ export class PlaymatResizedComponent implements OnInit {
     else {
       this.selected_player = null;
     }
+  }
+
+  getPlayer(player: string) {
+    for(let cur_player of this.players) {
+      if (cur_player.name === player) {
+        return cur_player;
+      }
+    }
+    return null;
   }
 
   nextTurn() {
@@ -725,6 +199,24 @@ export class PlaymatResizedComponent implements OnInit {
 
   }
 
+  /**------------------------------------------------
+   *      Board-Interaction Helper Functions        *
+   ------------------------------------------------**/
+
+  isOpponent(player: any) {
+    return player.name !== this.user.name
+  }
+
+  tapSpot(spot: any) {
+    for (let card of spot) {
+      card.tapped = card.tapped === 'tapped'? 'untapped': 'tapped';
+    }
+  }
+
+  tapCard(card: any) {
+    card.tapped = card.tapped === 'tapped'? 'untapped': 'tapped';
+  }
+
   untapAll() {
     for (let spot of this.user.playmat) {
       for (let card of spot) {
@@ -733,6 +225,12 @@ export class PlaymatResizedComponent implements OnInit {
     }
   }
 
+  /**
+   * Add or remove the card from the selected list for group actions.
+   * @param card Card to add to the list
+   * @param from Current location of the card
+   * @param enable whether or not to allow the card to be selected (in the case of non-visible cards in the sidenav)
+   */
   toggleCardSelect(card: any, from: any, enable?: boolean) {
     if (typeof enable === 'undefined' || enable) {
       for (let selected of this.selected_cards) {
@@ -749,6 +247,116 @@ export class PlaymatResizedComponent implements OnInit {
       card.selected = true;
     }
   }
+
+  clearCard(card: any) {
+    card.tapped = 'untapped';
+    card.power_mod = 0;
+    card.toughness_mod = 0;
+    card.loyalty_mod = 0;
+    card.counter_1 = false;
+    card.counter_2 = false;
+    card.counter_3 = false;
+    card.multiplier = false;
+    card.locked = false;
+    card.primed = false;
+    card.triggered = false;
+  }
+
+  shuffleDeck(cards: any[]) {
+    for (let i = 0; i < cards.length; i++) {
+      let r = i + Math.floor(Math.random() * (cards.length - i));
+      let temp = cards[r];
+      cards[r] = cards[i];
+      cards[i] = temp;
+    }
+
+  }
+
+  /**------------------------------------------------
+   *          Card Transfer Helper Functions        *
+   ------------------------------------------------**/
+
+  moveCardToZone(event: any, location: string) {
+    //Hand, Command Zone, Deck, Grave, Exile, Temp Zone, Play
+
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    }
+    else {
+      let cur_card = event.previousContainer.data[event.previousIndex];
+      if (location !== 'temp_zone' && location !== 'play') {
+        this.clearCard(cur_card); //wipe all counters
+      }
+      if (!cur_card.selected) { //add the card to selected list if it isn't already
+        this.toggleCardSelect(cur_card, event.previousContainer.data);
+      }
+
+      if (location !== 'play') {
+        for (let card_select of this.selected_cards) {
+          switch(location) {
+            case 'hand':
+              transferArrayItem(
+                card_select.from,
+                this.getPlayer(card_select.card.owner).hand,
+                card_select.from.indexOf(card_select.card),
+                event.currentIndex
+              );
+              break;
+            case 'deck':
+              transferArrayItem(
+                card_select.from,
+                this.getPlayer(card_select.card.owner).deck.cards,
+                card_select.from.indexOf(card_select.card),
+                event.currentIndex
+              );
+              break;
+            case 'grave':
+              transferArrayItem(
+                card_select.from,
+                this.getPlayer(card_select.card.owner).grave,
+                card_select.from.indexOf(card_select.card),
+                event.currentIndex
+              );
+              break;
+            case 'exile':
+              transferArrayItem(
+                card_select.from,
+                this.getPlayer(card_select.card.owner).exile,
+                card_select.from.indexOf(card_select.card),
+                event.currentIndex
+              );
+              break;
+            case 'temp_zone':
+              transferArrayItem(
+                card_select.from,
+                event.container.data,
+                card_select.from.indexOf(card_select.card),
+                event.currentIndex
+              );
+              break;
+            case 'command_zone':
+              if (card_select.card.iscommander) {
+                transferArrayItem(
+                  card_select.from,
+                  this.getPlayer(card_select.card.owner).deck.commander,
+                  card_select.from.indexOf(card_select.card),
+                  event.currentIndex
+                );
+                break;
+              }
+          }
+        }
+      }
+
+      else { //card is being moved to play
+
+      }
+    }
+  }
+
+  /**------------------------------------------------
+   *               Sidenav Functions                *
+   ------------------------------------------------**/
 
   @ViewChild('fddp_sidenav') fddp_sidenav: any;
   openSideNav(type: string) {
@@ -792,93 +400,9 @@ export class PlaymatResizedComponent implements OnInit {
   }
 
 
-  getCount(player: any, type: string) {
-    if (player) {
-      let count = 0;
-      if(type.toLowerCase() === 'white') {
-        for (let spot of player.playmat) {
-          for (let card of spot) {
-            if (card.mana_cost) {
-              for(let mana of card.mana_cost) {
-                if(mana === 'W') {
-                  count++;
-                }
-              }
-            }
-          }
-        }
-      }
-      else if (type.toLowerCase() === 'blue') {
-        for (let spot of player.playmat) {
-          for (let card of spot) {
-            console.log(card);
-            if (card.mana_cost) {
-              for(let mana of card.mana_cost) {
-                if(mana === 'U') {
-                  count++;
-                }
-              }
-            }
-          }
-        }
-      }
-      else if (type.toLowerCase() === 'black') {
-        for (let spot of player.playmat) {
-          for (let card of spot) {
-            if (card.mana_cost) {
-              for(let mana of card.mana_cost) {
-                if(mana === 'B') {
-                  count++;
-                }
-              }
-            }
-          }
-        }
-      }
-      else if (type.toLowerCase() === 'red') {
-        for (let spot of player.playmat) {
-          for (let card of spot) {
-            if (card.mana_cost) {
-              for(let mana of card.mana_cost) {
-                if(mana === 'R') {
-                  count++;
-                }
-              }
-            }
-          }
-        }
-      }
-      else if (type.toLowerCase() === 'green') {
-        for (let spot of player.playmat) {
-          for (let card of spot) {
-            if (card.mana_cost) {
-              for(let mana of card.mana_cost) {
-                if(mana === 'G') {
-                  count++;
-                }
-              }
-            }
-          }
-        }
-      }
-      else {
-        for (let spot of player.playmat) {
-          for (let card of spot) {
-            if (card.types.includes(type)) {
-              count++;
-            }
-          }
-        }
-      }
-      return count;
-    }
-    else {
-      return 0;
-    }
-
-  }
-
-
+  /**------------------------------------------------
+   *      Right-Click Replacement Functions         *
+   ------------------------------------------------**/
   menuTopLeftPosition =  {x: '0', y: '0'}
   @ViewChild(MatMenuTrigger, {static: true}) matMenuTrigger: any;
 

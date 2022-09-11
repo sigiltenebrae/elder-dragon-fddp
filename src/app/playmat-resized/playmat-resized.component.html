@@ -322,7 +322,7 @@
               <div class="opponent-playmat-holder" fxLayout="row wrap" fxLayout.lt-md="column" fxLayoutAlign="center">
                 <div *ngFor="let player of players">
                   <div *ngIf="isOpponent(player)" class="playmat-opponent" [ngClass]="{'playmat-opponent-selected': player.selected}" fxLayout="row wrap" fxLayoutAlign="center center">
-                    <div *ngFor="let spot of reverse(player.playmat)" class="mtg-card-holder-opponent">
+                    <div *ngFor="let spot of reversePlaymat(player.playmat)" class="mtg-card-holder-opponent">
                       <div *ngFor="let card of spot; let i = index">
                         <img
                           [ngClass]="
