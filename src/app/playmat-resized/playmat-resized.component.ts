@@ -218,7 +218,9 @@ export class PlaymatResizedComponent implements OnInit {
   untapAll() {
     for (let spot of this.user.playmat) {
       for (let card of spot) {
-        card.tapped = 'untapped';
+        if (!card.locked) {
+          card.tapped = 'untapped';
+        }
       }
     }
   }
@@ -274,6 +276,12 @@ export class PlaymatResizedComponent implements OnInit {
    *          Card Transfer Helper Functions        *
    ------------------------------------------------**/
 
+  /**
+   * Drag event handler for moving a card
+   * @param event
+   * @param location string value of where to move the card.
+   * Accepts: 'hand', 'deck', 'grave', 'exile', 'temp_zone', 'command_zone' or 'play'
+   */
   moveCardToZone(event: any, location: string) {
     //Hand, Command Zone, Deck, Grave, Exile, Temp Zone, Play
     let cur_card = event.previousContainer.data[event.previousIndex];
@@ -376,6 +384,49 @@ export class PlaymatResizedComponent implements OnInit {
       }
     }
     this.selected_cards = [];
+  }
+
+  /**
+   * Manual handler for moving a card. Constructs a drag event and passes into the drag handler.
+   * @param card card to move
+   * @param from location of card to move
+   * @param location string value of where to move the card.
+   * Accepts: 'hand', 'deck', 'grave', 'exile', 'temp_zone', 'selected', 'command_zone' or 'play'
+   */
+  sendCardToZone(card: any, from: any[], location: string) {
+    let event:any = {}
+    event.previousContainer = {}
+    event.container = {}
+    event.previousContainer.data = from;
+    event.previousIndex = from.indexOf(card);
+    switch (location) {
+      case 'hand':
+        event.container.data = this.user.hand;
+        break;
+      case 'deck':
+        event.container.data = this.user.deck.cards;
+        break;
+      case 'grave':
+        event.container.data = this.user.grave;
+        break;
+      case 'exile':
+        event.container.data = this.user.exile;
+        break;
+      case 'temp_zone':
+        event.container.data = this.user.temp_zone;
+        break;
+      case 'selected':
+        event.container.data = this.selected_player.temp_zone;
+        break;
+      case 'command_zone':
+        event.container.data = this.user.deck.commander;
+        break;
+      case 'play':
+        event.container.data = this.user.playmat[0];
+        break;
+    }
+    event.currentIndex = 0;
+    this.moveCardToZone(event, location);
   }
 
   /**------------------------------------------------
