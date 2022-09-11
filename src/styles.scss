@@ -168,6 +168,13 @@ $mtg-green: #087f23;
   justify-content: center;
 }
 
+.mtg-card-user-container .mtg-lock {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+}
+
 .mtg-counter-1 p, .mtg-counter-2 p, .mtg-counter-3 p, .mtg-multiplier-counter p, .mtg-counter-1-alt p{
   font-family: Beleren, "Helvetica Neue", sans-serif !important;
   margin: 3px;

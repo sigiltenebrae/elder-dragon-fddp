@@ -382,6 +382,7 @@
                            (cdkDragStarted)="hovered_card=null"
                            class="mtg-card-user-container" [@userTappedState]="card.tapped"
                            cdkDrag>
+                        <div *ngIf="card.locked" class="mtg-lock"><mat-icon>lock</mat-icon></div>
                         <img [ngClass]="{'mtg-card-user-selected': card.selected }"
                              class="mtg-card-user"
                              src="{{card.image}}"
