@@ -478,6 +478,10 @@ export class PlaymatResizedComponent implements OnInit {
     this.moveCardToZone(event, location);
   }
 
+  /**
+   * Draws to the temp zone until it reaches a card of the given type
+   * @param type
+   */
   drawUntil(type: string) {
     while(true) {
       if (this.user.deck.cards.length > 0) {
@@ -495,6 +499,11 @@ export class PlaymatResizedComponent implements OnInit {
     }
   }
 
+
+  /**
+   * Draws cards to the temp zone until it reaches a non-land with a cmc lower than the given.
+   * @param cmc
+   */
   cascade(cmc: any) {
     cmc = Number(cmc);
     while(true) {
