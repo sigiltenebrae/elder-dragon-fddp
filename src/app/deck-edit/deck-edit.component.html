@@ -73,7 +73,7 @@
       </div>
     </div>
     <div *ngIf="selected_card && !changing_image" fxLayout="column" fxFlex fxLayoutAlign="center center" fxLayoutGap="20">
-      <img src="{{selected_card.image}}" class="commander-viewer-single">
+      <img src="{{selected_card.image}}" class="deck-edit-image">
       <div fxLayout="row">
         <button *ngIf="selected_card.iscommander" mat-raised-button color="accent" style="margin: 5px;" (click)="selected_card.iscommander=false">Unset Commander</button>
         <button *ngIf="!selected_card.iscommander" mat-raised-button color="accent" style="margin: 5px;" (click)="selected_card.iscommander=true; deck.image=deck.image===''? selected_card.image: deck.image">Set Commander</button>

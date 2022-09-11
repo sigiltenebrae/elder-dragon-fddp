@@ -36,6 +36,7 @@ import { DeckEditComponent } from './deck-edit/deck-edit.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CustomImagesComponent } from './custom-images/custom-images.component';
 import { CustomImageManagerComponent } from './custom-image-manager/custom-image-manager.component';
+import { DeckManagerComponent } from './deck-manager/deck-manager.component';
 
 
 @NgModule({
@@ -44,7 +45,8 @@ import { CustomImageManagerComponent } from './custom-image-manager/custom-image
     PlaymatResizedComponent,
     DeckEditComponent,
     CustomImagesComponent,
-    CustomImageManagerComponent
+    CustomImageManagerComponent,
+    DeckManagerComponent
   ],
   imports: [
     BrowserModule,

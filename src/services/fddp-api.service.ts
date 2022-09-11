@@ -61,6 +61,31 @@ export class FddpApiService {
     })
   }
 
+  public updateDeck(deck: any): Promise<void> {
+    return new Promise<void>((resolve) => {
+      this.http.put<any>(environment.fddp_api_url + '/decks/' + deck.id,
+        JSON.stringify({deck: deck}),
+        {headers : new HttpHeaders({'Content-Type': 'application/json'})}).subscribe((deck_response: any) => {
+         if (deck_response.errors) {
+           if (deck_response.errors.length == 0) {
+             console.log('deck updated');
+           }
+           else {
+             console.log('Errors in deck update: ');
+             deck.errors.forEach((error: any) => {
+               console.log(error);
+             });
+           }
+           resolve();
+         }
+      }, (error) => {
+          console.log('Error updating deck');
+          console.log(error);
+          resolve();
+      });
+    });
+  }
+
   public getDeck(deckid: number): Promise<any> {
     return new Promise<any>((resolve) => {
       this.http.get(environment.fddp_api_url + '/decks/' + deckid).subscribe((deck:any) => {

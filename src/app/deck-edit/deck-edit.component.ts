@@ -71,6 +71,8 @@ export class DeckEditComponent implements OnInit {
     else {
       this.fddp_data.getDeck(this.deckid).then((deck) => {
         this.deck = deck;
+        this.deck.delete = [];
+        console.log(deck);
       })
     }
   }
@@ -160,8 +162,14 @@ export class DeckEditComponent implements OnInit {
   }
 
   saveDeck() {
+    console.log(this.deck);
     if (this.deckid == -1) { //create
       this.fddp_data.createDeck(this.deck).then(() => {
+        this.router.navigate(['/']);
+      });
+    }
+    else {
+      this.fddp_data.updateDeck(this.deck).then(() => {
         this.router.navigate(['/']);
       });
     }
@@ -173,6 +181,7 @@ export class DeckEditComponent implements OnInit {
       if (item.type == 'card_count') {
         item.card.count--;
         if (item.card.count == 0) {
+          this.deck.delete.push(item.card);
           this.deck.cards.splice(this.deck.cards.indexOf(item.card), 1);
         }
       }
