@@ -10,55 +10,55 @@
       <button mat-menu-item (click)="untapAll()">Untap All</button>
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'deck'">
         <div>
-          <button mat-button (click)="drawCard(current_draw)">Draw</button>
-          <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white" [(ngModel)]="current_draw">
+          <button mat-button>Draw</button>
+          <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
         </div>
         <div>
-          <button mat-button (click)="openSideNav('scry')">Scry</button>
-          <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white" [(ngModel)]="current_draw">
+          <button mat-button>Scry</button>
+          <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
         </div>
         <div>
-          <button mat-button (click)="drawToZone(current_drawto, 'play')">Draw to Play</button>
-          <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white" [(ngModel)]="current_drawto">
+          <button mat-button>Draw to Play</button>
+          <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
         </div>
         <div>
-          <button mat-button (click)="drawToZone(current_drawto, 'grave')">Draw to Grave</button>
-          <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white" [(ngModel)]="current_drawto">
+          <button mat-button>Draw to Grave</button>
+          <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
         </div>
         <div>
-          <button mat-button (click)="drawToZone(current_drawto, 'exile')">Draw to Exile</button>
-          <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white" [(ngModel)]="current_drawto">
+          <button mat-button>Draw to Exile</button>
+          <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
         </div>
         <div>
-          <button mat-button (click)="drawToZone(current_drawto, 'temp_zone')">Draw to Temp</button>
-          <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white" [(ngModel)]="current_drawto">
+          <button mat-button>Draw to Temp</button>
+          <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
         </div>
         <div>
-          <button mat-button (click)="drawToOtherTempZone(current_drawto, selected_player)">Send to Selected</button>
-          <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white" [(ngModel)]="current_drawto">
+          <button mat-button>Send to Selected</button>
+          <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
         </div>
         <button mat-menu-item (click)="openSideNav('deck')">Search Deck</button>
         <button mat-menu-item (click)="shuffleDeck(user.deck.cards)">Shuffle</button>
         <button mat-menu-item (click)="nextTurn()">Next Turn</button>
       </div>
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'hand'">
-        <button mat-menu-item (click)="sendToPlayWrapper(rightclicked_item.card, rightclicked_item.from)">Send to Play</button>
-        <button mat-menu-item (click)="sendToGrave(rightclicked_item.card, rightclicked_item.from)">Send to Grave</button>
-        <button mat-menu-item (click)="sendToExile(rightclicked_item.card, rightclicked_item.from)">Send to Exile</button>
-        <button mat-menu-item (click)="sendToDeck(rightclicked_item.card, rightclicked_item.from, 0)">Send to Deck Top</button>
-        <button mat-menu-item (click)="sendToDeck(rightclicked_item.card, rightclicked_item.from, -1)">Send to Deck Bottom</button>
-        <button mat-menu-item (click)="sendToTempZone(rightclicked_item.card, rightclicked_item.from, user)">Send to Temp</button>
-        <button mat-menu-item (click)="sendToTempZone(rightclicked_item.card, rightclicked_item.from, selected_player)">Send to Selected</button>
+        <button mat-menu-item>Send to Play</button>
+        <button mat-menu-item>Send to Grave</button>
+        <button mat-menu-item>Send to Exile</button>
+        <button mat-menu-item>Send to Deck Top</button>
+        <button mat-menu-item>Send to Deck Bottom</button>
+        <button mat-menu-item>Send to Temp</button>
+        <button mat-menu-item>Send to Selected</button>
       </div>
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'inPlayUser'">
         <button mat-menu-item (click)="tapSpot(rightclicked_item.spot)">(un)Tap Stack</button>
-        <button mat-menu-item (click)="sendToHand(rightclicked_item.card, rightclicked_item.spot)">Send to Hand</button>
-        <button mat-menu-item (click)="sendToGrave(rightclicked_item.card, rightclicked_item.spot)">Send to Grave</button>
-        <button mat-menu-item (click)="sendToExile(rightclicked_item.card, rightclicked_item.spot)">Send to Exile</button>
-        <button mat-menu-item (click)="sendToTempZone(rightclicked_item.card, rightclicked_item.spot, user)">Send to Temp</button>
-        <button mat-menu-item (click)="sendToTempZone(rightclicked_item.card, rightclicked_item.spot, selected_player)">Send to Selected</button>
-        <button mat-menu-item (click)="sendToDeck(rightclicked_item.card, rightclicked_item.spot, 0)">Send to Deck Top</button>
-        <button mat-menu-item (click)="sendToDeck(rightclicked_item.card, rightclicked_item.spot, -1)">Send to Deck Bottom</button>
+        <button mat-menu-item>Send to Hand</button>
+        <button mat-menu-item>Send to Grave</button>
+        <button mat-menu-item>Send to Exile</button>
+        <button mat-menu-item>Send to Temp</button>
+        <button mat-menu-item>Send to Selected</button>
+        <button mat-menu-item>Send to Deck Top</button>
+        <button mat-menu-item>Send to Deck Bottom</button>
         <button mat-menu-item (click)="rightclicked_item.card.counter_1 = !rightclicked_item.card.counter_1; rightclicked_item.card.counter_1_value=0">Toggle Counter 1</button>
         <button mat-menu-item (click)="rightclicked_item.card.counter_2 = !rightclicked_item.card.counter_2; rightclicked_item.card.counter_2_value=0">Toggle Counter 2</button>
         <button mat-menu-item (click)="rightclicked_item.card.counter_3 = !rightclicked_item.card.counter_3; rightclicked_item.card.counter_3_value=0">Toggle Counter 3</button>
@@ -74,14 +74,14 @@
         <button mat-menu-item (click)="openSideNav('temp_zone')">View Temp Zones</button>
       </div>
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'sidenav'">
-        <button mat-menu-item (click)="sendToPlayWrapper(rightclicked_item.card, rightclicked_item.from)">Send to Play</button>
-        <button mat-menu-item (click)="sendToGrave(rightclicked_item.card, rightclicked_item.from)">Send to Grave</button>
-        <button mat-menu-item (click)="sendToExile(rightclicked_item.card, rightclicked_item.from)">Send to Exile</button>
-        <button mat-menu-item (click)="sendToDeck(rightclicked_item.card, rightclicked_item.from, 0)">Send to Deck Top</button>
-        <button mat-menu-item (click)="sendToDeck(rightclicked_item.card, rightclicked_item.from, -1)">Send to Deck Bottom</button>
-        <button mat-menu-item (click)="sendToHand(rightclicked_item.card, rightclicked_item.from)">Send to Hand</button>
-        <button mat-menu-item (click)="sendToTempZone(rightclicked_item.card, rightclicked_item.from, user)">Send to Temp</button>
-        <button mat-menu-item (click)="sendToTempZone(rightclicked_item.card, rightclicked_item.from, selected_player)">Send to Selected</button>
+        <button mat-menu-item>Send to Play</button>
+        <button mat-menu-item>Send to Grave</button>
+        <button mat-menu-item>Send to Exile</button>
+        <button mat-menu-item>Send to Deck Top</button>
+        <button mat-menu-item>Send to Deck Bottom</button>
+        <button mat-menu-item>Send to Hand</button>
+        <button mat-menu-item>Send to Temp</button>
+        <button mat-menu-item>Send to Selected</button>
       </div>
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'commander'">
 
@@ -126,7 +126,7 @@
           </mat-autocomplete>
         </mat-form-field>
         <div class="sidenav-list" cdkDropList
-             (cdkDropListDropped)="moveCardToGrave($event)"
+             (cdkDropListDropped)="moveCardToZone($event, 'grave')"
              [cdkDropListData]="sidenav_selected_player.grave">
           <div *ngFor="let card of sidenav_selected_player.grave"
                class="sidenav-list-item"
@@ -165,7 +165,7 @@
           </mat-autocomplete>
         </mat-form-field>
         <div class="sidenav-list" cdkDropList
-             (cdkDropListDropped)="moveCardToExile($event)"
+             (cdkDropListDropped)="moveCardToZone($event, 'exile')"
              [cdkDropListData]="sidenav_selected_player.exile">
           <div *ngFor="let card of sidenav_selected_player.exile"
                class="sidenav-list-item"
@@ -205,7 +205,7 @@
           </mat-autocomplete>
         </mat-form-field>
         <div class="sidenav-list" cdkDropList
-             (cdkDropListDropped)="moveCardToTempZone($event)"
+             (cdkDropListDropped)="moveCardToZone($event, 'temp_zone')"
              [cdkDropListData]="sidenav_selected_player.temp_zone">
           <div *ngFor="let card of sidenav_selected_player.temp_zone"
                class="sidenav-list-item"
@@ -237,7 +237,7 @@
           </mat-autocomplete>
         </mat-form-field>
         <div class="sidenav-list" cdkDropList
-             (cdkDropListDropped)="moveCardToDeck($event)"
+             (cdkDropListDropped)="moveCardToZone($event, 'deck')"
              [cdkDropListData]="sidenav_selected_player.deck.cards">
           <div *ngFor="let card of sidenav_selected_player.deck.cards; let c = index">
             <div *ngIf="sidenav_type === 'deck' || (sidenav_type === 'scry' && c < sidenav_scry)" class="sidenav-list-item"
@@ -349,7 +349,7 @@
                      class="mtg-card-holder-user"
                      cdkDropList
                      [cdkDropListData]="spot"
-                     (cdkDropListDropped)="moveCardToPlay($event)">
+                     (cdkDropListDropped)="moveCardToZone($event, 'play')">
                   <div *ngFor="let card of spot; let i = index">
                     <div [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2}"
                          (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
@@ -396,7 +396,7 @@
                 <div cdkDropList class="user-hand-list"
                      cdkDropListOrientation="horizontal"
                      [cdkDropListData]="user.hand"
-                     (cdkDropListDropped)="moveCardToHand($event)" fxFlex fxLayout="row" fxLayoutAlign="start">
+                     (cdkDropListDropped)="moveCardToZone($event, 'hand')" fxFlex fxLayout="row" fxLayoutAlign="start">
                   <h1 class="hand-count">{{user.hand.length}}</h1>
                   <div *ngFor="let card of user.hand" [ngClass]="{'mtg-card-user-container': card.selected}"
                        fxFlex fxLayout="column"
@@ -414,11 +414,10 @@
         </div>
         <div class="user-deck">
           <div class="zone-data"
-               (dblclick)="drawCard(1);"
                (contextmenu)="onRightClick($event, {type: 'deck'})"
                cdkDropList [cdkDropListData]="user.deck.cards"
                cdkDropListOrientation="horizontal"
-               (cdkDropListDropped)="moveCardToDeck($event)">
+               (cdkDropListDropped)="moveCardToZone($event, 'deck')">
             <h1 class="zone-count">{{user.deck.cards.length}}</h1>
             <img class="mtg-card-user"
                  src="https://c1.scryfall.com/file/scryfall-card-backs/large/59/597b79b3-7d77-4261-871a-60dd17403388.jpg?1561757129"
@@ -432,7 +431,7 @@
                (contextmenu)="onRightClick($event, {type: 'grave'})"
                cdkDropList [cdkDropListData]="user.grave"
                cdkDropListOrientation="horizontal"
-               (cdkDropListDropped)="moveCardToGrave($event)">
+               (cdkDropListDropped)="moveCardToZone($event, 'grave')">
             <div class="zone-title"><h5>Graveyard</h5></div>
             <h1 class="zone-count">{{user.grave.length}}</h1>
             <div *ngIf="user.grave.length == 0" class="mtg-card-user"></div>
@@ -446,7 +445,7 @@
           <div class="zone-data" (contextmenu)="onRightClick($event, {type: 'exile'})"
                cdkDropList [cdkDropListData]="user.exile"
                cdkDropListOrientation="horizontal"
-               (cdkDropListDropped)="moveCardToExile($event)">
+               (cdkDropListDropped)="moveCardToZone($event, 'exile')">
             <div class="zone-title"><h5>Exile</h5></div>
             <h1 class="zone-count">{{user.exile.length}}</h1>
             <div *ngIf="user.exile.length == 0" class="mtg-card-user"></div>
@@ -460,7 +459,7 @@
           <div class="zone-data" (contextmenu)="onRightClick($event, {type: 'temp-zone'})"
                cdkDropList [cdkDropListData]="user.temp_zone"
                cdkDropListOrientation="horizontal"
-               (cdkDropListDropped)="moveCardToTempZone($event)">
+               (cdkDropListDropped)="moveCardToZone($event, 'temp_zone')">
             <div class="zone-title"><h5>Temp</h5></div>
             <h1 class="zone-count">{{user.temp_zone.length}}</h1>
             <div *ngIf="user.temp_zone.length == 0" class="mtg-card-user"></div>
@@ -472,7 +471,7 @@
         </div>
         <div class="commander-viewer" cdkDropList
              [cdkDropListData]="user.deck.commander"
-             (cdkDropListDropped)="moveCardToCommandZone($event)">
+             (cdkDropListDropped)="moveCardToZone($event, 'command_zone')">
           <div *ngIf="user.deck.commander.length == 1">
             <img class="commander-viewer-single" src="{{user.deck.commander[0].image}}" cdkDrag>
           </div>
@@ -495,7 +494,7 @@
                   <mat-label>Enter a Type</mat-label>
                   <input #custom_search matInput>
                 </mat-form-field>
-                <h2 style="margin: 0 0 2px 10px">Count: {{getCount(user, custom_search.value)}}</h2>
+                <h2 style="margin: 0 0 2px 10px">Count: 2</h2>
               </div>
             </div>
           </div>
@@ -509,10 +508,10 @@
         <div class="selected-player-data">
           <div fxFlex fxLayout="row" fxLayoutAlign="center center">
             <div fxLayout="column" fxFlex>
-              <h3 style="margin: 0 0 0 4px;">Creatures: {{getCount(selected_player, 'Creature')}}</h3>
-              <h3 style="margin: 0 0 0 4px;">Artifacts: {{getCount(selected_player, 'Artifact')}}</h3>
-              <h3 style="margin: 0 0 0 4px;">Enchantments: {{getCount(selected_player, 'Enchantment')}}</h3>
-              <h3 style="margin: 0 0 0 4px;">Lands: {{getCount(selected_player, 'Land')}}</h3>
+              <h3 style="margin: 0 0 0 4px;">Creatures: 2</h3>
+              <h3 style="margin: 0 0 0 4px;">Artifacts: 2</h3>
+              <h3 style="margin: 0 0 0 4px;">Enchantments: 2</h3>
+              <h3 style="margin: 0 0 0 4px;">Lands: 2</h3>
             </div>
             <div fxLayout="column" fxFlex>
 

@@ -42,8 +42,6 @@ export class PlaymatResizedComponent implements OnInit {
   hovered_card: any = null;
   rightclicked_item: any = null;
   sidenav_type: any = null;
-  current_draw = 1;
-  current_drawto = 1;
   selected_cards: any[] = [];
   sidenav_sort = '';
   sidenav_scry = 0;
@@ -101,8 +99,8 @@ export class PlaymatResizedComponent implements OnInit {
             card.counter_2_value = 0;
             card.counter_3_value = 0;
             card.multiplier_value = 0;
-            //card.owner = out_player.name;
-            card.owner = 'Liam';
+            card.owner = out_player.name;
+            //card.owner = 'Liam';
             card.power_mod = 0;
             card.toughness_mod = 0;
             card.loyalty_mod = 0;
@@ -278,80 +276,106 @@ export class PlaymatResizedComponent implements OnInit {
 
   moveCardToZone(event: any, location: string) {
     //Hand, Command Zone, Deck, Grave, Exile, Temp Zone, Play
-
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    let cur_card = event.previousContainer.data[event.previousIndex];
+    if (location !== 'temp_zone' && location !== 'play') {
+      this.clearCard(cur_card); //wipe all counters
     }
-    else {
-      let cur_card = event.previousContainer.data[event.previousIndex];
-      if (location !== 'temp_zone' && location !== 'play') {
-        this.clearCard(cur_card); //wipe all counters
-      }
-      if (!cur_card.selected) { //add the card to selected list if it isn't already
-        this.toggleCardSelect(cur_card, event.previousContainer.data);
-      }
+    if (!cur_card.selected) { //add the card to selected list if it isn't already
+      this.toggleCardSelect(cur_card, event.previousContainer.data);
+    }
 
-      if (location !== 'play') {
+    if (location !== 'play') {
+      for (let card_select of this.selected_cards) {
+        switch(location) {
+          case 'hand':
+            if (card_select.from === this.getPlayer(card_select.card.owner).hand) { //If it is already in hand
+              moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex);
+            }
+            else {
+              transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).hand, card_select.from.indexOf(card_select.card), event.currentIndex);
+            }
+            break;
+          case 'deck':
+            if (card_select.from === this.getPlayer(card_select.card.owner).deck.cards) { //If it is already in the deck
+              moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex)
+            }
+            else {
+              transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), event.currentIndex);
+            }
+            break;
+          case 'grave':
+            if (card_select.from === this.getPlayer(card_select.card.owner).grave) { //If it is already in grave
+              moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex)
+            }
+            else {
+              //transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).grave, card_select.from.indexOf(card_select.card), event.currentIndex);
+              //changed to insert at the top of grave no matter what
+              transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).grave, card_select.from.indexOf(card_select.card), 0);
+            }
+            break;
+          case 'exile':
+            if (card_select.from === this.getPlayer(card_select.card.owner).exile) { //If it is already in exile
+              moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex)
+            }
+            else {
+              transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).exile, card_select.from.indexOf(card_select.card), 0);
+            }
+            break;
+          case 'temp_zone':
+            if (card_select.from === event.container.data) { //If it is already in temp zone
+              moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex);
+            }
+            else {
+              transferArrayItem(card_select.from, event.container.data, card_select.from.indexOf(card_select.card), 0);
+            }
+            break;
+          case 'command_zone':
+            if (card_select.card.iscommander) {
+              if (card_select.from === this.getPlayer(card_select.card.owner).deck.commander) { //If it is already in hand
+                moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex);
+              }
+              else {
+                transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.commander, card_select.from.indexOf(card_select.card), event.currentIndex);
+              }
+              break;
+            }
+        }
+        card_select.card.selected = false;
+      }
+    }
+    else { //card is being moved to play
+      if (this.selected_cards.length == 1) { //only moving 1 card, just use default behavior
+        if (event.previousContainer === event.container) {
+          moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+        }
+        else {
+          if (event.container.data.length < 3) {
+            transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
+          }
+        }
+        cur_card.selected = false;
+      }
+      else {
+        //Get the index on the playmat of the spot you are moving to
+        let spot_index = this.user.playmat.indexOf(event.container.data);
         for (let card_select of this.selected_cards) {
-          switch(location) {
-            case 'hand':
-              transferArrayItem(
-                card_select.from,
-                this.getPlayer(card_select.card.owner).hand,
-                card_select.from.indexOf(card_select.card),
-                event.currentIndex
-              );
-              break;
-            case 'deck':
-              transferArrayItem(
-                card_select.from,
-                this.getPlayer(card_select.card.owner).deck.cards,
-                card_select.from.indexOf(card_select.card),
-                event.currentIndex
-              );
-              break;
-            case 'grave':
-              transferArrayItem(
-                card_select.from,
-                this.getPlayer(card_select.card.owner).grave,
-                card_select.from.indexOf(card_select.card),
-                event.currentIndex
-              );
-              break;
-            case 'exile':
-              transferArrayItem(
-                card_select.from,
-                this.getPlayer(card_select.card.owner).exile,
-                card_select.from.indexOf(card_select.card),
-                event.currentIndex
-              );
-              break;
-            case 'temp_zone':
-              transferArrayItem(
-                card_select.from,
-                event.container.data,
-                card_select.from.indexOf(card_select.card),
-                event.currentIndex
-              );
-              break;
-            case 'command_zone':
-              if (card_select.card.iscommander) {
-                transferArrayItem(
-                  card_select.from,
-                  this.getPlayer(card_select.card.owner).deck.commander,
-                  card_select.from.indexOf(card_select.card),
-                  event.currentIndex
-                );
+          card_select.card.selected = false;
+          if (card_select.from != event.container.data) { //if the card is already there, skip it
+            for (let spot_offset = 0; spot_offset < this.user.playmat.length; spot_offset++) {
+              //start at the spot you are trying to insert on and loop around
+              let current_index = spot_index + spot_offset;
+              if (current_index >= this.user.playmat.length) { current_index -= this.user.playmat.length }
+              if (this.user.playmat[current_index].length < 3) {
+                this.user.playmat[current_index].push(card_select.card);
+                card_select.from.splice(card_select.from.indexOf(card_select.card), 1);
                 break;
               }
+            }
           }
         }
       }
-
-      else { //card is being moved to play
-
-      }
     }
+    this.selected_cards = [];
   }
 
   /**------------------------------------------------
@@ -366,9 +390,8 @@ export class PlaymatResizedComponent implements OnInit {
     this.getSidenavSort(this.user.exile);
     this.getSidenavSort(this.user.temp_zone);
     this.sidenav_type = type;
-    this.sidenav_scry = this.current_draw;
+    this.sidenav_scry = 2; //DEBUGGING, NEED TO FIX
     this.fddp_sidenav.open();
-    this.current_draw = 1;
   }
 
   closeSideNav() {
