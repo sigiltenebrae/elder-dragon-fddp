@@ -34,6 +34,14 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 
 @include mat.all-component-themes($fddp-theme-dark);
 
+//variables
+$mtg-white: #aeaeae;
+$mtg-blue: #0069c0;
+$mtg-black: #373737;
+$mtg-red: #ba000d;
+$mtg-green: #087f23;
+
+
 .star { //for ngb-rating
   font-size: 1.5rem;
   color: rgba(mat.get-color-from-palette($fddp-palette-primary-dark, 500), 0.4);
@@ -200,7 +208,61 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   box-shadow:0 0 0 1px black inset;
 }
 
+.playmat-user-holder {
+  position: relative;
+  min-width: 1264px;
+  max-width: 1264px;
+  width: 1264px !important;
+  min-height: 409px;
+  max-height: 409px;
+  height: 409px !important;
+}
+
+.playmat-user-devotions {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 60px;
+  max-width: 60px;
+  width: 60px !important;
+  min-height: 409px;
+  max-height: 409px;
+  height: 409px !important;
+}
+
+.playmat-user-devotions .devotion-holder {
+  min-width: 48px;
+  max-width: 48px;
+  width: 48px !important;
+  min-height: 48px;
+  max-height: 48px;
+  height: 48px !important;
+}
+
+.playmat-user-devotions .devotion-white {
+  background: $mtg-white;
+}
+
+.playmat-user-devotions .devotion-blue {
+  background: $mtg-blue;
+}
+
+.playmat-user-devotions .devotion-black {
+  background: $mtg-black;
+}
+
+.playmat-user-devotions .devotion-red {
+  background: $mtg-red;
+}
+
+.playmat-user-devotions .devotion-green {
+  background: $mtg-green;
+}
+
 .playmat-user {
+  position: absolute;
+  top: 0;
+  left: 60px;
   min-width: 1144px;
   max-width: 1144px;
   width: 1144px !important;

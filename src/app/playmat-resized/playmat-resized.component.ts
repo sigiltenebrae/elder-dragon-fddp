@@ -107,6 +107,7 @@ export class PlaymatResizedComponent implements OnInit {
             card.locked = false;
             card.primed = false;
             card.triggered = false;
+            card.is_token = false;
           })
           out_player.deck.commander.forEach((card: any) => {
             card.counter_1 = false;
@@ -124,6 +125,7 @@ export class PlaymatResizedComponent implements OnInit {
             card.locked = false;
             card.primed = false;
             card.triggered = false;
+            card.is_token = false;
           })
 
           out_player.selected = false;
@@ -270,6 +272,29 @@ export class PlaymatResizedComponent implements OnInit {
       cards[i] = temp;
     }
 
+  }
+
+  isPermanent(card: any) {
+    return card.types.includes("Creature") ||
+      card.types.includes("Artifact") ||
+      card.types.includes("Enchantment") ||
+      card.types.includes("Land");
+  }
+
+  devotionCount(player: any, color: string) {
+    let count = 0;
+    if (player) {
+      for (let spot of player.playmat) {
+        for (let card of spot) {
+          if (this.isPermanent(card) && !card.is_token) {
+            if (card.mana_cost) {
+              card.mana_cost.forEach((mana: any) => { if(mana === color) { count++ }});
+            }
+          }
+        }
+      }
+    }
+    return count;
   }
 
   /**------------------------------------------------
