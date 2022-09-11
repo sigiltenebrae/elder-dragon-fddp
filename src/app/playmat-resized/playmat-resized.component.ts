@@ -311,14 +311,6 @@ export class PlaymatResizedComponent implements OnInit {
               transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), 0);
             }
             break;
-          case 'deck_top':
-            if (card_select.from === this.getPlayer(card_select.card.owner).deck.cards) { //If it is already in the deck
-              moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex)
-            }
-            else {
-              transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), 0);
-            }
-            break;
           case 'deck_bottom': //this should never happen from a drag event, only from a 'send'
             if (card_select.from === this.getPlayer(card_select.card.owner).deck.cards) { //If it is already in the deck
               moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex)
@@ -421,6 +413,7 @@ export class PlaymatResizedComponent implements OnInit {
         event.currentIndex = 0;
         break;
       case 'deck_top':
+        location = 'deck'
         event.container.data = this.user.deck.cards;
         event.currentIndex = 0;
         break;
@@ -442,6 +435,8 @@ export class PlaymatResizedComponent implements OnInit {
         break;
       case 'selected':
         if (this.selected_player) {
+          location = 'temp_zone';
+          console.log(this.selected_player);
           event.container.data = this.selected_player.temp_zone;
           event.currentIndex = 0;
         }
