@@ -108,6 +108,7 @@ export class PlaymatResizedComponent implements OnInit {
             card.primed = false;
             card.triggered = false;
             card.is_token = false;
+            card.tapped = 'untapped';
           })
           out_player.deck.commander.forEach((card: any) => {
             card.counter_1 = false;
@@ -126,6 +127,7 @@ export class PlaymatResizedComponent implements OnInit {
             card.primed = false;
             card.triggered = false;
             card.is_token = false;
+            card.tapped = 'untapped';
           })
 
           out_player.selected = false;

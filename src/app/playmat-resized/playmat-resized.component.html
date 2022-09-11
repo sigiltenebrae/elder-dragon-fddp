@@ -68,6 +68,7 @@
         <button mat-menu-item (click)="rightclicked_item.card.counter_2 = !rightclicked_item.card.counter_2; rightclicked_item.card.counter_2_value=0">Toggle Counter 2</button>
         <button mat-menu-item (click)="rightclicked_item.card.counter_3 = !rightclicked_item.card.counter_3; rightclicked_item.card.counter_3_value=0">Toggle Counter 3</button>
         <button mat-menu-item (click)="rightclicked_item.card.multiplier = !rightclicked_item.card.multiplier; rightclicked_item.card.multiplier_value=0">Toggle Multiplier</button>
+        <button mat-menu-item (click)="rightclicked_item.card.locked = !rightclicked_item.card.locked;">Lock Card</button>
       </div>
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'grave'">
         <button mat-menu-item (click)="openSideNav('grave')">View Graveyards</button>
