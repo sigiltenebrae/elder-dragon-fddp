@@ -83,6 +83,8 @@ export class PlaymatResizedComponent implements OnInit {
           out_player.infect = 0;
           out_player.turn = turn;
           out_player.playmat = []
+          out_player.command_tax_1 = 0;
+          out_player.command_tax_2 = 0;
           for (let i = 0; i < 36; i++) {
             out_player.playmat.push([])
           }
@@ -110,6 +112,7 @@ export class PlaymatResizedComponent implements OnInit {
             card.is_token = false;
             card.tapped = 'untapped';
             card.sidenav_visible = true;
+            card.visible = []
           })
           out_player.deck.commander.forEach((card: any) => {
             card.counter_1 = false;
@@ -130,6 +133,7 @@ export class PlaymatResizedComponent implements OnInit {
             card.is_token = false;
             card.tapped = 'untapped';
             card.sidenav_visible = true;
+            card.visible = []
           })
 
           out_player.selected = false;
@@ -209,6 +213,13 @@ export class PlaymatResizedComponent implements OnInit {
 
   isOpponent(player: any) {
     return player.name !== this.user.name
+  }
+
+  canSee(card: any, user: any) {
+    if (card.visible && card.visible.includes(user.name)) {
+      return true;
+    }
+    return false;
   }
 
   tapSpot(spot: any) {
@@ -635,6 +646,12 @@ export class PlaymatResizedComponent implements OnInit {
       }
       else if (item.type === 'loyalty') {
         item.card.loyalty_mod --;
+      }
+      else if (item.type === 'command_tax_1') {
+        this.user.command_tax_1 --;
+      }
+      else if (item.type === 'command_tax_2') {
+        this.user.command_tax_2 --;
       }
       else {
         this.rightclicked_item = item;

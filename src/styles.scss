@@ -505,6 +505,8 @@ $mtg-green: #087f23;
   min-height: 355px;
 }
 
+
+
 .commander-viewer-mat-card {
   position: relative;
   display: block;
@@ -513,6 +515,22 @@ $mtg-green: #087f23;
   min-width: 254px;
   min-height: 355px;
   border-radius: 12px !important;
+}
+
+.commander-viewer-mat-card .commander-counter {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin: 5px;
+  z-index: 15;
+}
+
+.commander-viewer-mat-card .commander-counter-2 {
+  position: absolute;
+  bottom: 0;
+  left: 60px;
+  margin: 5px;
+  z-index: 15;
 }
 
 .commander-viewer-partner-holder {
@@ -545,7 +563,7 @@ $mtg-green: #087f23;
   max-height: 310px;
   min-width: 229px;
   min-height: 310px;
-  z-index: 1;
+  z-index: 11;
   border-radius: 12px;
 }
 
@@ -557,13 +575,13 @@ $mtg-green: #087f23;
   max-height: 310px;
   min-width: 229px;
   min-height: 310px;
-  z-index: 2;
+  z-index: 12;
   border-radius: 12px;
 }
 
 .commander-viewer-partner-holder .commander-viewer-partner-1:hover,
 .commander-viewer-partner-holder .commander-viewer-partner-2:hover {
-  z-index: 3;
+  z-index: 13;
 }
 
 .commander-dashboard {
