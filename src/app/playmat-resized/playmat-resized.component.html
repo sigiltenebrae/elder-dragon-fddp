@@ -52,13 +52,13 @@
       </div>
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'inPlayUser'">
         <button mat-menu-item (click)="tapSpot(rightclicked_item.spot)">(un)Tap Stack</button>
-        <button mat-menu-item>Send to Hand</button>
-        <button mat-menu-item>Send to Grave</button>
-        <button mat-menu-item>Send to Exile</button>
-        <button mat-menu-item>Send to Temp</button>
-        <button mat-menu-item>Send to Selected</button>
-        <button mat-menu-item>Send to Deck Top</button>
-        <button mat-menu-item>Send to Deck Bottom</button>
+        <button mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.spot, 'hand')">Send to Hand</button>
+        <button mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.spot, 'grave')">Send to Grave</button>
+        <button mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.spot, 'exile')">Send to Exile</button>
+        <button mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.spot, 'temp_zone')">Send to Temp</button>
+        <button mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.spot, 'selected')">Send to Selected</button>
+        <button mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.spot, 'deck_top')">Send to Deck Top</button>
+        <button mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.spot, 'deck_bottom')">Send to Deck Bottom</button>
         <button mat-menu-item (click)="rightclicked_item.card.counter_1 = !rightclicked_item.card.counter_1; rightclicked_item.card.counter_1_value=0">Toggle Counter 1</button>
         <button mat-menu-item (click)="rightclicked_item.card.counter_2 = !rightclicked_item.card.counter_2; rightclicked_item.card.counter_2_value=0">Toggle Counter 2</button>
         <button mat-menu-item (click)="rightclicked_item.card.counter_3 = !rightclicked_item.card.counter_3; rightclicked_item.card.counter_3_value=0">Toggle Counter 3</button>

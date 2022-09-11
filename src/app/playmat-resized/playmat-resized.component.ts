@@ -308,7 +308,23 @@ export class PlaymatResizedComponent implements OnInit {
               moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex)
             }
             else {
-              transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), event.currentIndex);
+              transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), 0);
+            }
+            break;
+          case 'deck_top':
+            if (card_select.from === this.getPlayer(card_select.card.owner).deck.cards) { //If it is already in the deck
+              moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex)
+            }
+            else {
+              transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), 0);
+            }
+            break;
+          case 'deck_bottom': //this should never happen from a drag event, only from a 'send'
+            if (card_select.from === this.getPlayer(card_select.card.owner).deck.cards) { //If it is already in the deck
+              moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex)
+            }
+            else {
+              transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), this.getPlayer(card_select.card.owner).deck.cards.length);
             }
             break;
           case 'grave':
@@ -391,7 +407,7 @@ export class PlaymatResizedComponent implements OnInit {
    * @param card card to move
    * @param from location of card to move
    * @param location string value of where to move the card.
-   * Accepts: 'hand', 'deck', 'grave', 'exile', 'temp_zone', 'selected', 'command_zone' or 'play'
+   * Accepts: 'hand', 'deck_top', 'deck_bottom', 'grave', 'exile', 'temp_zone', 'selected', 'command_zone' or 'play'
    */
   sendCardToZone(card: any, from: any[], location: string) {
     let event:any = {}
@@ -402,30 +418,43 @@ export class PlaymatResizedComponent implements OnInit {
     switch (location) {
       case 'hand':
         event.container.data = this.user.hand;
+        event.currentIndex = 0;
         break;
-      case 'deck':
+      case 'deck_top':
         event.container.data = this.user.deck.cards;
+        event.currentIndex = 0;
+        break;
+      case 'deck_bottom':
+        event.container.data = this.user.deck.cards;
+        event.currentIndex = 0;
         break;
       case 'grave':
         event.container.data = this.user.grave;
+        event.currentIndex = 0;
         break;
       case 'exile':
         event.container.data = this.user.exile;
+        event.currentIndex = 0;
         break;
       case 'temp_zone':
         event.container.data = this.user.temp_zone;
+        event.currentIndex = 0;
         break;
       case 'selected':
-        event.container.data = this.selected_player.temp_zone;
+        if (this.selected_player) {
+          event.container.data = this.selected_player.temp_zone;
+          event.currentIndex = 0;
+        }
         break;
       case 'command_zone':
         event.container.data = this.user.deck.commander;
+        event.currentIndex = 0;
         break;
       case 'play':
         event.container.data = this.user.playmat[0];
+        event.currentIndex = 0;
         break;
     }
-    event.currentIndex = 0;
     this.moveCardToZone(event, location);
   }
 
