@@ -275,50 +275,52 @@
         </mat-card>
       </div>
       <div class="player-list">
-        <mat-list>
-          <mat-divider></mat-divider>
-          <div *ngFor="let player of players; let j = index">
-            <mat-list-item [ngClass]="{'player-button-selected': player.selected,
+        <mat-card style="padding:5px 10px 0 0">
+          <mat-list>
+            <mat-divider></mat-divider>
+            <div *ngFor="let player of players; let j = index">
+              <mat-list-item [ngClass]="{'player-button-selected': player.selected,
                                   'player-button-turn': player.turn == current_turn}">
-              <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
-                <div fxLayout="column" fxFlex="100">
-                  <button
-                    class="player-button"
-                    matTooltip="Hand: {{player.hand.length}} Deck: {{player.deck.cards.length}} Grave: {{player.grave.length}} Exile: {{player.exile.length}}"
-                    matTooltipPosition="right"
-                    matTooltipShowDelay="1000"
-                    mat-button
-                    (click)="selectPlayer(player)">
-                    {{player.name}}
-                  </button>
-                </div>
-                <div fxLayout="column" fxFlex="100">
-                  <div fxLayout="row" fxFlex>
-                    <div class="column" fxFlex>
-                      <button *ngIf="isOpponent(player)" class="player-button" mat-button disabled style="color: white">
-                        {{player.life}}
-                      </button>
-                      <button *ngIf="!isOpponent(player)" class="player-button" mat-button
-                              (click)="player.life = player.life + 1" (contextmenu)="onRightClick($event, {type: 'life', player: player})">
-                        {{player.life}}
-                      </button>
-                    </div>
-                    <div class="column" fxFlex>
-                      <button *ngIf="isOpponent(player)" class="player-button" mat-button disabled style="color: white">
-                        {{player.infect}}
-                      </button>
-                      <button *ngIf="!isOpponent(player)" class="player-button" mat-button
-                              (click)="player.infect = player.infect + 1" (contextmenu)="onRightClick($event, {type: 'infect', player: player})">
-                        {{player.infect}}
-                      </button>
+                <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
+                  <div fxLayout="column" fxFlex="100">
+                    <button
+                      class="player-button"
+                      matTooltip="Hand: {{player.hand.length}} Deck: {{player.deck.cards.length}} Grave: {{player.grave.length}} Exile: {{player.exile.length}}"
+                      matTooltipPosition="right"
+                      matTooltipShowDelay="1000"
+                      mat-button
+                      (click)="selectPlayer(player)">
+                      {{player.name}}
+                    </button>
+                  </div>
+                  <div fxLayout="column" fxFlex="100">
+                    <div fxLayout="row" fxFlex>
+                      <div class="column" fxFlex>
+                        <button *ngIf="isOpponent(player)" class="player-button" mat-button disabled style="color: white">
+                          {{player.life}}
+                        </button>
+                        <button *ngIf="!isOpponent(player)" class="player-button" mat-button
+                                (click)="player.life = player.life + 1" (contextmenu)="onRightClick($event, {type: 'life', player: player})">
+                          {{player.life}}
+                        </button>
+                      </div>
+                      <div class="column" fxFlex>
+                        <button *ngIf="isOpponent(player)" class="player-button" mat-button disabled style="color: white">
+                          {{player.infect}}
+                        </button>
+                        <button *ngIf="!isOpponent(player)" class="player-button" mat-button
+                                (click)="player.infect = player.infect + 1" (contextmenu)="onRightClick($event, {type: 'infect', player: player})">
+                          {{player.infect}}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </mat-list-item>
-            <mat-divider *ngIf="j != players.length - 1"></mat-divider>
-          </div>
-        </mat-list>
+              </mat-list-item>
+              <mat-divider *ngIf="j != players.length - 1"></mat-divider>
+            </div>
+          </mat-list>
+        </mat-card>
       </div>
       <div fxFlexFill (contextmenu)="onRightClick($event, {type: 'none'})">
         <div class="container" fxLayout="row" fxLayoutAlign="center end" fxFlexFill>
