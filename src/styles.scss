@@ -216,9 +216,9 @@ $mtg-green: #087f23;
 
 .playmat-user-holder {
   position: relative;
-  min-width: 1264px;
-  max-width: 1264px;
-  width: 1264px !important;
+  min-width: 1284px;
+  max-width: 1284px;
+  width: 1284px !important;
   min-height: 409px;
   max-height: 409px;
   height: 409px !important;
@@ -268,7 +268,7 @@ $mtg-green: #087f23;
 .playmat-user {
   position: absolute;
   top: 0;
-  left: 60px;
+  left: 70px;
   min-width: 1144px;
   max-width: 1144px;
   width: 1144px !important;
@@ -534,6 +534,7 @@ $mtg-green: #087f23;
   min-width: 254px;
   min-height: 355px;
   border-radius: 12px;
+  z-index: 10;
 }
 
 .commander-viewer-partner-holder .commander-viewer-partner-1 {
