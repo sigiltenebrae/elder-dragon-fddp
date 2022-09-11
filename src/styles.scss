@@ -51,11 +51,15 @@ $mtg-green: #087f23;
   color: mat.get-color-from-palette($fddp-palette-primary-dark, 500);
 }
 
+//Base Card Size
+
 .mtg-card-full {
   width: 1500px;
   height: 2100px;
   border-radius: 5px;
 }
+
+//
 
 .mtg-card-user {
   min-width: 75px;
@@ -747,4 +751,116 @@ $mtg-green: #087f23;
   min-width: 254px;
   min-height: 355px;
   border-radius: 12px;
+}
+
+
+.deck-manager-commander-viewer {
+  font-family: Beleren, "Helvetica Neue", sans-serif;
+  position: relative;
+  float: left;
+  overflow: hidden;
+  width: 300px;
+  text-align: center;
+  height: 372px;
+  border: none;
+}
+
+.deck-manager-commander-viewer .deck-manager-background-card-closed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  float: left;
+  width: 300px;
+  height: 200px;
+  overflow: hidden;
+  clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+  z-index: 2;
+}
+
+.deck-manager-commander-viewer .deck-manager-background-card-open {
+  position: absolute;
+  top: 0;
+  left: 0;
+  float: left;
+  width: 300px;
+  height: 200px;
+  overflow: hidden;
+  clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);
+  background-color: black;
+  z-index: 2;
+}
+
+.deck-manager-commander-viewer .deck-manager-background-card-closed .deck-manager-commander-crop,
+.deck-manager-commander-viewer .deck-manager-background-card-open .deck-manager-commander-crop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 560px;
+  width: 360px;
+  margin-left: -30px;
+  margin-top: -70px;
+  opacity: 0.9;
+  background-color: black;
+}
+
+.deck-manager-commander-viewer .deck-manager-background-card-open:hover .deck-manager-commander-crop {
+  filter: grayscale(100%);
+}
+
+.deck-manager-commander-viewer .deck-manager-background-card-open .deck-manager-commander-edit,
+.deck-manager-commander-viewer .deck-manager-background-card-closed .deck-manager-commander-edit {
+  position: absolute;
+  color: white;
+  top: 5px;
+  right: 5px;
+  opacity: 0.8;
+  z-index: 2;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  display: none;
+}
+
+.deck-manager-commander-viewer .deck-manager-background-card-open:hover .deck-manager-commander-edit {
+  display: block;
+}
+
+.deck-manager-commander-viewer .deck-manager-content {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  float: left;
+  left: 0;
+  top: 0;
+}
+
+.deck-manager-commander-viewer .deck-manager-content-holder {
+  position: absolute;
+  height: 162px;
+  width: 300px;
+  top: 210px;
+  left: 0;
+  z-index: 2;
+}
+
+.deck-manager-commander-viewer .commander-name {
+  margin-top:-10px !important;
+  opacity: 0.7;
+}
+
+.deck-manager-commander-viewer .deck-manager-commander-colors {
+  position: absolute;
+  height: 16px;
+  width: 100%;
+  bottom: 10px;
+  left: 0;
+}
+
+.deck-manager-commander-viewer .deck-manager-commander-colors .deck-manager-commander-color {
+  height: 16px;
+  width: 16px;
+  margin: 0 2px 0 2px;
+  border-radius: 50%;
+  @include mat.elevation(2);
 }

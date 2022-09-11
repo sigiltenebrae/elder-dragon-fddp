@@ -111,6 +111,29 @@ export class FddpApiService {
     });
   }
 
+  public getDecksBasic(userid?: any): Promise<any> {
+    return new Promise<any>((resolve) => {
+      let url = environment.fddp_api_url;
+      if (userid) {
+        url += '/userdecks/basic/' + userid;
+      }
+      else {
+        url += '/decks/basic/'
+      }
+      this.http.get(url).subscribe((decks: any) => {
+        if(decks.errors && decks.errors.length > 0) {
+          console.log('Errors in getting decks')
+          console.log(decks.errors);
+        }
+        resolve(decks.decks);
+      }, (error) => {
+        console.log('Error getting decks')
+        console.log(error);
+        resolve(null);
+      });
+    })
+  }
+
   public getDeck(deckid: number): Promise<any> {
     return new Promise<any>((resolve) => {
       this.http.get(environment.fddp_api_url + '/decks/' + deckid).subscribe((deck:any) => {
@@ -172,7 +195,4 @@ export class FddpApiService {
       this.http.delete(environment.fddp_api_url + '/custom_cards/' + cardid).subscribe(() => { resolve(); })
     });
   }
-
-
-
 }
