@@ -38,6 +38,11 @@
           <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
         </div>
         <button mat-menu-item (click)="openSideNav('deck')">Search Deck</button>
+        <button mat-menu-item (click)="drawUntil('Creature')">Draw Until Creature</button>
+        <div>
+          <button mat-button (click)="cascade(cascade_count.value)">Cascade</button>
+          <input #cascade_count matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
+        </div>
         <button mat-menu-item (click)="shuffleDeck(user.deck.cards)">Shuffle</button>
         <button mat-menu-item (click)="nextTurn()">Next Turn</button>
       </div>

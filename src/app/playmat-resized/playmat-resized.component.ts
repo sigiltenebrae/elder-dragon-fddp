@@ -478,6 +478,52 @@ export class PlaymatResizedComponent implements OnInit {
     this.moveCardToZone(event, location);
   }
 
+  drawUntil(type: string) {
+    while(true) {
+      if (this.user.deck.cards.length > 0) {
+        let cur_card = this.user.deck.cards[0];
+        this.sendCardToZone(cur_card, this.user.deck.cards, 'temp_zone');
+        if (cur_card.types) {
+          if (cur_card.types.includes(type)) {
+            break;
+          }
+        }
+        else {
+          break;
+        }
+      }
+    }
+  }
+
+  cascade(cmc: any) {
+    cmc = Number(cmc);
+    while(true) {
+      if (this.user.deck.cards.length > 0) {
+        let cur_card = this.user.deck.cards[0];
+        this.sendCardToZone(cur_card, this.user.deck.cards, 'temp_zone');
+        if (cur_card.cmc) {
+          console.log(cur_card.cmc);
+          if (cur_card.cmc < cmc) {
+            if (cur_card.cmc > 0) {
+              break;
+            }
+            if (cur_card.types) {
+              if (!cur_card.types.includes("Land")) {
+                break;
+              }
+            }
+            else {
+              break;
+            }
+          }
+        }
+        else {
+          break;
+        }
+      }
+    }
+  }
+
   /**------------------------------------------------
    *               Sidenav Functions                *
    ------------------------------------------------**/
