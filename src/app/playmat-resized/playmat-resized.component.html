@@ -511,21 +511,17 @@
           </mat-card>
         </div>
         <div class="commander-dashboard">
-          <mat-card class="commander-dashboard-button-holder">
-            <div fxFlex fxLayout="row" fxLayoutAlign="center center">
-              <!--<div fxLayout="column" fxFlex>
-                <h3 style="margin: 0 0 0 4px;">Creatures: {{getCount(user, 'Creature')}}</h3>
-                <h3 style="margin: 0 0 0 4px;">Artifacts: {{getCount(user, 'Artifact')}}</h3>
-                <h3 style="margin: 0 0 0 4px;">Enchantments: {{getCount(user, 'Enchantment')}}</h3>
-                <h3 style="margin: 0 0 0 4px;">Lands: {{getCount(user, 'Land')}}</h3>
-              </div>-->
-              <div fxLayout="column" fxFlex style="margin: 2px 15px 0 10px;">
-                <mat-form-field appearance="fill">
-                  <mat-label>Enter a Type</mat-label>
-                  <input #custom_search matInput>
-                </mat-form-field>
-                <h2 style="margin: 0 0 2px 10px">Count: 2</h2>
+          <mat-card class="commander-dashboard-button-holder" style="padding: 0">
+            <div fxLayout="column" fxLayoutGap="5">
+              <div fxFlex fxLayout="row" fxLayoutAlign="start center">
+                <div fxLayout="column" fxFlex>
+                  <mat-form-field appearance="fill">
+                    <mat-label>Enter a Type</mat-label>
+                    <input #custom_search matInput>
+                  </mat-form-field>
+                </div>
               </div>
+              <div fxLayout="row" fxLayoutAlign="end"><h2 style="margin: 0 5px 5px 5px; padding: 0;">In Play: {{typeCount(user, custom_search.value)}} </h2></div>
             </div>
           </mat-card>
         </div>

@@ -301,6 +301,24 @@ export class PlaymatResizedComponent implements OnInit {
     return count;
   }
 
+  typeCount(player: any, type: string) {
+    let count = 0;
+    if (player) {
+      for (let spot of player.playmat) {
+        for (let card of spot) {
+          if (card.types) {
+            for (let card_type of card.types) {
+              if (type.toLowerCase() === card_type.toLowerCase()) {
+                count++;
+              }
+            }
+          }
+        }
+      }
+    }
+    return count;
+  }
+
   /**------------------------------------------------
    *          Card Transfer Helper Functions        *
    ------------------------------------------------**/
