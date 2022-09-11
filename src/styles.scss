@@ -72,6 +72,7 @@ $mtg-green: #087f23;
   max-width: 75px;
   max-height: 105px;
   border-radius: 5px;
+  margin: 0;
   background-color: mat.get-color-from-palette($fddp-palette-primary-dark, 500);
 }
 
@@ -186,7 +187,7 @@ $mtg-green: #087f23;
 
 .user-hand {
   position: relative;
-  border: dotted #ccc 2px;
+  padding: 0;
   min-height: 110px;
   min-width: 75px;
   max-height: 110px;
@@ -211,8 +212,6 @@ $mtg-green: #087f23;
   max-width: 95px;
   height: 135px;
   max-height: 135px;
-  background-color: rgba(255, 0, 0, 0.1);
-  box-shadow:0 0 0 1px black inset;
 }
 
 .playmat-user-holder {
@@ -278,7 +277,6 @@ $mtg-green: #087f23;
   height: 409px !important;
   padding: 0 !important;
   margin: 0;
-  border: dotted #ccc 2px;
 }
 
 .mtg-card-holder-user .stack-1 {
@@ -310,7 +308,6 @@ $mtg-green: #087f23;
 
 .opponent-hand {
   position: relative;
-  border: dotted #ccc 2px;
   min-height: 60px;
   min-width: 40px;
   max-height: 60px;
@@ -346,15 +343,17 @@ $mtg-green: #087f23;
   max-width: 50px !important;
   height: 70px !important;
   max-height: 70px !important;
-  background-color: rgba(0, 0, 255, 0.1);
-  box-shadow:0 0 0 1px black inset;
 }
 
 .playmat-opponent {
-  border: dotted #ccc 2px;
-  width: 604px;
-  height: 214px;
+  width: 604px !important;
+  height: 214px !important;
   margin: 5px;
+  min-width: 604px;
+  max-width: 604px;
+  min-height: 214px;
+  max-height: 214px;
+  padding: 0 !important;
 }
  .playmat-opponent-selected {
    box-shadow:0 0 0 5px white inset;
@@ -404,21 +403,18 @@ $mtg-green: #087f23;
   position: absolute;
   bottom: 125px;
   right: 10px;
-  border: dotted #ccc 2px;
 }
 
 .user-exile {
   position: absolute;
   bottom: 250px;
   right: 10px;
-  border: dotted #ccc 2px;
 }
 
 .user-temp-zone {
   position: absolute;
   bottom: 375px;
   right: 10px;
-  border: dotted #ccc 2px;
 }
 
 .zone-data {
@@ -500,7 +496,6 @@ $mtg-green: #087f23;
 }
 
 .commander-viewer {
-  border: dotted #ccc 2px;
   position: absolute;
   bottom: 125px;
   right: 95px;
@@ -510,8 +505,20 @@ $mtg-green: #087f23;
   min-height: 355px;
 }
 
-.commander-viewer-partner-holder {
+.commander-viewer-mat-card {
   position: relative;
+  display: block;
+  max-width: 254px;
+  max-height: 355px;
+  min-width: 254px;
+  min-height: 355px;
+  border-radius: 12px !important;
+}
+
+.commander-viewer-partner-holder {
+  position: absolute;
+  top: 0;
+  left: 0;
   max-width: 254px;
   max-height: 355px;
   min-width: 254px;
@@ -519,6 +526,9 @@ $mtg-green: #087f23;
 }
 
 .commander-viewer-single {
+  position: absolute;
+  top: 0;
+  left: 0;
   max-width: 254px;
   max-height: 355px;
   min-width: 254px;
@@ -563,7 +573,6 @@ $mtg-green: #087f23;
   min-width: 254px;
   min-height: 105px;
   max-height: 105px;
-  border: dotted #ccc 2px;
 }
 
 .commander-dashboard-button-holder {
@@ -575,7 +584,6 @@ $mtg-green: #087f23;
 }
 
 .selected-commander-viewer {
-  border: dotted #ccc 2px;
   position: absolute;
   bottom: 490px;
   right: 274px;
@@ -586,10 +594,17 @@ $mtg-green: #087f23;
 }
 
 .selected-player-data {
-  border: dotted #ccc 2px;
   position: absolute;
   bottom: 490px;
   right: 10px;
+  max-width: 254px;
+  min-width: 254px;
+  min-height: 105px;
+  max-height: 105px;
+}
+
+.selected-player-data-holder {
+  position: relative;
   max-width: 254px;
   min-width: 254px;
   min-height: 105px;

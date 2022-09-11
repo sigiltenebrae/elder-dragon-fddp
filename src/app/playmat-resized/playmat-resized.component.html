@@ -327,7 +327,7 @@
             <div class="opponent-holder" fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
               <div class="opponent-playmat-holder" fxLayout="row wrap" fxLayout.lt-md="column" fxLayoutAlign="center">
                 <div *ngFor="let player of players">
-                  <div *ngIf="isOpponent(player)" class="playmat-opponent" [ngClass]="{'playmat-opponent-selected': player.selected}" fxLayout="row wrap" fxLayoutAlign="center center">
+                  <mat-card *ngIf="isOpponent(player)" class="playmat-opponent" [ngClass]="{'playmat-opponent-selected': player.selected}" fxLayout="row wrap" fxLayoutAlign="center center">
                     <div *ngFor="let spot of reversePlaymat(player.playmat)" class="mtg-card-holder-opponent">
                       <div *ngFor="let card of spot; let i = index">
                         <img
@@ -344,7 +344,7 @@
                           (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null" loading="lazy">
                       </div>
                     </div>
-                  </div>
+                  </mat-card>
                 </div>
               </div>
             </div>
@@ -370,14 +370,14 @@
                     </div>
                   </div>
                 </div>
-                <div class="playmat-user" fxLayout="row wrap" fxLayoutAlign="start start">
+                <mat-card class="playmat-user" fxLayout="row wrap" fxLayoutAlign="start start">
                   <div *ngFor="let spot of user.playmat"
                        class="mtg-card-holder-user"
                        cdkDropList
                        [cdkDropListData]="spot"
                        (cdkDropListDropped)="moveCardToZone($event, 'play')">
                     <div *ngFor="let card of spot; let i = index">
-                      <div [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2}"
+                      <mat-card [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2}"
                            (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
                            (cdkDragStarted)="hovered_card=null"
                            class="mtg-card-user-container" [@userTappedState]="card.tapped"
@@ -397,16 +397,16 @@
                           <a [ngClass]="{'mat-card-power-tough-text-up': card.power_mod > 0, 'mat-card-power-tough-text-down': card.power_mod < 0}" class="mat-card-power-tough-text" (click)="card.power_mod = card.power_mod + 1" (contextmenu)="onRightClick($event, {type: 'power', card: card})">{{card.power + card.power_mod}}</a>/
                           <a [ngClass]="{'mat-card-power-tough-text-up': card.toughness_mod > 0, 'mat-card-power-tough-text-down': card.toughness_mod < 0}" class="mat-card-power-tough-text" (click)="card.toughness_mod = card.toughness_mod + 1" (contextmenu)="onRightClick($event, {type: 'toughness', card: card})">{{card.toughness + card.toughness_mod}}</a></h4>
                         <h4 *ngIf="card.loyalty" class="mtg-card-loyalty"><a class="mat-card-power-tough-text" [ngClass]="{'mat-card-power-tough-text-up': card.loyalty_mod > 0, 'mat-card-power-tough-text-down': card.loyalty_mod < 0}" (click)="card.loyalty_mod = card.loyalty_mod + 1" (contextmenu)="onRightClick($event, {type: 'loyalty', card: card})">{{card.loyalty + card.loyalty_mod}}</a></h4>
-                      </div>
+                      </mat-card>
 
                     </div>
                   </div>
-                </div>
+                </mat-card>
               </div>
             </div>
             <!-- Opponent Hand -->
             <div fxLayout="row" fxFlex fxLayoutAlign="center">
-              <div class="opponent-hand" fxLayout="column" fxLayoutAlign="center">
+              <div class="opponent-hand" fxLayout="column" fxLayoutAlign="center" [class.mat-elevation-z8]="selected_player != null">
                 <div *ngIf="selected_player != null" class="opponent-hand-list"
                      fxFlex fxLayout="row" fxLayoutAlign="start">
                   <h1 class="hand-count">{{selected_player.hand.length}}</h1>
@@ -420,13 +420,13 @@
             </div>
             <!-- User Hand -->
             <div fxLayout="row" fxFlex fxLayoutAlign="center">
-              <div class="user-hand" fxLayout="column" fxLayoutAlign="center">
+              <div class="user-hand" fxLayout="column" fxLayoutAlign="center" [class.mat-elevation-z8]="true">
                 <div cdkDropList class="user-hand-list"
                      cdkDropListOrientation="horizontal"
                      [cdkDropListData]="user.hand"
-                     (cdkDropListDropped)="moveCardToZone($event, 'hand')" fxFlex fxLayout="row" fxLayoutAlign="start">
+                     (cdkDropListDropped)="moveCardToZone($event, 'hand')" fxFlexFill fxLayout="row" fxLayoutAlign="start">
                   <h1 class="hand-count">{{user.hand.length}}</h1>
-                  <div *ngFor="let card of user.hand" [ngClass]="{'mtg-card-user-container': card.selected}"
+                  <mat-card *ngFor="let card of user.hand" class="mtg-card-user-container"
                        fxFlex fxLayout="column"
                        (contextmenu)="onRightClick($event, {type: 'hand', card: card, from: user.hand})"
                        (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
@@ -434,14 +434,14 @@
                        (cdkDragStarted)="hovered_card=null"
                        cdkDrag>
                     <img [ngClass]="{ 'mtg-card-user-selected': card.selected }" class="mtg-card-user" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
-                  </div>
+                  </mat-card>
                 </div>
               </div>
             </div>
           </div>
         </div>
         <div class="user-deck">
-          <div class="zone-data"
+          <mat-card class="zone-data"
                (contextmenu)="onRightClick($event, {type: 'deck'})"
                cdkDropList [cdkDropListData]="user.deck.cards"
                cdkDropListOrientation="horizontal"
@@ -452,10 +452,10 @@
                  (pointerleave)="hovered_card=null"
                  (cdkDragStarted)="hovered_card=null"
                  cdkDrag loading="lazy">
-          </div>
+          </mat-card>
         </div>
         <div class="user-grave">
-          <div class="zone-data"
+          <mat-card class="zone-data"
                (contextmenu)="onRightClick($event, {type: 'grave'})"
                cdkDropList [cdkDropListData]="user.grave"
                cdkDropListOrientation="horizontal"
@@ -467,10 +467,10 @@
                  (pointerleave)="hovered_card=null"
                  (cdkDragStarted)="hovered_card=null"
                  cdkDrag loading="lazy">
-          </div>
+          </mat-card>
         </div>
         <div class="user-exile">
-          <div class="zone-data" (contextmenu)="onRightClick($event, {type: 'exile'})"
+          <mat-card class="zone-data" (contextmenu)="onRightClick($event, {type: 'exile'})"
                cdkDropList [cdkDropListData]="user.exile"
                cdkDropListOrientation="horizontal"
                (cdkDropListDropped)="moveCardToZone($event, 'exile')">
@@ -481,10 +481,10 @@
                  (pointerleave)="hovered_card=null"
                  (cdkDragStarted)="hovered_card=null"
                  cdkDrag loading="lazy">
-          </div>
+          </mat-card>
         </div>
         <div class="user-temp-zone">
-          <div class="zone-data" (contextmenu)="onRightClick($event, {type: 'temp-zone'})"
+          <mat-card class="zone-data" (contextmenu)="onRightClick($event, {type: 'temp-zone'})"
                cdkDropList [cdkDropListData]="user.temp_zone"
                cdkDropListOrientation="horizontal"
                (cdkDropListDropped)="moveCardToZone($event, 'temp_zone')">
@@ -495,21 +495,23 @@
                  (pointerleave)="hovered_card=null"
                  (cdkDragStarted)="hovered_card=null"
                  cdkDrag loading="lazy">
-          </div>
+          </mat-card>
         </div>
         <div class="commander-viewer" cdkDropList
              [cdkDropListData]="user.deck.commander"
              (cdkDropListDropped)="moveCardToZone($event, 'command_zone')">
-          <div *ngIf="user.deck.commander.length == 1">
-            <img class="commander-viewer-single" src="{{user.deck.commander[0].image}}" cdkDrag loading="lazy">
-          </div>
-          <div *ngIf="user.deck.commander.length == 2" class="commander-viewer-partner-holder">
-            <img class="commander-viewer-partner-1" src="{{user.deck.commander[0].image}}" cdkDrag loading="lazy">
-            <img class="commander-viewer-partner-2" src="{{user.deck.commander[1].image}}" cdkDrag loading="lazy">
-          </div>
+          <mat-card class="commander-viewer-mat-card">
+            <div *ngIf="user.deck.commander.length == 1">
+              <img class="commander-viewer-single" src="{{user.deck.commander[0].image}}" cdkDrag loading="lazy">
+            </div>
+            <div *ngIf="user.deck.commander.length == 2" class="commander-viewer-partner-holder">
+              <img class="commander-viewer-partner-1" src="{{user.deck.commander[0].image}}" cdkDrag loading="lazy">
+              <img class="commander-viewer-partner-2" src="{{user.deck.commander[1].image}}" cdkDrag loading="lazy">
+            </div>
+          </mat-card>
         </div>
         <div class="commander-dashboard">
-          <div class="commander-dashboard-button-holder">
+          <mat-card class="commander-dashboard-button-holder">
             <div fxFlex fxLayout="row" fxLayoutAlign="center center">
               <!--<div fxLayout="column" fxFlex>
                 <h3 style="margin: 0 0 0 4px;">Creatures: {{getCount(user, 'Creature')}}</h3>
@@ -525,26 +527,28 @@
                 <h2 style="margin: 0 0 2px 10px">Count: 2</h2>
               </div>
             </div>
-          </div>
+          </mat-card>
         </div>
         <div class="selected-commander-viewer">
-          <img *ngIf="selected_player"
-               class="mtg-card-user"
-               src="{{selected_player.deck.commander[0].image}}" alt="{{selected_player.deck.commander[0].name}}"
-               (pointerenter)="hovered_card=selected_player.deck.commander[0]" (pointerleave)="hovered_card=null" loading="lazy">
+          <mat-card class="zone-data">
+            <img *ngIf="selected_player"
+                 class="mtg-card-user" style="opacity: 1"
+                 src="{{selected_player.deck.commander[0].image}}" alt="{{selected_player.deck.commander[0].name}}"
+                 (pointerenter)="hovered_card=selected_player.deck.commander[0]" (pointerleave)="hovered_card=null" loading="lazy">
+          </mat-card>
         </div>
         <div class="selected-player-data">
-          <div fxFlex fxLayout="row" fxLayoutAlign="center center">
-            <div fxLayout="column" fxFlex>
-              <h3 style="margin: 0 0 0 4px;">Creatures: 2</h3>
-              <h3 style="margin: 0 0 0 4px;">Artifacts: 2</h3>
-              <h3 style="margin: 0 0 0 4px;">Enchantments: 2</h3>
-              <h3 style="margin: 0 0 0 4px;">Lands: 2</h3>
-            </div>
-            <div fxLayout="column" fxFlex>
+          <mat-card class="selected-player-data-holder">
+            <div fxFlex fxLayout="row" fxLayoutAlign="center center">
+              <div fxLayout="column" fxFlex>
+                <h3 style="margin: 0 0 0 4px;">Creatures: 2</h3>
+                <h3 style="margin: 0 0 0 4px;">Artifacts: 2</h3>
+              </div>
+              <div fxLayout="column" fxFlex>
 
+              </div>
             </div>
-          </div>
+          </mat-card>
         </div>
       </div>
   </mat-sidenav-content>
