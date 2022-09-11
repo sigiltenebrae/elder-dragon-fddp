@@ -536,15 +536,17 @@
           </mat-card>
         </div>
         <div class="selected-player-data">
-          <mat-card class="selected-player-data-holder">
-            <div fxFlex fxLayout="row" fxLayoutAlign="center center">
-              <div fxLayout="column" fxFlex>
-                <h3 style="margin: 0 0 0 4px;">Creatures: 2</h3>
-                <h3 style="margin: 0 0 0 4px;">Artifacts: 2</h3>
+          <mat-card class="selected-player-data-holder" style="padding: 0">
+            <div fxLayout="column" fxLayoutGap="5">
+              <div fxFlex fxLayout="row" fxLayoutAlign="start center">
+                <div fxLayout="column" fxFlex>
+                  <mat-form-field appearance="fill">
+                    <mat-label>Enter a Type</mat-label>
+                    <input #custom_search_opponent matInput>
+                  </mat-form-field>
+                </div>
               </div>
-              <div fxLayout="column" fxFlex>
-
-              </div>
+              <div fxLayout="row" fxLayoutAlign="start"><h2 style="margin: 0 5px 5px 5px; padding: 0;">In Play: {{typeCount(selected_player, custom_search_opponent.value)}} </h2></div>
             </div>
           </mat-card>
         </div>
