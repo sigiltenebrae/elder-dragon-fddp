@@ -11,6 +11,25 @@ export class FddpApiService {
 
   constructor(private http: HttpClient) { }
 
+  public getUsers(): Promise<any> {
+    return new Promise<any>((resolve) => {
+      this.http.get(environment.fddp_api_url + '/users').subscribe((users: any) => {
+        if (users.errors) {
+          console.log('Error getting users');
+          console.log(users.errors);
+          resolve([]);
+        }
+        else {
+          resolve(users);
+        }
+      }, (error) => {
+        console.log('Error getting users');
+        console.log(error);
+        resolve([]);
+      })
+    });
+  }
+
   public getArchidektDeck(archidekt_deckid: number): Promise<any> {
     return new Promise<any> ((resolve) => {
       this.http.get('/archidekt/api/decks/' + archidekt_deckid + '/').subscribe((archidekt_data: any) => {

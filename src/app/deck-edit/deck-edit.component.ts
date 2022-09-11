@@ -13,32 +13,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 export class DeckEditComponent implements OnInit {
 
   loading = false;
-  users = [
-    {
-      id: 1,
-      name: "Christian"
-    },
-    {
-      id: 2,
-      name: "David"
-    },
-    {
-      id: 3,
-      name: "Ray"
-    },
-    {
-      id: 4,
-      name: "Liam"
-    },
-    {
-      id: 5,
-      name: "Ryan"
-    },
-    {
-      id: 6,
-      name: "George"
-    }
-  ]
+  users: any = []
 
   deckid = -1;
   deck: any = null;
@@ -53,6 +28,9 @@ export class DeckEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.fddp_data.getUsers().then((users: any) => {
+      this.users = users;
+    });
     const routeParams = this.route.snapshot.paramMap;
     this.deckid = Number(routeParams.get('deckid'));
     if (this.deckid == -1) {
