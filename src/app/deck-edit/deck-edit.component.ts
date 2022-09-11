@@ -46,6 +46,7 @@ export class DeckEditComponent implements OnInit {
   changing_image = false;
   image_options: any[] = []
   new_card_temp: any = null;
+  deleting = false;
 
   constructor(private fddp_data: FddpApiService, private route: ActivatedRoute, private router: Router) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
@@ -72,7 +73,6 @@ export class DeckEditComponent implements OnInit {
       this.fddp_data.getDeck(this.deckid).then((deck) => {
         this.deck = deck;
         this.deck.delete = [];
-        console.log(deck);
       })
     }
   }
@@ -175,6 +175,12 @@ export class DeckEditComponent implements OnInit {
         this.router.navigate(['/']);
       });
     }
+  }
+
+  deleteDeck() {
+    this.fddp_data.deleteDeck(this.deck.id).then(() => {
+      this.router.navigate(['/']);
+    });
   }
 
   onRightClick(event: MouseEvent, item: any) {

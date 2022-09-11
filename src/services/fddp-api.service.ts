@@ -86,6 +86,12 @@ export class FddpApiService {
     });
   }
 
+  public deleteDeck(deckid: number): Promise<void> {
+    return new Promise<void>((resolve) => {
+      return this.http.delete(environment.fddp_api_url + '/decks/' + deckid).subscribe(() => { resolve(); })
+    });
+  }
+
   public getDeck(deckid: number): Promise<any> {
     return new Promise<any>((resolve) => {
       this.http.get(environment.fddp_api_url + '/decks/' + deckid).subscribe((deck:any) => {

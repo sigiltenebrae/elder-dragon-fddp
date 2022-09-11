@@ -39,7 +39,8 @@
         </div>
         <div fxLayout="column">
           <div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10">
-            <button *ngIf="deckid > -1" mat-raised-button color="warn">Delete</button>
+            <button *ngIf="deckid > -1 && !deleting" mat-raised-button color="warn" (click)="deleting=!deleting">Delete</button>
+            <button *ngIf="deleting" mat-raised-button color="warn" (click)="deleteDeck()">Confirm</button>
             <button mat-raised-button color="primary" (click)="saveDeck()">Submit</button>
           </div>
         </div>
