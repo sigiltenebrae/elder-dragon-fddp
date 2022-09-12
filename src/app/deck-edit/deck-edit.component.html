@@ -45,6 +45,16 @@
           </div>
         </div>
       </div>
+      <div fxFlex fxLayout="row" fxLayoutAlign="space-evenly center">
+        <div fxLayout="column" fxLayoutAlign="center center">
+          <img class="deck-edit-preview" src="{{deck.image}}" loading="lazy">
+          <h2>Deck Image</h2>
+        </div>
+        <div fxLayout="column" fxLayoutAlign="center center">
+          <img class="deck-edit-preview" src="{{deck.sleeves}}" loading="lazy">
+          <h2>Deck Sleeves</h2>
+        </div>
+      </div>
     </div>
     <div fxLayout="column" style="min-height: 640px; max-height: 640px;">
       <mat-form-field appearance="fill" style="margin-top: 10px;">

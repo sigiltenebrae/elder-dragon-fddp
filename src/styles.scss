@@ -930,6 +930,13 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   border-radius: 12px;
 }
 
+.deck-edit-preview {
+  min-width: 75px;
+  min-height: 105px;
+  max-width: 75px;
+  max-height: 105px;
+  border-radius: 5px;
+}
 
 .deck-manager-commander-viewer {
   font-family: Beleren, "Helvetica Neue", sans-serif;
