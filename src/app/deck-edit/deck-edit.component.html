@@ -85,6 +85,9 @@
         <button *ngIf="selected_card.back_image" mat-raised-button color="primary" (click)="changing_back_image=true; getCardImage(selected_card)">Change Back Image</button>
         <button mat-raised-button color="warn" (click)="resetCard(selected_card)"><mat-icon>refresh</mat-icon></button>
       </div>
+      <div fxLayout="row">
+        <button mat-raised-button color="accent" (click)="deck.image=selected_card.image">Set As Deck Image</button>
+      </div>
     </div>
     <div *ngIf="selected_card && (changing_image || changing_back_image)" fxLayout="column" fxFlex fxLayoutAlign="center center">
       <div fxFlex fxLayout="row wrap" fxLayoutAlign="center" style="overflow-y: scroll; min-height: 640px; max-height: 640px; margin-top: 10px;">
