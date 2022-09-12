@@ -226,11 +226,10 @@ export class PlaymatResizedComponent implements OnInit {
    ------------------------------------------------**/
 
   @HostListener('document:keydown.shift', ['$event']) onShiftDown(event: KeyboardEvent) {
-    this.hoverdata.shift_pressed = true;
+    this.hoverdata.shift_pressed = !this.hoverdata.shift_pressed;
   }
 
   @HostListener('document:keyup.shift', ['$event']) onShiftUp(event: KeyboardEvent) {
-    this.hoverdata.shift_pressed = false;
   }
 
   @HostListener('document:keydown.alt', ['$event']) onAltDown(event: KeyboardEvent) {
