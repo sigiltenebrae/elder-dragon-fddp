@@ -456,6 +456,7 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   z-index: 5;
 }
 
+
 .zone-data .mtg-card-user {
   position: absolute;
   top: 0;
@@ -463,6 +464,7 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   opacity: 0.7;
   z-index: 1;
 }
+
 
 .card-preview {
   position: absolute;
@@ -627,6 +629,53 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   min-height: 105px;
   max-width: 75px;
   max-height: 105px;
+}
+
+.selected-commander-data {
+  position: relative;
+  min-width: 75px;
+  min-height: 105px;
+  max-width: 75px;
+  max-height: 105px;
+}
+
+.mtg-card-selected-commander {
+  min-width: 75px;
+  min-height: 105px;
+  max-width: 75px;
+  max-height: 105px;
+  border-radius: 5px;
+}
+
+.selected-commander-data .mtg-card-selected-commander {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.selected-commander-data .mtg-card-selected-commander-partner-1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  min-width: 65px;
+  min-height: 90px;
+  max-width: 65px;
+  max-height: 90px;
+  border-radius: 5px;
+}
+
+.selected-commander-data .mtg-card-selected-commander-partner-2 {
+  position: absolute;
+  top: 15px;
+  left: 10px;
+  z-index: 2;
+  min-width: 65px;
+  min-height: 90px;
+  max-width: 65px;
+  max-height: 90px;
+  border-radius: 5px;
 }
 
 .selected-player-data {

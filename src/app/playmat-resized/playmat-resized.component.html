@@ -558,11 +558,22 @@
           </mat-card>
         </div>
         <div class="selected-commander-viewer">
-          <mat-card class="zone-data">
-            <img *ngIf="selected_player"
-                 class="mtg-card-user" style="opacity: 1"
-                 src="{{selected_player.deck.commander_saved[0].image}}" alt="{{selected_player.deck.commander_saved[0].name}}"
-                 (pointerenter)="hovered_card=selected_player.deck.commander_saved[0]" (pointerleave)="hovered_card=null" loading="lazy">
+          <mat-card class="selected-commander-data">
+            <div *ngIf="selected_player">
+              <div *ngIf="selected_player.deck.commander_saved.length == 1">
+                <img class="mtg-card-selected-commander"
+                     src="{{selected_player.deck.commander_saved[0].image}}" alt="{{selected_player.deck.commander_saved[0].name}}"
+                     (pointerenter)="hovered_card=selected_player.deck.commander_saved[0]" (pointerleave)="hovered_card=null" loading="lazy">
+              </div>
+              <div *ngIf="selected_player.deck.commander_saved.length == 2">
+                <img class="mtg-card-selected-commander-partner-1"
+                     src="{{selected_player.deck.commander_saved[0].image}}" alt="{{selected_player.deck.commander_saved[0].name}}"
+                     (pointerenter)="hovered_card=selected_player.deck.commander_saved[0]" (pointerleave)="hovered_card=null" loading="lazy">
+                <img class="mtg-card-selected-commander-partner-2"
+                     src="{{selected_player.deck.commander_saved[1].image}}" alt="{{selected_player.deck.commander_saved[1].name}}"
+                     (pointerenter)="hovered_card=selected_player.deck.commander_saved[1]" (pointerleave)="hovered_card=null" loading="lazy">
+              </div>
+            </div>
           </mat-card>
         </div>
         <div class="selected-player-data">
