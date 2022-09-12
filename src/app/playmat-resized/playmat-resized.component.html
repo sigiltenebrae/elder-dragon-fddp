@@ -14,7 +14,7 @@
           <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
         </div>
         <div>
-          <button mat-button>Scry</button>
+          <button mat-button (click)="openSideNav('scry')">Scry</button>
           <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
         </div>
         <div>
@@ -140,7 +140,7 @@
                (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
                (cdkDragStarted)="hovered_card=null; selectCard(card, sidenav_selected_player.grave);"
                (click)="toggleCardSelect(card, sidenav_selected_player.grave, card.sidenav_visible)"
-               [cdkDragDisabled]="!card.sidenav_visible" (contextmenu)="onRightClick($event, {type: 'sidenav', card: card, from: sidenav_selected_player.grave})"
+               [cdkDragDisabled]="!card.sidenav_visible" (contextmenu)="onRightClick($event, {type: 'sidenav_grave', card: card, from: sidenav_selected_player.grave})"
                cdkDrag>
             {{card.name}}
             <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="mtg-card-user" loading="lazy">
@@ -179,7 +179,7 @@
                (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
                (cdkDragStarted)="hovered_card=null; selectCard(card, sidenav_selected_player.exile);"
                (click)="toggleCardSelect(card, sidenav_selected_player.exile, card.sidenav_visible)"
-               (contextmenu)="onRightClick($event, {type: 'hand', card: card, from: sidenav_selected_player.exile})"
+               (contextmenu)="onRightClick($event, {type: 'sidenav_exile', card: card, from: sidenav_selected_player.exile})"
                [cdkDragDisabled]="!card.sidenav_visible"
                cdkDrag>
             {{card.name}}
@@ -219,7 +219,7 @@
                (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
                (cdkDragStarted)="hovered_card=null; selectCard(card, sidenav_selected_player.temp_zone);"
                (click)="toggleCardSelect(card, sidenav_selected_player.temp_zone, card.sidenav_visible)"
-               (contextmenu)="onRightClick($event, {type: 'hand', card: card, from: sidenav_selected_player.temp_zone})"
+               (contextmenu)="onRightClick($event, {type: 'sidenav_temp_zone', card: card, from: sidenav_selected_player.temp_zone})"
                [cdkDragDisabled]="!card.sidenav_visible"
                cdkDrag>
             {{card.name}}
@@ -229,9 +229,9 @@
         </div>
       </div>
     </div>
-    <div *ngIf="sidenav_type === 'deck' || sidenav_type === 'scry'">
+    <div *ngIf="sidenav_type === 'deck'">
       <div fxLayout="column">
-        <mat-form-field fxFlex style="margin: 5px;" appearance="outline" *ngIf="sidenav_type === 'deck'">
+        <mat-form-field fxFlex style="margin: 5px;" appearance="outline">
           <mat-label>Search</mat-label>
           <input type="text" placeholder="Card Name"
                  matInput [matAutocomplete]="card_name"
@@ -242,21 +242,34 @@
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
-        {{sidenav_sort}}
         <div class="sidenav-list" cdkDropList
              (cdkDropListDropped)="moveCardToZone($event, 'deck', true)"
              [cdkDropListData]="sidenav_selected_player.deck.cards">
           <div *ngFor="let card of sidenav_selected_player.deck.cards; let c = index">
-            <div *ngIf="(sidenav_type === 'deck' && card.sidenav_visible) || (sidenav_type === 'scry' && c < sidenav_scry)" class="sidenav-list-item"
+            <div *ngIf="(sidenav_type === 'deck' && card.sidenav_visible)" class="sidenav-list-item"
               [ngClass]="{'sidenav-list-item-selected': card.selected}"
               (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
               (cdkDragStarted)="hovered_card=null; selectCard(card, sidenav_selected_player.deck.cards);"
               (click)="toggleCardSelect(card, sidenav_selected_player.deck.cards, card.sidenav_visible)"
-              (contextmenu)="onRightClick($event, {type: 'hand', card: card, from: sidenav_selected_player.deck.cards})"
+              (contextmenu)="onRightClick($event, {type: 'sidenav_deck', card: card, from: sidenav_selected_player.deck.cards})"
               cdkDrag>
               {{card.name}}
               <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="mtg-card-user" loading="lazy">
               <img *cdkDragPlaceholder class="mtg-card-user" [src]="card.image" [alt]="card.name" loading="lazy">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="sidenav_type === 'scry'">
+      <div fxLayout="column">
+        <div class="sidenav-list">
+          <div *ngFor="let card of sidenav_selected_player.deck.cards; let c = index">
+            <div *ngIf="(sidenav_type === 'deck' && card.sidenav_visible) || (sidenav_type === 'scry' && c < sidenav_scry)" class="sidenav-list-item"
+                 [ngClass]="{'sidenav-list-item-selected': card.selected}"
+                 (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
+                 (contextmenu)="onRightClick($event, {type: 'sidenav_scry', card: card, from: sidenav_selected_player.deck.cards})">
+              {{card.name}}
             </div>
           </div>
         </div>

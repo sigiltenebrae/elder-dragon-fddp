@@ -45,6 +45,7 @@ export class PlaymatResizedComponent implements OnInit {
   selected_cards: any[] = [];
   sidenav_sort = '';
   sidenav_scry = 0;
+  temp_scry_zone: any[] = [];
   loading = false;
 
 
@@ -604,6 +605,11 @@ export class PlaymatResizedComponent implements OnInit {
     this.getSidenavSort(this.user.temp_zone);
     this.sidenav_type = type;
     this.sidenav_scry = 2; //DEBUGGING, NEED TO FIX
+    if (this.sidenav_scry > 0) {
+      for (let i = 0; i < this.sidenav_scry; i++) {
+        this.temp_scry_zone.push(this.user.deck.cards[i]);
+      }
+    }
     this.fddp_sidenav.open();
   }
 
