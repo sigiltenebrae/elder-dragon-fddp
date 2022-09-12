@@ -146,22 +146,6 @@ export class FddpApiService {
     })
   }
 
-  public getDeck(deckid: number): Promise<any> {
-    return new Promise<any>((resolve) => {
-      this.http.get(environment.fddp_api_url + '/decks/' + deckid).subscribe((deck:any) => {
-        if (deck.errors) {
-          console.log('Errors in getting deck');
-          console.log(deck.errors);
-        }
-        resolve(deck.deck);
-      }, (error) => {
-        console.log('Error getting deck with id: ' + deckid);
-        console.log(error);
-        resolve(null);
-      });
-    });
-  }
-
   public getDeckForPlay(deckid: number): Promise<any> {
     return new Promise<any>((resolve) => {
       this.http.get(environment.fddp_api_url + '/game/deck/' + deckid).subscribe((deck_data) => {
