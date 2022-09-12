@@ -96,6 +96,7 @@ export class PlaymatResizedComponent implements OnInit {
           out_player.grave = [];
           out_player.exile = [];
           out_player.temp_zone = [];
+          out_player.counters = [];
           out_player.deck.cards.forEach((card: any) => {
             card.counter_1 = false;
             card.counter_2 = false;
@@ -412,6 +413,17 @@ export class PlaymatResizedComponent implements OnInit {
       }
     }
     return count;
+  }
+
+  createCounter() {
+    this.user.counters.push({
+      color: '#' + Math.floor(Math.random()*16777215).toString(16),
+      value: 0
+    })
+  }
+
+  deleteCounter(counter: any) {
+    this.user.counters.splice(this.user.counters.indexOf(counter), 1);
   }
 
   /**------------------------------------------------
@@ -773,6 +785,9 @@ export class PlaymatResizedComponent implements OnInit {
           break;
         case 'command_tax_2':
           this.user.command_tax_2 --;
+          break;
+        case 'custom_counter':
+          item.counter.value--;
           break;
         default:
           this.rightclicked_item = item;

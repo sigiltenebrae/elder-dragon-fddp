@@ -66,7 +66,14 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   border-radius: 5px;
 }
 
-//
+//Game Classes
+
+.counter-creator {
+  top: 10px;
+  right: 10px;
+  position: fixed;
+  z-index: 2;
+}
 
 .mtg-card-user {
   min-width: 75px;

@@ -4,6 +4,16 @@
      [matMenuTriggerFor]="rightMenu">
 </div>
 
+<div *ngIf="user != null" class="counter-creator" fxLayout="column">
+  <button mat-fab (click)="createCounter()"><mat-icon>add</mat-icon></button>
+  <button cdkDrag mat-fab (click)="counter.value = counter.value + 1"
+          (contextmenu)="onRightClick($event, {type: 'custom_counter', counter: counter})"
+          (keyup.escape)="deleteCounter(counter)"
+          *ngFor="let counter of user.counters" style="background: {{counter.color}}">{{counter.value}}</button>
+</div>
+
+
+
 <mat-menu #rightMenu="matMenu">
   <div (click) = "$event.stopPropagation()">
     <ng-template matMenuContent>
