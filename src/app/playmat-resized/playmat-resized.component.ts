@@ -41,6 +41,9 @@ export class PlaymatResizedComponent implements OnInit {
   current_turn = 0;
 
   hovered_card: any = null;
+  hoverdata: any = {shift_pressed: false, alt_pressed: false}
+  preview = false;
+
   rightclicked_item: any = null;
   sidenav_type: any = null;
   selected_cards: any[] = [];
@@ -219,11 +222,49 @@ export class PlaymatResizedComponent implements OnInit {
   }
 
   /**------------------------------------------------
+   *      Keybind Functions        *
+   ------------------------------------------------**/
+
+  @HostListener('document:keydown.shift', ['$event']) onShiftDown(event: KeyboardEvent) {
+    this.hoverdata.shift_pressed = true;
+  }
+
+  @HostListener('document:keyup.shift', ['$event']) onShiftUp(event: KeyboardEvent) {
+    this.hoverdata.shift_pressed = false;
+  }
+
+  @HostListener('document:keydown.alt', ['$event']) onAltDown(event: KeyboardEvent) {
+    this.hoverdata.alt_pressed = true;
+  }
+
+  @HostListener('document:keyup.alt', ['$event']) onAltUp(event: KeyboardEvent) {
+    this.hoverdata.alt_pressed = false;
+  }
+
+  getHoverImage() {
+    if (this.hovered_card) {
+      if (this.hovered_card.back_image && this.hovered_card.back_image !== '' && this.hoverdata.alt_pressed) {
+        return this.hovered_card.back_image;
+      }
+      return this.hovered_card.image;
+    }
+    return null;
+  }
+
+  togglePreview() {
+    this.preview = !this.preview;
+  }
+
+  /**------------------------------------------------
    *      Board-Interaction Helper Functions        *
    ------------------------------------------------**/
 
   isOpponent(player: any) {
     return player.name !== this.user.name
+  }
+
+  isNum(s: any) {
+    return !isNaN(s);
   }
 
   canSee(card: any, user: any) {
@@ -431,8 +472,13 @@ export class PlaymatResizedComponent implements OnInit {
   cloneCard(card: any) {
     let card_clone = JSON.parse(JSON.stringify(card));
     card_clone.is_token = true;
+    card_clone.selected = false;
     this.clearCard(card_clone);
     this.user.temp_zone.push(card_clone);
+  }
+
+  openTokenMenu() {
+
   }
 
   createToken(token: any) {
@@ -441,6 +487,7 @@ export class PlaymatResizedComponent implements OnInit {
       if (tok.name === token.name) {
         out_token = JSON.parse(JSON.stringify(tok));
         out_token.is_token = true;
+        out_token.selected = false;
         this.clearCard(out_token);
         this.user.temp_zone.push(out_token);
         return;
@@ -452,7 +499,6 @@ export class PlaymatResizedComponent implements OnInit {
         out_token = token_data;
         out_token.is_token = true;
         out_token.selected = false;
-        out_token.tapped = 'untapped';
         out_token.image = images.length > 0 ? images[0]: null;
         this.clearCard(out_token);
         this.user.temp_zone.push(out_token);

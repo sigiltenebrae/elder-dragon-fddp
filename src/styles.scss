@@ -73,6 +73,52 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 
 //Game Classes
 
+.card-hover-container {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  min-height: 585px;
+  max-height: 585px;
+  min-width: 418px;
+  max-width: 418px;
+  border-radius: 12px !important;
+  z-index: 1000;
+  @include mat.elevation(15);
+}
+
+.card-hover-container .card-hover-holder {
+  position: relative;
+  min-height: 585px;
+  max-height: 585px;
+  min-width: 418px;
+  max-width: 418px;
+  border-radius: 12px !important;
+}
+
+.card-hover-holder .card-hover-preview {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-height: 585px;
+  max-height: 585px;
+  min-width: 418px;
+  max-width: 418px;
+  border-radius: 12px !important;
+  z-index: 10;
+}
+
+.card-hover-holder .card-hover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-height: 585px;
+  max-height: 585px;
+  min-width: 418px;
+  max-width: 418px;
+  z-index: 5;
+  padding: 15px;
+}
+
 .counter-creator {
   top: 10px;
   right: 10px;
@@ -1038,7 +1084,7 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   opacity: 0.7;
 }
 
-.deck-manager-commander-viewer .deck-manager-commander-colors {
+.deck-manager-commander-colors {
   position: absolute;
   height: 16px;
   width: 100%;
