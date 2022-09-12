@@ -19,7 +19,9 @@ export class DeckEditComponent implements OnInit {
   deck: any = null;
   selected_card: any = null;
   changing_image = false;
-  image_options: any[] = []
+  changing_back_image = false;
+  image_options: any[] = [];
+  back_image_options: any[] = [];
   new_card_temp: any = null;
   deleting = false;
 
@@ -92,6 +94,7 @@ export class DeckEditComponent implements OnInit {
               {
                 name: card.card.oracleCard.name,
                 image: '',
+                back_image: null,
                 count: card.quantity,
                 iscommander: iscommander
               });
@@ -110,12 +113,17 @@ export class DeckEditComponent implements OnInit {
   }
 
   async getCardImage(card: any) {
-    let card_images = await this.fddp_data.getImagesForCard(card.name);
-    card.image = card_images.length > 0? card_images[0]: '';
+    let card_image_data: any = await this.fddp_data.getImagesForCard(card.name);
+    let card_images = card_image_data.images;
+    let card_back_images = card_image_data.back_images
+    card.image = card_images && card_images.length > 0? card_images[0]: '';
+    card.back_image = card_back_images && card_back_images.length > 0? card_back_images[0]: '';
   }
 
   async getCardImages(card: any) {
-    this.image_options = await this.fddp_data.getImagesForCard(card.name);
+    let image_data: any = await this.fddp_data.getImagesForCard(card.name);
+    this.image_options = image_data.images;
+    this.back_image_options = image_data.back_images;
   }
 
   addCardToDeck() {

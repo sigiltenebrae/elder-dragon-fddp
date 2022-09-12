@@ -60,7 +60,7 @@
               <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
                 <div fxLayout="column" fxFlex="100">
                   <button mat-button style="text-align: start"
-                          (click)="selected_card=card; changing_image=false;image_options=[]">{{card.name}}</button>
+                          (click)="selected_card=card; changing_image=false; changing_back_image=false; image_options=[]">{{card.name}}</button>
                 </div>
                 <div fxLayout="column" fxFlex>
                   <button mat-button (click)="card.count = card.count + 1;"
@@ -73,19 +73,28 @@
         </mat-list>
       </div>
     </div>
-    <div *ngIf="selected_card && !changing_image" fxLayout="column" fxFlex fxLayoutAlign="center center" fxLayoutGap="20">
-      <img src="{{selected_card.image}}" class="deck-edit-image">
-      <div fxLayout="row">
-        <button *ngIf="selected_card.iscommander" mat-raised-button color="accent" style="margin: 5px;" (click)="selected_card.iscommander=false">Unset Commander</button>
-        <button *ngIf="!selected_card.iscommander" mat-raised-button color="accent" style="margin: 5px;" (click)="selected_card.iscommander=true; deck.image=deck.image===''? selected_card.image: deck.image">Set Commander</button>
-        <button mat-raised-button color="primary" style="margin: 5px;" (click)="changing_image=true; getCardImages(selected_card)">Change Image</button>
+    <div *ngIf="selected_card && !changing_image && !changing_back_image" fxLayout="column" fxFlex fxLayoutAlign="center center" fxLayoutGap="20">
+      <div fxLayout="row" fxLayoutGap="10px">
+        <img src="{{selected_card.image}}" class="deck-edit-image" loading="eager">
+        <img *ngIf="selected_card.back_image" src="{{selected_card.back_image}}" class="deck-edit-image" loading="eager">
+      </div>
+      <div fxLayout="row" fxLayoutGap="10px">
+        <button *ngIf="selected_card.iscommander" mat-raised-button color="accent" (click)="selected_card.iscommander=false">Unset Commander</button>
+        <button *ngIf="!selected_card.iscommander" mat-raised-button color="accent" (click)="selected_card.iscommander=true; deck.image=deck.image===''? selected_card.image: deck.image">Set Commander</button>
+        <button mat-raised-button color="primary" (click)="changing_image=true; getCardImages(selected_card)">Change Image</button>
+        <button *ngIf="selected_card.back_image" mat-raised-button color="primary" (click)="changing_back_image=true; getCardImage(selected_card)">Change Back Image</button>
       </div>
     </div>
-    <div *ngIf="selected_card && changing_image" fxLayout="column" fxFlex fxLayoutAlign="center center">
+    <div *ngIf="selected_card && (changing_image || changing_back_image)" fxLayout="column" fxFlex fxLayoutAlign="center center">
       <div fxFlex fxLayout="row wrap" fxLayoutAlign="center" style="overflow-y: scroll; min-height: 640px; max-height: 640px; margin-top: 10px;">
-        <img *ngFor="let card_image of image_options" class="mtg-card-deck-form-select" src="{{card_image}}" (click)="selected_card.image=card_image; changing_image=false;" loading="lazy">
+        <div *ngIf="changing_image">
+          <img *ngFor="let card_image of image_options" class="mtg-card-deck-form-select" src="{{card_image}}" (click)="selected_card.image=card_image; changing_image=false;" loading="lazy">
+        </div>
+        <div *ngIf="changing_back_image">
+          <img *ngFor="let card_image of back_image_options" class="mtg-card-deck-form-select" src="{{card_image}}" (click)="selected_card.back_image=card_image; changing_back_image=false;" loading="lazy">
+        </div>
       </div>
-      <button mat-raised-button color="warn" (click)="changing_image=false" style="margin-top: 10px;">Cancel</button>
+      <button mat-raised-button color="warn" (click)="changing_image=false; changing_back_image=false;" style="margin-top: 10px;">Cancel</button>
     </div>
   </mat-card>
 </div>

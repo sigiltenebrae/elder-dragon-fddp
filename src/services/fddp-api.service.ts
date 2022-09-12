@@ -47,7 +47,7 @@ export class FddpApiService {
       this.http.post(environment.fddp_api_url + '/cards/images',
         JSON.stringify({name: card}),
         {headers : new HttpHeaders({'Content-Type': 'application/json'})}).subscribe((image_data: any) => {
-          resolve_images(image_data.images);
+          resolve_images(image_data);
       }, () => {
           resolve_images([]);
       });
