@@ -61,7 +61,7 @@ export class PlaymatResizedComponent implements OnInit {
     this.rightClickHandler.overrideRightClick();
     let game_promises: any[] = [];
     game_promises.push(this.loadPlayer("Christian", 1, 16, 0));
-    game_promises.push(this.loadPlayer("Ray", 3, 13, 1));
+    game_promises.push(this.loadPlayer("Liam", 4, 10, 1));
     game_promises.push(this.loadPlayer("David", 2, 11, 2));
     game_promises.push(this.loadPlayer("George", 6, 12, 3));
     Promise.all(game_promises).then(() => {
@@ -431,22 +431,42 @@ export class PlaymatResizedComponent implements OnInit {
   cloneCard(card: any) {
     let card_clone = JSON.parse(JSON.stringify(card));
     card_clone.is_token = true;
-    card_clone.selected = false;
-    card_clone.tapped = 'untapped';
+    this.clearCard(card_clone);
     this.user.temp_zone.push(card_clone);
   }
 
   createToken(token: any) {
-    let out_token = null;
+    let out_token: any = null;
     for (let tok of this.user.deck.tokens) {
       if (tok.name === token.name) {
         out_token = JSON.parse(JSON.stringify(tok));
         out_token.is_token = true;
-        out_token.selected = false;
-        out_token.tapped = 'untapped';
+        this.clearCard(out_token);
         this.user.temp_zone.push(out_token);
+        return;
       }
     }
+    this.fddp_data.getCardInfo(token.name).then((token_data: any) => {
+      this.getCardImages(token.name).then((image_data: any) => {
+        let images = image_data;
+        out_token = token_data;
+        out_token.is_token = true;
+        out_token.selected = false;
+        out_token.tapped = 'untapped';
+        out_token.image = images.length > 0 ? images[0]: null;
+        this.clearCard(out_token);
+        this.user.temp_zone.push(out_token);
+        return;
+      });
+    })
+  }
+
+  getCardImages(name: string): Promise<any> {
+    return new Promise<any>((resolve) => {
+      this.fddp_data.getImagesForCard(name).then((image_data: any) => {
+        resolve(image_data.images);
+      });
+    })
   }
 
   /**------------------------------------------------
