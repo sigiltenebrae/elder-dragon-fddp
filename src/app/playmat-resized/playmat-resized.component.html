@@ -264,7 +264,7 @@
     <div *ngIf="sidenav_type === 'scry'">
       <div fxLayout="column">
         <div class="sidenav-list">
-          <div *ngFor="let card of sidenav_selected_player.deck.cards; let c = index">
+          <div *ngFor="let card of temp_scry_zone; let c = index">
             <div *ngIf="(sidenav_type === 'deck' && card.sidenav_visible) || (sidenav_type === 'scry' && c < sidenav_scry)" class="sidenav-list-item"
                  [ngClass]="{'sidenav-list-item-selected': card.selected}"
                  (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
@@ -519,15 +519,15 @@
             <button mat-fab class="commander-counter" (click)="user.command_tax_1 = user.command_tax_1 + 1" (contextmenu)="onRightClick($event, {type: 'command_tax_1'})">
               {{user.command_tax_1}}
             </button>
-            <button *ngIf="user.deck.commander.length == 2" mat-fab color="primary" class="commander-counter-2" (click)="user.command_tax_2 = user.command_tax_2 + 1" (contextmenu)="onRightClick($event, {type: 'command_tax_2'})">
+            <button *ngIf="user.deck.commander_saved.length == 2" mat-fab color="primary" class="commander-counter-2" (click)="user.command_tax_2 = user.command_tax_2 + 1" (contextmenu)="onRightClick($event, {type: 'command_tax_2'})">
               {{user.command_tax_2}}
             </button>
-            <div *ngIf="user.deck.commander.length == 1">
-              <img class="commander-viewer-single" src="{{user.deck.commander[0].image}}" cdkDrag loading="lazy">
+            <div *ngIf="user.deck.commander_saved.length == 1">
+              <img class="commander-viewer-single" src="{{user.deck.commander_saved[0].image}}" loading="lazy">
             </div>
-            <div *ngIf="user.deck.commander.length == 2" class="commander-viewer-partner-holder">
-              <img class="commander-viewer-partner-1" src="{{user.deck.commander[0].image}}" cdkDrag loading="lazy">
-              <img class="commander-viewer-partner-2" src="{{user.deck.commander[1].image}}" cdkDrag loading="lazy">
+            <div *ngIf="user.deck.commander_saved.length == 2" class="commander-viewer-partner-holder">
+              <img class="commander-viewer-partner-1" src="{{user.deck.commander_saved[0].image}}" loading="lazy">
+              <img class="commander-viewer-partner-2" src="{{user.deck.commander_saved[1].image}}" loading="lazy">
             </div>
           </mat-card>
         </div>
@@ -550,8 +550,8 @@
           <mat-card class="zone-data">
             <img *ngIf="selected_player"
                  class="mtg-card-user" style="opacity: 1"
-                 src="{{selected_player.deck.commander[0].image}}" alt="{{selected_player.deck.commander[0].name}}"
-                 (pointerenter)="hovered_card=selected_player.deck.commander[0]" (pointerleave)="hovered_card=null" loading="lazy">
+                 src="{{selected_player.deck.commander_saved[0].image}}" alt="{{selected_player.deck.commander_saved[0].name}}"
+                 (pointerenter)="hovered_card=selected_player.deck.commander_saved[0]" (pointerleave)="hovered_card=null" loading="lazy">
           </mat-card>
         </div>
         <div class="selected-player-data">

@@ -116,7 +116,9 @@ export class PlaymatResizedComponent implements OnInit {
             card.sidenav_visible = true;
             card.visible = [];
           })
+          out_player.deck.commander_saved = [];
           out_player.deck.commander.forEach((card: any) => {
+            out_player.deck.commander_saved.push(card);
             card.counter_1 = false;
             card.counter_2 = false;
             card.counter_3 = false;
@@ -267,14 +269,28 @@ export class PlaymatResizedComponent implements OnInit {
     }
   }
 
-  selectCard(card: any, from: any) {
-    if (!card.selected) {
-      card.selected = true;
-      this.selected_cards.push({
-        card: card,
-        from: from
-      });
-      card.selected = true;
+  selectCard(card: any, from: any, commander?: boolean) {
+    if (commander) { //if it is the commander being cast
+      if (from.indexOf(card) != -1) {
+        if (!card.selected) {
+          card.selected = true;
+          this.selected_cards.push({
+            card: card,
+            from: from
+          });
+          card.selected = true;
+        }
+      }
+    }
+    else {
+      if (!card.selected) {
+        card.selected = true;
+        this.selected_cards.push({
+          card: card,
+          from: from
+        });
+        card.selected = true;
+      }
     }
   }
 
@@ -445,11 +461,8 @@ export class PlaymatResizedComponent implements OnInit {
             break;
           case 'command_zone':
             if (card_select.card.iscommander) {
-              if (card_select.from === this.getPlayer(card_select.card.owner).deck.commander) { //If it is already in hand
-                moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex);
-              }
-              else {
-                transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.commander, card_select.from.indexOf(card_select.card), event.currentIndex);
+              if (card_select.from !== this.getPlayer(card_select.card.owner).deck.commander) { //Do not allow moving commanders via drag
+                transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.commander, card_select.from.indexOf(card_select.card), 0);
               }
               break;
             }
@@ -460,7 +473,6 @@ export class PlaymatResizedComponent implements OnInit {
     else { //card is being moved to play
       //Get the index on the playmat of the spot you are moving to
       let spot_index = this.user.playmat.indexOf(event.container.data);
-      console.log(this.selected_cards)
       for (let card_select of this.selected_cards) {
         card_select.card.selected = false;
         if (card_select.from != event.container.data) { //if the card is already there, skip it
@@ -608,6 +620,7 @@ export class PlaymatResizedComponent implements OnInit {
     if (this.sidenav_scry > 0) {
       for (let i = 0; i < this.sidenav_scry; i++) {
         this.temp_scry_zone.push(this.user.deck.cards[i]);
+        console.log('done')
       }
     }
     this.fddp_sidenav.open();
@@ -631,7 +644,7 @@ export class PlaymatResizedComponent implements OnInit {
     else if (this.sidenav_type === 'temp_zone') {
       this.getSidenavSort(this.sidenav_selected_player.temp_zone);
     }
-    else if (this.sidenav_type === 'deck' || this.sidenav_type === 'scry') {
+    else if (this.sidenav_type === 'deck') {
       this.getSidenavSort(this.sidenav_selected_player.deck.cards);
     }
   }
@@ -652,44 +665,45 @@ export class PlaymatResizedComponent implements OnInit {
   onRightClick(event: MouseEvent, item: any) {
     event.preventDefault();
     if (item.type && item.type !== 'none') {
-      if (item.type === 'life') {
-        item.player.life --;
-      }
-      else if (item.type === 'infect') {
-        item.player.infect --;
-      }
-      else if (item.type === 'counter_1') {
-        item.card.counter_1_value --;
-      }
-      else if (item.type === 'counter_2') {
-        item.card.counter_2_value --;
-      }
-      else if (item.type === 'counter_3') {
-        item.card.counter_3_value --;
-      }
-      else if (item.type === 'multiplier') {
-        item.card.multiplier_value --;
-      }
-      else if (item.type === 'power') {
-        item.card.power_mod --;
-      }
-      else if (item.type === 'toughness') {
-        item.card.toughness_mod --;
-      }
-      else if (item.type === 'loyalty') {
-        item.card.loyalty_mod --;
-      }
-      else if (item.type === 'command_tax_1') {
-        this.user.command_tax_1 --;
-      }
-      else if (item.type === 'command_tax_2') {
-        this.user.command_tax_2 --;
-      }
-      else {
-        this.rightclicked_item = item;
-        this.menuTopLeftPosition.x = event.clientX + 'px';
-        this.menuTopLeftPosition.y = event.clientY + 'px';
-        this.matMenuTrigger.openMenu();
+      switch (item.type) {
+        case 'life':
+          item.player.life --;
+          break;
+        case 'infect':
+          item.player.infect --;
+          break;
+        case 'counter_1':
+          item.card.counter_1_value --;
+          break;
+        case 'counter_2':
+          item.card.counter_2_value --;
+          break;
+        case 'counter_3':
+          item.card.counter_3_value --;
+          break;
+        case 'multiplier':
+          item.card.multiplier_value --;
+          break;
+        case 'power':
+          item.card.power_mod --;
+          break;
+        case 'toughness':
+          item.card.toughness_mod --;
+          break;
+        case 'loyalty':
+          item.card.loyalty_mod --;
+          break;
+        case 'command_tax_1':
+          this.user.command_tax_1 --;
+          break;
+        case 'command_tax_2':
+          this.user.command_tax_2 --;
+          break;
+        default:
+          this.rightclicked_item = item;
+          this.menuTopLeftPosition.x = event.clientX + 'px';
+          this.menuTopLeftPosition.y = event.clientY + 'px';
+          this.matMenuTrigger.openMenu();
       }
     }
   }
