@@ -43,7 +43,8 @@ export class CustomImagesComponent implements OnInit {
       this.fddp_data.createCustomCard(this.name, this.image).then(() => {
         this.image = '';
         this.name = null;
-      })
+        location.reload();
+      });
     }
   }
 

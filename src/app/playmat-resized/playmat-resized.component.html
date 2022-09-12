@@ -290,10 +290,24 @@
       <div class="card-preview" *ngIf="hovered_card">
         <mat-card fxLayout="row" fxLayoutAlign="start start" fxFlexFill>
           <div fxLayout="column" fxLayoutAlign="start center" fxFlex="100">
-            <img class="mtg-card-preview" src="{{hovered_card.image}}" alt="{{hovered_card.name}}" loading="lazy">
+            <div *ngIf="hovered_card.back_face" fxLayout="row">
+              <img class="mtg-card-preview" src="{{hovered_card.image}}" alt="{{hovered_card.name}}" loading="lazy">
+              <img class="mtg-card-preview" src="{{hovered_card.back_image}}" alt="{{hovered_card.name}}" loading="lazy">
+            </div>
+            <div *ngIf="!hovered_card.back_face">
+              <img class="mtg-card-preview" src="{{hovered_card.image}}" alt="{{hovered_card.name}}" loading="lazy">
+            </div>
             <h3 style="text-align: center">{{hovered_card.name}}</h3>
-            <h3 style="text-align: center">{{hovered_card.mana_cost}}</h3>
-            <h3 style="margin: 10px; white-space: pre-line">{{hovered_card.oracle_text}}</h3>
+            <div>
+              <mat-divider></mat-divider>
+              <h3 style="text-align: center">{{hovered_card.mana_cost}}</h3>
+              <h3 style="margin: 10px; white-space: pre-line">{{hovered_card.oracle_text}}</h3>
+            </div>
+            <div>
+              <mat-divider></mat-divider>
+              <h3 style="text-align: center">{{hovered_card.back_mana_cost}}</h3>
+              <h3 style="margin: 10px; white-space: pre-line">{{hovered_card.back_oracle_text}}</h3>
+            </div>
           </div>
         </mat-card>
       </div>
