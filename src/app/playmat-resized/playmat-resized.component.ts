@@ -117,6 +117,7 @@ export class PlaymatResizedComponent implements OnInit {
             card.tapped = 'untapped';
             card.sidenav_visible = true;
             card.visible = [];
+            card.alt = false;
           })
           out_player.deck.commander_saved = [];
           out_player.deck.commander.forEach((card: any) => {
@@ -140,6 +141,7 @@ export class PlaymatResizedComponent implements OnInit {
             card.tapped = 'untapped';
             card.sidenav_visible = true;
             card.visible = []
+            card.alt = false;
           })
 
           out_player.selected = false;
@@ -314,6 +316,36 @@ export class PlaymatResizedComponent implements OnInit {
     this.selected_cards = saving? [saving]: [];
   }
 
+  altFaceCard(card: any) {
+    if (card.back_face) {
+      let temp_image = card.image;
+      let temp_mana_cost = card.mana_cost;
+      let temp_types = card.types;
+      let temp_oracle_text = card.oracle_text;
+      let temp_power = card.power;
+      let temp_toughness = card.toughness;
+      let temp_loyalty = card.loyalty;
+
+      card.image = card.back_image;
+      card.mana_cost = card.back_mana_cost;
+      card.types = card.back_types;
+      card.oracle_text = card.back_oracle_text;
+      card.power = card.back_power;
+      card.toughness = card.back_toughness;
+      card.loyalty = card.back_loyalty;
+
+      card.back_image = temp_image;
+      card.back_mana_cost = temp_mana_cost;
+      card.back_types = temp_types;
+      card.back_oracle_text = temp_oracle_text;
+      card.back_power = temp_power;
+      card.back_toughness = temp_toughness;
+      card.back_loyalty = temp_loyalty;
+
+      card.alt = !card.alt;
+    }
+  }
+
   clearCard(card: any) {
     card.tapped = 'untapped';
     card.power_mod = 0;
@@ -326,6 +358,9 @@ export class PlaymatResizedComponent implements OnInit {
     card.locked = false;
     card.primed = false;
     card.triggered = false;
+    if (card.alt) {
+      this.altFaceCard(card);
+    }
   }
 
   shuffleDeck(cards: any[]) {
