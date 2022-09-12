@@ -1,6 +1,18 @@
 <div fxFlexFill style="margin: 20px;" fxLayoutAlign="center center">
   <mat-card fxFlex="30" fxLayout="column">
     <mat-form-field appearance="fill" style="margin-top: 10px;">
+      <mat-label>Type</mat-label>
+      <mat-select [(value)]="card_type">
+        <mat-option value="cards">Cards</mat-option>
+        <mat-option value="tokens">Tokens</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="card_type === 'tokens'" appearance="fill" style="margin-top: 10px;">
+      <mat-label>Add Card</mat-label>
+      <input type="text" placeholder="Enter Card" matInput
+             [(ngModel)]="name">
+    </mat-form-field>
+    <mat-form-field *ngIf="card_type === 'cards'" appearance="fill" style="margin-top: 10px;">
       <mat-label>Add Card</mat-label>
       <input type="text" placeholder="Enter Card" matInput
              [ngbTypeahead]="card_search" [(ngModel)]="name" [editable]="false">

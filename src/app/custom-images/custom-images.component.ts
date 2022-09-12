@@ -12,6 +12,7 @@ export class CustomImagesComponent implements OnInit {
 
   name: any = null;
   image: string = '';
+  card_type = 'cards';
 
   constructor(private fddp_data: FddpApiService) { }
 
