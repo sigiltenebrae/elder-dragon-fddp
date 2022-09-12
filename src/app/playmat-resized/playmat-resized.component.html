@@ -138,7 +138,7 @@
                class="sidenav-list-item"
                [ngClass]="{'sidenav-list-item-selected': card.selected}"
                (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
-               (cdkDragStarted)="hovered_card=null"
+               (cdkDragStarted)="hovered_card=null; selectCard(card, sidenav_selected_player.grave);"
                (click)="toggleCardSelect(card, sidenav_selected_player.grave, card.sidenav_visible)"
                [cdkDragDisabled]="!card.sidenav_visible" (contextmenu)="onRightClick($event, {type: 'sidenav', card: card, from: sidenav_selected_player.grave})"
                cdkDrag>
@@ -177,7 +177,7 @@
                class="sidenav-list-item"
                [ngClass]="{'sidenav-list-item-selected': card.selected}"
                (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
-               (cdkDragStarted)="hovered_card=null"
+               (cdkDragStarted)="hovered_card=null; selectCard(card, sidenav_selected_player.exile);"
                (click)="toggleCardSelect(card, sidenav_selected_player.exile, card.sidenav_visible)"
                (contextmenu)="onRightClick($event, {type: 'hand', card: card, from: sidenav_selected_player.exile})"
                [cdkDragDisabled]="!card.sidenav_visible"
@@ -217,7 +217,7 @@
                class="sidenav-list-item"
                [ngClass]="{'sidenav-list-item-selected': card.selected}"
                (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
-               (cdkDragStarted)="hovered_card=null"
+               (cdkDragStarted)="hovered_card=null; selectCard(card, sidenav_selected_player.temp_zone);"
                (click)="toggleCardSelect(card, sidenav_selected_player.temp_zone, card.sidenav_visible)"
                (contextmenu)="onRightClick($event, {type: 'hand', card: card, from: sidenav_selected_player.temp_zone})"
                [cdkDragDisabled]="!card.sidenav_visible"
@@ -231,7 +231,7 @@
     </div>
     <div *ngIf="sidenav_type === 'deck' || sidenav_type === 'scry'">
       <div fxLayout="column">
-        <mat-form-field fxFlex style="margin: 5px;" appearance="outline">
+        <mat-form-field fxFlex style="margin: 5px;" appearance="outline" *ngIf="sidenav_type === 'deck'">
           <mat-label>Search</mat-label>
           <input type="text" placeholder="Card Name"
                  matInput [matAutocomplete]="card_name"
@@ -247,13 +247,12 @@
              (cdkDropListDropped)="moveCardToZone($event, 'deck', true)"
              [cdkDropListData]="sidenav_selected_player.deck.cards">
           <div *ngFor="let card of sidenav_selected_player.deck.cards; let c = index">
-            <div *ngIf="sidenav_type === 'deck' || (sidenav_type === 'scry' && c < sidenav_scry)" class="sidenav-list-item"
+            <div *ngIf="(sidenav_type === 'deck' && card.sidenav_visible) || (sidenav_type === 'scry' && c < sidenav_scry)" class="sidenav-list-item"
               [ngClass]="{'sidenav-list-item-selected': card.selected}"
               (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
-              (cdkDragStarted)="hovered_card=null"
+              (cdkDragStarted)="hovered_card=null; selectCard(card, sidenav_selected_player.deck.cards);"
               (click)="toggleCardSelect(card, sidenav_selected_player.deck.cards, card.sidenav_visible)"
               (contextmenu)="onRightClick($event, {type: 'hand', card: card, from: sidenav_selected_player.deck.cards})"
-              [cdkDragDisabled]="!card.sidenav_visible"
               cdkDrag>
               {{card.name}}
               <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="mtg-card-user" loading="lazy">
@@ -382,7 +381,7 @@
                     <div *ngFor="let card of spot; let i = index">
                       <mat-card [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2}"
                            (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
-                           (cdkDragStarted)="hovered_card=null"
+                           (cdkDragStarted)="hovered_card=null; selectCard(card, spot);"
                            class="mtg-card-user-container" [@userTappedState]="card.tapped"
                            cdkDrag>
                         <div *ngIf="card.locked" class="mtg-lock"><mat-icon>lock</mat-icon></div>
@@ -434,7 +433,7 @@
                        (contextmenu)="onRightClick($event, {type: 'hand', card: card, from: user.hand})"
                        (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
                        (click)="toggleCardSelect(card, user.hand)"
-                       (cdkDragStarted)="hovered_card=null"
+                       (cdkDragStarted)="hovered_card=null; selectCard(card, user.hand);"
                        cdkDrag>
                     <img [ngClass]="{ 'mtg-card-user-selected': card.selected }" class="mtg-card-user" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
                   </mat-card>
@@ -453,7 +452,7 @@
             <img class="mtg-card-user"
                  src="https://c1.scryfall.com/file/scryfall-card-backs/large/59/597b79b3-7d77-4261-871a-60dd17403388.jpg?1561757129"
                  (pointerleave)="hovered_card=null"
-                 (cdkDragStarted)="hovered_card=null"
+                 (cdkDragStarted)="hovered_card=null; selectCard(user.deck.cards[0], user.deck.cards);"
                  cdkDrag loading="lazy">
           </mat-card>
         </div>
@@ -468,7 +467,7 @@
             <div *ngIf="user.grave.length == 0" class="mtg-card-user"></div>
             <img *ngIf="user.grave.length > 0" class="mtg-card-user" src="{{user.grave[0].image}}"
                  (pointerleave)="hovered_card=null"
-                 (cdkDragStarted)="hovered_card=null"
+                 (cdkDragStarted)="hovered_card=null; selectCard(user.grave[0], user.grave);"
                  cdkDrag loading="lazy">
           </mat-card>
         </div>
@@ -482,7 +481,7 @@
             <div *ngIf="user.exile.length == 0" class="mtg-card-user"></div>
             <img *ngIf="user.exile.length > 0" class="mtg-card-user" src="{{user.exile[0].image}}"
                  (pointerleave)="hovered_card=null"
-                 (cdkDragStarted)="hovered_card=null"
+                 (cdkDragStarted)="hovered_card=null; selectCard(user.exile[0], user.exile);"
                  cdkDrag loading="lazy">
           </mat-card>
         </div>
@@ -496,7 +495,7 @@
             <div *ngIf="user.temp_zone.length == 0" class="mtg-card-user"></div>
             <img *ngIf="user.temp_zone.length > 0" class="mtg-card-user" src="{{user.temp_zone[0].image}}"
                  (pointerleave)="hovered_card=null"
-                 (cdkDragStarted)="hovered_card=null"
+                 (cdkDragStarted)="hovered_card=null; selectCard(user.temp_zone[0], user.temp_zone);"
                  cdkDrag loading="lazy">
           </mat-card>
         </div>

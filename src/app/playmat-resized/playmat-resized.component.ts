@@ -266,6 +266,17 @@ export class PlaymatResizedComponent implements OnInit {
     }
   }
 
+  selectCard(card: any, from: any) {
+    if (!card.selected) {
+      card.selected = true;
+      this.selected_cards.push({
+        card: card,
+        from: from
+      });
+      card.selected = true;
+    }
+  }
+
   clearCard(card: any) {
     card.tapped = 'untapped';
     card.power_mod = 0;
@@ -345,18 +356,11 @@ export class PlaymatResizedComponent implements OnInit {
   //Sidebar search limit
   moveCardToZone(event: any, location: string, sidebar?: boolean) {
     //Hand, Command Zone, Deck, Grave, Exile, Temp Zone, Play
-    let cur_card = event.previousContainer.data[event.previousIndex];
-    if (location !== 'temp_zone' && location !== 'play') {
-      this.clearCard(cur_card); //wipe all counters
-    }
-    if (!cur_card.selected) { //add the card to selected list if it isn't already
-      this.toggleCardSelect(cur_card, event.previousContainer.data);
-    }
-
     if (location !== 'play') {
       for (let card_select of this.selected_cards) {
         switch(location) {
           case 'hand':
+            this.clearCard(card_select.card); //wipe all counters
             if (card_select.from === this.getPlayer(card_select.card.owner).hand) { //If it is already in hand
               moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex);
             }
@@ -365,8 +369,11 @@ export class PlaymatResizedComponent implements OnInit {
             }
             break;
           case 'deck':
+            this.clearCard(card_select.card); //wipe all counters
             if (card_select.from === this.getPlayer(card_select.card.owner).deck.cards) { //If it is already in the deck
-              moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex)
+              if (!(sidebar && this.sidenav_sort !== '')) { //if it is trying to move in a sorted sidebar, prevent
+                moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex)
+              }
             }
             else {
               if (sidebar) {
@@ -380,6 +387,7 @@ export class PlaymatResizedComponent implements OnInit {
             }
             break;
           case 'deck_bottom': //this should never happen from a drag event, only from a 'send'
+            this.clearCard(card_select.card); //wipe all counters
             if (card_select.from === this.getPlayer(card_select.card.owner).deck.cards) { //If it is already in the deck
               moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex)
             }
@@ -388,8 +396,11 @@ export class PlaymatResizedComponent implements OnInit {
             }
             break;
           case 'grave':
+            this.clearCard(card_select.card); //wipe all counters
             if (card_select.from === this.getPlayer(card_select.card.owner).grave) { //If it is already in grave
-              moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex)
+              if (!(sidebar && this.sidenav_sort !== '')) {
+                moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex)
+              }
             }
             else {
               if (sidebar && this.sidenav_sort === '') {
@@ -401,8 +412,11 @@ export class PlaymatResizedComponent implements OnInit {
             }
             break;
           case 'exile':
+            this.clearCard(card_select.card); //wipe all counters
             if (card_select.from === this.getPlayer(card_select.card.owner).exile) { //If it is already in exile
-              moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex)
+              if (!(sidebar && this.sidenav_sort !== '')) {
+                moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex)
+              }
             }
             else {
               if (sidebar && this.sidenav_sort === '') {
@@ -415,7 +429,9 @@ export class PlaymatResizedComponent implements OnInit {
             break;
           case 'temp_zone':
             if (card_select.from === event.container.data) { //If it is already in temp zone
-              moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex);
+              if (!(sidebar && this.sidenav_sort !== '')) {
+                moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex)
+              }
             }
             else {
               if (sidebar && this.sidenav_sort === '') {
@@ -441,32 +457,20 @@ export class PlaymatResizedComponent implements OnInit {
       }
     }
     else { //card is being moved to play
-      if (this.selected_cards.length == 1) { //only moving 1 card, just use default behavior
-        if (event.previousContainer === event.container) {
-          moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-        }
-        else {
-          if (event.container.data.length < 3) {
-            transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
-          }
-        }
-        cur_card.selected = false;
-      }
-      else {
-        //Get the index on the playmat of the spot you are moving to
-        let spot_index = this.user.playmat.indexOf(event.container.data);
-        for (let card_select of this.selected_cards) {
-          card_select.card.selected = false;
-          if (card_select.from != event.container.data) { //if the card is already there, skip it
-            for (let spot_offset = 0; spot_offset < this.user.playmat.length; spot_offset++) {
-              //start at the spot you are trying to insert on and loop around
-              let current_index = spot_index + spot_offset;
-              if (current_index >= this.user.playmat.length) { current_index -= this.user.playmat.length }
-              if (this.user.playmat[current_index].length < 3) {
-                this.user.playmat[current_index].push(card_select.card);
-                card_select.from.splice(card_select.from.indexOf(card_select.card), 1);
-                break;
-              }
+      //Get the index on the playmat of the spot you are moving to
+      let spot_index = this.user.playmat.indexOf(event.container.data);
+      console.log(this.selected_cards)
+      for (let card_select of this.selected_cards) {
+        card_select.card.selected = false;
+        if (card_select.from != event.container.data) { //if the card is already there, skip it
+          for (let spot_offset = 0; spot_offset < this.user.playmat.length; spot_offset++) {
+            //start at the spot you are trying to insert on and loop around
+            let current_index = spot_index + spot_offset;
+            if (current_index >= this.user.playmat.length) { current_index -= this.user.playmat.length }
+            if (this.user.playmat[current_index].length < 3) {
+              this.user.playmat[current_index].push(card_select.card);
+              card_select.from.splice(card_select.from.indexOf(card_select.card), 1);
+              break;
             }
           }
         }
@@ -604,6 +608,7 @@ export class PlaymatResizedComponent implements OnInit {
   }
 
   closeSideNav() {
+    this.sidenav_sort = '';
     this.sidenav_selected_player = null;
     this.sidenav_type = null;
     this.fddp_sidenav.close();
