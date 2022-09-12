@@ -60,7 +60,7 @@ export class PlaymatResizedComponent implements OnInit {
     this.loading = true;
     this.rightClickHandler.overrideRightClick();
     let game_promises: any[] = [];
-    game_promises.push(this.loadPlayer("Christian", 1, 9, 0));
+    game_promises.push(this.loadPlayer("Christian", 1, 16, 0));
     game_promises.push(this.loadPlayer("Ray", 3, 13, 1));
     game_promises.push(this.loadPlayer("David", 2, 11, 2));
     game_promises.push(this.loadPlayer("George", 6, 12, 3));

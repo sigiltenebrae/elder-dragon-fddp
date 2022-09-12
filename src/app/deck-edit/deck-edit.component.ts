@@ -126,6 +126,14 @@ export class DeckEditComponent implements OnInit {
     this.back_image_options = image_data.back_images;
   }
 
+  resetCard(card:any) {
+    card.image = null;
+    card.back_image = null;
+    this.getCardImage(card).then(() => {
+      console.log('reset images for card')
+    });
+  }
+
   addCardToDeck() {
     if (this.new_card_temp) {
       for (let card of this.deck.cards) {

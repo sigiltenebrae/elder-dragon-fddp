@@ -83,6 +83,7 @@
         <button *ngIf="!selected_card.iscommander" mat-raised-button color="accent" (click)="selected_card.iscommander=true; deck.image=deck.image===''? selected_card.image: deck.image">Set Commander</button>
         <button mat-raised-button color="primary" (click)="changing_image=true; getCardImages(selected_card)">Change Image</button>
         <button *ngIf="selected_card.back_image" mat-raised-button color="primary" (click)="changing_back_image=true; getCardImage(selected_card)">Change Back Image</button>
+        <button mat-raised-button color="warn" (click)="resetCard(selected_card)"><mat-icon>refresh</mat-icon></button>
       </div>
     </div>
     <div *ngIf="selected_card && (changing_image || changing_back_image)" fxLayout="column" fxFlex fxLayoutAlign="center center">
