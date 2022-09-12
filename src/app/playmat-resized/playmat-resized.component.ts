@@ -79,8 +79,25 @@ export class PlaymatResizedComponent implements OnInit {
     return new Promise<void>((resolve) => {
       this.fddp_data.getDeckForPlay(deckid).then((deck_data: any) => {
         if (deck_data) {
+          let deck: any = deck_data;
+          let temp_sideboard: any[] = [];
+          deck.cards.forEach((card: any) => {
+            if (card.count > 1) {
+              for (let i = 1; i < card.count; i++) {
+                temp_sideboard.push(card);
+              }
+            }
+          });
+          temp_sideboard.forEach((temp_card) => {
+            deck.cards.push(temp_card);
+          });
+          deck.cards.forEach((card: any) => {
+            card.count = 1;
+          })
+
           let out_player: any = {};
-          out_player.deck = deck_data;
+          out_player.deck = deck;
+          out_player.deck.commander = [];
           out_player.name = name;
           out_player.id = id;
           out_player.life = 40;
@@ -119,30 +136,14 @@ export class PlaymatResizedComponent implements OnInit {
             card.sidenav_visible = true;
             card.visible = [];
             card.alt = false;
+            if (card.iscommander) {
+              out_player.deck.commander.push(card);
+            }
           })
           out_player.deck.commander_saved = [];
           out_player.deck.commander.forEach((card: any) => {
             out_player.deck.commander_saved.push(card);
-            card.counter_1 = false;
-            card.counter_2 = false;
-            card.counter_3 = false;
-            card.multiplier = false;
-            card.counter_1_value = 0;
-            card.counter_2_value = 0;
-            card.counter_3_value = 0;
-            card.multiplier_value = 0;
-            card.owner = out_player.deck.owner;
-            card.power_mod = 0;
-            card.toughness_mod = 0;
-            card.loyalty_mod = 0;
-            card.locked = false;
-            card.primed = false;
-            card.triggered = false;
-            card.is_token = false;
-            card.tapped = 'untapped';
-            card.sidenav_visible = true;
-            card.visible = []
-            card.alt = false;
+            out_player.deck.cards.splice(deck.cards.indexOf(card), 1);
           })
 
           out_player.selected = false;

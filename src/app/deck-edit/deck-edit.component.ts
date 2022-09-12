@@ -23,6 +23,7 @@ export class DeckEditComponent implements OnInit {
   image_options: any[] = [];
   back_image_options: any[] = [];
   new_card_temp: any = null;
+  new_token_temp = '';
   deleting = false;
   card_type = 'cards';
 
@@ -46,16 +47,18 @@ export class DeckEditComponent implements OnInit {
       this.deck.rating = 3;
       this.deck.owner = 0;
       this.deck.cards = [];
+      this.deck.tokens = [];
     }
     else if (this.deckid < 0) {
       this.router.navigate(['/']);
     }
     else {
-      this.fddp_data.getDeck(this.deckid).then((deck) => {
+      this.fddp_data.getDeckForPlay(this.deckid).then((deck) => {
         this.deck = deck;
         this.deck.delete = [];
+        this.deck.token_delete = [];
         this.deck.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
-      })
+      });
     }
   }
 
@@ -130,8 +133,43 @@ export class DeckEditComponent implements OnInit {
           }
         });
         this.deck.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+        let token_promises: any[] = [];
+        this.deck.cards.forEach((card: any) => {
+          token_promises.push(this.getTokens(card));
+        });
+        Promise.all(token_promises).then(() => {
+          this.deck.tokens.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+          this.deck.tokens.forEach((token: any) => {
+            this.getCardImage(token);
+            console.log(this.deck.tokens);
+          });
+        });
       });
     }
+  }
+
+  getTokens(card: any): Promise<void> {
+    return new Promise<void>((resolve) => {
+      this.fddp_data.getCardInfo(card.name).then((card_info: any) => {
+        if (card_info.tokens && card_info.tokens.length > 0) {
+          card_info.tokens.forEach((token: any) => {
+            if (!this.hasToken(token)) {
+              this.deck.tokens.push(token);
+            }
+          });
+        }
+        resolve();
+      });
+    })
+  }
+
+  hasToken(token: any) {
+    for (let tok of this.deck.tokens) {
+      if (tok.name === token.name) {
+        return true;
+      }
+    }
+    return false;
   }
 
   hasCard(name: string): boolean {
@@ -209,6 +247,29 @@ export class DeckEditComponent implements OnInit {
       this.getCardImage(temp_card);
       this.new_card_temp = null;
     }
+  }
+
+  addTokenToDeck() {
+    if (this.new_token_temp !== '') {
+      for (let card of this.deck.tokens) {
+        if (card.name === this.new_token_temp) {
+          return;
+        }
+      }
+      let temp_card = {
+        name: this.new_token_temp,
+        image: '',
+      }
+      this.deck.tokens.push(temp_card);
+      this.deck.tokens.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+      this.getCardImage(temp_card);
+      this.new_token_temp = '';
+    }
+  }
+
+  deleteToken(token: any) {
+    this.deck.token_delete.push(token);
+    this.deck.tokens.splice(this.deck.tokens.indexOf(token), 1);
   }
 
   saveDeck() {

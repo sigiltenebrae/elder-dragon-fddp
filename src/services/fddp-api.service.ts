@@ -54,6 +54,18 @@ export class FddpApiService {
     });
   }
 
+  public getCardInfo(card: string): Promise<any> {
+    return new Promise<any>((resolve) => {
+      this.http.post(environment.fddp_api_url + '/cards',
+        JSON.stringify({name: card}),
+        {headers : new HttpHeaders({'Content-Type': 'application/json'})}).subscribe((card_data: any) => {
+          resolve(card_data);
+      }, () => {
+          resolve({});
+      });
+    })
+  }
+
   public createDeck(deck: any): Promise<any> {
     return new Promise<any>((resolve_deck, reject) => {
       this.http.post(environment.fddp_api_url + '/decks',

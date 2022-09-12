@@ -64,14 +64,14 @@
           <mat-option value="tokens">Tokens</mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-form-field appearance="fill">
+      <mat-form-field appearance="fill" *ngIf="card_type === 'cards'">
         <mat-label>Add Card</mat-label>
         <input type="text" placeholder="Enter Card" matInput
                [ngbTypeahead]="card_search" [(ngModel)]="new_card_temp" [editable]="false">
         <button mat-icon-button matSuffix type="button" (click)="addCardToDeck()"><mat-icon>add</mat-icon></button>
       </mat-form-field>
-      <h4>Cards: {{deck.cards.length}}</h4>
-      <div class="deck-form-card-list">
+      <h4 *ngIf="card_type === 'cards'">Cards: {{deck.cards.length}}</h4>
+      <div *ngIf="card_type === 'cards'" class="deck-form-card-list">
         <mat-list>
           <div *ngFor="let card of deck.cards; let i = index" class="deck-form-card-display">
             <mat-list-item [ngClass]="{'deck-form-card-list-commander': card.iscommander}">
@@ -87,6 +87,33 @@
               </div>
             </mat-list-item>
             <mat-divider *ngIf="i != deck.cards.length - 1"></mat-divider>
+          </div>
+        </mat-list>
+      </div>
+
+
+      <mat-form-field appearance="fill" *ngIf="card_type === 'tokens'">
+        <mat-label>Add Card</mat-label>
+        <input type="text" placeholder="Enter Token" matInput
+               [(ngModel)]="new_token_temp">
+        <button mat-icon-button matSuffix type="button" (click)="addTokenToDeck()"><mat-icon>add</mat-icon></button>
+      </mat-form-field>
+      <h4 *ngIf="card_type === 'tokens'">Cards: {{deck.tokens.length}}</h4>
+      <div *ngIf="card_type === 'tokens'" class="deck-form-card-list">
+        <mat-list>
+          <div *ngFor="let card of deck.tokens; let i = index" class="deck-form-card-display">
+            <mat-list-item>
+              <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
+                <div fxLayout="column" fxFlex="100">
+                  <button mat-button style="text-align: start"
+                          (click)="selected_card=card; changing_image=false; changing_back_image=false; image_options=[]">{{card.name}}</button>
+                </div>
+                <div fxLayout="column" fxFlex>
+                  <button mat-button (click)="deleteToken(card)"><mat-icon>close</mat-icon></button>
+                </div>
+              </div>
+            </mat-list-item>
+            <mat-divider *ngIf="i != deck.tokens.length - 1"></mat-divider>
           </div>
         </mat-list>
       </div>

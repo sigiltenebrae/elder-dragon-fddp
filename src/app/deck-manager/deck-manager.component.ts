@@ -61,6 +61,15 @@ export class DeckManagerComponent implements OnInit {
   getDeckData(deckid: number): Promise<void> {
     return new Promise<void>((resolve) => {
       this.fddp_data.getDeckForPlay(deckid).then((deck) => {
+        deck.commander = [];
+        deck.cards.forEach((card: any) => {
+          if (card.iscommander) {
+            deck.commander.push(card);
+          }
+        });
+        deck.commander.forEach((card: any) => {
+          deck.cards.splice(deck.cards.indexOf(card), 1);
+        });
         deck.colors = this.getDeckColors(deck);
         this.decks.push(deck);
         resolve();
