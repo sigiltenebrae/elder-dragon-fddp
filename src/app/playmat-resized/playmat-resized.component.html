@@ -82,6 +82,7 @@
         <button mat-menu-item (click)="rightclicked_item.card.counter_3 = !rightclicked_item.card.counter_3; rightclicked_item.card.counter_3_value=0">Toggle Counter 3</button>
         <button mat-menu-item (click)="rightclicked_item.card.multiplier = !rightclicked_item.card.multiplier; rightclicked_item.card.multiplier_value=0">Toggle Multiplier</button>
         <button *ngIf="rightclicked_item.card.back_face" mat-menu-item (click)="altFaceCard(rightclicked_item.card)">Alt Face</button>
+        <button mat-menu-item (click)="cloneCard(rightclicked_item.card)">Clone</button>
         <button mat-menu-item (click)="rightclicked_item.card.locked = !rightclicked_item.card.locked;">Lock Card</button>
       </div>
       <!-- Grave -->
@@ -308,6 +309,7 @@
               <img class="mtg-card-preview" src="{{hovered_card.image}}" alt="{{hovered_card.name}}" loading="lazy">
             </div>
             <h3 style="text-align: center">{{hovered_card.name}}</h3>
+            <h3 *ngIf="hovered_card.is_token && !hovered_card.types.includes('Token')">(Copy)</h3>
             <div>
               <mat-divider></mat-divider>
               <h3 style="text-align: center">{{hovered_card.mana_cost}}</h3>
@@ -434,7 +436,7 @@
                            class="mtg-card-user-container" [@userTappedState]="card.tapped"
                            cdkDrag>
                         <div *ngIf="card.locked" class="mtg-lock"><mat-icon>lock</mat-icon></div>
-                        <img [ngClass]="{'mtg-card-user-selected': card.selected }"
+                        <img [ngClass]="{'mtg-card-user-selected': card.selected, 'mtg-card-clone': card.is_token && !card.types.includes('Token') }"
                              class="mtg-card-user"
                              src="{{card.image}}"
                              alt="{{card.name}}"

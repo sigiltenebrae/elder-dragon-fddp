@@ -426,6 +426,13 @@ export class PlaymatResizedComponent implements OnInit {
     this.user.counters.splice(this.user.counters.indexOf(counter), 1);
   }
 
+  cloneCard(card: any) {
+    let card_clone = JSON.parse(JSON.stringify(card));
+    card_clone.is_token = true;
+    card_clone.selected = false;
+    this.user.temp_zone.push(card_clone);
+  }
+
   /**------------------------------------------------
    *          Card Transfer Helper Functions        *
    ------------------------------------------------**/
@@ -444,6 +451,10 @@ export class PlaymatResizedComponent implements OnInit {
       for (let card_select of this.selected_cards) {
         switch(location) {
           case 'hand':
+            if (card_select.card.is_token) {
+              card_select.from.splice(card_select.from.indexOf(card_select.card), 1);
+              break;
+            }
             this.clearCard(card_select.card); //wipe all counters
             if (card_select.from === this.getPlayer(card_select.card.owner).hand) { //If it is already in hand
               moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex);
@@ -453,6 +464,10 @@ export class PlaymatResizedComponent implements OnInit {
             }
             break;
           case 'deck':
+            if (card_select.card.is_token) {
+              card_select.from.splice(card_select.from.indexOf(card_select.card), 1);
+              break;
+            }
             this.clearCard(card_select.card); //wipe all counters
             if (card_select.from === this.getPlayer(card_select.card.owner).deck.cards) { //If it is already in the deck
               if (!(sidebar && this.sidenav_sort !== '')) { //if it is trying to move in a sorted sidebar, prevent
@@ -471,6 +486,10 @@ export class PlaymatResizedComponent implements OnInit {
             }
             break;
           case 'deck_bottom': //this should never happen from a drag event, only from a 'send'
+            if (card_select.card.is_token) {
+              card_select.from.splice(card_select.from.indexOf(card_select.card), 1);
+              break;
+            }
             this.clearCard(card_select.card); //wipe all counters
             if (card_select.from === this.getPlayer(card_select.card.owner).deck.cards) { //If it is already in the deck
               moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex)
@@ -480,6 +499,10 @@ export class PlaymatResizedComponent implements OnInit {
             }
             break;
           case 'grave':
+            if (card_select.card.is_token) {
+              card_select.from.splice(card_select.from.indexOf(card_select.card), 1);
+              break;
+            }
             this.clearCard(card_select.card); //wipe all counters
             if (card_select.from === this.getPlayer(card_select.card.owner).grave) { //If it is already in grave
               if (!(sidebar && this.sidenav_sort !== '')) {
@@ -496,6 +519,10 @@ export class PlaymatResizedComponent implements OnInit {
             }
             break;
           case 'exile':
+            if (card_select.card.is_token) {
+              card_select.from.splice(card_select.from.indexOf(card_select.card), 1);
+              break;
+            }
             this.clearCard(card_select.card); //wipe all counters
             if (card_select.from === this.getPlayer(card_select.card.owner).exile) { //If it is already in exile
               if (!(sidebar && this.sidenav_sort !== '')) {
