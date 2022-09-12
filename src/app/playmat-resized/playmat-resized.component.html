@@ -84,6 +84,7 @@
         <button *ngIf="rightclicked_item.card.back_face" mat-menu-item (click)="altFaceCard(rightclicked_item.card)">Alt Face</button>
         <button mat-menu-item (click)="cloneCard(rightclicked_item.card)">Clone</button>
         <button mat-menu-item (click)="rightclicked_item.card.locked = !rightclicked_item.card.locked;">Lock Card</button>
+        <button *ngFor="let token of rightclicked_item.card.tokens" mat-menu-item (click)="createToken(token)">Create {{token.name}} Token</button>
       </div>
       <!-- Grave -->
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'grave'">
@@ -390,10 +391,10 @@
                           <button *ngIf="card.counter_3" class="mtg-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true"><p>{{card.counter_3_value}}</p></button>
                           <button *ngIf="card.multiplier" class="mtg-multiplier-counter" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>{{card.multiplier_value}}</p></button>
 
-                          <h5 *ngIf="card.power && card.toughness" class="mtg-card-power-tough">
+                          <h5 *ngIf="card.power && card.toughness && card.power != null && card.toughness != null" class="mtg-card-power-tough">
                             <a [ngClass]="{'mat-card-power-tough-text-up': card.power_mod > 0, 'mat-card-power-tough-text-down': card.power_mod < 0}" class="mat-card-power-tough-text">{{card.power + card.power_mod}}</a>/
                             <a [ngClass]="{'mat-card-power-tough-text-up': card.toughness_mod > 0, 'mat-card-power-tough-text-down': card.toughness_mod < 0}" class="mat-card-power-tough-text">{{card.toughness + card.toughness_mod}}</a></h5>
-                          <h5 *ngIf="card.loyalty" class="mtg-card-loyalty"><a class="mat-card-power-tough-text" [ngClass]="{'mat-card-power-tough-text-up': card.loyalty_mod > 0, 'mat-card-power-tough-text-down': card.loyalty_mod < 0}">{{card.loyalty + card.loyalty_mod}}</a></h5>
+                          <h5 *ngIf="card.loyalty && card.loyalty != null" class="mtg-card-loyalty"><a class="mat-card-power-tough-text" [ngClass]="{'mat-card-power-tough-text-up': card.loyalty_mod > 0, 'mat-card-power-tough-text-down': card.loyalty_mod < 0}">{{card.loyalty + card.loyalty_mod}}</a></h5>
                         </div>
                       </div>
                     </div>

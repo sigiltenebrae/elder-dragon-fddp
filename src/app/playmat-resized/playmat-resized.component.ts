@@ -149,6 +149,7 @@ export class PlaymatResizedComponent implements OnInit {
           out_player.selected = false;
           this.shuffleDeck(out_player.deck.cards);
           this.players.push(out_player);
+          console.log(out_player);
           resolve();
         }
         else{
@@ -431,7 +432,21 @@ export class PlaymatResizedComponent implements OnInit {
     let card_clone = JSON.parse(JSON.stringify(card));
     card_clone.is_token = true;
     card_clone.selected = false;
+    card_clone.tapped = 'untapped';
     this.user.temp_zone.push(card_clone);
+  }
+
+  createToken(token: any) {
+    let out_token = null;
+    for (let tok of this.user.deck.tokens) {
+      if (tok.name === token.name) {
+        out_token = JSON.parse(JSON.stringify(tok));
+        out_token.is_token = true;
+        out_token.selected = false;
+        out_token.tapped = 'untapped';
+        this.user.temp_zone.push(out_token);
+      }
+    }
   }
 
   /**------------------------------------------------
