@@ -24,6 +24,7 @@ export class DeckEditComponent implements OnInit {
   back_image_options: any[] = [];
   new_card_temp: any = null;
   deleting = false;
+  card_type = 'cards';
 
   constructor(private fddp_data: FddpApiService, private route: ActivatedRoute, private router: Router) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
@@ -53,6 +54,7 @@ export class DeckEditComponent implements OnInit {
       this.fddp_data.getDeck(this.deckid).then((deck) => {
         this.deck = deck;
         this.deck.delete = [];
+        this.deck.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
       })
     }
   }
@@ -90,34 +92,81 @@ export class DeckEditComponent implements OnInit {
             if (card.categories.includes('Commander')){
               iscommander = true;
             }
-            this.deck.cards.push(
-              {
-                name: card.card.oracleCard.name,
-                image: '',
-                back_image: null,
-                count: card.quantity,
-                iscommander: iscommander
-              });
+            if (!this.hasCard(card.card.oracleCard.name)) {
+              console.log(card.card.oracleCard.name);
+              this.deck.cards.push(
+                {
+                  name: card.card.oracleCard.name,
+                  image: '',
+                  back_image: null,
+                  count: card.quantity,
+                  iscommander: iscommander
+                });
+            }
+            else {
+              this.getCard(card.card.oracleCard.name).count = card.quantity;
+            }
+          }
+          for (let card of this.deck.cards) {
+            if (this.removeCard(card.name, archidekt_deck.cards)) {
+              console.log('removing ' + card.name);
+              this.deck.cards.splice(this.deck.cards.indexOf(card));
+            }
           }
         }
-        this.deck.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
         this.deck.cards.forEach((card: any) => {
-          this.getCardImage(card).then(() => {
-            if (card.iscommander) {
-              this.deck.image = card.image;
-            }
-          });
+          if (card.image === '' || card.image == null) {
+            this.getCardImage(card).then(() => {
+              if (card.iscommander) {
+                if (this.deck.image === '' || this.deck.image == null) {
+                  this.deck.image = card.image;
+                }
+              }
+            });
+          }
         });
+        this.deck.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
       });
     }
   }
 
-  async getCardImage(card: any) {
-    let card_image_data: any = await this.fddp_data.getImagesForCard(card.name);
-    let card_images = card_image_data.images;
-    let card_back_images = card_image_data.back_images
-    card.image = card_images && card_images.length > 0? card_images[0]: '';
-    card.back_image = card_back_images && card_back_images.length > 0? card_back_images[0]: '';
+  hasCard(name: string): boolean {
+    for (let card of this.deck.cards) {
+      if (card.name === name) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  getCard(name: string) {
+    for (let card of this.deck.cards) {
+      if (card.name === name) {
+        return card;
+      }
+    }
+    return null;
+  }
+
+  removeCard(name: string, cards: any[]): boolean {
+    for (let card of cards) {
+      if (card.card.oracleCard.name === name) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  getCardImage(card: any): Promise<void> {
+    return new Promise<void>((resolve) => {
+      this.fddp_data.getImagesForCard(card.name).then((card_image_data: any) => {
+        let card_images = card_image_data.images;
+        let card_back_images = card_image_data.back_images
+        card.image = card_images && card_images.length > 0? card_images[0]: '';
+        card.back_image = card_back_images && card_back_images.length > 0? card_back_images[0]: '';
+        resolve();
+      });
+    });
   }
 
   async getCardImages(card: any) {
@@ -152,9 +201,9 @@ export class DeckEditComponent implements OnInit {
       this.deck.cards.push(
         temp_card
       );
+      this.deck.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
       this.getCardImage(temp_card);
       this.new_card_temp = null;
-
     }
   }
 

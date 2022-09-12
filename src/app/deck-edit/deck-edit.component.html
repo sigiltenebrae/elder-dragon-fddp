@@ -58,11 +58,19 @@
     </div>
     <div fxLayout="column" style="min-height: 640px; max-height: 640px;">
       <mat-form-field appearance="fill" style="margin-top: 10px;">
+        <mat-label>Type</mat-label>
+        <mat-select [(value)]="card_type">
+          <mat-option value="cards">Cards</mat-option>
+          <mat-option value="tokens">Tokens</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
         <mat-label>Add Card</mat-label>
         <input type="text" placeholder="Enter Card" matInput
                [ngbTypeahead]="card_search" [(ngModel)]="new_card_temp" [editable]="false">
         <button mat-icon-button matSuffix type="button" (click)="addCardToDeck()"><mat-icon>add</mat-icon></button>
       </mat-form-field>
+      <h4>Cards: {{deck.cards.length}}</h4>
       <div class="deck-form-card-list">
         <mat-list>
           <div *ngFor="let card of deck.cards; let i = index" class="deck-form-card-display">
