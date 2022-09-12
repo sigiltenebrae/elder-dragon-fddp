@@ -242,6 +242,7 @@
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
+        {{sidenav_sort}}
         <div class="sidenav-list" cdkDropList
              (cdkDropListDropped)="moveCardToZone($event, 'deck', true)"
              [cdkDropListData]="sidenav_selected_player.deck.cards">

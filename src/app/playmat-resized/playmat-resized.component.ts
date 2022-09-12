@@ -171,7 +171,6 @@ export class PlaymatResizedComponent implements OnInit {
   }
 
   getPlayer(player: number) {
-    console.log(player);
     for(let cur_player of this.players) {
       if (cur_player.id === player) {
         return cur_player;
@@ -343,7 +342,6 @@ export class PlaymatResizedComponent implements OnInit {
    * Accepts: 'hand', 'deck', 'grave', 'exile', 'temp_zone', 'command_zone' or 'play'
    */
 
-  //Sidebar / pile zone drag
   //Sidebar search limit
   moveCardToZone(event: any, location: string, sidebar?: boolean) {
     //Hand, Command Zone, Deck, Grave, Exile, Temp Zone, Play
@@ -372,7 +370,9 @@ export class PlaymatResizedComponent implements OnInit {
             }
             else {
               if (sidebar) {
-                transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), event.currentIndex);
+                if (this.sidenav_sort === '') {
+                  transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), event.currentIndex);
+                }
               }
               else {
                 transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), 0);
@@ -517,7 +517,6 @@ export class PlaymatResizedComponent implements OnInit {
       case 'selected':
         if (this.selected_player) {
           location = 'temp_zone';
-          console.log(this.selected_player);
           event.container.data = this.selected_player.temp_zone;
           event.currentIndex = 0;
         }
