@@ -655,8 +655,9 @@ export class PlaymatResizedComponent implements OnInit {
     while(true) {
       if (this.user.deck.cards.length > 0) {
         let cur_card = this.user.deck.cards[0];
+        this.selectCard(cur_card, this.user.deck.cards);
         this.sendCardToZone(cur_card, this.user.deck.cards, 'temp_zone');
-        if (cur_card.cmc) {
+        if (cur_card.cmc != null) {
           if (cur_card.cmc < cmc) {
             if (cur_card.cmc > 0) {
               break;
