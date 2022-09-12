@@ -1,1 +1,19 @@
-<router-outlet></router-outlet>
+<div class="fdpp-nav-button">
+  <button mat-fab *ngIf="!root_sidenav.opened" (click)="root_sidenav.open()"><mat-icon>menu</mat-icon></button>
+</div>
+
+<mat-sidenav-container fxFlexFill>
+  <mat-sidenav #root_sidenav (keydown.escape)="root_sidenav.close()">
+    <mat-toolbar color="primary">
+      <div fxFlex="100" fxLayout="row" fxLayoutAlign="space-between center">
+        <h2 fxFlex>Elder Dragon fddp</h2>
+        <button mat-icon-button (click)="root_sidenav.close()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </mat-toolbar>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

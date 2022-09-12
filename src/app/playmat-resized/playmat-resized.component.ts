@@ -57,10 +57,10 @@ export class PlaymatResizedComponent implements OnInit {
     this.loading = true;
     this.rightClickHandler.overrideRightClick();
     let game_promises: any[] = [];
-    game_promises.push(this.loadPlayer("Christian", 8, 0));
-    game_promises.push(this.loadPlayer("Liam", 10, 1));
-    game_promises.push(this.loadPlayer("David", 11, 2));
-    game_promises.push(this.loadPlayer("George", 12, 3));
+    game_promises.push(this.loadPlayer("Christian", 1, 9, 0));
+    game_promises.push(this.loadPlayer("Ray", 3, 13, 1));
+    game_promises.push(this.loadPlayer("David", 2, 11, 2));
+    game_promises.push(this.loadPlayer("George", 6, 12, 3));
     Promise.all(game_promises).then(() => {
       for (let player of this.players) {
         if (player.name === "Christian") {
@@ -72,13 +72,14 @@ export class PlaymatResizedComponent implements OnInit {
     });
   }
 
-  loadPlayer(player: string, deckid: number, turn: number): Promise<void> {
+  loadPlayer(name: string, id: number, deckid: number, turn: number): Promise<void> {
     return new Promise<void>((resolve) => {
       this.fddp_data.getDeckForPlay(deckid).then((deck_data: any) => {
         if (deck_data) {
           let out_player: any = {};
           out_player.deck = deck_data;
-          out_player.name = player;
+          out_player.name = name;
+          out_player.id = id;
           out_player.life = 40;
           out_player.infect = 0;
           out_player.turn = turn;
@@ -101,7 +102,7 @@ export class PlaymatResizedComponent implements OnInit {
             card.counter_2_value = 0;
             card.counter_3_value = 0;
             card.multiplier_value = 0;
-            card.owner = out_player.name;
+            card.owner = out_player.deck.owner;
             //card.owner = 'Liam';
             card.power_mod = 0;
             card.toughness_mod = 0;
@@ -112,7 +113,7 @@ export class PlaymatResizedComponent implements OnInit {
             card.is_token = false;
             card.tapped = 'untapped';
             card.sidenav_visible = true;
-            card.visible = []
+            card.visible = [];
           })
           out_player.deck.commander.forEach((card: any) => {
             card.counter_1 = false;
@@ -123,7 +124,7 @@ export class PlaymatResizedComponent implements OnInit {
             card.counter_2_value = 0;
             card.counter_3_value = 0;
             card.multiplier_value = 0;
-            card.owner = out_player.name;
+            card.owner = out_player.deck.owner;
             card.power_mod = 0;
             card.toughness_mod = 0;
             card.loyalty_mod = 0;
@@ -169,9 +170,10 @@ export class PlaymatResizedComponent implements OnInit {
     }
   }
 
-  getPlayer(player: string) {
+  getPlayer(player: number) {
+    console.log(player);
     for(let cur_player of this.players) {
-      if (cur_player.name === player) {
+      if (cur_player.id === player) {
         return cur_player;
       }
     }
@@ -340,7 +342,10 @@ export class PlaymatResizedComponent implements OnInit {
    * @param location string value of where to move the card.
    * Accepts: 'hand', 'deck', 'grave', 'exile', 'temp_zone', 'command_zone' or 'play'
    */
-  moveCardToZone(event: any, location: string) {
+
+  //Sidebar / pile zone drag
+  //Sidebar search limit
+  moveCardToZone(event: any, location: string, sidebar?: boolean) {
     //Hand, Command Zone, Deck, Grave, Exile, Temp Zone, Play
     let cur_card = event.previousContainer.data[event.previousIndex];
     if (location !== 'temp_zone' && location !== 'play') {
@@ -366,7 +371,12 @@ export class PlaymatResizedComponent implements OnInit {
               moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex)
             }
             else {
-              transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), 0);
+              if (sidebar) {
+                transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), event.currentIndex);
+              }
+              else {
+                transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), 0);
+              }
             }
             break;
           case 'deck_bottom': //this should never happen from a drag event, only from a 'send'
@@ -382,9 +392,12 @@ export class PlaymatResizedComponent implements OnInit {
               moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex)
             }
             else {
-              //transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).grave, card_select.from.indexOf(card_select.card), event.currentIndex);
-              //changed to insert at the top of grave no matter what
-              transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).grave, card_select.from.indexOf(card_select.card), 0);
+              if (sidebar && this.sidenav_sort === '') {
+                transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).grave, card_select.from.indexOf(card_select.card), event.currentIndex);
+              }
+              else {
+                transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).grave, card_select.from.indexOf(card_select.card), 0);
+              }
             }
             break;
           case 'exile':
@@ -392,7 +405,12 @@ export class PlaymatResizedComponent implements OnInit {
               moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex)
             }
             else {
-              transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).exile, card_select.from.indexOf(card_select.card), 0);
+              if (sidebar && this.sidenav_sort === '') {
+                transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).exile, card_select.from.indexOf(card_select.card), event.currentIndex);
+              }
+              else {
+                transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).exile, card_select.from.indexOf(card_select.card), 0);
+              }
             }
             break;
           case 'temp_zone':
@@ -400,7 +418,12 @@ export class PlaymatResizedComponent implements OnInit {
               moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex);
             }
             else {
-              transferArrayItem(card_select.from, event.container.data, card_select.from.indexOf(card_select.card), 0);
+              if (sidebar && this.sidenav_sort === '') {
+                transferArrayItem(card_select.from, event.container.data, card_select.from.indexOf(card_select.card), event.currentIndex);
+              }
+              else {
+                transferArrayItem(card_select.from, event.container.data, card_select.from.indexOf(card_select.card), 0);
+              }
             }
             break;
           case 'command_zone':
@@ -544,7 +567,6 @@ export class PlaymatResizedComponent implements OnInit {
         let cur_card = this.user.deck.cards[0];
         this.sendCardToZone(cur_card, this.user.deck.cards, 'temp_zone');
         if (cur_card.cmc) {
-          console.log(cur_card.cmc);
           if (cur_card.cmc < cmc) {
             if (cur_card.cmc > 0) {
               break;

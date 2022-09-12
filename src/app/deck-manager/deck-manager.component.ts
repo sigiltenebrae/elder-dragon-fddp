@@ -49,6 +49,7 @@ export class DeckManagerComponent implements OnInit {
         deck_promises.push(this.getDeckData(deck.id));
       });
       Promise.all(deck_promises).then(() => {
+        for(let i = 0; i < 20; i++) {this.decks.push(this.decks[0])}
         for (let deck of this.decks) {
           deck.hovered = false;
         }
@@ -62,7 +63,6 @@ export class DeckManagerComponent implements OnInit {
       this.fddp_data.getDeckForPlay(deckid).then((deck) => {
         deck.colors = this.getDeckColors(deck);
         this.decks.push(deck);
-        console.log(deck);
         resolve();
       })
     })

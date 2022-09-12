@@ -4,15 +4,6 @@
 
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
-
-
-html, body { height: 100%; padding: 0; }
-body { margin: 0; font-family: Beleren, "Helvetica Neue", sans-serif; }
-
-a, h1, h2, h3, h4, h5, h6 .nav-button{
-  font-family: Beleren, "Helvetica Neue", sans-serif !important;
-}
-
 @import 'src/dark-theme';
 @import 'src/light-theme';
 
@@ -41,6 +32,7 @@ $mtg-black: #373737;
 $mtg-red: #ba000d;
 $mtg-green: #087f23;
 
+//Globals
 
 .star { //for ngb-rating
   font-size: 1.5rem;
@@ -49,6 +41,21 @@ $mtg-green: #087f23;
 
 .filled { //also for ngb-rating
   color: mat.get-color-from-palette($fddp-palette-primary-dark, 500);
+}
+
+html, body { height: 100%; padding: 0; }
+body { margin: 0; font-family: Beleren, "Helvetica Neue", sans-serif; }
+
+a, h1, h2, h3, h4, h5, h6 .nav-button{
+  font-family: Beleren, "Helvetica Neue", sans-serif !important;
+}
+
+//Root Items
+.fdpp-nav-button {
+  top: 10px;
+  left: 10px;
+  position: fixed;
+  z-index: 2;
 }
 
 //Base Card Size
@@ -567,6 +574,9 @@ $mtg-green: #087f23;
   max-height: 310px;
   min-width: 229px;
   min-height: 310px;
+  height: 229px;
+  width: 310px;
+  display: block;
   z-index: 11;
   border-radius: 12px;
 }
@@ -576,9 +586,12 @@ $mtg-green: #087f23;
   top: 45px;
   left: 25px;
   max-width: 229px;
+  height: 229px;
+  width: 310px;
   max-height: 310px;
   min-width: 229px;
   min-height: 310px;
+  display: block;
   z-index: 12;
   border-radius: 12px;
 }
@@ -701,6 +714,14 @@ $mtg-green: #087f23;
   min-height: 355px;
   border-radius: 12px;
   border: dotted #ccc 2px;
+}
+
+.mtg-custom-card {
+  max-width: 254px;
+  max-height: 355px;
+  min-width: 254px;
+  min-height: 355px;
+  border-radius: 12px;
 }
 
 .custom-card-holder {

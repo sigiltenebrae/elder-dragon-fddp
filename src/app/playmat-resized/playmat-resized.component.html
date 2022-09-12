@@ -132,7 +132,7 @@
           </mat-autocomplete>
         </mat-form-field>
         <div class="sidenav-list" cdkDropList
-             (cdkDropListDropped)="moveCardToZone($event, 'grave')"
+             (cdkDropListDropped)="moveCardToZone($event, 'grave', true)"
              [cdkDropListData]="sidenav_selected_player.grave">
           <div *ngFor="let card of sidenav_selected_player.grave"
                class="sidenav-list-item"
@@ -171,7 +171,7 @@
           </mat-autocomplete>
         </mat-form-field>
         <div class="sidenav-list" cdkDropList
-             (cdkDropListDropped)="moveCardToZone($event, 'exile')"
+             (cdkDropListDropped)="moveCardToZone($event, 'exile', true)"
              [cdkDropListData]="sidenav_selected_player.exile">
           <div *ngFor="let card of sidenav_selected_player.exile"
                class="sidenav-list-item"
@@ -211,7 +211,7 @@
           </mat-autocomplete>
         </mat-form-field>
         <div class="sidenav-list" cdkDropList
-             (cdkDropListDropped)="moveCardToZone($event, 'temp_zone')"
+             (cdkDropListDropped)="moveCardToZone($event, 'temp_zone', true)"
              [cdkDropListData]="sidenav_selected_player.temp_zone">
           <div *ngFor="let card of sidenav_selected_player.temp_zone"
                class="sidenav-list-item"
@@ -243,7 +243,7 @@
           </mat-autocomplete>
         </mat-form-field>
         <div class="sidenav-list" cdkDropList
-             (cdkDropListDropped)="moveCardToZone($event, 'deck')"
+             (cdkDropListDropped)="moveCardToZone($event, 'deck', true)"
              [cdkDropListData]="sidenav_selected_player.deck.cards">
           <div *ngFor="let card of sidenav_selected_player.deck.cards; let c = index">
             <div *ngIf="sidenav_type === 'deck' || (sidenav_type === 'scry' && c < sidenav_scry)" class="sidenav-list-item"
