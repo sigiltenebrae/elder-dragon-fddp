@@ -37,6 +37,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CustomImagesComponent } from './custom-images/custom-images.component';
 import { CustomImageManagerComponent } from './custom-image-manager/custom-image-manager.component';
 import { DeckManagerComponent } from './deck-manager/deck-manager.component';
+import { MatSnackBarModule } from "@angular/material/snack-bar";
 
 
 @NgModule({
@@ -73,6 +74,7 @@ import { DeckManagerComponent } from './deck-manager/deck-manager.component';
     MatSelectModule,
     MatTooltipModule,
     MatStepperModule,
+    MatSnackBarModule,
     HttpClientModule,
     RouterModule.forRoot([
       {path: '', component: DeckManagerComponent},

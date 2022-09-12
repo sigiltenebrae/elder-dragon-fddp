@@ -8,6 +8,7 @@
   <div (click) = "$event.stopPropagation()">
     <ng-template matMenuContent>
       <button mat-menu-item (click)="untapAll()">Untap All</button>
+      <!-- Deck -->
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'deck'">
         <div>
           <button mat-button>Draw</button>
@@ -46,6 +47,7 @@
         <button mat-menu-item (click)="shuffleDeck(user.deck.cards)">Shuffle</button>
         <button mat-menu-item (click)="nextTurn()">Next Turn</button>
       </div>
+      <!-- Hand -->
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'hand'">
         <button mat-menu-item>Send to Play</button>
         <button mat-menu-item>Send to Grave</button>
@@ -55,6 +57,7 @@
         <button mat-menu-item>Send to Temp</button>
         <button mat-menu-item>Send to Selected</button>
       </div>
+      <!-- inPlayUser -->
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'inPlayUser'">
         <button mat-menu-item (click)="tapSpot(rightclicked_item.spot)">(un)Tap Stack</button>
         <button mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.spot, 'hand')">Send to Hand</button>
@@ -70,15 +73,19 @@
         <button mat-menu-item (click)="rightclicked_item.card.multiplier = !rightclicked_item.card.multiplier; rightclicked_item.card.multiplier_value=0">Toggle Multiplier</button>
         <button mat-menu-item (click)="rightclicked_item.card.locked = !rightclicked_item.card.locked;">Lock Card</button>
       </div>
+      <!-- Grave -->
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'grave'">
         <button mat-menu-item (click)="openSideNav('grave')">View Graveyards</button>
       </div>
+      <!-- Exile -->
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'exile'">
         <button mat-menu-item (click)="openSideNav('exile')">View Exiles</button>
       </div>
+      <!-- Temp Zone -->
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'temp-zone'">
         <button mat-menu-item (click)="openSideNav('temp_zone')">View Temp Zones</button>
       </div>
+      <!-- Sidenav -->
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'sidenav'">
         <button mat-menu-item>Send to Play</button>
         <button mat-menu-item>Send to Grave</button>
@@ -89,8 +96,9 @@
         <button mat-menu-item>Send to Temp</button>
         <button mat-menu-item>Send to Selected</button>
       </div>
+      <!-- Commander (command zone) -->
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'commander'">
-
+        <button mat-menu-item (click)="castCommander(rightclicked_item.card)">Cast Commander</button>
       </div>
     </ng-template>
   </div>
@@ -402,7 +410,7 @@
                              class="mtg-card-user"
                              src="{{card.image}}"
                              alt="{{card.name}}"
-                             (contextmenu)="onRightClick($event,{type: 'inPlayUser', card: card, spot: spot})"
+                             (contextmenu)="onRightClick($event,{type: 'inPlayUser', card: card, spot: spot}); selectCard(card, spot);"
                              (click)="toggleCardSelect(card, spot)" (dblclick)="tapCard(card)" loading="lazy">
                         <button *ngIf="card.counter_1" class="mtg-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true" (click)="card.counter_1_value = card.counter_1_value + 1" (contextmenu)="onRightClick($event, {type: 'counter_1', card: card})"><p>{{card.counter_1_value}}</p></button>
                         <button *ngIf="card.counter_2" class="mtg-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true" (click)="card.counter_2_value = card.counter_2_value + 1" (contextmenu)="onRightClick($event, {type: 'counter_2', card: card})"><p>{{card.counter_2_value}}</p></button>
@@ -523,11 +531,13 @@
               {{user.command_tax_2}}
             </button>
             <div *ngIf="user.deck.commander_saved.length == 1">
-              <img class="commander-viewer-single" src="{{user.deck.commander_saved[0].image}}" loading="lazy">
+              <img class="commander-viewer-single" src="{{user.deck.commander_saved[0].image}}" loading="lazy"
+                   (contextmenu)="onRightClick($event, {type: 'commander', card: user.deck.commander_saved[0]});
+                                    selectCard(user.deck.commander_saved[0], user.deck.commander, true);">
             </div>
             <div *ngIf="user.deck.commander_saved.length == 2" class="commander-viewer-partner-holder">
-              <img class="commander-viewer-partner-1" src="{{user.deck.commander_saved[0].image}}" loading="lazy">
-              <img class="commander-viewer-partner-2" src="{{user.deck.commander_saved[1].image}}" loading="lazy">
+              <img class="commander-viewer-partner-1" src="{{user.deck.commander_saved[0].image}}" loading="lazy" (contextmenu)="onRightClick($event, {type: 'commander', card: user.deck.commander_saved[0]}); selectCard(user.deck.commander_saved[0], user.deck.commander, true);">
+              <img class="commander-viewer-partner-2" src="{{user.deck.commander_saved[1].image}}" loading="lazy" (contextmenu)="onRightClick($event, {type: 'commander', card: user.deck.commander_saved[1]}); selectCard(user.deck.commander_saved[1], user.deck.commander, true);">
             </div>
           </mat-card>
         </div>

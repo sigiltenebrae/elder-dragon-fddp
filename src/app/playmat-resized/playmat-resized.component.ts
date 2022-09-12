@@ -6,6 +6,7 @@ import { RightclickHandlerServiceService } from "../../services/rightclick-handl
 import {MatSelectionListChange} from "@angular/material/list";
 import {MatSidenav} from "@angular/material/sidenav";
 import {FddpApiService} from "../../services/fddp-api.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-playmat-resized',
@@ -52,7 +53,8 @@ export class PlaymatResizedComponent implements OnInit {
   /**------------------------------------------------
    *              Game Setup Functions              *
    ------------------------------------------------**/
-  constructor(private rightClickHandler: RightclickHandlerServiceService, private fddp_data: FddpApiService) { }
+  constructor(private rightClickHandler: RightclickHandlerServiceService, private fddp_data: FddpApiService,
+              private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.loading = true;
@@ -292,6 +294,24 @@ export class PlaymatResizedComponent implements OnInit {
         card.selected = true;
       }
     }
+  }
+
+  clearSelection(besides?: any) {
+    let saving:any = null;
+    for (let card of this.selected_cards) {
+      if (besides) {
+        if (card.card == besides) {
+          saving = card;
+        }
+        else {
+          card.card.selected = false;
+        }
+      }
+      else {
+        card.card.selected = false;
+      }
+    }
+    this.selected_cards = saving? [saving]: [];
   }
 
   clearCard(card: any) {
@@ -548,6 +568,17 @@ export class PlaymatResizedComponent implements OnInit {
         break;
     }
     this.moveCardToZone(event, location);
+  }
+
+  castCommander(commander: any) {
+    if(this.user.deck.commander.includes(commander)) { //If commander is in the command zone
+
+      this.clearSelection(commander);
+      this.sendCardToZone(commander, this.user.deck.commander, 'play');
+    }
+    else {
+      this.snackBar.open('Commander is not in the command zone!', 'Dismiss', { duration: 3000});
+    }
   }
 
   /**
