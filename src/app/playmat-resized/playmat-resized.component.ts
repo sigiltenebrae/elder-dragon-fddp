@@ -581,6 +581,14 @@ export class PlaymatResizedComponent implements OnInit {
     }
   }
 
+
+  swapCommanders() {
+    if (this.user.deck.commander_saved.length == 2) {
+      let temp: any = this.user.deck.commander_saved[0];
+      this.user.deck.commander_saved[0] = this.user.deck.commander_saved[1];
+      this.user.deck.commander_saved[1] = temp;
+    }
+  }
   /**
    * Draws to the temp zone until it reaches a card of the given type
    * @param type
