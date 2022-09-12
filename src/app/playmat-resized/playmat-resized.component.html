@@ -369,18 +369,20 @@
                   <mat-card *ngIf="isOpponent(player)" class="playmat-opponent" [ngClass]="{'playmat-opponent-selected': player.selected}" fxLayout="row wrap" fxLayoutAlign="center center">
                     <div *ngFor="let spot of reversePlaymat(player.playmat)" class="mtg-card-holder-opponent">
                       <div *ngFor="let card of spot; let i = index">
-                        <img
-                          [ngClass]="
-                {
-                  'stack-1': i == 0,
-                  'stack-2': i == 1,
-                  'stack-3': i == 2
-                }"
-                          [@opponentTappedState]="card.tapped"
-                          class="mtg-card-opponent mtg-card-opponent-play"
-                          src="{{card.image}}"
-                          alt="{{card.name}}"
-                          (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null" loading="lazy">
+                        <div [ngClass]="{'stack-1': i == 0,'stack-2': i == 1,'stack-3': i == 2}" class="mtg-card-opponent-container"
+                             (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null" [@opponentTappedState]="card.tapped">
+                          <img class="mtg-card-opponent" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
+
+                          <button *ngIf="card.counter_1" class="mtg-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true"><p>{{card.counter_1_value}}</p></button>
+                          <button *ngIf="card.counter_2" class="mtg-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>{{card.counter_2_value}}</p></button>
+                          <button *ngIf="card.counter_3" class="mtg-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true"><p>{{card.counter_3_value}}</p></button>
+                          <button *ngIf="card.multiplier" class="mtg-multiplier-counter" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>{{card.multiplier_value}}</p></button>
+
+                          <h5 *ngIf="card.power && card.toughness" class="mtg-card-power-tough">
+                            <a [ngClass]="{'mat-card-power-tough-text-up': card.power_mod > 0, 'mat-card-power-tough-text-down': card.power_mod < 0}" class="mat-card-power-tough-text">{{card.power + card.power_mod}}</a>/
+                            <a [ngClass]="{'mat-card-power-tough-text-up': card.toughness_mod > 0, 'mat-card-power-tough-text-down': card.toughness_mod < 0}" class="mat-card-power-tough-text">{{card.toughness + card.toughness_mod}}</a></h5>
+                          <h5 *ngIf="card.loyalty" class="mtg-card-loyalty"><a class="mat-card-power-tough-text" [ngClass]="{'mat-card-power-tough-text-up': card.loyalty_mod > 0, 'mat-card-power-tough-text-down': card.loyalty_mod < 0}">{{card.loyalty + card.loyalty_mod}}</a></h5>
+                        </div>
                       </div>
                     </div>
                   </mat-card>

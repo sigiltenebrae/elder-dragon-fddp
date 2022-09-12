@@ -187,11 +187,6 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   z-index: 5;
 }
 
-.mtg-counter-1 p, .mtg-counter-2 p, .mtg-counter-3 p, .mtg-multiplier-counter p, .mtg-counter-1-alt p{
-  font-family: Beleren, "Helvetica Neue", sans-serif !important;
-  margin: 3px;
-}
-
 .mtg-card-user-selected {
   clip-path: polygon(5% 5%, 95% 5%, 95% 95%, 5% 95%);
 }
@@ -311,10 +306,110 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   z-index: 22;
 }
 
+.mtg-card-opponent-container {
+  position: relative;
+  min-width: 40px;
+  min-height: 56px;
+  max-width: 40px;
+  max-height: 56px;
+  border-radius: 3px;
+  margin: 0;
+}
+
 .mtg-card-opponent {
   width: 40px;
   height: 56px;
   border-radius: 3px;
+}
+
+.mtg-card-opponent-container .mtg-card-opponent {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.mtg-card-opponent-container .mtg-card-power-tough {
+  position: absolute;
+  bottom: 0;
+  right: 5px;
+  font-family: Beleren, "Helvetica Neue", sans-serif !important;
+  margin: 0;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+.mtg-card-opponent-container .mtg-card-loyalty {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  font-family: Beleren, "Helvetica Neue", sans-serif !important;
+  margin: 0;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+.mtg-card-opponent-container .mtg-counter-1 {
+  position: absolute;
+  bottom: 20px;
+  left: 2px;
+  min-height: 16px;
+  max-height: 16px;
+  min-width: 16px;
+  max-width: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mtg-card-opponent-container .mtg-counter-2 {
+  position: absolute;
+  bottom: 20px;
+  right: 2px;
+  min-height: 16px;
+  max-height: 16px;
+  min-width: 16px;
+  max-width: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mtg-card-opponent-container .mtg-counter-3 {
+  position: absolute;
+  bottom: 35px;
+  left: 50%;
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  min-height: 16px;
+  max-height: 16px;
+  min-width: 16px;
+  max-width: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mtg-card-opponent-container .mtg-multiplier-counter {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  min-height: 21px;
+  max-height: 21px;
+  min-width: 21px;
+  max-width: 21px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mtg-counter-1 p, .mtg-counter-2 p, .mtg-counter-3 p, .mtg-multiplier-counter p, .mtg-counter-1-alt p{
+  font-family: Beleren, "Helvetica Neue", sans-serif !important;
+  margin: 3px;
+}
+
+.mtg-card-opponent-container .mtg-counter-1 p, .mtg-card-opponent-container .mtg-counter-2 p, .mtg-card-opponent-container .mtg-counter-3 p, .mtg-card-opponent-container .mtg-multiplier-counter p, .mtg-card-opponent-container .mtg-counter-1-alt p{
+  font-family: Beleren, "Helvetica Neue", sans-serif !important;
+  margin: 0;
 }
 
 .opponent-hand {
