@@ -80,6 +80,13 @@ export class DeckManagerComponent implements OnInit {
             colors.push(mana);
           }
         }
+        if (commander.back_mana_cost) {
+          for (let mana of commander.back_mana_cost) {
+            if (mana === 'W' || mana === 'U' || mana === 'B' || mana === 'R' || mana === 'G'){
+              colors.push(mana);
+            }
+          }
+        }
       }
     }
     return colors;
