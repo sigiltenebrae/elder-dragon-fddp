@@ -93,7 +93,7 @@ export class DeckEditComponent implements OnInit {
               iscommander = true;
             }
             if (!this.hasCard(card.card.oracleCard.name)) {
-              console.log(card.card.oracleCard.name);
+              console.log('adding ' + card.card.oracleCard.name);
               this.deck.cards.push(
                 {
                   name: card.card.oracleCard.name,
@@ -107,12 +107,16 @@ export class DeckEditComponent implements OnInit {
               this.getCard(card.card.oracleCard.name).count = card.quantity;
             }
           }
+          let remove_cards: any[] = [];
           for (let card of this.deck.cards) {
             if (this.removeCard(card.name, archidekt_deck.cards)) {
               console.log('removing ' + card.name);
-              this.deck.cards.splice(this.deck.cards.indexOf(card));
+              remove_cards.push(card);
             }
           }
+          remove_cards.forEach((card: any) => {
+            this.deck.cards.splice(this.deck.cards.indexOf(card), 1);
+          });
         }
         this.deck.cards.forEach((card: any) => {
           if (card.image === '' || card.image == null) {
