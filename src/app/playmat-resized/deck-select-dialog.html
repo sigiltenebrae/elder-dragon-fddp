@@ -1,0 +1,40 @@
+<div *ngIf="loading" fxLayout="row" fxFlex="100" fxLayoutAlign="center center" style="margin: 20px;">
+  <mat-spinner></mat-spinner>
+</div>
+<div *ngIf="!loading" fxFlexFill fxLayout="row" fxLayoutAlign="center center" style="position: relative">
+  <div style="position: absolute; top: 5px; right: 5px; cursor: pointer; width: 24px; height: 24px; z-index: 20">
+    <mat-icon (click)="onNoClick()">close</mat-icon>
+  </div>
+  <div fxLayout="column" fxFlex="100" fxLayoutAlign="start center" style="height: 800px;">
+    <div fxLayout="row">
+      <h1>Select Deck</h1>
+    </div>
+    <div fxLayout="row wrap" fxLayoutAlign="center" style="max-height: 200px; overflow-y: scroll">
+      <div *ngFor="let deck of decks" fxLayout="column" style="margin: 10px; cursor: pointer" (click)="selectDeck(deck)">
+        <mat-card class="deck-manager-commander-viewer" matRipple [matRippleCentered]="false" [matRippleDisabled]="!deck.hovered">
+          <div [ngClass]="{'deck-manager-background-card-closed': deck.hovered, 'deck-manager-background-card-open': !deck.hovered}">
+            <img src="{{deck.image}}" alt="{{deck.name}}" class="deck-manager-commander-crop-no-filter" loading="lazy">
+          </div>
+          <mat-card-content class="deck-manager-content">
+            <div class="deck-manager-content-holder">
+              <h2 *ngIf="deck.link != null && deck.link !== ''"><a>{{deck.name}}</a></h2>
+              <h2 *ngIf="deck.link == null || deck.url === ''">{{deck.name}}</h2>
+              <h4 *ngFor="let commander of deck.commander" class="commander-name">{{commander.name}}</h4>
+              <div *ngIf="deck.colors && deck.colors != null" fxLayout="row" fxLayoutAlign="center" class="deck-manager-commander-colors">
+                <img *ngIf="deck.colors.includes('W');" class="deck-manager-commander-color" src="assets/color_symbols/W.png" loading="lazy">
+                <img *ngIf="deck.colors.includes('U');" class="deck-manager-commander-color" src="assets/color_symbols/U.png" loading="lazy">
+                <img *ngIf="deck.colors.includes('B');" class="deck-manager-commander-color" src="assets/color_symbols/B.png" loading="lazy">
+                <img *ngIf="deck.colors.includes('R');" class="deck-manager-commander-color" src="assets/color_symbols/R.png" loading="lazy">
+                <img *ngIf="deck.colors.includes('G');" class="deck-manager-commander-color" src="assets/color_symbols/G.png" loading="lazy">
+                <img *ngIf="deck.colors.length == 0" class="deck-manager-commander-color" src="assets/color_symbols/C.png" loading="lazy">
+              </div>
+              <div *ngIf="!deck.colors || deck.colors == null" fxLayout="row" fxLayoutAlign="center" class="commander-colors">
+                <mat-spinner class="commander-color" [diameter]="16"></mat-spinner>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+</div>

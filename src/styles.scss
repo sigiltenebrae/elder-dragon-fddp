@@ -1095,7 +1095,9 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 }
 
 .deck-manager-commander-viewer .deck-manager-background-card-closed .deck-manager-commander-crop,
-.deck-manager-commander-viewer .deck-manager-background-card-open .deck-manager-commander-crop {
+.deck-manager-commander-viewer .deck-manager-background-card-open .deck-manager-commander-crop,
+.deck-manager-commander-viewer .deck-manager-background-card-closed .deck-manager-commander-crop-no-filter,
+.deck-manager-commander-viewer .deck-manager-background-card-open .deck-manager-commander-crop-no-filter {
   position: absolute;
   top: 0;
   left: 0;

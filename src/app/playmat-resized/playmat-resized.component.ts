@@ -74,14 +74,14 @@ export class PlaymatResizedComponent implements OnInit {
    *              Game Setup Functions              *
    ------------------------------------------------**/
   constructor(private rightClickHandler: RightclickHandlerServiceService, private fddp_data: FddpApiService,
-              private snackBar: MatSnackBar, public tokDialog: MatDialog) { }
+              private snackBar: MatSnackBar, public dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.loading = true;
     this.rightClickHandler.overrideRightClick();
     let game_promises: any[] = [];
-    game_promises.push(this.loadPlayer("Christian", 1, 16, 0));
-    game_promises.push(this.loadPlayer("Liam", 4, 10, 1));
+    game_promises.push(this.loadPlayer("Christian", 1, 16, 1));
+    game_promises.push(this.loadPlayer("Liam", 4, 10, 0));
     game_promises.push(this.loadPlayer("David", 2, 11, 2));
     game_promises.push(this.loadPlayer("George", 6, 12, 3));
     Promise.all(game_promises).then(() => {
@@ -96,6 +96,7 @@ export class PlaymatResizedComponent implements OnInit {
   }
 
   loadPlayer(name: string, id: number, deckid: number, turn: number): Promise<void> {
+    this.selected_cards = [];
     return new Promise<void>((resolve) => {
       this.fddp_data.getDeckForPlay(deckid).then((deck_data: any) => {
         if (deck_data) {
@@ -527,13 +528,43 @@ export class PlaymatResizedComponent implements OnInit {
   }
 
   openTokenDialog(): void {
-    const tokDialogRef = this.tokDialog.open(TokenInsertDialog, {
+    const tokDialogRef = this.dialog.open(TokenInsertDialog, {
       width: '800px',
       data: {}
     });
 
     tokDialogRef.afterClosed().subscribe(result => {
-      this.createTokenFromImage(result);
+      if (result) {
+        this.createTokenFromImage(result);
+      }
+    })
+  }
+
+  selectDeck(deck: any) {
+    if (this.user) {
+      this.players.splice(this.players.indexOf(this.user), 1);
+    }
+    this.loadPlayer(this.user.name, this.user.id, deck.id, this.user.turn).then(() => {
+      this.players.sort((a: any, b: any) => (a.turn > b.turn) ? 1: -1);
+      for (let player of this.players) {
+        if (player.id === this.user.id) {
+          this.user = player;
+          break;
+        }
+      }
+    });
+  }
+
+  openDeckSelectDialog(): void {
+    const deckDialogRef = this.dialog.open(DeckSelectDialog, {
+      width: '1600px',
+      data: {user: this.user.id}
+    });
+
+    deckDialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.selectDeck(result);
+      }
     })
   }
 
@@ -991,4 +1022,88 @@ export class TokenInsertDialog {
     let out_token = {name: this.name, image: res}
     this.dialogRef.close(out_token);
   }
+}
+
+@Component({
+  selector: 'deck-select-dialog',
+  templateUrl: 'deck-select-dialog.html',
+})
+export class DeckSelectDialog {
+
+  decks: any[] = [];
+  loading = false;
+
+  constructor(
+    public dialogRef: MatDialogRef<TokenInsertDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private fddp_data: FddpApiService
+  )
+  {
+    this.loading = true;
+    this.fddp_data.getDecksBasic(this.data.user).then((decks: any) => {
+      let temp_decks = decks;
+      let deck_promises: any[] = [];
+      temp_decks.forEach((deck: any) => {
+        deck_promises.push(this.getDeckData(deck.id));
+      });
+      Promise.all(deck_promises).then(() => {
+        for (let deck of this.decks) {
+          deck.hovered = false;
+        }
+        this.loading = false;
+      });
+    });
+  }
+
+  getDeckData(deckid: number): Promise<void> {
+    return new Promise<void>((resolve) => {
+      this.fddp_data.getDeckForPlay(deckid).then((deck) => {
+        deck.commander = [];
+        deck.cards.forEach((card: any) => {
+          if (card.iscommander) {
+            deck.commander.push(card);
+          }
+        });
+        deck.commander.forEach((card: any) => {
+          deck.cards.splice(deck.cards.indexOf(card), 1);
+        });
+        deck.colors = this.getDeckColors(deck);
+        this.decks.push(deck);
+        resolve();
+      })
+    })
+  }
+
+  getDeckColors(deck: any) {
+    let colors: any = null;
+    for (let commander of deck.commander) {
+      if (commander.mana_cost) {
+        if (colors == null) {
+          colors = [];
+        }
+        for (let mana of commander.mana_cost) {
+          if (mana === 'W' || mana === 'U' || mana === 'B' || mana === 'R' || mana === 'G'){
+            colors.push(mana);
+          }
+        }
+        if (commander.back_mana_cost) {
+          for (let mana of commander.back_mana_cost) {
+            if (mana === 'W' || mana === 'U' || mana === 'B' || mana === 'R' || mana === 'G'){
+              colors.push(mana);
+            }
+          }
+        }
+      }
+    }
+    return colors;
+  }
+
+  selectDeck(deck: any) {
+    this.dialogRef.close(deck);
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
 }

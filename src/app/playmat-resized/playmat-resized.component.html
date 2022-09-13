@@ -111,6 +111,7 @@
       </div>
       <!-- Commander (command zone) -->
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'commander'">
+        <button mat-menu-item (click)="openDeckSelectDialog()">Change Deck</button>
         <button mat-menu-item (click)="castCommander(rightclicked_item.card)">Cast Commander</button>
         <button *ngIf="user.deck.commander_saved.length == 2" mat-menu-item (click)="swapCommanders()">Swap Commanders</button>
         <button mat-menu-item (click)="openTokenDialog()">Create Token</button>

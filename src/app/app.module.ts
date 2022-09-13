@@ -28,7 +28,11 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {DragDropModule} from "@angular/cdk/drag-drop";
-import { PlaymatResizedComponent, TokenInsertDialog } from './playmat-resized/playmat-resized.component';
+import {
+  DeckSelectDialog,
+  PlaymatResizedComponent,
+  TokenInsertDialog
+} from './playmat-resized/playmat-resized.component';
 import {MatMenuModule} from "@angular/material/menu";
 import {FormsModule} from "@angular/forms";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
@@ -50,6 +54,7 @@ import { MatDialogModule } from "@angular/material/dialog";
     CustomImageManagerComponent,
     DeckManagerComponent,
     TokenInsertDialog,
+    DeckSelectDialog
   ],
   imports: [
     BrowserModule,
