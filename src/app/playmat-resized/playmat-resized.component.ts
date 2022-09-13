@@ -797,6 +797,15 @@ export class PlaymatResizedComponent implements OnInit {
       this.user.deck.commander_saved[1] = temp;
     }
   }
+
+  drawX(count: any) {
+    let num_count = Number(count);
+    for (let i = 0; i < num_count; i++) {
+      this.user.hand.push(this.user.deck.cards[0]);
+      this.user.deck.cards.splice(0, 1);
+    }
+  }
+
   /**
    * Draws to the temp zone until it reaches a card of the given type
    * @param type
