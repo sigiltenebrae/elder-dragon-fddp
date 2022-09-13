@@ -572,14 +572,28 @@ export class PlaymatResizedComponent implements OnInit {
    *          Card Transfer Helper Functions        *
    ------------------------------------------------**/
 
+  selectAllBlank(type: string) {
+    this.clearSelection();
+    for (let spot of this.user.playmat) {
+      for (let card of spot) {
+        if (card.types) {
+          for (let card_type of card.types) {
+            if (type.toLowerCase() === card_type.toLowerCase()) {
+              this.toggleCardSelect(card, spot);
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+
   /**
    * Drag event handler for moving a card
    * @param event
    * @param location string value of where to move the card.
    * Accepts: 'hand', 'deck', 'grave', 'exile', 'temp_zone', 'command_zone' or 'play'
    */
-
-  //Sidebar search limit
   moveCardToZone(event: any, location: string, sidebar?: boolean) {
     //Hand, Command Zone, Deck, Grave, Exile, Temp Zone, Play
     if (location !== 'play') {
