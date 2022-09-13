@@ -41,7 +41,7 @@ export class PlaymatResizedComponent implements OnInit {
   current_turn = 0;
 
   hovered_card: any = null;
-  hoverdata: any = {shift_pressed: false, alt_pressed: false}
+  hoverdata: any = {shift_pressed: false, control_pressed: false}
   preview = false;
 
   rightclicked_item: any = null;
@@ -232,12 +232,12 @@ export class PlaymatResizedComponent implements OnInit {
   @HostListener('document:keyup.shift', ['$event']) onShiftUp(event: KeyboardEvent) {
   }
 
-  @HostListener('document:keydown.alt', ['$event']) onAltDown(event: KeyboardEvent) {
-    this.hoverdata.alt_pressed = true;
+  @HostListener('document:keydown.control', ['$event']) onCtrlDown(event: KeyboardEvent) {
+    this.hoverdata.control_pressed = true;
   }
 
-  @HostListener('document:keyup.alt', ['$event']) onAltUp(event: KeyboardEvent) {
-    this.hoverdata.alt_pressed = false;
+  @HostListener('document:keyup.control', ['$event']) onCtrlUp(event: KeyboardEvent) {
+    this.hoverdata.control_pressed = false;
   }
 
   getHoverImage() {

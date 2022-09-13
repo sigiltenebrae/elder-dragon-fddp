@@ -120,44 +120,57 @@
   </div>
 </mat-menu>
 
-<div [style.display]="hovered_card || preview ? 'block': 'none'" class="card-hover-container" cdkDrag>
-  <mat-card class="card-hover-holder">
-    <img *ngIf="hovered_card && !hoverdata.shift_pressed" [src]="getHoverImage()" class="card-hover-preview">
-    <div class="card-hover" fxFlexFill fxLayout="row" fxLayoutAlign="center center" *ngIf="hovered_card && (!hoverdata.alt_pressed || !hovered_card.back_face)">
-      <div fxLayout="column" fxLayoutAlign="center center" fxFlex>
-        <div style="text-align: center">
-          <h3 style="margin: 2px">{{hovered_card.name}}</h3>
-          <h3 style="margin: 2px" *ngIf="hovered_card.is_token && !hovered_card.types.includes('Token')">(Copy)</h3>
-          <mat-divider></mat-divider>
-          <h3 style="margin: 2px">{{hovered_card.mana_cost.join(' ')}}</h3>
-          <h3 style="margin: 2px">{{hovered_card.types.join(' ')}}</h3>
-          <mat-divider></mat-divider>
-          <h3 style="margin: 10px; white-space: pre-line">{{hovered_card.oracle_text}}</h3>
-          <h3 *ngIf="hovered_card.power && hovered_card.power != null && hovered_card.toughness && hovered_card.toughness != null">
-            {{hovered_card.power}}/{{hovered_card.toughness}}
-          </h3>
-          <h3 *ngIf="hovered_card.loyalty && hovered_card.loyalty !== null">{{hovered_card.loyalty}}</h3>
+
+
+<div *ngIf="user" class="fddp-hover-holder" [style.display]="hovered_card || preview ? 'block': 'none'" [style.pointer-events]="preview ? 'all': 'none'">
+  <mat-card class="fddp-hover-box" cdkDrag>
+    <div *ngIf="hovered_card">
+      <img *ngIf="!hoverdata.shift_pressed && (!hoverdata.control_pressed || !hovered_card.back_face)" src="{{hovered_card.image}}" class="fddp-hover-image">
+      <img *ngIf="!hoverdata.shift_pressed && hoverdata.control_pressed && hovered_card.back_face" src="{{hovered_card.back_image}}" class="fddp-hover-image">
+      <div *ngIf="hoverdata.shift_pressed && (!hoverdata.control_pressed || !hovered_card.back_face)" fxFlexFill fxLayout="row" fxLayoutAlign="center center">
+        <div fxLayout="column" fxLayoutAlign="center center" fxFlex>
+          <div style="text-align: center">
+            <h3 style="margin: 2px">{{hovered_card.name}}</h3>
+            <h3 style="margin: 2px" *ngIf="hovered_card.is_token && !hovered_card.types.includes('Token')">(Copy)</h3>
+            <mat-divider></mat-divider>
+            <h3 style="margin: 2px">{{hovered_card.mana_cost.join(' ')}}</h3>
+            <h3 style="margin: 2px">{{hovered_card.types.join(' ')}}</h3>
+            <mat-divider></mat-divider>
+            <h3 style="margin: 10px; white-space: pre-line">{{hovered_card.oracle_text}}</h3>
+            <h3 *ngIf="hovered_card.power && hovered_card.power != null && hovered_card.toughness && hovered_card.toughness != null">
+              {{hovered_card.power}}/{{hovered_card.toughness}}
+            </h3>
+            <h3 *ngIf="hovered_card.loyalty && hovered_card.loyalty !== null">{{hovered_card.loyalty}}</h3>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="hoverdata.shift_pressed && hoverdata.control_pressed && hovered_card.back_face" fxFlexFill fxLayout="row" fxLayoutAlign="center center">
+        <div fxLayout="column" fxLayoutAlign="center center">
+          <div style="text-align: center">
+            <h3 style="margin: 2px">{{hovered_card.name}}</h3>
+            <mat-divider></mat-divider>
+            <h3 style="margin: 2px">{{hovered_card.back_mana_cost.join(' ')}}</h3>
+            <h3 style="margin: 2px">{{hovered_card.back_types.join(' ')}}</h3>
+            <mat-divider></mat-divider>
+            <h3 style="margin: 10px; white-space: pre-line">{{hovered_card.back_oracle_text}}</h3>
+            <h3 *ngIf="hovered_card.back_power && hovered_card.back_power != null && hovered_card.back_toughness && hovered_card.back_toughness != null">
+              {{hovered_card.back_power}}/{{hovered_card.back_toughness}}
+            </h3>
+            <h3 *ngIf="hovered_card.back_loyalty && hovered_card.back_loyalty !== null">{{hovered_card.back_loyalty}}</h3>
+          </div>
         </div>
       </div>
     </div>
-    <div class="card-hover" fxFlexFill fxLayout="row" fxLayoutAlign="center center" *ngIf="hoverdata.alt_pressed && hovered_card.back_face">
-      <div fxLayout="column" fxLayoutAlign="center center">
-        <div style="text-align: center">
-          <h3 style="margin: 2px">{{hovered_card.name}}</h3>
-          <mat-divider></mat-divider>
-          <h3 style="margin: 2px">{{hovered_card.back_mana_cost.join(' ')}}</h3>
-          <h3 style="margin: 2px">{{hovered_card.back_types.join(' ')}}</h3>
-          <mat-divider></mat-divider>
-          <h3 style="margin: 10px; white-space: pre-line">{{hovered_card.back_oracle_text}}</h3>
-          <h3 *ngIf="hovered_card.back_power && hovered_card.back_power != null && hovered_card.back_toughness && hovered_card.back_toughness != null">
-            {{hovered_card.back_power}}/{{hovered_card.back_toughness}}
-          </h3>
-          <h3 *ngIf="hovered_card.back_loyalty && hovered_card.back_loyalty !== null">{{hovered_card.back_loyalty}}</h3>
-        </div>
-      </div>
+    <div class="fddp-hover-handle" cdkDragHandle>
+      <mat-icon>open_with</mat-icon>
+    </div>
+    <div class="fddp-hover-minimize">
+      <mat-icon (click)="togglePreview()">minimize</mat-icon>
     </div>
   </mat-card>
 </div>
+
 
 <mat-sidenav-container fxFlexFill cdkDropListGroup hasBackdrop="false" *ngIf="!loading">
   <mat-sidenav #fddp_sidenav disableClose>
