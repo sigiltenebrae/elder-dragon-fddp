@@ -41,7 +41,7 @@ export class PlaymatResizedComponent implements OnInit {
   current_turn = 0;
 
   hovered_card: any = null;
-  hoverdata: any = {shift_pressed: false, control_pressed: false}
+  hoverdata: any = {shift_pressed: false, control_pressed: false, position : {x: 0, y: 0}}
   preview = false;
 
   rightclicked_item: any = null;
@@ -240,16 +240,6 @@ export class PlaymatResizedComponent implements OnInit {
     this.hoverdata.control_pressed = false;
   }
 
-  getHoverImage() {
-    if (this.hovered_card) {
-      if (this.hovered_card.back_image && this.hovered_card.back_image !== '' && this.hoverdata.alt_pressed) {
-        return this.hovered_card.back_image;
-      }
-      return this.hovered_card.image;
-    }
-    return null;
-  }
-
   togglePreview() {
     this.preview = !this.preview;
   }
@@ -260,10 +250,6 @@ export class PlaymatResizedComponent implements OnInit {
 
   isOpponent(player: any) {
     return player.name !== this.user.name
-  }
-
-  isNum(s: any) {
-    return !isNaN(s);
   }
 
   canSee(card: any, user: any) {
@@ -476,9 +462,7 @@ export class PlaymatResizedComponent implements OnInit {
     this.user.temp_zone.push(card_clone);
   }
 
-  openTokenMenu() {
-
-  }
+  openTokenMenu() {}
 
   createToken(token: any) {
     let out_token: any = null;

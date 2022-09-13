@@ -123,7 +123,7 @@
 
 
 <div *ngIf="user" class="fddp-hover-holder" [style.display]="hovered_card || preview ? 'block': 'none'" [style.pointer-events]="preview ? 'all': 'none'">
-  <mat-card class="fddp-hover-box" cdkDrag>
+  <mat-card class="fddp-hover-box" cdkDrag [cdkDragFreeDragPosition]="hoverdata.position">
     <div *ngIf="hovered_card">
       <img *ngIf="!hoverdata.shift_pressed && (!hoverdata.control_pressed || !hovered_card.back_face)" src="{{hovered_card.image}}" class="fddp-hover-image">
       <img *ngIf="!hoverdata.shift_pressed && hoverdata.control_pressed && hovered_card.back_face" src="{{hovered_card.back_image}}" class="fddp-hover-image">
