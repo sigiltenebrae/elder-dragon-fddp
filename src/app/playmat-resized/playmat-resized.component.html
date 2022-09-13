@@ -13,44 +13,44 @@
 </div>
 
 <mat-menu #rightMenu="matMenu">
-  <div (click) = "$event.stopPropagation()">
+  <div>
     <ng-template matMenuContent>
       <button mat-menu-item (click)="untapAll()">Untap All</button>
       <!-- Deck -->
       <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'deck'">
         <div>
           <button mat-button>Draw</button>
-          <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
+          <input (click)="$event.stopPropagation()" matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
         </div>
         <div>
           <button mat-button (click)="scryX(scry_val.value)">Scry</button>
-          <input matInput #scry_val type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
+          <input (click)="$event.stopPropagation()" matInput #scry_val type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
         </div>
         <div>
           <button mat-button>Draw to Play</button>
-          <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
+          <input (click)="$event.stopPropagation()" matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
         </div>
         <div>
           <button mat-button>Draw to Grave</button>
-          <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
+          <input (click)="$event.stopPropagation()" matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
         </div>
         <div>
           <button mat-button>Draw to Exile</button>
-          <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
+          <input (click)="$event.stopPropagation()" matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
         </div>
         <div>
           <button mat-button>Draw to Temp</button>
-          <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
+          <input (click)="$event.stopPropagation()" matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
         </div>
         <div>
           <button mat-button>Send to Selected</button>
-          <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
+          <input (click)="$event.stopPropagation()" matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
         </div>
         <button mat-menu-item (click)="openSideNav('deck')">Search Deck</button>
         <button mat-menu-item (click)="drawUntil('Creature')">Draw Until Creature</button>
         <div>
           <button mat-button (click)="cascade(cascade_count.value)">Cascade</button>
-          <input #cascade_count matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
+          <input (click)="$event.stopPropagation()" #cascade_count matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
         </div>
         <button mat-menu-item (click)="shuffleDeck(user.deck.cards)">Shuffle</button>
         <button mat-menu-item (click)="nextTurn()">Next Turn</button>
@@ -176,12 +176,17 @@
 <div *ngIf="scrying" class="scrydata-holder">
   <div fxFlexFill fxLayout="row" fxLayoutAlign="center center">
     <mat-card fxFlex="70" class="scrydata-card-holder" fxLayout="column" fxLayoutAlign="start center">
-      <div fxLayout="row wrap">
-        <div *ngFor="let card of temp_scry_zone" class="scrydata-card-container">
+      <div fxLayout="row" fxLayoutAlign="center">
+        <h2>Scrying</h2>
+      </div>
+
+      <div fxLayout="row wrap" fxLayoutAlign="center start">
+        <div *ngFor="let card of temp_scry_zone; let i = index" class="scrydata-card-container">
           <img class="scrydata-card" src="{{card.image}}"
                [ngClass]="{'mtg-card-user-selected': card.selected}"
                (click)="toggleCardSelect(card, temp_scry_zone);"
                (contextmenu)="onRightClick($event,{type: 'scry', card: card});">
+          <h1 class="scrydata-card-count">{{i + 1}}</h1>
         </div>
       </div>
       <div class="scrydata-card-close">

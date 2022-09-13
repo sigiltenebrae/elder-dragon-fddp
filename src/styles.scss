@@ -157,13 +157,26 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   background-color: mat.get-color-from-palette($fddp-palette-primary-dark, 500);
 }
 
-.scrydata-card {
+.scrydata-card-container .scrydata-card {
   min-width: 150px;
   max-width: 150px;
   min-height: 210px;
   max-height: 210px;
   border-radius: 7px;
   cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.scrydata-card-container .scrydata-card-count {
+  position: absolute;
+  bottom: 5px;
+  left: 12px;
+  z-index: 2;
+  margin: 0;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
 .scrydata-card-close {
