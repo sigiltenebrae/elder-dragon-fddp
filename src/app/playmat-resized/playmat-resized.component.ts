@@ -1,4 +1,4 @@
-import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
+import {Component, HostListener, Inject, Injectable, OnInit, ViewChild} from '@angular/core';
 import {CdkDrag, CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {animate, state, style, transition, trigger} from "@angular/animations";
 import {MatMenuTrigger} from "@angular/material/menu";
@@ -7,6 +7,20 @@ import {MatSelectionListChange} from "@angular/material/list";
 import {MatSidenav} from "@angular/material/sidenav";
 import {FddpApiService} from "../../services/fddp-api.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {HttpClient} from "@angular/common/http";
+import {
+  catchError,
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  Observable,
+  of,
+  OperatorFunction,
+  switchMap,
+  tap
+} from 'rxjs';
+import * as Scry from "scryfall-sdk";
 
 @Component({
   selector: 'app-playmat-resized',
@@ -60,7 +74,7 @@ export class PlaymatResizedComponent implements OnInit {
    *              Game Setup Functions              *
    ------------------------------------------------**/
   constructor(private rightClickHandler: RightclickHandlerServiceService, private fddp_data: FddpApiService,
-              private snackBar: MatSnackBar) { }
+              private snackBar: MatSnackBar, public tokDialog: MatDialog) { }
 
   ngOnInit(): void {
     this.loading = true;
@@ -464,8 +478,6 @@ export class PlaymatResizedComponent implements OnInit {
     this.user.temp_zone.push(card_clone);
   }
 
-  openTokenMenu() {}
-
   createToken(token: any) {
     let out_token: any = null;
     for (let tok of this.user.deck.tokens) {
@@ -492,11 +504,36 @@ export class PlaymatResizedComponent implements OnInit {
     })
   }
 
+  createTokenFromImage(result: any) {
+    this.clearSelection();
+    this.fddp_data.getCardInfo(result.name).then((token_data: any) => {
+      let out_token: any = token_data;
+      out_token.is_token = true;
+      out_token.selected = false;
+      out_token.image = result.image;
+      this.clearCard(out_token);
+      this.user.temp_zone.push(out_token);
+      return;
+    });
+
+  }
+
   getCardImages(name: string): Promise<any> {
     return new Promise<any>((resolve) => {
       this.fddp_data.getImagesForCard(name).then((image_data: any) => {
         resolve(image_data.images);
       });
+    })
+  }
+
+  openTokenDialog(): void {
+    const tokDialogRef = this.tokDialog.open(TokenInsertDialog, {
+      width: '800px',
+      data: {}
+    });
+
+    tokDialogRef.afterClosed().subscribe(result => {
+      this.createTokenFromImage(result);
     })
   }
 
@@ -918,5 +955,40 @@ export class PlaymatResizedComponent implements OnInit {
           this.matMenuTrigger.openMenu();
       }
     }
+  }
+}
+
+@Component({
+  selector: 'token-insert-dialog',
+  templateUrl: 'token-insert-dialog.html',
+})
+export class TokenInsertDialog {
+  constructor(
+    public dialogRef: MatDialogRef<TokenInsertDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private fddp_data: FddpApiService
+  ) {}
+
+  results: any[] = [];
+  name = '';
+
+  async searchToken(token: string) {
+    this.results = [];
+    //const values = await Scry.Cards.search('"' + token + '"', {include_extras: true}).waitForAll();
+    this.fddp_data.getImagesForCard(token).then((values: any) => {
+      for (let val of values.images) {
+        this.results.push(val)
+      }
+      this.name = token;
+    });
+  }
+
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  createToken(res: any) {
+    let out_token = {name: this.name, image: res}
+    this.dialogRef.close(out_token);
   }
 }

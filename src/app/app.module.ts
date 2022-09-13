@@ -28,7 +28,7 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {DragDropModule} from "@angular/cdk/drag-drop";
-import { PlaymatResizedComponent } from './playmat-resized/playmat-resized.component';
+import { PlaymatResizedComponent, TokenInsertDialog } from './playmat-resized/playmat-resized.component';
 import {MatMenuModule} from "@angular/material/menu";
 import {FormsModule} from "@angular/forms";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
@@ -38,6 +38,7 @@ import { CustomImagesComponent } from './custom-images/custom-images.component';
 import { CustomImageManagerComponent } from './custom-image-manager/custom-image-manager.component';
 import { DeckManagerComponent } from './deck-manager/deck-manager.component';
 import { MatSnackBarModule } from "@angular/material/snack-bar";
+import { MatDialogModule } from "@angular/material/dialog";
 
 
 @NgModule({
@@ -47,7 +48,8 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
     DeckEditComponent,
     CustomImagesComponent,
     CustomImageManagerComponent,
-    DeckManagerComponent
+    DeckManagerComponent,
+    TokenInsertDialog,
   ],
   imports: [
     BrowserModule,
@@ -75,6 +77,7 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
     MatTooltipModule,
     MatStepperModule,
     MatSnackBarModule,
+    MatDialogModule,
     HttpClientModule,
     RouterModule.forRoot([
       {path: '', component: DeckManagerComponent},

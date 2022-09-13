@@ -1,0 +1,20 @@
+<div fxFlexFill fxLayout="row" fxLayoutAlign="center center" style="position: relative">
+  <div style="position: absolute; top: 5px; right: 5px; cursor: pointer; width: 24px; height: 24px; z-index: 20">
+    <mat-icon (click)="onNoClick()">close</mat-icon>
+  </div>
+  <div fxLayout="column" fxFlex="100" fxLayoutAlign="start center" style="height: 500px;">
+    <div fxLayout="row">
+      <h1>Insert Token</h1>
+    </div>
+    <div fxLayout="row">
+      <mat-form-field appearance="fill">
+        <mat-label>Search Card</mat-label>
+        <input type="text" placeholder="Enter Scryfall Query" matInput #token_str>
+        <button mat-icon-button matSuffix type="button" (click)="searchToken(token_str.value)"><mat-icon>search</mat-icon></button>
+      </mat-form-field>
+    </div>
+    <div fxLayout="row wrap" fxLayoutAlign="center" style="max-height: 200px; overflow-y: scroll">
+      <img *ngFor="let res of results" src="{{res}}" style="width: 150px; height: 210px; margin: 5px; cursor: pointer" (click)="createToken(res)">
+    </div>
+  </div>
+</div>
