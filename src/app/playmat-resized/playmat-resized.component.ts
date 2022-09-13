@@ -779,6 +779,13 @@ export class PlaymatResizedComponent implements OnInit {
     this.moveCardToZone(event, location);
   }
 
+  sendSelectedToSpot(destination: any) {
+    let event:any = {}
+    event.container = {}
+    event.container.data = destination;
+    this.moveCardToZone(event, 'play');
+  }
+
   castCommander(commander: any) {
     if(this.user.deck.commander.includes(commander)) { //If commander is in the command zone
 

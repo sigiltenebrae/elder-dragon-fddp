@@ -416,7 +416,7 @@
       <div fxFlexFill (contextmenu)="onRightClick($event, {type: 'none'})">
         <div class="container" fxLayout="row" fxLayoutAlign="center end" fxFlexFill>
           <div fxLayout="column" fxLayoutAlign="start center" fxFlexFill style="margin: 10px;">
-            <!-- Opponents -->
+            <!-- &&Opponents -->
             <div class="opponent-holder" fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
               <div class="opponent-playmat-holder" fxLayout="row wrap" fxLayout.lt-md="column" fxLayoutAlign="center">
                 <div *ngFor="let player of players">
@@ -443,7 +443,7 @@
                 </div>
               </div>
             </div>
-            <!-- User Playmat -->
+            <!-- &&Playmat User -->
             <div fxLayout="row" fxFlex fxLayoutAlign="center">
               <div class="playmat-user-holder">
                 <div class="playmat-user-devotions" >
@@ -470,7 +470,8 @@
                        class="mtg-card-holder-user"
                        cdkDropList
                        [cdkDropListData]="spot"
-                       (cdkDropListDropped)="moveCardToZone($event, 'play')">
+                       (cdkDropListDropped)="moveCardToZone($event, 'play')"
+                        (dblclick)="sendSelectedToSpot(spot)">
                     <div *ngFor="let card of spot; let i = index">
                       <mat-card [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2}"
                            (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
