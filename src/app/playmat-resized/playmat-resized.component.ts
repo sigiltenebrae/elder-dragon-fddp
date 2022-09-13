@@ -779,11 +779,11 @@ export class PlaymatResizedComponent implements OnInit {
     this.moveCardToZone(event, location);
   }
 
-  sendSelectedToSpot(destination: any) {
+  sendSelectedToSpot(destination: any, location: string) {
     let event:any = {}
     event.container = {}
     event.container.data = destination;
-    this.moveCardToZone(event, 'play');
+    this.moveCardToZone(event, location);
   }
 
   castCommander(commander: any) {

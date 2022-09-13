@@ -471,7 +471,7 @@
                        cdkDropList
                        [cdkDropListData]="spot"
                        (cdkDropListDropped)="moveCardToZone($event, 'play')"
-                        (dblclick)="sendSelectedToSpot(spot)">
+                        (dblclick)="sendSelectedToSpot(spot, 'play')">
                     <div *ngFor="let card of spot; let i = index">
                       <mat-card [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2}"
                            (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
@@ -552,7 +552,7 @@
           </mat-card>
         </div>
         <div class="user-grave">
-          <mat-card class="zone-data"
+          <mat-card class="zone-data" (dblclick)="sendSelectedToSpot(user.grave, 'grave')"
                (contextmenu)="onRightClick($event, {type: 'grave'})"
                cdkDropList [cdkDropListData]="user.grave"
                cdkDropListOrientation="horizontal"
@@ -567,7 +567,8 @@
           </mat-card>
         </div>
         <div class="user-exile">
-          <mat-card class="zone-data" (contextmenu)="onRightClick($event, {type: 'exile'})"
+          <mat-card class="zone-data" (dblclick)="sendSelectedToSpot(user.exile, 'exile')"
+                    (contextmenu)="onRightClick($event, {type: 'exile'})"
                cdkDropList [cdkDropListData]="user.exile"
                cdkDropListOrientation="horizontal"
                (cdkDropListDropped)="moveCardToZone($event, 'exile')">
@@ -581,7 +582,8 @@
           </mat-card>
         </div>
         <div class="user-temp-zone">
-          <mat-card class="zone-data" (contextmenu)="onRightClick($event, {type: 'temp-zone'})"
+          <mat-card class="zone-data" (dblclick)="sendSelectedToSpot(user.temp_zone, 'temp_zone')"
+                    (contextmenu)="onRightClick($event, {type: 'temp-zone'})"
                cdkDropList [cdkDropListData]="user.temp_zone"
                cdkDropListOrientation="horizontal"
                (cdkDropListDropped)="moveCardToZone($event, 'temp_zone')">
