@@ -25,8 +25,8 @@
           <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
         </div>
         <div>
-          <button mat-button (click)="openSideNav('scry')">Scry</button>
-          <input matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
+          <button mat-button (click)="scryX(scry_val.value)">Scry</button>
+          <input matInput #scry_val type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
         </div>
         <div>
           <button mat-button>Draw to Play</button>
@@ -116,13 +116,19 @@
         <button *ngIf="user.deck.commander_saved.length == 2" mat-menu-item (click)="swapCommanders()">Swap Commanders</button>
         <button mat-menu-item (click)="openTokenMenu()">Create Token</button>
       </div>
+      <!-- Scry -->
+      <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'scry'">
+        <button mat-menu-item (click)="scrySendTo(rightclicked_item.card, 'top')">Send to Deck Top</button>
+        <button mat-menu-item (click)="scrySendTo(rightclicked_item.card, 'bottom')">Send to Deck Bottom</button>
+        <button mat-menu-item (click)="scrySendTo(rightclicked_item.card, 'temp_zone')">Send to Temp Zone</button>
+      </div>
     </ng-template>
   </div>
 </mat-menu>
 
 
 
-<div *ngIf="user" class="fddp-hover-holder" [style.display]="hovered_card || preview ? 'block': 'none'" [style.pointer-events]="preview ? 'all': 'none'">
+<div class="fddp-hover-holder" [style.display]="hovered_card || preview ? 'block': 'none'" [style.pointer-events]="preview ? 'all': 'none'">
   <mat-card class="fddp-hover-box" cdkDrag [cdkDragFreeDragPosition]="hoverdata.position">
     <div *ngIf="hovered_card">
       <img *ngIf="!hoverdata.shift_pressed && (!hoverdata.control_pressed || !hovered_card.back_face)" src="{{hovered_card.image}}" class="fddp-hover-image">
@@ -171,6 +177,23 @@
   </mat-card>
 </div>
 
+<div *ngIf="scrying" class="scrydata-holder">
+  <div fxFlexFill fxLayout="row" fxLayoutAlign="center center">
+    <mat-card fxFlex="70" class="scrydata-card-holder" fxLayout="column" fxLayoutAlign="start center">
+      <div fxLayout="row wrap">
+        <div *ngFor="let card of temp_scry_zone" class="scrydata-card-container">
+          <img class="scrydata-card" src="{{card.image}}"
+               [ngClass]="{'mtg-card-user-selected': card.selected}"
+               (click)="toggleCardSelect(card, temp_scry_zone);"
+               (contextmenu)="onRightClick($event,{type: 'scry', card: card});">
+        </div>
+      </div>
+      <div class="scrydata-card-close">
+        <mat-icon (click)="endScry()">close</mat-icon>
+      </div>
+    </mat-card>
+  </div>
+</div>
 
 <mat-sidenav-container fxFlexFill cdkDropListGroup hasBackdrop="false" *ngIf="!loading">
   <mat-sidenav #fddp_sidenav disableClose>
@@ -180,7 +203,6 @@
         <h2 fxFlex *ngIf="sidenav_type==='exile'">Exile</h2>
         <h2 fxFlex *ngIf="sidenav_type==='temp_zone'">Temp Zones</h2>
         <h2 fxFlex *ngIf="sidenav_type==='deck'">Searching Deck</h2>
-        <h2 fxFlex *ngIf="sidenav_type==='scry'">Scrying</h2>
         <button mat-icon-button (click)="closeSideNav()">
           <mat-icon>close</mat-icon>
         </button>
@@ -332,20 +354,6 @@
               {{card.name}}
               <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="mtg-card-user" loading="lazy">
               <img *cdkDragPlaceholder class="mtg-card-user" [src]="card.image" [alt]="card.name" loading="lazy">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div *ngIf="sidenav_type === 'scry'">
-      <div fxLayout="column">
-        <div class="sidenav-list">
-          <div *ngFor="let card of temp_scry_zone; let c = index">
-            <div *ngIf="(sidenav_type === 'deck' && card.sidenav_visible) || (sidenav_type === 'scry' && c < sidenav_scry)" class="sidenav-list-item"
-                 [ngClass]="{'sidenav-list-item-selected': card.selected}"
-                 (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
-                 (contextmenu)="onRightClick($event, {type: 'sidenav_scry', card: card, from: sidenav_selected_player.deck.cards})">
-              {{card.name}}
             </div>
           </div>
         </div>

@@ -44,12 +44,15 @@ export class PlaymatResizedComponent implements OnInit {
   hoverdata: any = {shift_pressed: false, control_pressed: false, position : {x: 0, y: 0}}
   preview = false;
 
+  scrying = false;
+  temp_scry_zone: any[] = [];
+
   rightclicked_item: any = null;
   sidenav_type: any = null;
   selected_cards: any[] = [];
   sidenav_sort = '';
   sidenav_scry = 0;
-  temp_scry_zone: any[] = [];
+
   loading = false;
 
 
@@ -152,7 +155,6 @@ export class PlaymatResizedComponent implements OnInit {
           out_player.selected = false;
           this.shuffleDeck(out_player.deck.cards);
           this.players.push(out_player);
-          console.log(out_player);
           resolve();
         }
         else{
@@ -720,7 +722,6 @@ export class PlaymatResizedComponent implements OnInit {
     }
   }
 
-
   swapCommanders() {
     if (this.user.deck.commander_saved.length == 2) {
       let temp: any = this.user.deck.commander_saved[0];
@@ -749,6 +750,43 @@ export class PlaymatResizedComponent implements OnInit {
     }
   }
 
+  scryX(count: any) {
+    this.clearSelection();
+    let scry_num = Number(count);
+    for (let i = 0; i < scry_num; i++) {
+      this.temp_scry_zone.push(this.user.deck.cards[0]);
+      this.user.deck.cards.splice(0, 1);
+    }
+    this.scrying = true;
+    console.log(this.selected_cards);
+    console.log(this.temp_scry_zone);
+  }
+
+  endScry() {
+    if (this.temp_scry_zone.length > 0) {
+      for (let card of this.reversePlaymat(this.temp_scry_zone)) {
+        this.selectCard(card, this.temp_scry_zone);
+      }
+      this.scrySendTo(this.temp_scry_zone[0], 'top');
+    }
+    this.temp_scry_zone = [];
+    this.scrying = false;
+  }
+
+  scrySendTo(card: any, type: string) {
+    this.selectCard(card, this.temp_scry_zone);
+    switch(type) {
+      case 'top':
+        this.sendCardToZone(card, this.temp_scry_zone, 'deck');
+        break;
+      case 'bottom':
+        this.sendCardToZone(card, this.temp_scry_zone, 'deck_bottom');
+        break;
+      case 'temp_zone':
+        this.sendCardToZone(card, this.temp_scry_zone, 'temp_zone');
+        break;
+    }
+  }
 
   /**
    * Draws cards to the temp zone until it reaches a non-land with a cmc lower than the given.
