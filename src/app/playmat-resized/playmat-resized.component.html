@@ -166,10 +166,10 @@
         </div>
       </div>
     </div>
-    <div class="fddp-hover-handle" cdkDragHandle>
+    <div *ngIf="preview" class="fddp-hover-handle" cdkDragHandle>
       <mat-icon>open_with</mat-icon>
     </div>
-    <div class="fddp-hover-minimize">
+    <div *ngIf="preview" class="fddp-hover-minimize">
       <mat-icon (click)="togglePreview()">minimize</mat-icon>
     </div>
   </mat-card>
