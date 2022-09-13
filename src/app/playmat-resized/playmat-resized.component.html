@@ -12,8 +12,6 @@
           *ngFor="let counter of user.counters" style="background: {{counter.color}}">{{counter.value}}</button>
 </div>
 
-
-
 <mat-menu #rightMenu="matMenu">
   <div (click) = "$event.stopPropagation()">
     <ng-template matMenuContent>
@@ -125,8 +123,6 @@
     </ng-template>
   </div>
 </mat-menu>
-
-
 
 <div class="fddp-hover-holder" [style.display]="hovered_card || preview ? 'block': 'none'" [style.pointer-events]="preview ? 'all': 'none'">
   <mat-card class="fddp-hover-box" cdkDrag [cdkDragFreeDragPosition]="hoverdata.position">
