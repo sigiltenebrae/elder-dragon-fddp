@@ -751,15 +751,13 @@ export class PlaymatResizedComponent implements OnInit {
   }
 
   scryX(count: any) {
-    this.clearSelection();
+    this.clearSelection(null);
     let scry_num = Number(count);
     for (let i = 0; i < scry_num; i++) {
       this.temp_scry_zone.push(this.user.deck.cards[0]);
       this.user.deck.cards.splice(0, 1);
     }
     this.scrying = true;
-    console.log(this.selected_cards);
-    console.log(this.temp_scry_zone);
   }
 
   endScry() {
@@ -833,13 +831,6 @@ export class PlaymatResizedComponent implements OnInit {
     this.getSidenavSort(this.user.exile);
     this.getSidenavSort(this.user.temp_zone);
     this.sidenav_type = type;
-    this.sidenav_scry = 2; //DEBUGGING, NEED TO FIX
-    if (this.sidenav_scry > 0) {
-      for (let i = 0; i < this.sidenav_scry; i++) {
-        this.temp_scry_zone.push(this.user.deck.cards[i]);
-        console.log('done')
-      }
-    }
     this.fddp_sidenav.open();
   }
 
@@ -847,6 +838,7 @@ export class PlaymatResizedComponent implements OnInit {
     this.sidenav_sort = '';
     this.sidenav_selected_player = null;
     this.sidenav_type = null;
+    this.clearSelection();
     this.fddp_sidenav.close();
     this.sidenav_sort = '';
   }
