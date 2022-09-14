@@ -570,8 +570,9 @@
           <div class="zone-hider-inner">
             <div [ngClass]="{'zone-container': !hidden, 'zone-container-hidden': hidden}">
               <div class="zone-holder">
-                <button mat-mini-fab [ngClass]="{'zone-toggle-button-off': !hidden, 'zone-toggle-button-on': hidden}"
-                (click)="hidden=!hidden"><mat-icon>keyboard_arrow_right</mat-icon></button>
+                <button mat-mini-fab class="zone-toggle-button"
+                (click)="hidden=!hidden"><mat-icon
+                  [ngClass]="{'zones-arrow-off': !hidden, 'zones-arrow-on': hidden}">keyboard_arrow_right</mat-icon></button>
                 <div class="user-grave">
                   <mat-card class="zone-data" (dblclick)="sendSelectedToSpot(user.grave, 'grave')"
                             (contextmenu)="onRightClick($event, {type: 'grave'})"

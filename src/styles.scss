@@ -651,9 +651,9 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   right: 90px;
 }
 
-.zone-toggle-button-on {
+.zone-toggle-button {
   position: absolute;
-  right: 0;
+  left: 10px;
   top: 103px;
   z-index: 100;
   animation-name: zones-rotate-off;
@@ -661,11 +661,13 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   animation-fill-mode: forwards;
 }
 
-.zone-toggle-button-off {
-  position: absolute;
-  right: 0;
-  top: 103px;
-  z-index: 100;
+.zones-arrow-on {
+  animation-name: zones-rotate-off;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+}
+
+.zones-arrow-off {
   transform: rotate(180deg);
   animation-name: zones-rotate-on;
   animation-duration: 1s;
@@ -687,18 +689,18 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   bottom: 0;
   right: 0;
   max-height: 400px;
-  max-width: 220px;
+  max-width: 250px;
   min-height: 400px;
-  min-width: 220px;
+  min-width: 250px;
 }
 
 .zone-hider-inner {
   position: relative;
   overflow: hidden;
   max-height: 400px;
-  max-width: 220px;
+  max-width: 250px;
   min-height: 400px;
-  min-width: 220px;
+  min-width: 250px;
 }
 
 .zone-data {
@@ -743,9 +745,9 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   position: relative;
   overflow:hidden;
   max-height: 235px;
-  max-width: 210px;
+  max-width: 220px;
   min-height: 235px;
-  min-width: 210px;
+  min-width: 220px;
 }
 
 .zone-container {
@@ -753,9 +755,9 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   bottom: 125px;
   right: 10px;
   max-height: 235px;
-  max-width: 210px;
+  max-width: 220px;
   min-height: 235px;
-  min-width: 210px;
+  min-width: 220px;
 }
 
 .zone-container {
@@ -767,7 +769,7 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 .zone-container-hidden {
   position: absolute;
   bottom: 125px;
-  right: -120px;
+  right: -110px;
   max-height: 235px;
   max-width: 165px;
   min-height: 235px;
@@ -781,13 +783,13 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 }
 
 @keyframes zones-in {
-  from {right: -120px}
+  from {right: -110px}
   to {right: 10px}
 }
 
 @keyframes zones-out {
   from {right: 10px}
-  to {right: -120px;}
+  to {right: -110px;}
 }
 
 
