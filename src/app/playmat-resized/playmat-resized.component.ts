@@ -67,6 +67,8 @@ export class PlaymatResizedComponent implements OnInit {
   sidenav_sort = '';
   sidenav_scry = 0;
 
+  hidden = false;
+
   loading = false;
 
 
@@ -81,12 +83,12 @@ export class PlaymatResizedComponent implements OnInit {
     this.rightClickHandler.overrideRightClick();
     let game_promises: any[] = [];
     game_promises.push(this.loadPlayer("Christian", 1, 16, 1));
-    game_promises.push(this.loadPlayer("Liam", 4, 10, 0));
+    game_promises.push(this.loadPlayer("Ray", 3, 13, 0));
     game_promises.push(this.loadPlayer("David", 2, 11, 2));
     game_promises.push(this.loadPlayer("George", 6, 12, 3));
     Promise.all(game_promises).then(() => {
       for (let player of this.players) {
-        if (player.name === "Christian") {
+        if (player.name === "Ray") {
           this.user = player;
         }
       }

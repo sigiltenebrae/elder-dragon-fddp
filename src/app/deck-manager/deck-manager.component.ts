@@ -33,7 +33,7 @@ export class DeckManagerComponent implements OnInit {
       "name": "George"
     }
   ];
-  user = this.users[0];
+  user = this.users[3];
 
   loading = false;
   decks: any[] = [];
