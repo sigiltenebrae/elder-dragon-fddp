@@ -4,46 +4,6 @@
      [matMenuTriggerFor]="rightMenu">
 </div>
 
-<div *ngIf="user != null" class="counter-creator" fxLayout="column">
-  <div class="counter-container">
-    <button class="counter-creator-button" mat-fab (click)="createCounter()"><mat-icon>add</mat-icon></button>
-    <!--<button cdkDrag mat-fab (click)="counter.value = counter.value + 1"
-            (contextmenu)="onRightClick($event, {type: 'custom_counter', counter: counter})"
-            (keyup.escape)="deleteCounter(counter)"
-            *ngFor="let counter of user.counters" style="background: {{counter.color}}">{{counter.value}}</button>-->
-    <mat-card *ngFor="let counter of user.counters" class="commander-dashboard-custom-counter"
-              style="padding: 0" cdkDrag>
-
-        <!--<div fxLayout="row" fxLayoutAlign="end">
-
-&lt;!&ndash;          <h2 style="margin: 0 5px 5px 5px; padding: 0;">In Play: {{typeCount(user, custom_search.value)}} </h2>&ndash;&gt;
-        </div>-->
-      <mat-form-field appearance="fill" class="commander-dashboard-input">
-        <mat-label>Enter a Type</mat-label>
-        <input #custom_search matInput>
-      </mat-form-field>
-      <div fxFlex="100" fxLayout="row" fxLayoutGap="10" class="commander-dashboard-select-holder" fxLayoutAlign="space-between">
-        <mat-form-field appearance="outline" class="commander-dashboard-select">
-          <mat-label>Player</mat-label>
-          <mat-select #search_player>
-            <mat-option *ngFor="let player of players" [value]="player">{{player.name}}</mat-option>
-            <mat-option [value]="'All'">All</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="commander-dashboard-select">
-          <mat-label>Player</mat-label>
-          <mat-select #search_zone>
-            <mat-option [value]="'Play'">Play</mat-option>
-            <mat-option [value]="'Grave'">Graveyard</mat-option>
-            <mat-option [value]="'Exile'">Exile</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <h1 class="commander-dashboard-text" style="text-align: end">Count: {{typeCount(search_player.value, search_zone.value,  custom_search.value)}}</h1>
-    </mat-card>
-  </div>
-</div>
-
 <mat-menu #rightMenu="matMenu">
   <div>
     <ng-template matMenuContent>
@@ -399,277 +359,316 @@
     </div>
   </mat-sidenav>
   <mat-sidenav-content>
-      <div class="player-list">
-        <mat-card style="padding:5px 10px 0 0">
-          <mat-list>
-            <mat-divider></mat-divider>
-            <div *ngFor="let player of players; let j = index">
-              <mat-list-item [ngClass]="{'player-button-selected': player.selected,
-                                  'player-button-turn': player.turn == current_turn}">
-                <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
-                  <div fxLayout="column" fxFlex="100">
-                    <button (pointerenter)="hovered_card=isOpponent(player) ? player.deck.commander[0]: null" (pointerleave)="hovered_card=null"
-                      class="player-button"
-                      mat-button
-                      (click)="selectPlayer(player)">
-                      {{player.name}}
-                    </button>
-                  </div>
-                  <div fxLayout="column" fxFlex="100">
-                    <div fxLayout="row" fxFlex>
-                      <div class="column" fxFlex>
-                        <button (pointerenter)="hovered_card=player.deck.commander.length>1 ? player.deck.commander[1] : null" (pointerleave)="hovered_card=null" *ngIf="isOpponent(player)" class="player-button" mat-button disabled style="color: white">
-                          {{player.life}}
-                        </button>
-                        <button *ngIf="!isOpponent(player)" class="player-button" mat-button
-                                (click)="player.life = player.life + 1" (contextmenu)="onRightClick($event, {type: 'life', player: player})">
-                          {{player.life}}
-                        </button>
-                      </div>
-                      <div class="column" fxFlex>
-                        <button *ngIf="isOpponent(player)" class="player-button" mat-button disabled style="color: white">
-                          {{player.infect}}
-                        </button>
-                        <button *ngIf="!isOpponent(player)" class="player-button" mat-button
-                                (click)="player.infect = player.infect + 1" (contextmenu)="onRightClick($event, {type: 'infect', player: player})">
-                          {{player.infect}}
-                        </button>
-                      </div>
+    <div *ngIf="user != null" class="counter-creator" fxLayout="column">
+      <div class="counter-container">
+        <button class="counter-creator-button" mat-fab (click)="createCounter()"><mat-icon>add</mat-icon></button>
+        <!--<button cdkDrag mat-fab (click)="counter.value = counter.value + 1"
+                (contextmenu)="onRightClick($event, {type: 'custom_counter', counter: counter})"
+                (keyup.escape)="deleteCounter(counter)"
+                *ngFor="let counter of user.counters" style="background: {{counter.color}}">{{counter.value}}</button>-->
+        <mat-card *ngFor="let counter of user.counters" class="commander-dashboard-custom-counter"
+                  style="padding: 0" cdkDrag>
+
+          <!--<div fxLayout="row" fxLayoutAlign="end">
+
+  &lt;!&ndash;          <h2 style="margin: 0 5px 5px 5px; padding: 0;">In Play: {{typeCount(user, custom_search.value)}} </h2>&ndash;&gt;
+          </div>-->
+          <mat-form-field appearance="fill" class="commander-dashboard-input">
+            <mat-label>Enter a Type</mat-label>
+            <input #custom_search matInput>
+          </mat-form-field>
+          <div fxFlex="100" fxLayout="row" fxLayoutGap="10" class="commander-dashboard-select-holder" fxLayoutAlign="space-between">
+            <mat-form-field appearance="outline" class="commander-dashboard-select">
+              <mat-label>Player</mat-label>
+              <mat-select #search_player>
+                <mat-option *ngFor="let player of players" [value]="player">{{player.name}}</mat-option>
+                <mat-option [value]="'All'">All</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="commander-dashboard-select">
+              <mat-label>Player</mat-label>
+              <mat-select #search_zone>
+                <mat-option [value]="'Play'">Play</mat-option>
+                <mat-option [value]="'Grave'">Graveyard</mat-option>
+                <mat-option [value]="'Exile'">Exile</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <h1 class="commander-dashboard-text" style="text-align: end">Count: {{typeCount(search_player.value, search_zone.value,  custom_search.value)}}</h1>
+        </mat-card>
+      </div>
+    </div>
+    <div class="player-list">
+      <mat-card style="padding:5px 10px 0 0">
+        <mat-list>
+          <mat-divider></mat-divider>
+          <div *ngFor="let player of players; let j = index">
+            <mat-list-item [ngClass]="{'player-button-selected': player.selected,
+                                'player-button-turn': player.turn == current_turn}">
+              <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
+                <div fxLayout="column" fxFlex="100">
+                  <button (pointerenter)="hovered_card=isOpponent(player) ? player.deck.commander[0]: null" (pointerleave)="hovered_card=null"
+                    class="player-button"
+                    mat-button
+                    (click)="selectPlayer(player)">
+                    {{player.name}}
+                  </button>
+                </div>
+                <div fxLayout="column" fxFlex="100">
+                  <div fxLayout="row" fxFlex>
+                    <div class="column" fxFlex>
+                      <button (pointerenter)="hovered_card=player.deck.commander.length>1 ? player.deck.commander[1] : null" (pointerleave)="hovered_card=null" *ngIf="isOpponent(player)" class="player-button" mat-button disabled style="color: white">
+                        {{player.life}}
+                      </button>
+                      <button *ngIf="!isOpponent(player)" class="player-button" mat-button
+                              (click)="player.life = player.life + 1" (contextmenu)="onRightClick($event, {type: 'life', player: player})">
+                        {{player.life}}
+                      </button>
+                    </div>
+                    <div class="column" fxFlex>
+                      <button *ngIf="isOpponent(player)" class="player-button" mat-button disabled style="color: white">
+                        {{player.infect}}
+                      </button>
+                      <button *ngIf="!isOpponent(player)" class="player-button" mat-button
+                              (click)="player.infect = player.infect + 1" (contextmenu)="onRightClick($event, {type: 'infect', player: player})">
+                        {{player.infect}}
+                      </button>
                     </div>
                   </div>
                 </div>
-              </mat-list-item>
-              <mat-divider *ngIf="j != players.length - 1"></mat-divider>
-            </div>
-          </mat-list>
-        </mat-card>
-      </div>
-      <div fxFlexFill (contextmenu)="onRightClick($event, {type: 'none'})">
-        <div class="container" fxLayout="row" fxLayoutAlign="center end" fxFlexFill>
-          <div fxLayout="column" fxLayoutAlign="start center" fxFlexFill style="margin: 10px;">
-            <!-- &&Opponents -->
-            <div class="opponent-holder" fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
-              <div class="opponent-playmat-holder" fxLayout="row wrap" fxLayout.lt-md="column" fxLayoutAlign="center">
-                <div *ngFor="let player of players">
-                  <mat-card *ngIf="isOpponent(player)" class="playmat-opponent" fxLayout="row wrap" fxLayoutAlign="center center">
-                    <div class="playmat-opponent-data">
-                      <div class="opponent-information">
-                        <h3>Hand: {{player.hand.length}}, Deck: {{player.deck.cards.length}}, Graveyard: {{player.grave.length}}, Exile: {{player.exile.length}}</h3>
-                      </div>
-                      <div class="playmat-opponent-selector" [ngClass]="{'playmat-opponent-selected': player.selected}"></div>
-                      <div class="playmat-opponent-card-data">
-                        <div *ngFor="let spot of reversePlaymat(player.playmat)" class="mtg-card-holder-opponent">
-                          <div *ngFor="let card of spot; let i = index">
-                            <div [ngClass]="{'stack-1': i == 0,'stack-2': i == 1,'stack-3': i == 2}" class="mtg-card-opponent-container"
-                                 (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null" [@opponentTappedState]="card.tapped">
-                              <img class="mtg-card-opponent" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
+              </div>
+            </mat-list-item>
+            <mat-divider *ngIf="j != players.length - 1"></mat-divider>
+          </div>
+        </mat-list>
+      </mat-card>
+    </div>
+    <div fxFlexFill (contextmenu)="onRightClick($event, {type: 'none'})">
+      <div class="container" fxLayout="row" fxLayoutAlign="center end" fxFlexFill>
+        <div fxLayout="column" fxLayoutAlign="start center" fxFlexFill style="margin: 10px;">
+          <!-- &&Opponents -->
+          <div class="opponent-holder" fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
+            <div class="opponent-playmat-holder" fxLayout="row wrap" fxLayout.lt-md="column" fxLayoutAlign="center">
+              <div *ngFor="let player of players">
+                <mat-card *ngIf="isOpponent(player)" class="playmat-opponent" fxLayout="row wrap" fxLayoutAlign="center center">
+                  <div class="playmat-opponent-data">
+                    <div class="opponent-information">
+                      <h3>Hand: {{player.hand.length}}, Deck: {{player.deck.cards.length}}, Graveyard: {{player.grave.length}}, Exile: {{player.exile.length}}</h3>
+                    </div>
+                    <div class="playmat-opponent-selector" [ngClass]="{'playmat-opponent-selected': player.selected}"></div>
+                    <div class="playmat-opponent-card-data">
+                      <div *ngFor="let spot of reversePlaymat(player.playmat)" class="mtg-card-holder-opponent">
+                        <div *ngFor="let card of spot; let i = index">
+                          <div [ngClass]="{'stack-1': i == 0,'stack-2': i == 1,'stack-3': i == 2}" class="mtg-card-opponent-container"
+                               (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null" [@opponentTappedState]="card.tapped">
+                            <img class="mtg-card-opponent" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
 
-                              <button *ngIf="card.counter_1" class="mtg-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true"><p>{{card.counter_1_value}}</p></button>
-                              <button *ngIf="card.counter_2" class="mtg-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>{{card.counter_2_value}}</p></button>
-                              <button *ngIf="card.counter_3" class="mtg-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true"><p>{{card.counter_3_value}}</p></button>
-                              <button *ngIf="card.multiplier" class="mtg-multiplier-counter" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>{{card.multiplier_value}}</p></button>
+                            <button *ngIf="card.counter_1" class="mtg-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true"><p>{{card.counter_1_value}}</p></button>
+                            <button *ngIf="card.counter_2" class="mtg-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>{{card.counter_2_value}}</p></button>
+                            <button *ngIf="card.counter_3" class="mtg-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true"><p>{{card.counter_3_value}}</p></button>
+                            <button *ngIf="card.multiplier" class="mtg-multiplier-counter" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>{{card.multiplier_value}}</p></button>
 
-                              <h5 *ngIf="card.power && card.toughness && card.power != null && card.toughness != null" class="mtg-card-power-tough">
-                                <a [ngClass]="{'mat-card-power-tough-text-up': card.power_mod > 0, 'mat-card-power-tough-text-down': card.power_mod < 0}" class="mat-card-power-tough-text">{{card.power + card.power_mod}}</a>/
-                                <a [ngClass]="{'mat-card-power-tough-text-up': card.toughness_mod > 0, 'mat-card-power-tough-text-down': card.toughness_mod < 0}" class="mat-card-power-tough-text">{{card.toughness + card.toughness_mod}}</a></h5>
-                              <h5 *ngIf="card.loyalty && card.loyalty != null" class="mtg-card-loyalty"><a class="mat-card-power-tough-text" [ngClass]="{'mat-card-power-tough-text-up': card.loyalty_mod > 0, 'mat-card-power-tough-text-down': card.loyalty_mod < 0}">{{card.loyalty + card.loyalty_mod}}</a></h5>
-                            </div>
+                            <h5 *ngIf="card.power && card.toughness && card.power != null && card.toughness != null" class="mtg-card-power-tough">
+                              <a [ngClass]="{'mat-card-power-tough-text-up': card.power_mod > 0, 'mat-card-power-tough-text-down': card.power_mod < 0}" class="mat-card-power-tough-text">{{card.power + card.power_mod}}</a>/
+                              <a [ngClass]="{'mat-card-power-tough-text-up': card.toughness_mod > 0, 'mat-card-power-tough-text-down': card.toughness_mod < 0}" class="mat-card-power-tough-text">{{card.toughness + card.toughness_mod}}</a></h5>
+                            <h5 *ngIf="card.loyalty && card.loyalty != null" class="mtg-card-loyalty"><a class="mat-card-power-tough-text" [ngClass]="{'mat-card-power-tough-text-up': card.loyalty_mod > 0, 'mat-card-power-tough-text-down': card.loyalty_mod < 0}">{{card.loyalty + card.loyalty_mod}}</a></h5>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </mat-card>
-                </div>
-              </div>
-            </div>
-            <!-- &&Playmat User -->
-            <div fxLayout="row" fxFlex fxLayoutAlign="center">
-              <div class="playmat-user-holder">
-                <div class="playmat-user-devotions" >
-                  <div fxFlexFill fxLayout="column" fxLayoutAlign="space-evenly start">
-                    <div class="devotion-holder">
-                      <button mat-fab class="devotion-white">{{devotionCount(user, 'W')}}</button>
-                    </div>
-                    <div class="devotion-holder">
-                      <button mat-fab class="devotion-blue">{{devotionCount(user, 'U')}}</button>
-                    </div>
-                    <div class="devotion-holder">
-                      <button mat-fab class="devotion-black">{{devotionCount(user, 'B')}}</button>
-                    </div>
-                    <div class="devotion-holder">
-                      <button mat-fab class="devotion-red">{{devotionCount(user, 'R')}}</button>
-                    </div>
-                    <div class="devotion-holder">
-                      <button mat-fab class="devotion-green">{{devotionCount(user, 'G')}}</button>
-                    </div>
-                  </div>
-                </div>
-                <mat-card class="playmat-user" fxLayout="row wrap" fxLayoutAlign="start start">
-                  <div *ngFor="let spot of user.playmat"
-                       class="mtg-card-holder-user"
-                       cdkDropList
-                       [cdkDropListData]="spot"
-                       (cdkDropListDropped)="moveCardToZone($event, 'play')"
-                        (dblclick)="sendSelectedToSpot(spot, 'play')">
-                    <div *ngFor="let card of spot; let i = index">
-                      <mat-card [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2}"
-                           (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
-                           (cdkDragStarted)="hovered_card=null; selectCard(card, spot);"
-                           class="mtg-card-user-container" [@userTappedState]="card.tapped"
-                           cdkDrag>
-                        <div *ngIf="card.locked" class="mtg-lock"><mat-icon>lock</mat-icon></div>
-                        <img [ngClass]="{'mtg-card-user-selected': card.selected, 'mtg-card-clone': card.is_token && !card.types.includes('Token') }"
-                             class="mtg-card-user"
-                             src="{{card.image}}"
-                             alt="{{card.name}}"
-                             (contextmenu)="onRightClick($event,{type: 'inPlayUser', card: card, spot: spot}); selectCard(card, spot);"
-                             (click)="toggleCardSelect(card, spot)" (dblclick)="tapCard(card)" loading="lazy">
-                        <button *ngIf="card.counter_1" class="mtg-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true" (click)="card.counter_1_value = card.counter_1_value + 1" (contextmenu)="onRightClick($event, {type: 'counter_1', card: card})"><p>{{card.counter_1_value}}</p></button>
-                        <button *ngIf="card.counter_2" class="mtg-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true" (click)="card.counter_2_value = card.counter_2_value + 1" (contextmenu)="onRightClick($event, {type: 'counter_2', card: card})"><p>{{card.counter_2_value}}</p></button>
-                        <button *ngIf="card.counter_3" class="mtg-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true" (click)="card.counter_3_value = card.counter_3_value + 1" (contextmenu)="onRightClick($event, {type: 'counter_3', card: card})"><p>{{card.counter_3_value}}</p></button>
-                        <button *ngIf="card.multiplier" class="mtg-multiplier-counter" mat-fab color="accent" [class.mat-elevation-z8]="true" (click)="card.multiplier_value = card.multiplier_value + 1" (contextmenu)="onRightClick($event, {type: 'multiplier', card: card})"><p>{{card.multiplier_value}}</p></button>
-                        <h4 *ngIf="card.power && card.toughness" class="mtg-card-power-tough">
-                          <a [ngClass]="{'mat-card-power-tough-text-up': card.power_mod > 0, 'mat-card-power-tough-text-down': card.power_mod < 0}" class="mat-card-power-tough-text" (click)="card.power_mod = card.power_mod + 1" (contextmenu)="onRightClick($event, {type: 'power', card: card})">{{card.power + card.power_mod}}</a>/
-                          <a [ngClass]="{'mat-card-power-tough-text-up': card.toughness_mod > 0, 'mat-card-power-tough-text-down': card.toughness_mod < 0}" class="mat-card-power-tough-text" (click)="card.toughness_mod = card.toughness_mod + 1" (contextmenu)="onRightClick($event, {type: 'toughness', card: card})">{{card.toughness + card.toughness_mod}}</a></h4>
-                        <h4 *ngIf="card.loyalty" class="mtg-card-loyalty"><a class="mat-card-power-tough-text" [ngClass]="{'mat-card-power-tough-text-up': card.loyalty_mod > 0, 'mat-card-power-tough-text-down': card.loyalty_mod < 0}" (click)="card.loyalty_mod = card.loyalty_mod + 1" (contextmenu)="onRightClick($event, {type: 'loyalty', card: card})">{{card.loyalty + card.loyalty_mod}}</a></h4>
-                      </mat-card>
-
                     </div>
                   </div>
                 </mat-card>
               </div>
             </div>
-            <!-- Opponent Hand -->
-            <div fxLayout="row" fxFlex fxLayoutAlign="center">
-              <div class="opponent-hand" fxLayout="column" fxLayoutAlign="center" [class.mat-elevation-z8]="selected_player != null">
-                <div *ngIf="selected_player != null" class="opponent-hand-list"
-                     fxFlex fxLayout="row" fxLayoutAlign="start">
-                  <h1 class="hand-count">{{selected_player.hand.length}}</h1>
-                  <img *ngFor="let card of selected_player.hand" fxFlex fxLayout="column"
-                       class="mtg-card-opponent"
-                       src="{{canSee(card, user) ? card.image: selected_player.deck.sleeves}}" alt="card"
-                       (contextmenu)="onRightClick($event, {type: 'opponent_hand', card: card})"
-                       (pointerenter)="hovered_card = canSee(card, user)? card: null" (pointerleave)="hovered_card=null" loading="lazy">
+          </div>
+          <!-- &&Playmat User -->
+          <div fxLayout="row" fxFlex fxLayoutAlign="center">
+            <div class="playmat-user-holder">
+              <div class="playmat-user-devotions" >
+                <div fxFlexFill fxLayout="column" fxLayoutAlign="space-evenly start">
+                  <div class="devotion-holder">
+                    <button mat-fab class="devotion-white">{{devotionCount(user, 'W')}}</button>
+                  </div>
+                  <div class="devotion-holder">
+                    <button mat-fab class="devotion-blue">{{devotionCount(user, 'U')}}</button>
+                  </div>
+                  <div class="devotion-holder">
+                    <button mat-fab class="devotion-black">{{devotionCount(user, 'B')}}</button>
+                  </div>
+                  <div class="devotion-holder">
+                    <button mat-fab class="devotion-red">{{devotionCount(user, 'R')}}</button>
+                  </div>
+                  <div class="devotion-holder">
+                    <button mat-fab class="devotion-green">{{devotionCount(user, 'G')}}</button>
+                  </div>
                 </div>
               </div>
-            </div>
-            <!-- User Hand -->
-            <div fxLayout="row" fxFlex fxLayoutAlign="center">
-              <div class="user-hand" fxLayout="column" fxLayoutAlign="center" [class.mat-elevation-z8]="true">
-                <div cdkDropList class="user-hand-list"
-                     cdkDropListOrientation="horizontal"
-                     [cdkDropListData]="user.hand"
-                     (cdkDropListDropped)="moveCardToZone($event, 'hand')" fxFlexFill fxLayout="row" fxLayoutAlign="start">
-                  <h1 class="hand-count">{{user.hand.length}}</h1>
-                  <mat-icon class="hand-menu">menu</mat-icon>
-                  <mat-card *ngFor="let card of user.hand" class="mtg-card-user-container"
-                       fxFlex fxLayout="column"
-                       (contextmenu)="onRightClick($event, {type: 'hand', card: card, from: user.hand})"
-                       (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
-                       (click)="toggleCardSelect(card, user.hand)"
-                       (cdkDragStarted)="hovered_card=null; selectCard(card, user.hand);"
-                       cdkDrag>
-                    <img [ngClass]="{ 'mtg-card-user-selected': card.selected }" class="mtg-card-user" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
-                  </mat-card>
+              <mat-card class="playmat-user" fxLayout="row wrap" fxLayoutAlign="start start">
+                <div *ngFor="let spot of user.playmat"
+                     class="mtg-card-holder-user"
+                     cdkDropList
+                     [cdkDropListData]="spot"
+                     (cdkDropListDropped)="moveCardToZone($event, 'play')"
+                      (dblclick)="sendSelectedToSpot(spot, 'play')">
+                  <div *ngFor="let card of spot; let i = index">
+                    <mat-card [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2}"
+                         (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
+                         (cdkDragStarted)="hovered_card=null; selectCard(card, spot);"
+                         class="mtg-card-user-container" [@userTappedState]="card.tapped"
+                         cdkDrag>
+                      <div *ngIf="card.locked" class="mtg-lock"><mat-icon>lock</mat-icon></div>
+                      <img [ngClass]="{'mtg-card-user-selected': card.selected, 'mtg-card-clone': card.is_token && !card.types.includes('Token') }"
+                           class="mtg-card-user"
+                           src="{{card.image}}"
+                           alt="{{card.name}}"
+                           (contextmenu)="onRightClick($event,{type: 'inPlayUser', card: card, spot: spot}); selectCard(card, spot);"
+                           (click)="toggleCardSelect(card, spot)" (dblclick)="tapCard(card)" loading="lazy">
+                      <button *ngIf="card.counter_1" class="mtg-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true" (click)="card.counter_1_value = card.counter_1_value + 1" (contextmenu)="onRightClick($event, {type: 'counter_1', card: card})"><p>{{card.counter_1_value}}</p></button>
+                      <button *ngIf="card.counter_2" class="mtg-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true" (click)="card.counter_2_value = card.counter_2_value + 1" (contextmenu)="onRightClick($event, {type: 'counter_2', card: card})"><p>{{card.counter_2_value}}</p></button>
+                      <button *ngIf="card.counter_3" class="mtg-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true" (click)="card.counter_3_value = card.counter_3_value + 1" (contextmenu)="onRightClick($event, {type: 'counter_3', card: card})"><p>{{card.counter_3_value}}</p></button>
+                      <button *ngIf="card.multiplier" class="mtg-multiplier-counter" mat-fab color="accent" [class.mat-elevation-z8]="true" (click)="card.multiplier_value = card.multiplier_value + 1" (contextmenu)="onRightClick($event, {type: 'multiplier', card: card})"><p>{{card.multiplier_value}}</p></button>
+                      <h4 *ngIf="card.power && card.toughness" class="mtg-card-power-tough">
+                        <a [ngClass]="{'mat-card-power-tough-text-up': card.power_mod > 0, 'mat-card-power-tough-text-down': card.power_mod < 0}" class="mat-card-power-tough-text" (click)="card.power_mod = card.power_mod + 1" (contextmenu)="onRightClick($event, {type: 'power', card: card})">{{card.power + card.power_mod}}</a>/
+                        <a [ngClass]="{'mat-card-power-tough-text-up': card.toughness_mod > 0, 'mat-card-power-tough-text-down': card.toughness_mod < 0}" class="mat-card-power-tough-text" (click)="card.toughness_mod = card.toughness_mod + 1" (contextmenu)="onRightClick($event, {type: 'toughness', card: card})">{{card.toughness + card.toughness_mod}}</a></h4>
+                      <h4 *ngIf="card.loyalty" class="mtg-card-loyalty"><a class="mat-card-power-tough-text" [ngClass]="{'mat-card-power-tough-text-up': card.loyalty_mod > 0, 'mat-card-power-tough-text-down': card.loyalty_mod < 0}" (click)="card.loyalty_mod = card.loyalty_mod + 1" (contextmenu)="onRightClick($event, {type: 'loyalty', card: card})">{{card.loyalty + card.loyalty_mod}}</a></h4>
+                    </mat-card>
+
+                  </div>
                 </div>
+              </mat-card>
+            </div>
+          </div>
+          <!-- Opponent Hand -->
+          <div fxLayout="row" fxFlex fxLayoutAlign="center">
+            <div class="opponent-hand" fxLayout="column" fxLayoutAlign="center" [class.mat-elevation-z8]="selected_player != null">
+              <div *ngIf="selected_player != null" class="opponent-hand-list"
+                   fxFlex fxLayout="row" fxLayoutAlign="start">
+                <h1 class="hand-count">{{selected_player.hand.length}}</h1>
+                <img *ngFor="let card of selected_player.hand" fxFlex fxLayout="column"
+                     class="mtg-card-opponent"
+                     src="{{canSee(card, user) ? card.image: selected_player.deck.sleeves}}" alt="card"
+                     (contextmenu)="onRightClick($event, {type: 'opponent_hand', card: card})"
+                     (pointerenter)="hovered_card = canSee(card, user)? card: null" (pointerleave)="hovered_card=null" loading="lazy">
               </div>
             </div>
           </div>
-        </div>
-        <div class="user-deck">
-          <mat-card class="zone-data"
-               (dblclick)="drawX(1)"
-               (contextmenu)="onRightClick($event, {type: 'deck'})"
-               cdkDropList [cdkDropListData]="user.deck.cards"
-               cdkDropListOrientation="horizontal"
-               (cdkDropListDropped)="moveCardToZone($event, 'deck')">
-            <h1 class="zone-count">{{user.deck.cards.length}}</h1>
-            <img class="mtg-card-user"
-                 src="https://c1.scryfall.com/file/scryfall-card-backs/large/59/597b79b3-7d77-4261-871a-60dd17403388.jpg?1561757129"
-                 (pointerleave)="hovered_card=null"
-                 (cdkDragStarted)="hovered_card=null; selectCard(user.deck.cards[0], user.deck.cards);"
-                 cdkDrag loading="lazy">
-          </mat-card>
-        </div>
-        <div class="zone-hider-outer">
-          <div class="zone-hider-inner">
-            <div [ngClass]="{'zone-container': !hidden, 'zone-container-hidden': hidden}">
-              <div class="zone-holder">
-                <button [style.display]="'none'" mat-mini-fab class="zone-toggle-button"
-                (click)="hidden=!hidden"><mat-icon
-                  [ngClass]="{'zones-arrow-on': !hidden, 'zones-arrow-off': hidden}">keyboard_arrow_right</mat-icon></button>
-                <div class="user-grave">
-                  <mat-card class="zone-data" (dblclick)="sendSelectedToSpot(user.grave, 'grave')"
-                            (contextmenu)="onRightClick($event, {type: 'grave'})"
-                            cdkDropList [cdkDropListData]="user.grave"
-                            cdkDropListOrientation="horizontal"
-                            (cdkDropListDropped)="moveCardToZone($event, 'grave')">
-                    <div class="zone-title"><h5>Graveyard</h5></div>
-                    <h1 class="zone-count">{{user.grave.length}}</h1>
-                    <div *ngIf="user.grave.length == 0" class="mtg-card-user"></div>
-                    <img *ngIf="user.grave.length > 0" class="mtg-card-user" src="{{user.grave[0].image}}"
-                         (pointerleave)="hovered_card=null"
-                         (cdkDragStarted)="hovered_card=null; selectCard(user.grave[0], user.grave);"
-                         cdkDrag loading="lazy">
-                  </mat-card>
-                </div>
-                <div class="user-exile">
-                  <mat-card class="zone-data" (dblclick)="sendSelectedToSpot(user.exile, 'exile')"
-                            (contextmenu)="onRightClick($event, {type: 'exile'})"
-                            cdkDropList [cdkDropListData]="user.exile"
-                            cdkDropListOrientation="horizontal"
-                            (cdkDropListDropped)="moveCardToZone($event, 'exile')">
-                    <div class="zone-title"><h5>Exile</h5></div>
-                    <h1 class="zone-count">{{user.exile.length}}</h1>
-                    <div *ngIf="user.exile.length == 0" class="mtg-card-user"></div>
-                    <img *ngIf="user.exile.length > 0" class="mtg-card-user" src="{{user.exile[0].image}}"
-                         (pointerleave)="hovered_card=null"
-                         (cdkDragStarted)="hovered_card=null; selectCard(user.exile[0], user.exile);"
-                         cdkDrag loading="lazy">
-                  </mat-card>
-                </div>
-                <div class="user-temp-zone">
-                  <mat-card class="zone-data" (dblclick)="sendSelectedToSpot(user.temp_zone, 'temp_zone')"
-                            (contextmenu)="onRightClick($event, {type: 'temp-zone'})"
-                            cdkDropList [cdkDropListData]="user.temp_zone"
-                            cdkDropListOrientation="horizontal"
-                            (cdkDropListDropped)="moveCardToZone($event, 'temp_zone')">
-                    <div class="zone-title"><h5>Temp</h5></div>
-                    <h1 class="zone-count">{{user.temp_zone.length}}</h1>
-                    <div *ngIf="user.temp_zone.length == 0" class="mtg-card-user"></div>
-                    <img *ngIf="user.temp_zone.length > 0" class="mtg-card-user" src="{{user.temp_zone[0].image}}"
-                         (pointerleave)="hovered_card=null"
-                         (cdkDragStarted)="hovered_card=null; selectCard(user.temp_zone[0], user.temp_zone);"
-                         cdkDrag loading="lazy">
-                  </mat-card>
-                </div>
-                <div class="commander-viewer" cdkDropList
-                     [cdkDropListData]="user.deck.commander"
-                     (cdkDropListDropped)="moveCardToZone($event, 'command_zone')">
-                  <mat-card class="commander-viewer-mat-card">
-                    <button mat-fab class="commander-counter" (click)="user.command_tax_1 = user.command_tax_1 + 1" (contextmenu)="onRightClick($event, {type: 'command_tax_1'})">
-                      {{user.command_tax_1}}
-                    </button>
-                    <button *ngIf="user.deck.commander_saved.length == 2" mat-fab color="primary" class="commander-counter-2" (click)="user.command_tax_2 = user.command_tax_2 + 1" (contextmenu)="onRightClick($event, {type: 'command_tax_2'})">
-                      {{user.command_tax_2}}
-                    </button>
-                    <div *ngIf="user.deck.commander_saved.length == 1">
-                      <img class="commander-viewer-single" src="{{user.deck.commander_saved[0].image}}" loading="lazy"
-                           (contextmenu)="onRightClick($event, {type: 'commander', card: user.deck.commander_saved[0]});
-                                    selectCard(user.deck.commander_saved[0], user.deck.commander, true);"
-                           (pointerenter)="hovered_card=user.deck.commander_saved[0]" (pointerleave)="hovered_card=null">
-                    </div>
-                    <div *ngIf="user.deck.commander_saved.length == 2" class="commander-viewer-partner-holder">
-                      <img (pointerenter)="hovered_card=user.deck.commander_saved[0]" (pointerleave)="hovered_card=null" class="commander-viewer-partner-1" src="{{user.deck.commander_saved[0].image}}" loading="lazy" (contextmenu)="onRightClick($event, {type: 'commander', card: user.deck.commander_saved[0]}); selectCard(user.deck.commander_saved[0], user.deck.commander, true);">
-                      <img (pointerenter)="hovered_card=user.deck.commander_saved[1]" (pointerleave)="hovered_card=null" class="commander-viewer-partner-2" src="{{user.deck.commander_saved[1].image}}" loading="lazy" (contextmenu)="onRightClick($event, {type: 'commander', card: user.deck.commander_saved[1]}); selectCard(user.deck.commander_saved[1], user.deck.commander, true);">
-                    </div>
-                  </mat-card>
-                </div>
+          <!-- User Hand -->
+          <div fxLayout="row" fxFlex fxLayoutAlign="center">
+            <div class="user-hand" fxLayout="column" fxLayoutAlign="center" [class.mat-elevation-z8]="true">
+              <div cdkDropList class="user-hand-list"
+                   cdkDropListOrientation="horizontal"
+                   [cdkDropListData]="user.hand"
+                   (cdkDropListDropped)="moveCardToZone($event, 'hand')" fxFlexFill fxLayout="row" fxLayoutAlign="start">
+                <h1 class="hand-count">{{user.hand.length}}</h1>
+                <mat-icon class="hand-menu">menu</mat-icon>
+                <mat-card *ngFor="let card of user.hand" class="mtg-card-user-container"
+                     fxFlex fxLayout="column"
+                     (contextmenu)="onRightClick($event, {type: 'hand', card: card, from: user.hand})"
+                     (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
+                     (click)="toggleCardSelect(card, user.hand)"
+                     (cdkDragStarted)="hovered_card=null; selectCard(card, user.hand);"
+                     cdkDrag>
+                  <img [ngClass]="{ 'mtg-card-user-selected': card.selected }" class="mtg-card-user" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
+                </mat-card>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <div class="user-deck">
+        <mat-card class="zone-data"
+             (dblclick)="drawX(1)"
+             (contextmenu)="onRightClick($event, {type: 'deck'})"
+             cdkDropList [cdkDropListData]="user.deck.cards"
+             cdkDropListOrientation="horizontal"
+             (cdkDropListDropped)="moveCardToZone($event, 'deck')">
+          <h1 class="zone-count">{{user.deck.cards.length}}</h1>
+          <img class="mtg-card-user"
+               src="https://c1.scryfall.com/file/scryfall-card-backs/large/59/597b79b3-7d77-4261-871a-60dd17403388.jpg?1561757129"
+               (pointerleave)="hovered_card=null"
+               (cdkDragStarted)="hovered_card=null; selectCard(user.deck.cards[0], user.deck.cards);"
+               cdkDrag loading="lazy">
+        </mat-card>
+      </div>
+      <div class="zone-hider-outer">
+        <div class="zone-hider-inner">
+          <div [ngClass]="{'zone-container': !hidden, 'zone-container-hidden': hidden}">
+            <div class="zone-holder">
+              <button [style.display]="'none'" mat-mini-fab class="zone-toggle-button"
+              (click)="hidden=!hidden"><mat-icon
+                [ngClass]="{'zones-arrow-on': !hidden, 'zones-arrow-off': hidden}">keyboard_arrow_right</mat-icon></button>
+              <div class="user-grave">
+                <mat-card class="zone-data" (dblclick)="sendSelectedToSpot(user.grave, 'grave')"
+                          (contextmenu)="onRightClick($event, {type: 'grave'})"
+                          cdkDropList [cdkDropListData]="user.grave"
+                          cdkDropListOrientation="horizontal"
+                          (cdkDropListDropped)="moveCardToZone($event, 'grave')">
+                  <div class="zone-title"><h5>Graveyard</h5></div>
+                  <h1 class="zone-count">{{user.grave.length}}</h1>
+                  <div *ngIf="user.grave.length == 0" class="mtg-card-user"></div>
+                  <img *ngIf="user.grave.length > 0" class="mtg-card-user" src="{{user.grave[0].image}}"
+                       (pointerleave)="hovered_card=null"
+                       (cdkDragStarted)="hovered_card=null; selectCard(user.grave[0], user.grave);"
+                       cdkDrag loading="lazy">
+                </mat-card>
+              </div>
+              <div class="user-exile">
+                <mat-card class="zone-data" (dblclick)="sendSelectedToSpot(user.exile, 'exile')"
+                          (contextmenu)="onRightClick($event, {type: 'exile'})"
+                          cdkDropList [cdkDropListData]="user.exile"
+                          cdkDropListOrientation="horizontal"
+                          (cdkDropListDropped)="moveCardToZone($event, 'exile')">
+                  <div class="zone-title"><h5>Exile</h5></div>
+                  <h1 class="zone-count">{{user.exile.length}}</h1>
+                  <div *ngIf="user.exile.length == 0" class="mtg-card-user"></div>
+                  <img *ngIf="user.exile.length > 0" class="mtg-card-user" src="{{user.exile[0].image}}"
+                       (pointerleave)="hovered_card=null"
+                       (cdkDragStarted)="hovered_card=null; selectCard(user.exile[0], user.exile);"
+                       cdkDrag loading="lazy">
+                </mat-card>
+              </div>
+              <div class="user-temp-zone">
+                <mat-card class="zone-data" (dblclick)="sendSelectedToSpot(user.temp_zone, 'temp_zone')"
+                          (contextmenu)="onRightClick($event, {type: 'temp-zone'})"
+                          cdkDropList [cdkDropListData]="user.temp_zone"
+                          cdkDropListOrientation="horizontal"
+                          (cdkDropListDropped)="moveCardToZone($event, 'temp_zone')">
+                  <div class="zone-title"><h5>Temp</h5></div>
+                  <h1 class="zone-count">{{user.temp_zone.length}}</h1>
+                  <div *ngIf="user.temp_zone.length == 0" class="mtg-card-user"></div>
+                  <img *ngIf="user.temp_zone.length > 0" class="mtg-card-user" src="{{user.temp_zone[0].image}}"
+                       (pointerleave)="hovered_card=null"
+                       (cdkDragStarted)="hovered_card=null; selectCard(user.temp_zone[0], user.temp_zone);"
+                       cdkDrag loading="lazy">
+                </mat-card>
+              </div>
+              <div class="commander-viewer" cdkDropList
+                   [cdkDropListData]="user.deck.commander"
+                   (cdkDropListDropped)="moveCardToZone($event, 'command_zone')">
+                <mat-card class="commander-viewer-mat-card">
+                  <button mat-fab class="commander-counter" (click)="user.command_tax_1 = user.command_tax_1 + 1" (contextmenu)="onRightClick($event, {type: 'command_tax_1'})">
+                    {{user.command_tax_1}}
+                  </button>
+                  <button *ngIf="user.deck.commander_saved.length == 2" mat-fab color="primary" class="commander-counter-2" (click)="user.command_tax_2 = user.command_tax_2 + 1" (contextmenu)="onRightClick($event, {type: 'command_tax_2'})">
+                    {{user.command_tax_2}}
+                  </button>
+                  <div *ngIf="user.deck.commander_saved.length == 1">
+                    <img class="commander-viewer-single" src="{{user.deck.commander_saved[0].image}}" loading="lazy"
+                         (contextmenu)="onRightClick($event, {type: 'commander', card: user.deck.commander_saved[0]});
+                                  selectCard(user.deck.commander_saved[0], user.deck.commander, true);"
+                         (pointerenter)="hovered_card=user.deck.commander_saved[0]" (pointerleave)="hovered_card=null">
+                  </div>
+                  <div *ngIf="user.deck.commander_saved.length == 2" class="commander-viewer-partner-holder">
+                    <img (pointerenter)="hovered_card=user.deck.commander_saved[0]" (pointerleave)="hovered_card=null" class="commander-viewer-partner-1" src="{{user.deck.commander_saved[0].image}}" loading="lazy" (contextmenu)="onRightClick($event, {type: 'commander', card: user.deck.commander_saved[0]}); selectCard(user.deck.commander_saved[0], user.deck.commander, true);">
+                    <img (pointerenter)="hovered_card=user.deck.commander_saved[1]" (pointerleave)="hovered_card=null" class="commander-viewer-partner-2" src="{{user.deck.commander_saved[1].image}}" loading="lazy" (contextmenu)="onRightClick($event, {type: 'commander', card: user.deck.commander_saved[1]}); selectCard(user.deck.commander_saved[1], user.deck.commander, true);">
+                  </div>
+                </mat-card>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
 
