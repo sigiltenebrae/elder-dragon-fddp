@@ -5,24 +5,43 @@
 </div>
 
 <div *ngIf="user != null" class="counter-creator" fxLayout="column">
-  <button mat-fab (click)="createCounter()"><mat-icon>add</mat-icon></button>
-  <!--<button cdkDrag mat-fab (click)="counter.value = counter.value + 1"
-          (contextmenu)="onRightClick($event, {type: 'custom_counter', counter: counter})"
-          (keyup.escape)="deleteCounter(counter)"
-          *ngFor="let counter of user.counters" style="background: {{counter.color}}">{{counter.value}}</button>-->
-  <mat-card *ngFor="let counter of user.counters" class="commander-dashboard-button-holder" style="padding: 0" cdkDrag>
-    <div fxLayout="column" fxLayoutGap="5">
-      <div fxFlex fxLayout="row" fxLayoutAlign="start center">
-        <div fxLayout="column" fxFlex>
-          <mat-form-field appearance="fill">
-            <mat-label>Enter a Type</mat-label>
-            <input #custom_search matInput>
-          </mat-form-field>
-        </div>
+  <div class="counter-container">
+    <button class="counter-creator-button" mat-fab (click)="createCounter()"><mat-icon>add</mat-icon></button>
+    <!--<button cdkDrag mat-fab (click)="counter.value = counter.value + 1"
+            (contextmenu)="onRightClick($event, {type: 'custom_counter', counter: counter})"
+            (keyup.escape)="deleteCounter(counter)"
+            *ngFor="let counter of user.counters" style="background: {{counter.color}}">{{counter.value}}</button>-->
+    <mat-card *ngFor="let counter of user.counters" class="commander-dashboard-custom-counter"
+              style="padding: 0" cdkDrag>
+
+        <!--<div fxLayout="row" fxLayoutAlign="end">
+
+&lt;!&ndash;          <h2 style="margin: 0 5px 5px 5px; padding: 0;">In Play: {{typeCount(user, custom_search.value)}} </h2>&ndash;&gt;
+        </div>-->
+      <mat-form-field appearance="fill" class="commander-dashboard-input">
+        <mat-label>Enter a Type</mat-label>
+        <input #custom_search matInput>
+      </mat-form-field>
+      <div fxFlex="100" fxLayout="row" fxLayoutGap="10" class="commander-dashboard-select-holder" fxLayoutAlign="space-between">
+        <mat-form-field appearance="outline" class="commander-dashboard-select">
+          <mat-label>Player</mat-label>
+          <mat-select #search_player>
+            <mat-option *ngFor="let player of players" [value]="player">{{player.name}}</mat-option>
+            <mat-option [value]="'All'">All</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="commander-dashboard-select">
+          <mat-label>Player</mat-label>
+          <mat-select #search_zone>
+            <mat-option [value]="'Play'">Play</mat-option>
+            <mat-option [value]="'Grave'">Graveyard</mat-option>
+            <mat-option [value]="'Exile'">Exile</mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
-      <div fxLayout="row" fxLayoutAlign="end"><h2 style="margin: 0 5px 5px 5px; padding: 0;">In Play: {{typeCount(user, custom_search.value)}} </h2></div>
-    </div>
-  </mat-card>
+      <h1 class="commander-dashboard-text" style="text-align: end">Count: {{typeCount(search_player.value, search_zone.value,  custom_search.value)}}</h1>
+    </mat-card>
+  </div>
 </div>
 
 <mat-menu #rightMenu="matMenu">
@@ -432,22 +451,30 @@
             <div class="opponent-holder" fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
               <div class="opponent-playmat-holder" fxLayout="row wrap" fxLayout.lt-md="column" fxLayoutAlign="center">
                 <div *ngFor="let player of players">
-                  <mat-card *ngIf="isOpponent(player)" class="playmat-opponent" [ngClass]="{'playmat-opponent-selected': player.selected}" fxLayout="row wrap" fxLayoutAlign="center center">
-                    <div *ngFor="let spot of reversePlaymat(player.playmat)" class="mtg-card-holder-opponent">
-                      <div *ngFor="let card of spot; let i = index">
-                        <div [ngClass]="{'stack-1': i == 0,'stack-2': i == 1,'stack-3': i == 2}" class="mtg-card-opponent-container"
-                             (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null" [@opponentTappedState]="card.tapped">
-                          <img class="mtg-card-opponent" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
+                  <mat-card *ngIf="isOpponent(player)" class="playmat-opponent" fxLayout="row wrap" fxLayoutAlign="center center">
+                    <div class="playmat-opponent-data">
+                      <div class="opponent-information">
+                        <h3>Hand: {{player.hand.length}}, Deck: {{player.deck.cards.length}}, Graveyard: {{player.grave.length}}, Exile: {{player.exile.length}}</h3>
+                      </div>
+                      <div class="playmat-opponent-selector" [ngClass]="{'playmat-opponent-selected': player.selected}"></div>
+                      <div class="playmat-opponent-card-data">
+                        <div *ngFor="let spot of reversePlaymat(player.playmat)" class="mtg-card-holder-opponent">
+                          <div *ngFor="let card of spot; let i = index">
+                            <div [ngClass]="{'stack-1': i == 0,'stack-2': i == 1,'stack-3': i == 2}" class="mtg-card-opponent-container"
+                                 (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null" [@opponentTappedState]="card.tapped">
+                              <img class="mtg-card-opponent" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
 
-                          <button *ngIf="card.counter_1" class="mtg-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true"><p>{{card.counter_1_value}}</p></button>
-                          <button *ngIf="card.counter_2" class="mtg-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>{{card.counter_2_value}}</p></button>
-                          <button *ngIf="card.counter_3" class="mtg-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true"><p>{{card.counter_3_value}}</p></button>
-                          <button *ngIf="card.multiplier" class="mtg-multiplier-counter" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>{{card.multiplier_value}}</p></button>
+                              <button *ngIf="card.counter_1" class="mtg-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true"><p>{{card.counter_1_value}}</p></button>
+                              <button *ngIf="card.counter_2" class="mtg-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>{{card.counter_2_value}}</p></button>
+                              <button *ngIf="card.counter_3" class="mtg-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true"><p>{{card.counter_3_value}}</p></button>
+                              <button *ngIf="card.multiplier" class="mtg-multiplier-counter" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>{{card.multiplier_value}}</p></button>
 
-                          <h5 *ngIf="card.power && card.toughness && card.power != null && card.toughness != null" class="mtg-card-power-tough">
-                            <a [ngClass]="{'mat-card-power-tough-text-up': card.power_mod > 0, 'mat-card-power-tough-text-down': card.power_mod < 0}" class="mat-card-power-tough-text">{{card.power + card.power_mod}}</a>/
-                            <a [ngClass]="{'mat-card-power-tough-text-up': card.toughness_mod > 0, 'mat-card-power-tough-text-down': card.toughness_mod < 0}" class="mat-card-power-tough-text">{{card.toughness + card.toughness_mod}}</a></h5>
-                          <h5 *ngIf="card.loyalty && card.loyalty != null" class="mtg-card-loyalty"><a class="mat-card-power-tough-text" [ngClass]="{'mat-card-power-tough-text-up': card.loyalty_mod > 0, 'mat-card-power-tough-text-down': card.loyalty_mod < 0}">{{card.loyalty + card.loyalty_mod}}</a></h5>
+                              <h5 *ngIf="card.power && card.toughness && card.power != null && card.toughness != null" class="mtg-card-power-tough">
+                                <a [ngClass]="{'mat-card-power-tough-text-up': card.power_mod > 0, 'mat-card-power-tough-text-down': card.power_mod < 0}" class="mat-card-power-tough-text">{{card.power + card.power_mod}}</a>/
+                                <a [ngClass]="{'mat-card-power-tough-text-up': card.toughness_mod > 0, 'mat-card-power-tough-text-down': card.toughness_mod < 0}" class="mat-card-power-tough-text">{{card.toughness + card.toughness_mod}}</a></h5>
+                              <h5 *ngIf="card.loyalty && card.loyalty != null" class="mtg-card-loyalty"><a class="mat-card-power-tough-text" [ngClass]="{'mat-card-power-tough-text-up': card.loyalty_mod > 0, 'mat-card-power-tough-text-down': card.loyalty_mod < 0}">{{card.loyalty + card.loyalty_mod}}</a></h5>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -534,6 +561,7 @@
                      [cdkDropListData]="user.hand"
                      (cdkDropListDropped)="moveCardToZone($event, 'hand')" fxFlexFill fxLayout="row" fxLayoutAlign="start">
                   <h1 class="hand-count">{{user.hand.length}}</h1>
+                  <mat-icon class="hand-menu">menu</mat-icon>
                   <mat-card *ngFor="let card of user.hand" class="mtg-card-user-container"
                        fxFlex fxLayout="column"
                        (contextmenu)="onRightClick($event, {type: 'hand', card: card, from: user.hand})"

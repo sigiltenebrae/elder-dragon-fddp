@@ -189,10 +189,26 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 }
 
 .counter-creator {
-  top: 10px;
-  right: 10px;
+  top: 0;
+  right: 0;
   position: fixed;
   z-index: 2;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.counter-creator .counter-container {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.counter-container .counter-creator-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  pointer-events: all;
 }
 
 .mtg-card-user {
@@ -569,6 +585,15 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   z-index: 20;
 }
 
+.user-hand .hand-menu {
+  position: absolute;
+  top: 0;
+  right: 5px;
+  z-index: 2;
+  margin-bottom: 0;
+  cursor: pointer;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
 
 .mtg-card-holder-opponent {
   position: relative;
@@ -590,8 +615,47 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   padding: 0 !important;
 }
  .playmat-opponent-selected {
-   box-shadow:0 0 0 5px white inset;
+   border: solid 2px mat.get-color-from-palette($fddp-palette-primary-dark, 200);
+   border-radius: 5px;
+   box-shadow: inset 0 0 4px 2px mat.get-color-from-palette($fddp-palette-primary-dark, 200);
  }
+
+.playmat-opponent .playmat-opponent-data {
+  min-width: 604px;
+  max-width: 604px;
+  min-height: 214px;
+  max-height: 214px;
+  position: relative;
+}
+
+.playmat-opponent .opponent-information {
+  position: absolute;
+  top: 0;
+  left: 5px;
+  z-index: 50;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+.playmat-opponent-selector {
+  min-width: 604px;
+  max-width: 604px;
+  min-height: 214px;
+  max-height: 214px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.playmat-opponent-data .playmat-opponent-card-data {
+  min-width: 604px;
+  max-width: 604px;
+  min-height: 214px;
+  max-height: 214px;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 
 .opponent-playmat-holder {
   max-height: 475px;
@@ -954,12 +1018,54 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   max-height: 105px;
 }
 
-.commander-dashboard-button-holder {
+.commander-dashboard-custom-counter {
   position: relative;
-  max-width: 254px;
-  min-width: 254px;
-  min-height: 105px;
-  max-height: 105px;
+  display: block;
+  float: left;
+  max-width: 225px;
+  min-width: 225px;
+  min-height: 165px;
+  max-height: 165px;
+  pointer-events: all;
+}
+
+.commander-dashboard-custom-counter .custom-counter-close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+.commander-dashboard-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100%;
+}
+
+.commander-dashboard-select {
+  max-width: 100px;
+  min-width: 100px;
+  max-height: 50px;
+  min-height: 50px;
+}
+
+.commander-dashboard-select-holder {
+  position: absolute;
+  bottom: 60px;
+  left: 5px;
+}
+
+.commander-dashboard-text {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+}
+
+commander-dashboard-select-zone {
+  position: absolute;
+  bottom: 10px;
+  left: 150px;
 }
 
 .selected-commander-viewer {

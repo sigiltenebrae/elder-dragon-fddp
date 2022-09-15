@@ -444,15 +444,49 @@ export class PlaymatResizedComponent implements OnInit {
     return count;
   }
 
-  typeCount(player: any, type: string) {
+  typeCount(player: any, zone: string, type: string) {
     let count = 0;
-    if (player) {
-      for (let spot of player.playmat) {
-        for (let card of spot) {
-          if (card.types) {
-            for (let card_type of card.types) {
-              if (type.toLowerCase() === card_type.toLowerCase()) {
-                count++;
+    if (player && zone && type && zone !== '' && type !== '') {
+      let players = []
+      if (player === 'All')
+      {
+        players = this.players;
+      }
+      else {
+        players = [player];
+      }
+      for (let play of players) {
+        if (zone === 'Grave') {
+          for (let card of play.grave) {
+            if (card.types) {
+              for (let card_type of card.types) {
+                if (type.toLowerCase() === card_type.toLowerCase()) {
+                  count++;
+                }
+              }
+            }
+          }
+        }
+        else if (zone === 'Exile') {
+          for (let card of play.exile) {
+            if (card.types) {
+              for (let card_type of card.types) {
+                if (type.toLowerCase() === card_type.toLowerCase()) {
+                  count++;
+                }
+              }
+            }
+          }
+        }
+        else if (zone === 'Play') {
+          for (let spot of play.playmat) {
+            for (let card of spot) {
+              if (card.types) {
+                for (let card_type of card.types) {
+                  if (type.toLowerCase() === card_type.toLowerCase()) {
+                    count++;
+                  }
+                }
               }
             }
           }
