@@ -238,7 +238,7 @@
              (cdkDropListDropped)="moveCardToZone($event, 'grave', true)"
              [cdkDropListData]="sidenav_selected_player.grave">
           <div *ngFor="let card of sidenav_selected_player.grave">
-            <div *ngIf="(card.sidenav_visible)" class="sidenav-list-item"
+            <div *ngIf="card.sidenav_visible && card.visible.includes(user.id)" class="sidenav-list-item"
                [ngClass]="{'sidenav-list-item-selected': card.selected}"
                (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
                (cdkDragStarted)="hovered_card=null; selectCard(card, sidenav_selected_player.grave);"
@@ -248,6 +248,13 @@
               {{card.name}}
               <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="mtg-card-user" loading="lazy">
               <img *cdkDragPlaceholder class="mtg-card-user" [src]="card.image" [alt]="card.name" loading="lazy">
+            </div>
+            <div *ngIf="card.sidenav_visible && !card.visible.includes(user.id)" class="sidenav-list-item"
+                 [ngClass]="{'sidenav-list-item-selected': card.selected}"
+                 (pointerenter)="hovered_card=null" (pointerleave)="hovered_card=null"
+                 [cdkDragDisabled]="true" (contextmenu)="onRightClick($event, {type: 'sidenav_grave', card: card, from: sidenav_selected_player.grave})"
+                 cdkDrag>
+              -------- Hidden --------
             </div>
           </div>
         </div>
@@ -284,8 +291,8 @@
         <div class="sidenav-list" cdkDropList
              (cdkDropListDropped)="moveCardToZone($event, 'exile', true)"
              [cdkDropListData]="sidenav_selected_player.exile">
-          <div *ngFor="let card of sidenav_selected_player.exile"
-               class="sidenav-list-item"
+          <div *ngFor="let card of sidenav_selected_player.exile">
+            <div *ngIf="(card.sidenav_visible && card.visible.includes(user.id))" class="sidenav-list-item"
                [ngClass]="{'sidenav-list-item-selected': card.selected}"
                (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
                (cdkDragStarted)="hovered_card=null; selectCard(card, sidenav_selected_player.exile);"
@@ -293,9 +300,17 @@
                (contextmenu)="onRightClick($event, {type: 'sidenav_exile', card: card, from: sidenav_selected_player.exile})"
                [cdkDragDisabled]="!card.sidenav_visible"
                cdkDrag>
-            {{card.name}}
-            <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="mtg-card-user" loading="lazy">
-            <img *cdkDragPlaceholder class="mtg-card-user" [src]="card.image" [alt]="card.name" loading="lazy">
+              {{card.name}}
+              <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="mtg-card-user" loading="lazy">
+              <img *cdkDragPlaceholder class="mtg-card-user" [src]="card.image" [alt]="card.name" loading="lazy">
+            </div>
+            <div *ngIf="card.sidenav_visible && !card.visible.includes(user.id)" class="sidenav-list-item"
+                 [ngClass]="{'sidenav-list-item-selected': card.selected}"
+                 (pointerenter)="hovered_card=null" (pointerleave)="hovered_card=null"
+                 [cdkDragDisabled]="true" (contextmenu)="onRightClick($event, {type: 'sidenav_exile', card: card, from: sidenav_selected_player.exile})"
+                 cdkDrag>
+              -------- Hidden --------
+            </div>
           </div>
         </div>
       </div>
@@ -331,8 +346,8 @@
         <div class="sidenav-list" cdkDropList
              (cdkDropListDropped)="moveCardToZone($event, 'temp_zone', true)"
              [cdkDropListData]="sidenav_selected_player.temp_zone">
-          <div *ngFor="let card of sidenav_selected_player.temp_zone"
-               class="sidenav-list-item"
+          <div *ngFor="let card of sidenav_selected_player.temp_zone">
+            <div class="sidenav-list-item" *ngIf="(card.sidenav_visible && card.visible.includes(user.id))"
                [ngClass]="{'sidenav-list-item-selected': card.selected}"
                (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
                (cdkDragStarted)="hovered_card=null; selectCard(card, sidenav_selected_player.temp_zone);"
@@ -340,9 +355,17 @@
                (contextmenu)="onRightClick($event, {type: 'sidenav_temp_zone', card: card, from: sidenav_selected_player.temp_zone})"
                [cdkDragDisabled]="!card.sidenav_visible"
                cdkDrag>
-            {{card.name}}
-            <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="mtg-card-user" loading="lazy">
-            <img *cdkDragPlaceholder class="mtg-card-user" [src]="card.image" [alt]="card.name" loading="lazy">
+              {{card.name}}
+              <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="mtg-card-user" loading="lazy">
+              <img *cdkDragPlaceholder class="mtg-card-user" [src]="card.image" [alt]="card.name" loading="lazy">
+            </div>
+            <div *ngIf="card.sidenav_visible && !card.visible.includes(user.id)" class="sidenav-list-item"
+                 [ngClass]="{'sidenav-list-item-selected': card.selected}"
+                 (pointerenter)="hovered_card=null" (pointerleave)="hovered_card=null"
+                 [cdkDragDisabled]="true" (contextmenu)="onRightClick($event, {type: 'sidenav_temp_zone', card: card, from: sidenav_selected_player.temp_zone})"
+                 cdkDrag>
+              -------- Hidden --------
+            </div>
           </div>
         </div>
       </div>

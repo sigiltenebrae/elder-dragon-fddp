@@ -625,7 +625,7 @@ export class PlaymatResizedComponent implements OnInit {
    * @param location string value of where to move the card.
    * Accepts: 'hand', 'deck', 'grave', 'exile', 'temp_zone', 'command_zone' or 'play'
    */
-  moveCardToZone(event: any, location: string, sidebar?: boolean) {
+  moveCardToZone(event: any, location: string, sidebar?: boolean, facedown?: boolean) {
     //Hand, Command Zone, Deck, Grave, Exile, Temp Zone, Play
     if (location !== 'play') {
       for (let card_select of this.selected_cards) {
@@ -640,6 +640,8 @@ export class PlaymatResizedComponent implements OnInit {
               moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex);
             }
             else {
+              card_select.card.visible = [this.user.id];
+              card_select.facedown = false;
               transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).hand, card_select.from.indexOf(card_select.card), event.currentIndex);
             }
             break;
@@ -648,6 +650,8 @@ export class PlaymatResizedComponent implements OnInit {
               card_select.from.splice(card_select.from.indexOf(card_select.card), 1);
               break;
             }
+            card_select.card.visible = [];
+            card_select.card.facedown = false;
             this.clearCard(card_select.card); //wipe all counters
             if (card_select.from === this.getPlayer(card_select.card.owner).deck.cards) { //If it is already in the deck
               if (!(sidebar && this.sidenav_sort !== '')) { //if it is trying to move in a sorted sidebar, prevent
@@ -670,6 +674,8 @@ export class PlaymatResizedComponent implements OnInit {
               card_select.from.splice(card_select.from.indexOf(card_select.card), 1);
               break;
             }
+            card_select.card.visible = [];
+            card_select.card.facedown = false;
             this.clearCard(card_select.card); //wipe all counters
             if (card_select.from === this.getPlayer(card_select.card.owner).deck.cards) { //If it is already in the deck
               moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex)
@@ -682,6 +688,10 @@ export class PlaymatResizedComponent implements OnInit {
             if (card_select.card.is_token) {
               card_select.from.splice(card_select.from.indexOf(card_select.card), 1);
               break;
+            }
+            card_select.card.visible = [];
+            for (let player of this.players) {
+              card_select.card.visible.push(player.id);
             }
             this.clearCard(card_select.card); //wipe all counters
             if (card_select.from === this.getPlayer(card_select.card.owner).grave) { //If it is already in grave
@@ -704,6 +714,16 @@ export class PlaymatResizedComponent implements OnInit {
             if (card_select.card.is_token) {
               card_select.from.splice(card_select.from.indexOf(card_select.card), 1);
               break;
+            }
+            card_select.card.visible = [];
+            if (facedown) {
+              card_select.facedown = true;
+            }
+            else {
+              card_select.facedown = false;
+              for (let player of this.players) {
+                card_select.card.visible.push(player.id);
+              }
             }
             this.clearCard(card_select.card); //wipe all counters
             if (card_select.from === this.getPlayer(card_select.card.owner).exile) { //If it is already in exile
@@ -729,6 +749,19 @@ export class PlaymatResizedComponent implements OnInit {
               }
             }
             else {
+              if (facedown) {
+                card_select.visible = [];
+                card_select.card.facedown = true;
+              }
+              else if (card_select.card.facedown) {
+
+              }
+              else {
+                card_select.visible = [];
+                for (let player of this.players) {
+                  card_select.card.visible.push(player.id);
+                }
+              }
               if (sidebar) {
                 if (!(sidebar && this.sidenav_sort !== '')) {
                   transferArrayItem(card_select.from, event.container.data, card_select.from.indexOf(card_select.card), event.currentIndex);
@@ -741,6 +774,11 @@ export class PlaymatResizedComponent implements OnInit {
             break;
           case 'command_zone':
             if (card_select.card.iscommander) {
+              card_select.card.visible = [];
+              card_select.card.facedown = false;
+              for (let player of this.players) {
+                card_select.card.visible.push(player.id);
+              }
               if (card_select.from !== this.getPlayer(card_select.card.owner).deck.commander) { //Do not allow moving commanders via drag
                 transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.commander, card_select.from.indexOf(card_select.card), 0);
               }
@@ -761,11 +799,27 @@ export class PlaymatResizedComponent implements OnInit {
             let current_index = spot_index + spot_offset;
             if (current_index >= this.user.playmat.length) { current_index -= this.user.playmat.length }
             if (this.user.playmat[current_index].length < 3) {
+              if (facedown) { //card is being sent to play face down
+                card_select.card.visible = [];
+                card_select.card.facedown = true;
+              }
+              else if (card_select.card.facedown) { //card is already in play, but face down
+                //don't change the visibility
+              }
+              else { //card is entering play not facedown
+                card_select.card.visible = [];
+                for (let player of this.players) {
+                  card_select.card.visible.push(player.id);
+                }
+              }
               this.user.playmat[current_index].push(card_select.card);
               card_select.from.splice(card_select.from.indexOf(card_select.card), 1);
               break;
             }
           }
+        }
+        else { //visibility won't change
+          moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         }
       }
     }
@@ -859,6 +913,9 @@ export class PlaymatResizedComponent implements OnInit {
   drawX(count: any) {
     let num_count = Number(count);
     for (let i = 0; i < num_count; i++) {
+      if (!this.user.deck.cards[0].visible.includes(this.user.id)) {
+        this.user.deck.cards[0].visible.push(this.user.id);
+      }
       this.user.hand.push(this.user.deck.cards[0]);
       this.user.deck.cards.splice(0, 1);
     }
@@ -1021,6 +1078,13 @@ export class PlaymatResizedComponent implements OnInit {
           }
         }
         else {
+          item.sidenav_visible = false;
+        }
+      }
+    }
+    if ((this.sidenav_sort && this.sidenav_sort !== '') || (this.sidenav_sort_type && this.sidenav_sort_type != '')){
+      for (let item of items) {
+        if (!item.visible.includes(this.user.id)) {
           item.sidenav_visible = false;
         }
       }
