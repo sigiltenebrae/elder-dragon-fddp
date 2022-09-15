@@ -389,11 +389,8 @@
                                   'player-button-turn': player.turn == current_turn}">
                 <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
                   <div fxLayout="column" fxFlex="100">
-                    <button
+                    <button (pointerenter)="hovered_card=isOpponent(player) ? player.deck.commander[0]: null" (pointerleave)="hovered_card=null"
                       class="player-button"
-                      matTooltip="Hand: {{player.hand.length}} Deck: {{player.deck.cards.length}} Grave: {{player.grave.length}} Exile: {{player.exile.length}}"
-                      matTooltipPosition="right"
-                      matTooltipShowDelay="1000"
                       mat-button
                       (click)="selectPlayer(player)">
                       {{player.name}}
@@ -402,7 +399,7 @@
                   <div fxLayout="column" fxFlex="100">
                     <div fxLayout="row" fxFlex>
                       <div class="column" fxFlex>
-                        <button *ngIf="isOpponent(player)" class="player-button" mat-button disabled style="color: white">
+                        <button (pointerenter)="hovered_card=player.deck.commander.length>1 ? player.deck.commander[1] : null" (pointerleave)="hovered_card=null" *ngIf="isOpponent(player)" class="player-button" mat-button disabled style="color: white">
                           {{player.life}}
                         </button>
                         <button *ngIf="!isOpponent(player)" class="player-button" mat-button
@@ -631,11 +628,12 @@
                     <div *ngIf="user.deck.commander_saved.length == 1">
                       <img class="commander-viewer-single" src="{{user.deck.commander_saved[0].image}}" loading="lazy"
                            (contextmenu)="onRightClick($event, {type: 'commander', card: user.deck.commander_saved[0]});
-                                    selectCard(user.deck.commander_saved[0], user.deck.commander, true);">
+                                    selectCard(user.deck.commander_saved[0], user.deck.commander, true);"
+                           (pointerenter)="hovered_card=user.deck.commander_saved[0]" (pointerleave)="hovered_card=null">
                     </div>
                     <div *ngIf="user.deck.commander_saved.length == 2" class="commander-viewer-partner-holder">
-                      <img class="commander-viewer-partner-1" src="{{user.deck.commander_saved[0].image}}" loading="lazy" (contextmenu)="onRightClick($event, {type: 'commander', card: user.deck.commander_saved[0]}); selectCard(user.deck.commander_saved[0], user.deck.commander, true);">
-                      <img class="commander-viewer-partner-2" src="{{user.deck.commander_saved[1].image}}" loading="lazy" (contextmenu)="onRightClick($event, {type: 'commander', card: user.deck.commander_saved[1]}); selectCard(user.deck.commander_saved[1], user.deck.commander, true);">
+                      <img (pointerenter)="hovered_card=user.deck.commander_saved[0]" (pointerleave)="hovered_card=null" class="commander-viewer-partner-1" src="{{user.deck.commander_saved[0].image}}" loading="lazy" (contextmenu)="onRightClick($event, {type: 'commander', card: user.deck.commander_saved[0]}); selectCard(user.deck.commander_saved[0], user.deck.commander, true);">
+                      <img (pointerenter)="hovered_card=user.deck.commander_saved[1]" (pointerleave)="hovered_card=null" class="commander-viewer-partner-2" src="{{user.deck.commander_saved[1].image}}" loading="lazy" (contextmenu)="onRightClick($event, {type: 'commander', card: user.deck.commander_saved[1]}); selectCard(user.deck.commander_saved[1], user.deck.commander, true);">
                     </div>
                   </mat-card>
                 </div>
