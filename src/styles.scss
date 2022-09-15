@@ -693,7 +693,7 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 
 .user-deck {
   position: fixed;
-  z-index: 2;
+  z-index: 3;
   bottom: 10px;
   right: 10px;
 }
@@ -926,10 +926,26 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   border-radius: 5px;
 }
 
-.commander-viewer-mat-card .commander-counter {
+.commander-counter-holder {
   position: absolute;
   bottom: 0;
   left: 0;
+  min-width: 75px;
+  min-height: 32px;
+  max-width: 75px;
+  max-height: 32px;
+  margin: 0;
+}
+
+.commander-counter-container {
+  position: relative;
+  min-width: 75px;
+  min-height: 32px;
+  max-width: 75px;
+  max-height: 32px;
+}
+
+.commander-viewer-mat-card .commander-counter {
   min-height: 32px;
   max-height: 32px;
   min-width: 32px;
@@ -941,19 +957,16 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   justify-content: center;
 }
 
+.commander-viewer-mat-card .commander-counter-1 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
 .commander-viewer-mat-card .commander-counter-2 {
   position: absolute;
   bottom: 0;
   right: 0;
-  min-height: 32px;
-  max-height: 32px;
-  min-width: 32px;
-  max-width: 32px;
-  margin: 3px;
-  z-index: 15;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .commander-viewer-partner-holder {
@@ -1003,6 +1016,14 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   border-radius: 5px;
   display: block;
   z-index: 12;
+}
+
+.commander-viewer-partner-image {
+  min-width: 65px;
+  min-height: 95px;
+  max-width: 65px;
+  max-height: 95px;
+  border-radius: 5px;
 }
 
 .commander-viewer-partner-holder .commander-viewer-partner-1:hover,
