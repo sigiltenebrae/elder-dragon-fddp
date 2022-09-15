@@ -229,10 +229,16 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   border-radius: 5px;
   margin: 0;
   background-color: mat.get-color-from-palette($fddp-palette-primary-dark, 500);
+  @include mat.elevation(2);
 }
 
 .cdk-drag-placeholder {
   opacity: 0;
+}
+
+.cdk-drag-preview {
+  @include mat.elevation-transition();
+  @include mat.elevation(6)
 }
 
 .mtg-card-user-container .mtg-card-user {

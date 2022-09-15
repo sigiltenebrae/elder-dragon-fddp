@@ -570,7 +570,7 @@
                       (dblclick)="sendSelectedToSpot(spot, 'play')"
                      (contextmenu)="onRightClick($event, {type: 'usermat', spot: spot})">
                   <div *ngFor="let card of spot; let i = index">
-                    <mat-card [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2}"
+                    <div [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2}"
                          (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
                          (cdkDragStarted)="hovered_card=null; selectCard(card, spot);"
                          class="mtg-card-user-container" [@userTappedState]="card.tapped"
@@ -590,7 +590,7 @@
                         <a [ngClass]="{'mat-card-power-tough-text-up': card.power_mod > 0, 'mat-card-power-tough-text-down': card.power_mod < 0}" class="mat-card-power-tough-text" (click)="card.power_mod = card.power_mod + 1" (contextmenu)="onRightClick($event, {type: 'power', card: card})">{{card.power + card.power_mod}}</a>/
                         <a [ngClass]="{'mat-card-power-tough-text-up': card.toughness_mod > 0, 'mat-card-power-tough-text-down': card.toughness_mod < 0}" class="mat-card-power-tough-text" (click)="card.toughness_mod = card.toughness_mod + 1" (contextmenu)="onRightClick($event, {type: 'toughness', card: card})">{{card.toughness + card.toughness_mod}}</a></h4>
                       <h4 *ngIf="card.loyalty && card.visible.includes(user.id)" class="mtg-card-loyalty"><a class="mat-card-power-tough-text" [ngClass]="{'mat-card-power-tough-text-up': card.loyalty_mod > 0, 'mat-card-power-tough-text-down': card.loyalty_mod < 0}" (click)="card.loyalty_mod = card.loyalty_mod + 1" (contextmenu)="onRightClick($event, {type: 'loyalty', card: card})">{{card.loyalty + card.loyalty_mod}}</a></h4>
-                    </mat-card>
+                    </div>
                   </div>
                 </div>
               </mat-card>
