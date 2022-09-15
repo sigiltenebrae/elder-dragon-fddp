@@ -173,7 +173,6 @@ export class PlaymatResizedComponent implements OnInit {
           out_player.selected = false;
           this.shuffleDeck(out_player.deck.cards);
           this.players.push(out_player);
-          console.log(out_player);
           resolve();
         }
         else{
@@ -259,6 +258,10 @@ export class PlaymatResizedComponent implements OnInit {
 
   @HostListener('document:keyup.control', ['$event']) onCtrlUp(event: KeyboardEvent) {
     this.hoverdata.control_pressed = false;
+  }
+
+  @HostListener('document:keydown.escape', ['$event']) onEscape(event: KeyboardEvent) {
+    this.clearSelection();
   }
 
   togglePreview() {
