@@ -116,6 +116,9 @@
         <button mat-menu-item (click)="scrySendTo(rightclicked_item.card, 'bottom')">Send to Deck Bottom</button>
         <button mat-menu-item (click)="scrySendTo(rightclicked_item.card, 'temp_zone')">Send to Temp Zone</button>
       </div>
+      <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'usermat'">
+        <button mat-menu-item>Test Button</button>
+      </div>
     </ng-template>
   </div>
 </mat-menu>
@@ -564,7 +567,8 @@
                      cdkDropList
                      [cdkDropListData]="spot"
                      (cdkDropListDropped)="moveCardToZone($event, 'play')"
-                      (dblclick)="sendSelectedToSpot(spot, 'play')">
+                      (dblclick)="sendSelectedToSpot(spot, 'play')"
+                     (contextmenu)="onRightClick($event, {type: 'usermat', spot: spot})">
                   <div *ngFor="let card of spot; let i = index">
                     <mat-card [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2}"
                          (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
@@ -587,7 +591,6 @@
                         <a [ngClass]="{'mat-card-power-tough-text-up': card.toughness_mod > 0, 'mat-card-power-tough-text-down': card.toughness_mod < 0}" class="mat-card-power-tough-text" (click)="card.toughness_mod = card.toughness_mod + 1" (contextmenu)="onRightClick($event, {type: 'toughness', card: card})">{{card.toughness + card.toughness_mod}}</a></h4>
                       <h4 *ngIf="card.loyalty && card.visible.includes(user.id)" class="mtg-card-loyalty"><a class="mat-card-power-tough-text" [ngClass]="{'mat-card-power-tough-text-up': card.loyalty_mod > 0, 'mat-card-power-tough-text-down': card.loyalty_mod < 0}" (click)="card.loyalty_mod = card.loyalty_mod + 1" (contextmenu)="onRightClick($event, {type: 'loyalty', card: card})">{{card.loyalty + card.loyalty_mod}}</a></h4>
                     </mat-card>
-
                   </div>
                 </div>
               </mat-card>

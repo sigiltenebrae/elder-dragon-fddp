@@ -1106,6 +1106,8 @@ export class PlaymatResizedComponent implements OnInit {
 
   onRightClick(event: MouseEvent, item: any) {
     event.preventDefault();
+    event.stopPropagation();
+    console.log(event);
     if (item.type && item.type !== 'none') {
       switch (item.type) {
         case 'life':
