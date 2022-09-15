@@ -1027,13 +1027,10 @@ export class PlaymatResizedComponent implements OnInit {
   @ViewChild('fddp_sidenav') fddp_sidenav: any;
   openSideNav(type: string) {
     this.sidenav_selected_player = this.user;
-    this.getSidenavSort(this.user.deck.cards)
-    this.getSidenavSort(this.user.grave);
-    this.getSidenavSort(this.user.exile);
-    this.getSidenavSort(this.user.temp_zone);
     this.sidenav_type = type;
     this.sidenav_sort = '';
     this.sidenav_sort_type = '';
+    this.getSidenavSort();
     this.fddp_sidenav.open();
   }
 
@@ -1046,22 +1043,9 @@ export class PlaymatResizedComponent implements OnInit {
     this.sidenav_sort = '';
   }
 
-  updateSidenav() {
-    if (this.sidenav_type === 'grave') {
-      this.getSidenavSort(this.sidenav_selected_player.grave);
-    }
-    else if (this.sidenav_type === 'exile') {
-      this.getSidenavSort(this.sidenav_selected_player.exile);
-    }
-    else if (this.sidenav_type === 'temp_zone') {
-      this.getSidenavSort(this.sidenav_selected_player.temp_zone);
-    }
-    else if (this.sidenav_type === 'deck') {
-      this.getSidenavSort(this.sidenav_selected_player.deck.cards);
-    }
-  }
+  getSidenavSort() {
+    let items: any[] = this.getSidenavList();
 
-  getSidenavSort(items: any[]) {
     if (this.sidenav_sort && this.sidenav_sort !== '') {
       for (let item of items) {
         item.sidenav_visible = item.name.toLowerCase().includes(this.sidenav_sort.toLowerCase());
@@ -1091,15 +1075,35 @@ export class PlaymatResizedComponent implements OnInit {
         }
       }
     }
-    if ((this.sidenav_sort && this.sidenav_sort !== '') || (this.sidenav_sort_type && this.sidenav_sort_type != '')){
-      for (let item of items) {
-        if (!item.visible.includes(this.user.id)) {
-          item.sidenav_visible = false;
+    if (this.sidenav_type !== 'deck') {
+      if ((this.sidenav_sort && this.sidenav_sort !== '') || (this.sidenav_sort_type && this.sidenav_sort_type != '')){
+        for (let item of items) {
+          if (!item.visible.includes(this.user.id)) {
+            item.sidenav_visible = false;
+          }
         }
       }
     }
   }
 
+  getSidenavList() {
+    let items: any[] = []
+    switch(this.sidenav_type) {
+      case 'grave':
+        items = this.sidenav_selected_player.grave;
+        break;
+      case 'exile':
+        items = this.sidenav_selected_player.exile;
+        break;
+      case 'temp_zone':
+        items = this.sidenav_selected_player.temp_zone;
+        break;
+      case 'deck':
+        items = this.sidenav_selected_player.deck.cards;
+        break;
+    }
+    return items;
+  }
 
   /**------------------------------------------------
    *      Right-Click Replacement Functions         *
