@@ -692,7 +692,8 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 }
 
 .user-deck {
-  position: absolute;
+  position: fixed;
+  z-index: 2;
   bottom: 10px;
   right: 10px;
 }
@@ -749,9 +750,10 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 }
 
 .zone-hider-outer {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   right: 0;
+  z-index: 2;
   max-height: 400px;
   max-width: 250px;
   min-height: 400px;
