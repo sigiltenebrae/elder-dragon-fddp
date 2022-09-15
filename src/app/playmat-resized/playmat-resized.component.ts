@@ -63,9 +63,9 @@ export class PlaymatResizedComponent implements OnInit {
 
   rightclicked_item: any = null;
   sidenav_type: any = null;
+  sidenav_sort_type: string = '';
   selected_cards: any[] = [];
   sidenav_sort = '';
-  sidenav_scry = 0;
 
   hidden = false;
 
@@ -661,7 +661,7 @@ export class PlaymatResizedComponent implements OnInit {
             }
             else {
               if (sidebar) {
-                if (this.sidenav_sort === '') {
+                if (!(sidebar && this.sidenav_sort !== '')) {
                   transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), event.currentIndex);
                 }
               }
@@ -695,8 +695,10 @@ export class PlaymatResizedComponent implements OnInit {
               }
             }
             else {
-              if (sidebar && this.sidenav_sort === '') {
-                transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).grave, card_select.from.indexOf(card_select.card), event.currentIndex);
+              if (sidebar) {
+                if(this.sidenav_sort === '' && this.sidenav_sort_type === '') {
+                  transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).grave, card_select.from.indexOf(card_select.card), event.currentIndex);
+                }
               }
               else {
                 transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).grave, card_select.from.indexOf(card_select.card), 0);
@@ -715,8 +717,10 @@ export class PlaymatResizedComponent implements OnInit {
               }
             }
             else {
-              if (sidebar && this.sidenav_sort === '') {
-                transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).exile, card_select.from.indexOf(card_select.card), event.currentIndex);
+              if (sidebar) {
+                if (!(sidebar && this.sidenav_sort !== '')) {
+                  transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).exile, card_select.from.indexOf(card_select.card), event.currentIndex);
+                }
               }
               else {
                 transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).exile, card_select.from.indexOf(card_select.card), 0);
@@ -730,8 +734,10 @@ export class PlaymatResizedComponent implements OnInit {
               }
             }
             else {
-              if (sidebar && this.sidenav_sort === '') {
-                transferArrayItem(card_select.from, event.container.data, card_select.from.indexOf(card_select.card), event.currentIndex);
+              if (sidebar) {
+                if (!(sidebar && this.sidenav_sort !== '')) {
+                  transferArrayItem(card_select.from, event.container.data, card_select.from.indexOf(card_select.card), event.currentIndex);
+                }
               }
               else {
                 transferArrayItem(card_select.from, event.container.data, card_select.from.indexOf(card_select.card), 0);
@@ -965,6 +971,8 @@ export class PlaymatResizedComponent implements OnInit {
     this.getSidenavSort(this.user.exile);
     this.getSidenavSort(this.user.temp_zone);
     this.sidenav_type = type;
+    this.sidenav_sort = '';
+    this.sidenav_sort_type = '';
     this.fddp_sidenav.open();
   }
 
@@ -993,8 +1001,34 @@ export class PlaymatResizedComponent implements OnInit {
   }
 
   getSidenavSort(items: any[]) {
-    for (let item of items) {
-      item.sidenav_visible = item.name.toLowerCase().includes(this.sidenav_sort.toLowerCase());
+    if (this.sidenav_sort && this.sidenav_sort !== '') {
+      for (let item of items) {
+        item.sidenav_visible = item.name.toLowerCase().includes(this.sidenav_sort.toLowerCase());
+      }
+    }
+    else {
+      for (let item of items) {
+        item.sidenav_visible = true;
+      }
+    }
+    if (this.sidenav_sort_type && this.sidenav_sort_type != '') {
+      for (let item of items) {
+        if (item.types) {
+          let found = false;
+          for (let card_type of item.types) {
+            if (this.sidenav_sort_type.toLowerCase() === card_type.toLowerCase()) {
+              found = true;
+              break;
+            }
+          }
+          if (item.sidenav_visible) {
+            item.sidenav_visible = found;
+          }
+        }
+        else {
+          item.sidenav_visible = false;
+        }
+      }
     }
   }
 

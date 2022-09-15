@@ -227,20 +227,28 @@
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Type</mat-label>
+          <input type="text"
+                 placeholder="Card Type"
+                 matInput [(ngModel)]="sidenav_sort_type"
+                 (ngModelChange)="getSidenavSort(sidenav_selected_player.grave)">
+        </mat-form-field>
         <div class="sidenav-list" cdkDropList
              (cdkDropListDropped)="moveCardToZone($event, 'grave', true)"
              [cdkDropListData]="sidenav_selected_player.grave">
-          <div *ngFor="let card of sidenav_selected_player.grave"
-               class="sidenav-list-item"
+          <div *ngFor="let card of sidenav_selected_player.grave">
+            <div *ngIf="(card.sidenav_visible)" class="sidenav-list-item"
                [ngClass]="{'sidenav-list-item-selected': card.selected}"
                (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
                (cdkDragStarted)="hovered_card=null; selectCard(card, sidenav_selected_player.grave);"
                (click)="toggleCardSelect(card, sidenav_selected_player.grave, card.sidenav_visible)"
                [cdkDragDisabled]="!card.sidenav_visible" (contextmenu)="onRightClick($event, {type: 'sidenav_grave', card: card, from: sidenav_selected_player.grave})"
                cdkDrag>
-            {{card.name}}
-            <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="mtg-card-user" loading="lazy">
-            <img *cdkDragPlaceholder class="mtg-card-user" [src]="card.image" [alt]="card.name" loading="lazy">
+              {{card.name}}
+              <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="mtg-card-user" loading="lazy">
+              <img *cdkDragPlaceholder class="mtg-card-user" [src]="card.image" [alt]="card.name" loading="lazy">
+            </div>
           </div>
         </div>
       </div>
@@ -265,6 +273,13 @@
               {{card.name}}
             </mat-option>
           </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Type</mat-label>
+          <input type="text"
+                 placeholder="Card Type"
+                 matInput [(ngModel)]="sidenav_sort_type"
+                 (ngModelChange)="getSidenavSort(sidenav_selected_player.exile)">
         </mat-form-field>
         <div class="sidenav-list" cdkDropList
              (cdkDropListDropped)="moveCardToZone($event, 'exile', true)"
@@ -306,6 +321,13 @@
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Type</mat-label>
+          <input type="text"
+                 placeholder="Card Type"
+                 matInput [(ngModel)]="sidenav_sort_type"
+                 (ngModelChange)="getSidenavSort(sidenav_selected_player.temp_zone)">
+        </mat-form-field>
         <div class="sidenav-list" cdkDropList
              (cdkDropListDropped)="moveCardToZone($event, 'temp_zone', true)"
              [cdkDropListData]="sidenav_selected_player.temp_zone">
@@ -341,7 +363,7 @@
         <div class="sidenav-list" cdkDropList
              (cdkDropListDropped)="moveCardToZone($event, 'deck', true)"
              [cdkDropListData]="sidenav_selected_player.deck.cards">
-          <div *ngFor="let card of sidenav_selected_player.deck.cards; let c = index">
+          <div *ngFor="let card of sidenav_selected_player.deck.cards;">
             <div *ngIf="(sidenav_type === 'deck' && card.sidenav_visible)" class="sidenav-list-item"
               [ngClass]="{'sidenav-list-item-selected': card.selected}"
               (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
