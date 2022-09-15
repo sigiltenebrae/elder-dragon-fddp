@@ -286,6 +286,13 @@ export class PlaymatResizedComponent implements OnInit {
     card.tapped = card.tapped === 'tapped'? 'untapped': 'tapped';
   }
 
+  tapSelected() {
+    for (let card_select of this.selected_cards) {
+      this.tapCard(card_select.card);
+    }
+    this.clearSelection();
+  }
+
   untapAll() {
     for (let spot of this.user.playmat) {
       for (let card of spot) {
@@ -494,10 +501,11 @@ export class PlaymatResizedComponent implements OnInit {
     return count;
   }
 
-  createCounter() {
+  createCounter(type: string) {
     this.user.counters.push({
       color: '#' + Math.floor(Math.random()*16777215).toString(16),
-      value: 0
+      value: 0,
+      type: type
     })
   }
 
@@ -994,11 +1002,9 @@ export class PlaymatResizedComponent implements OnInit {
     while(true) {
       if (this.user.deck.cards.length > 0) {
         let cur_card = this.user.deck.cards[0];
-        console.log(cur_card);
         this.selectCard(cur_card, this.user.deck.cards);
         this.sendCardToZone(cur_card, this.user.deck.cards, 'temp_zone');
         if (cur_card.cmc != null) {
-          console.log(cur_card.cmc);
           if (cur_card.cmc < cmc) {
             if (cur_card.cmc > 0) {
               break;
@@ -1114,7 +1120,6 @@ export class PlaymatResizedComponent implements OnInit {
   onRightClick(event: MouseEvent, item: any) {
     event.preventDefault();
     event.stopPropagation();
-    console.log(event);
     if (item.type && item.type !== 'none') {
       switch (item.type) {
         case 'life':

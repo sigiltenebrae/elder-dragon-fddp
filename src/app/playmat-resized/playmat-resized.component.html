@@ -9,10 +9,10 @@
     <ng-template matMenuContent>
       <div *ngIf="rightclicked_item.type">
         <div *ngIf="rightclicked_item.type === 'user_play'">
-          <button mat-menu-item>Toggle Tap</button>
-          <button mat-menu-item>Lock Tap</button>
+          <button mat-menu-item (click)="tapSelected()">Toggle Tap</button>
+          <button mat-menu-item (click)="rightclicked_item.card.locked=!rightclicked_item.card.locked">(Un)Lock Tap</button>
           <button mat-menu-item>Shake</button>
-          <button mat-menu-item>Clone</button>
+          <button mat-menu-item (click)="cloneCard(rightclicked_item.card)">Clone</button>
           <button mat-menu-item [matMenuTriggerFor]="counters">Counters</button>
           <button mat-menu-item [matMenuTriggerFor]="orient">Orient</button>
           <button mat-menu-item [matMenuTriggerFor]="sendTo">Send To</button>
@@ -140,9 +140,9 @@
 </mat-menu>
 
 <mat-menu #orient="matMenu">
-  <button mat-menu-item>Alt Face</button>
+  <button mat-menu-item (click)="altFaceCard(rightclicked_item.card)">Alt Face</button>
   <button mat-menu-item>Invert</button>
-  <button mat-menu-item>Flip Face</button>
+  <button mat-menu-item (click)="rightclicked_item.card.facedown=!rightclicked_item.card.facedown">Flip Face</button>
 </mat-menu>
 
 <mat-menu #sendTo="matMenu">
@@ -176,8 +176,8 @@
 </mat-menu>
 
 <mat-menu #play_counter="matMenu">
-  <button mat-menu-item>Play Counter</button>
-  <button mat-menu-item>Type Counter</button>
+  <button mat-menu-item (click)="createCounter('play')">Play Counter</button>
+  <button mat-menu-item (click)="createCounter('type')">Type Counter</button>
 </mat-menu>
 
 <mat-menu #drawTo="matMenu">
@@ -334,41 +334,38 @@
   <mat-sidenav-content>
     <div *ngIf="user != null" class="counter-creator" fxLayout="column">
       <div class="counter-container">
-        <!--<button class="counter-creator-button" mat-fab (click)="createCounter()"><mat-icon>add</mat-icon></button>-->
-        <!--<button cdkDrag mat-fab (click)="counter.value = counter.value + 1"
-                (contextmenu)="onRightClick($event, {type: 'custom_counter', counter: counter})"
-                (keyup.escape)="deleteCounter(counter)"
-                *ngFor="let counter of user.counters" style="background: {{counter.color}}">{{counter.value}}</button>-->
-        <mat-card *ngFor="let counter of user.counters" class="commander-dashboard-custom-counter"
-                  style="padding: 0" cdkDrag>
-
-          <!--<div fxLayout="row" fxLayoutAlign="end">
-
-  &lt;!&ndash;          <h2 style="margin: 0 5px 5px 5px; padding: 0;">In Play: {{typeCount(user, custom_search.value)}} </h2>&ndash;&gt;
-          </div>-->
-          <mat-form-field appearance="fill" class="commander-dashboard-input">
-            <mat-label>Enter a Type</mat-label>
-            <input #custom_search matInput>
-          </mat-form-field>
-          <div fxFlex="100" fxLayout="row" fxLayoutGap="10" class="commander-dashboard-select-holder" fxLayoutAlign="space-between">
-            <mat-form-field appearance="outline" class="commander-dashboard-select">
-              <mat-label>Player</mat-label>
-              <mat-select #search_player>
-                <mat-option *ngFor="let player of players" [value]="player">{{player.name}}</mat-option>
-                <mat-option [value]="'All'">All</mat-option>
-              </mat-select>
+        <!---->
+        <div *ngFor="let counter of user.counters">
+          <mat-card *ngIf="counter.type === 'type'" class="commander-dashboard-custom-counter"
+                     style="padding: 0" cdkDrag>
+            <mat-form-field appearance="fill" class="commander-dashboard-input">
+              <mat-label>Enter a Type</mat-label>
+              <input #custom_search matInput>
             </mat-form-field>
-            <mat-form-field appearance="outline" class="commander-dashboard-select">
-              <mat-label>Zone</mat-label>
-              <mat-select #search_zone>
-                <mat-option [value]="'Play'">Play</mat-option>
-                <mat-option [value]="'Grave'">Graveyard</mat-option>
-                <mat-option [value]="'Exile'">Exile</mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
-          <h1 class="commander-dashboard-text" style="text-align: end">Count: {{typeCount(search_player.value, search_zone.value,  custom_search.value)}}</h1>
-        </mat-card>
+            <div fxFlex="100" fxLayout="row" fxLayoutGap="10" class="commander-dashboard-select-holder" fxLayoutAlign="space-between">
+              <mat-form-field appearance="outline" class="commander-dashboard-select">
+                <mat-label>Player</mat-label>
+                <mat-select #search_player>
+                  <mat-option *ngFor="let player of players" [value]="player">{{player.name}}</mat-option>
+                  <mat-option [value]="'All'">All</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="commander-dashboard-select">
+                <mat-label>Zone</mat-label>
+                <mat-select #search_zone>
+                  <mat-option [value]="'Play'">Play</mat-option>
+                  <mat-option [value]="'Grave'">Graveyard</mat-option>
+                  <mat-option [value]="'Exile'">Exile</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <h1 class="commander-dashboard-text" style="text-align: end">Count: {{typeCount(search_player.value, search_zone.value,  custom_search.value)}}</h1>
+          </mat-card>
+          <button *ngIf="counter.type === 'play'" cdkDrag mat-fab (click)="counter.value = counter.value + 1"
+                  (contextmenu)="onRightClick($event, {type: 'custom_counter', counter: counter})"
+                  (keyup.escape)="deleteCounter(counter)"
+                  style="background: {{counter.color}}; pointer-events: all;">{{counter.value}}</button>
+        </div>
       </div>
     </div>
     <div class="player-list">
