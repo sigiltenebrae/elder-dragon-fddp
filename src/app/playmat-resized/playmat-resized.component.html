@@ -7,120 +7,168 @@
 <mat-menu #rightMenu="matMenu">
   <div>
     <ng-template matMenuContent>
-      <button mat-menu-item (click)="untapAll()">Untap All</button>
-      <!-- Deck -->
-      <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'deck'">
-        <div>
-          <button mat-button>Draw</button>
-          <input (click)="$event.stopPropagation()" matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
+      <div *ngIf="rightclicked_item.type">
+        <div *ngIf="rightclicked_item.type === 'user_play'">
+          <button mat-menu-item>Toggle Tap</button>
+          <button mat-menu-item>Lock Tap</button>
+          <button mat-menu-item>Shake</button>
+          <button mat-menu-item>Clone</button>
+          <button mat-menu-item [matMenuTriggerFor]="counters">Counters</button>
+          <button mat-menu-item [matMenuTriggerFor]="orient">Orient</button>
+          <button mat-menu-item [matMenuTriggerFor]="sendTo">Send To</button>
+          <button mat-menu-item [matMenuTriggerFor]="revealTo">Reveal To</button>
         </div>
-        <div>
-          <button mat-button (click)="scryX(scry_val.value)">Scry</button>
-          <input (click)="$event.stopPropagation()" matInput #scry_val type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
+
+        <div *ngIf="rightclicked_item.type === 'user_playmat'">
+          <button mat-menu-item>Untap All</button>
+          <button mat-menu-item>Insert Token</button>
+          <button mat-menu-item [matMenuTriggerFor]="play_counter">Insert Counter</button>
+          <button mat-menu-item>End Turn</button>
         </div>
-        <div>
-          <button mat-button>Draw to Play</button>
-          <input (click)="$event.stopPropagation()" matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
+
+        <div *ngIf="rightclicked_item.type === 'commander'">
+          <button mat-menu-item>Change Deck</button>
+          <button mat-menu-item>Scoop Deck</button>
         </div>
-        <div>
-          <button mat-button>Draw to Grave</button>
-          <input (click)="$event.stopPropagation()" matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
+
+        <div *ngIf="rightclicked_item.type === 'user_hand'">
+          <button mat-menu-item [matMenuTriggerFor]="sendTo">Send To</button>
+          <button mat-menu-item>Send to Play Face Down</button>
+          <button mat-menu-item>Alt Face</button>
+          <button mat-menu-item>Shake</button>
+          <button mat-menu-item [matMenuTriggerFor]="revealTo">Reveal To</button>
         </div>
-        <div>
-          <button mat-button>Draw to Exile</button>
-          <input (click)="$event.stopPropagation()" matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
+
+        <div *ngIf="rightclicked_item.type === 'zone'">
+          <button mat-menu-item (click)="openSideNav('grave')">View Zone</button>
+          <button mat-menu-item>Select Random</button>
+          <button mat-menu-item [matMenuTriggerFor]="sendAllTo">Send All To</button>
+          <button mat-menu-item [matMenuTriggerFor]="revealAllTo">Reveal All To</button>
         </div>
-        <div>
-          <button mat-button>Draw to Temp</button>
-          <input (click)="$event.stopPropagation()" matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
+
+        <div *ngIf="rightclicked_item.type === 'zone_card'">
+          <button mat-menu-item [matMenuTriggerFor]="sendTo">Send To</button>
+          <button mat-menu-item>Alt Face</button>
+          <button mat-menu-item>Flip Face</button>
+          <button mat-menu-item>Shake</button>
         </div>
-        <div>
-          <button mat-button>Send to Selected</button>
-          <input (click)="$event.stopPropagation()" matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
+
+        <div *ngIf="rightclicked_item.type === 'deck'">
+          <button mat-menu-item>Flip Top</button>
+          <button mat-menu-item>Search</button>
+          <button mat-menu-item>Shuffle</button>
+          <div>
+            <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
+              <mat-label>Scry</mat-label>
+              <input #scry_count type="text" matInput (click)="$event.stopPropagation()" value="1">
+              <button matSuffix mat-icon-button aria-label="Scry"><mat-icon>visibility</mat-icon></button>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
+              <mat-label>Draw</mat-label>
+              <input #draw_count type="text" matInput (click)="$event.stopPropagation()" value="1">
+              <button matSuffix mat-icon-button aria-label="Draw"><mat-icon>add_circle</mat-icon></button>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
+              <mat-label>Draw To</mat-label>
+              <input #draw_to_count type="text" matInput (click)="$event.stopPropagation()" value="1">
+              <button matSuffix mat-icon-button aria-label="Draw" (click)="$event.stopPropagation()" [mat-menu-trigger-for]="drawTo"><mat-icon>navigate_next</mat-icon></button>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
+              <mat-label>Draw Until</mat-label>
+              <input #draw_until type="text" matInput (click)="$event.stopPropagation()" value="">
+              <button matSuffix mat-icon-button aria-label="Draw"><mat-icon>fast_forward</mat-icon></button>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
+              <mat-label>Cascade</mat-label>
+              <input #cascade_until type="text" matInput (click)="$event.stopPropagation()" value="">
+              <button matSuffix mat-icon-button aria-label="Draw"><mat-icon>fast_forward</mat-icon></button>
+            </mat-form-field>
+          </div>
         </div>
-        <button mat-menu-item (click)="openSideNav('deck')">Search Deck</button>
-        <button mat-menu-item (click)="drawUntil('Creature')">Draw Until Creature</button>
-        <div>
-          <button mat-button (click)="cascade(cascade_count.value)">Cascade</button>
-          <input (click)="$event.stopPropagation()" #cascade_count matInput type="number" style="width: 40px; margin: 2px; background: rgba(0,0,0,0); border: none; color: white">
+
+        <div *ngIf="rightclicked_item.type === 'deck_card'">
+          <button mat-menu-item [matMenuTriggerFor]="sendTo">Send To</button>
+          <button mat-menu-item>Shake</button>
         </div>
-        <button mat-menu-item (click)="shuffleDeck(user.deck.cards)">Shuffle</button>
-        <button mat-menu-item (click)="openTokenDialog()">Create Token</button>
-        <button mat-menu-item (click)="nextTurn()">Next Turn</button>
-        <button mat-menu-item (click)="togglePreview()">Toggle Preview</button>
-        <button mat-menu-item (click)="hidden=!hidden">Toggle Hidden</button>
-      </div>
-      <!-- Hand -->
-      <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'hand'">
-        <button mat-menu-item>Send to Play</button>
-        <button mat-menu-item>Send to Grave</button>
-        <button mat-menu-item>Send to Exile</button>
-        <button mat-menu-item>Send to Deck Top</button>
-        <button mat-menu-item>Send to Deck Bottom</button>
-        <button mat-menu-item>Send to Temp</button>
-        <button mat-menu-item>Send to Selected</button>
-      </div>
-      <!-- inPlayUser -->
-      <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'inPlayUser'">
-        <button mat-menu-item (click)="tapSpot(rightclicked_item.spot)">(un)Tap Stack</button>
-        <button mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.spot, 'hand')">Send to Hand</button>
-        <button mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.spot, 'grave')">Send to Grave</button>
-        <button mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.spot, 'exile')">Send to Exile</button>
-        <button mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.spot, 'temp_zone')">Send to Temp</button>
-        <button mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.spot, 'selected')">Send to Selected</button>
-        <button mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.spot, 'deck_top')">Send to Deck Top</button>
-        <button mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.spot, 'deck_bottom')">Send to Deck Bottom</button>
-        <button mat-menu-item (click)="rightclicked_item.card.counter_1 = !rightclicked_item.card.counter_1; rightclicked_item.card.counter_1_value=0">Toggle Counter 1</button>
-        <button mat-menu-item (click)="rightclicked_item.card.counter_2 = !rightclicked_item.card.counter_2; rightclicked_item.card.counter_2_value=0">Toggle Counter 2</button>
-        <button mat-menu-item (click)="rightclicked_item.card.counter_3 = !rightclicked_item.card.counter_3; rightclicked_item.card.counter_3_value=0">Toggle Counter 3</button>
-        <button mat-menu-item (click)="rightclicked_item.card.multiplier = !rightclicked_item.card.multiplier; rightclicked_item.card.multiplier_value=0">Toggle Multiplier</button>
-        <button *ngIf="rightclicked_item.card.back_face" mat-menu-item (click)="altFaceCard(rightclicked_item.card)">Alt Face</button>
-        <button mat-menu-item (click)="cloneCard(rightclicked_item.card)">Clone</button>
-        <button mat-menu-item (click)="rightclicked_item.card.locked = !rightclicked_item.card.locked;">Lock Card</button>
-        <button *ngFor="let token of rightclicked_item.card.tokens" mat-menu-item (click)="createToken(token)">Create {{token.name}} Token</button>
-      </div>
-      <!-- Grave -->
-      <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'grave'">
-        <button mat-menu-item (click)="openSideNav('grave')">View Graveyards</button>
-      </div>
-      <!-- Exile -->
-      <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'exile'">
-        <button mat-menu-item (click)="openSideNav('exile')">View Exiles</button>
-      </div>
-      <!-- Temp Zone -->
-      <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'temp-zone'">
-        <button mat-menu-item (click)="openSideNav('temp_zone')">View Temp Zones</button>
-      </div>
-      <!-- Sidenav -->
-      <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'sidenav'">
-        <button mat-menu-item>Send to Play</button>
-        <button mat-menu-item>Send to Grave</button>
-        <button mat-menu-item>Send to Exile</button>
-        <button mat-menu-item>Send to Deck Top</button>
-        <button mat-menu-item>Send to Deck Bottom</button>
-        <button mat-menu-item>Send to Hand</button>
-        <button mat-menu-item>Send to Temp</button>
-        <button mat-menu-item>Send to Selected</button>
-      </div>
-      <!-- Commander (command zone) -->
-      <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'commander'">
-        <button mat-menu-item (click)="openDeckSelectDialog()">Change Deck</button>
-        <button mat-menu-item (click)="castCommander(rightclicked_item.card)">Cast Commander</button>
-        <button *ngIf="user.deck.commander_saved.length == 2" mat-menu-item (click)="swapCommanders()">Swap Commanders</button>
-        <button mat-menu-item (click)="selectAllBlank('Creature')">Select All Creatures</button>
-        <button mat-menu-item (click)="openTokenDialog()">Create Token</button>
-      </div>
-      <!-- Scry -->
-      <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'scry'">
-        <button mat-menu-item (click)="scrySendTo(rightclicked_item.card, 'top')">Send to Deck Top</button>
-        <button mat-menu-item (click)="scrySendTo(rightclicked_item.card, 'bottom')">Send to Deck Bottom</button>
-        <button mat-menu-item (click)="scrySendTo(rightclicked_item.card, 'temp_zone')">Send to Temp Zone</button>
-      </div>
-      <div *ngIf="rightclicked_item.type && rightclicked_item.type === 'usermat'">
-        <button mat-menu-item>Test Button</button>
       </div>
     </ng-template>
   </div>
+</mat-menu>
+
+<mat-menu #hand_menu="matMenu">
+  <button mat-menu-item>Select Random</button>
+  <button mat-menu-item [matMenuTriggerFor]="sendAllTo">Send All To</button>
+  <button mat-menu-item [matMenuTriggerFor]="revealAllTo">Reveal All To</button>
+  <div>
+    <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
+      <mat-label>Mulligan</mat-label>
+      <input #mulligan type="text" matInput (click)="$event.stopPropagation()" value="7">
+      <button matSuffix mat-icon-button aria-label="Draw"><mat-icon>refresh</mat-icon></button>
+    </mat-form-field>
+  </div>
+</mat-menu>
+
+<mat-menu #counters="matMenu">
+  <button mat-menu-item>Counter 1</button>
+  <button mat-menu-item>Counter 2</button>
+  <button mat-menu-item>Counter 3</button>
+  <button mat-menu-item>Multiplier</button>
+</mat-menu>
+
+<mat-menu #orient="matMenu">
+  <button mat-menu-item>Alt Face</button>
+  <button mat-menu-item>Invert</button>
+  <button mat-menu-item>Flip Face</button>
+</mat-menu>
+
+<mat-menu #sendTo="matMenu">
+  <button mat-menu-item>Hand</button>
+  <button mat-menu-item>Graveyard</button>
+  <button mat-menu-item>Exile</button>
+  <button mat-menu-item>Deck Top</button>
+  <button mat-menu-item>Deck Bottom</button>
+  <button mat-menu-item>Temp Zone</button>
+  <button mat-menu-item>Selected Player</button>
+</mat-menu>
+
+<mat-menu #sendAllTo="matMenu">
+  <button mat-menu-item>Hand</button>
+  <button mat-menu-item>Graveyard</button>
+  <button mat-menu-item>Exile</button>
+  <button mat-menu-item>Deck Top</button>
+  <button mat-menu-item>Deck Bottom</button>
+  <button mat-menu-item>Temp Zone</button>
+  <button mat-menu-item>Selected Player</button>
+</mat-menu>
+
+<mat-menu #revealTo="matMenu">
+  <button mat-menu-item *ngFor="let player of players">{{player.name}}</button>
+  <button mat-menu-item>All</button>
+</mat-menu>
+
+<mat-menu #revealAllTo="matMenu">
+  <button mat-menu-item *ngFor="let player of players">{{player.name}}</button>
+  <button mat-menu-item>All</button>
+</mat-menu>
+
+<mat-menu #play_counter="matMenu">
+  <button mat-menu-item>Play Counter</button>
+  <button mat-menu-item>Type Counter</button>
+</mat-menu>
+
+<mat-menu #drawTo="matMenu">
+  <button mat-menu-item>Graveyard</button>
+  <button mat-menu-item>Exile</button>
+  <button mat-menu-item>Temp Zone</button>
+  <button mat-menu-item>Play</button>
 </mat-menu>
 
 <div class="fddp-hover-holder" [style.display]="hovered_card || preview ? 'block': 'none'" [style.pointer-events]="preview ? 'all': 'none'">
@@ -246,7 +294,7 @@
                (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
                (cdkDragStarted)="hovered_card=null; selectCard(card, sidenav_selected_player.grave);"
                (click)="toggleCardSelect(card, sidenav_selected_player.grave, card.sidenav_visible)"
-               [cdkDragDisabled]="!card.sidenav_visible" (contextmenu)="onRightClick($event, {type: 'sidenav_grave', card: card, from: sidenav_selected_player.grave})"
+               [cdkDragDisabled]="!card.sidenav_visible" (contextmenu)="onRightClick($event, {type: 'zone_card', card: card, from: sidenav_selected_player.grave})"
                cdkDrag>
               {{card.name}}
               <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="mtg-card-user" loading="lazy">
@@ -255,7 +303,7 @@
             <div *ngIf="card.sidenav_visible && !card.visible.includes(user.id)" class="sidenav-list-item"
                  [ngClass]="{'sidenav-list-item-selected': card.selected}"
                  (pointerenter)="hovered_card=null" (pointerleave)="hovered_card=null"
-                 [cdkDragDisabled]="true" (contextmenu)="onRightClick($event, {type: 'sidenav_grave', card: card, from: sidenav_selected_player.grave})"
+                 [cdkDragDisabled]="true" (contextmenu)="onRightClick($event, {type: 'zone_card', card: card, from: sidenav_selected_player.grave})"
                  cdkDrag>
               -------- Hidden --------
             </div>
@@ -300,7 +348,7 @@
                (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
                (cdkDragStarted)="hovered_card=null; selectCard(card, sidenav_selected_player.exile);"
                (click)="toggleCardSelect(card, sidenav_selected_player.exile, card.sidenav_visible)"
-               (contextmenu)="onRightClick($event, {type: 'sidenav_exile', card: card, from: sidenav_selected_player.exile})"
+               (contextmenu)="onRightClick($event, {type: 'zone_card', card: card, from: sidenav_selected_player.exile})"
                [cdkDragDisabled]="!card.sidenav_visible"
                cdkDrag>
               {{card.name}}
@@ -310,7 +358,7 @@
             <div *ngIf="card.sidenav_visible && !card.visible.includes(user.id)" class="sidenav-list-item"
                  [ngClass]="{'sidenav-list-item-selected': card.selected}"
                  (pointerenter)="hovered_card=null" (pointerleave)="hovered_card=null"
-                 [cdkDragDisabled]="true" (contextmenu)="onRightClick($event, {type: 'sidenav_exile', card: card, from: sidenav_selected_player.exile})"
+                 [cdkDragDisabled]="true" (contextmenu)="onRightClick($event, {type: 'zone_card', card: card, from: sidenav_selected_player.exile})"
                  cdkDrag>
               -------- Hidden --------
             </div>
@@ -355,7 +403,7 @@
                (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
                (cdkDragStarted)="hovered_card=null; selectCard(card, sidenav_selected_player.temp_zone);"
                (click)="toggleCardSelect(card, sidenav_selected_player.temp_zone, card.sidenav_visible)"
-               (contextmenu)="onRightClick($event, {type: 'sidenav_temp_zone', card: card, from: sidenav_selected_player.temp_zone})"
+               (contextmenu)="onRightClick($event, {type: 'zone_card', card: card, from: sidenav_selected_player.temp_zone})"
                [cdkDragDisabled]="!card.sidenav_visible"
                cdkDrag>
               {{card.name}}
@@ -365,7 +413,7 @@
             <div *ngIf="card.sidenav_visible && !card.visible.includes(user.id)" class="sidenav-list-item"
                  [ngClass]="{'sidenav-list-item-selected': card.selected}"
                  (pointerenter)="hovered_card=null" (pointerleave)="hovered_card=null"
-                 [cdkDragDisabled]="true" (contextmenu)="onRightClick($event, {type: 'sidenav_temp_zone', card: card, from: sidenav_selected_player.temp_zone})"
+                 [cdkDragDisabled]="true" (contextmenu)="onRightClick($event, {type: 'zone_card', card: card, from: sidenav_selected_player.temp_zone})"
                  cdkDrag>
               -------- Hidden --------
             </div>
@@ -402,7 +450,7 @@
               (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
               (cdkDragStarted)="hovered_card=null; selectCard(card, sidenav_selected_player.deck.cards);"
               (click)="toggleCardSelect(card, sidenav_selected_player.deck.cards, card.sidenav_visible)"
-              (contextmenu)="onRightClick($event, {type: 'sidenav_deck', card: card, from: sidenav_selected_player.deck.cards})"
+              (contextmenu)="onRightClick($event, {type: 'deck_card', card: card, from: sidenav_selected_player.deck.cards})"
               cdkDrag>
               {{card.name}}
               <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="mtg-card-user" loading="lazy">
@@ -568,7 +616,7 @@
                      [cdkDropListData]="spot"
                      (cdkDropListDropped)="moveCardToZone($event, 'play')"
                       (dblclick)="sendSelectedToSpot(spot, 'play')"
-                     (contextmenu)="onRightClick($event, {type: 'usermat', spot: spot})">
+                     (contextmenu)="onRightClick($event, {type: 'user_playmat', spot: spot})">
                   <div *ngFor="let card of spot; let i = index">
                     <div [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2}"
                          (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
@@ -580,7 +628,7 @@
                            class="mtg-card-user"
                            [src]="card.visible.includes(user.id) ? card.image: user.deck.sleeves"
                            [alt]="card.visible.includes(user.id) ? card.name: ''"
-                           (contextmenu)="onRightClick($event,{type: 'inPlayUser', card: card, spot: spot}); selectCard(card, spot);"
+                           (contextmenu)="onRightClick($event,{type: 'user_play', card: card, spot: spot}); selectCard(card, spot);"
                            (click)="toggleCardSelect(card, spot)" (dblclick)="tapCard(card)" loading="lazy">
                       <button *ngIf="card.counter_1" class="mtg-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true" (click)="card.counter_1_value = card.counter_1_value + 1" (contextmenu)="onRightClick($event, {type: 'counter_1', card: card})"><p>{{card.counter_1_value}}</p></button>
                       <button *ngIf="card.counter_2" class="mtg-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true" (click)="card.counter_2_value = card.counter_2_value + 1" (contextmenu)="onRightClick($event, {type: 'counter_2', card: card})"><p>{{card.counter_2_value}}</p></button>
@@ -619,10 +667,10 @@
                    [cdkDropListData]="user.hand"
                    (cdkDropListDropped)="moveCardToZone($event, 'hand')" fxFlexFill fxLayout="row" fxLayoutAlign="start">
                 <h1 class="hand-count">{{user.hand.length}}</h1>
-                <mat-icon class="hand-menu">menu</mat-icon>
+                <mat-icon [mat-menu-trigger-for]="hand_menu" class="hand-menu">more_vert</mat-icon>
                 <mat-card *ngFor="let card of user.hand" class="mtg-card-user-container"
                      fxFlex fxLayout="column"
-                     (contextmenu)="onRightClick($event, {type: 'hand', card: card, from: user.hand})"
+                     (contextmenu)="onRightClick($event, {type: 'user_hand', card: card, from: user.hand})"
                      (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
                      (click)="toggleCardSelect(card, user.hand)"
                      (cdkDragStarted)="hovered_card=null; selectCard(card, user.hand);"
@@ -663,7 +711,7 @@
                 [ngClass]="{'zones-arrow-on': !hidden, 'zones-arrow-off': hidden}">keyboard_arrow_right</mat-icon></button>
               <div class="user-grave">
                 <mat-card class="zone-data" (dblclick)="sendSelectedToSpot(user.grave, 'grave')"
-                          (contextmenu)="onRightClick($event, {type: 'grave'})"
+                          (contextmenu)="onRightClick($event, {type: 'zone'})"
                           cdkDropList [cdkDropListData]="user.grave"
                           cdkDropListOrientation="horizontal"
                           (cdkDropListDropped)="moveCardToZone($event, 'grave')">
@@ -680,7 +728,7 @@
               </div>
               <div class="user-exile">
                 <mat-card class="zone-data" (dblclick)="sendSelectedToSpot(user.exile, 'exile')"
-                          (contextmenu)="onRightClick($event, {type: 'exile'})"
+                          (contextmenu)="onRightClick($event, {type: 'zone'})"
                           cdkDropList [cdkDropListData]="user.exile"
                           cdkDropListOrientation="horizontal"
                           (cdkDropListDropped)="moveCardToZone($event, 'exile')">
@@ -698,7 +746,7 @@
               </div>
               <div class="user-temp-zone">
                 <mat-card class="zone-data" (dblclick)="sendSelectedToSpot(user.temp_zone, 'temp_zone')"
-                          (contextmenu)="onRightClick($event, {type: 'temp-zone'})"
+                          (contextmenu)="onRightClick($event, {type: 'zone'})"
                           cdkDropList [cdkDropListData]="user.temp_zone"
                           cdkDropListOrientation="horizontal"
                           (cdkDropListDropped)="moveCardToZone($event, 'temp_zone')">
