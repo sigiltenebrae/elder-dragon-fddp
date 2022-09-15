@@ -371,6 +371,7 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   min-height: 409px;
   max-height: 409px;
   height: 409px !important;
+  overflow: visible;
 }
 
 .playmat-user-devotions {
@@ -383,7 +384,7 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   min-height: 409px;
   max-height: 409px;
   height: 409px !important;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .playmat-user-devotions .devotion-holder {

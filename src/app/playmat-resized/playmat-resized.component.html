@@ -227,7 +227,7 @@
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" style="margin: 5px;">
           <mat-label>Type</mat-label>
           <input type="text"
                  placeholder="Card Type"
@@ -274,7 +274,7 @@
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" style="margin: 5px;">
           <mat-label>Type</mat-label>
           <input type="text"
                  placeholder="Card Type"
@@ -321,7 +321,7 @@
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" style="margin: 5px;">
           <mat-label>Type</mat-label>
           <input type="text"
                  placeholder="Card Type"
@@ -359,6 +359,13 @@
               {{card.name}}
             </mat-option>
           </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field appearance="outline" style="margin: 5px;">
+          <mat-label>Type</mat-label>
+          <input type="text"
+                 placeholder="Card Type"
+                 matInput [(ngModel)]="sidenav_sort_type"
+                 (ngModelChange)="getSidenavSort(sidenav_selected_player.deck.cards)">
         </mat-form-field>
         <div class="sidenav-list" cdkDropList
              (cdkDropListDropped)="moveCardToZone($event, 'deck', true)"
