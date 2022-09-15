@@ -107,11 +107,12 @@ export class PlaymatResizedComponent implements OnInit {
           deck.cards.forEach((card: any) => {
             if (card.count > 1) {
               for (let i = 1; i < card.count; i++) {
-                temp_sideboard.push(card);
+                temp_sideboard.push(JSON.parse(JSON.stringify(card)));
               }
             }
           });
           temp_sideboard.forEach((temp_card) => {
+            temp_card.id *= Math.random();
             deck.cards.push(temp_card);
           });
           deck.cards.forEach((card: any) => {
@@ -147,7 +148,6 @@ export class PlaymatResizedComponent implements OnInit {
             card.counter_3_value = 0;
             card.multiplier_value = 0;
             card.owner = out_player.deck.owner;
-            //card.owner = 'Liam';
             card.power_mod = 0;
             card.toughness_mod = 0;
             card.loyalty_mod = 0;
@@ -159,6 +159,7 @@ export class PlaymatResizedComponent implements OnInit {
             card.sidenav_visible = true;
             card.visible = [];
             card.alt = false;
+            card.facedown = false;
             if (card.iscommander) {
               out_player.deck.commander.push(card);
             }
@@ -172,6 +173,7 @@ export class PlaymatResizedComponent implements OnInit {
           out_player.selected = false;
           this.shuffleDeck(out_player.deck.cards);
           this.players.push(out_player);
+          console.log(out_player);
           resolve();
         }
         else{
@@ -269,13 +271,6 @@ export class PlaymatResizedComponent implements OnInit {
 
   isOpponent(player: any) {
     return player.name !== this.user.name
-  }
-
-  canSee(card: any, user: any) {
-    if (card.visible && card.visible.includes(user.name)) {
-      return true;
-    }
-    return false;
   }
 
   tapSpot(spot: any) {
