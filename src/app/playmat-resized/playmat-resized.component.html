@@ -19,11 +19,19 @@
           <button mat-menu-item [matMenuTriggerFor]="revealTo">Reveal To</button>
         </div>
 
+        <div *ngIf="rightclicked_item.type === 'opponent_play'">
+          <button mat-menu-item>Shake</button>
+        </div>
+
         <div *ngIf="rightclicked_item.type === 'user_playmat'">
           <button mat-menu-item>Untap All</button>
           <button mat-menu-item>Insert Token</button>
           <button mat-menu-item [matMenuTriggerFor]="play_counter">Insert Counter</button>
-          <button mat-menu-item>End Turn</button>
+          <button mat-menu-item (click)="nextTurn()">End Turn</button>
+        </div>
+
+        <div *ngIf="rightclicked_item.type === 'opponent_playmat'">
+          <button mat-menu-item>Taunt</button>
         </div>
 
         <div *ngIf="rightclicked_item.type === 'commander'">
@@ -39,6 +47,10 @@
           <button mat-menu-item [matMenuTriggerFor]="revealTo">Reveal To</button>
         </div>
 
+        <div *ngIf="rightclicked_item.type === 'opponent_hand'">
+          <button mat-menu-item>Shake</button>
+        </div>
+
         <div *ngIf="rightclicked_item.type === 'zone'">
           <button mat-menu-item (click)="openSideNav('grave')">View Zone</button>
           <button mat-menu-item>Select Random</button>
@@ -51,6 +63,10 @@
           <button mat-menu-item>Alt Face</button>
           <button mat-menu-item>Flip Face</button>
           <button mat-menu-item>Shake</button>
+        </div>
+
+        <div *ngIf="rightclicked_item.type === 'scry_card'">
+          <button mat-menu-item [matMenuTriggerFor]="sendTo">Send To</button>
         </div>
 
         <div *ngIf="rightclicked_item.type === 'deck'">
@@ -233,7 +249,7 @@
           <img class="scrydata-card" src="{{card.image}}"
                [ngClass]="{'mtg-card-user-selected': card.selected}"
                (click)="toggleCardSelect(card, temp_scry_zone);"
-               (contextmenu)="onRightClick($event,{type: 'scry', card: card});">
+               (contextmenu)="onRightClick($event,{type: 'scry_card', card: card});">
           <h1 class="scrydata-card-count">{{i + 1}}</h1>
         </div>
       </div>
@@ -554,7 +570,7 @@
             <div class="opponent-playmat-holder" fxLayout="row wrap" fxLayout.lt-md="column" fxLayoutAlign="center">
               <div *ngFor="let player of players">
                 <mat-card *ngIf="isOpponent(player)" class="playmat-opponent" fxLayout="row wrap" fxLayoutAlign="center center">
-                  <div class="playmat-opponent-data">
+                  <div class="playmat-opponent-data" (contextmenu)="onRightClick($event, {type: 'opponent_playmat'})">
                     <div class="opponent-information">
                       <h3>Hand: {{player.hand.length}}, Deck: {{player.deck.cards.length}}, Graveyard: {{player.grave.length}}, Exile: {{player.exile.length}}</h3>
                     </div>
@@ -567,7 +583,7 @@
                             <img class="mtg-card-opponent"
                                  [src]="card.visible.includes(user.id) ? card.image: player.deck.sleeves"
                                  [alt]="card.visible.includes(user.id) ? card.name: ''"
-                                 loading="lazy">
+                                 loading="lazy" (contextmenu)="onRightClick($event,{type: 'opponent_play', card: card, spot: spot})">
 
                             <button *ngIf="card.counter_1" class="mtg-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true"><p>{{card.counter_1_value}}</p></button>
                             <button *ngIf="card.counter_2" class="mtg-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>{{card.counter_2_value}}</p></button>
@@ -670,7 +686,7 @@
                 <mat-icon [mat-menu-trigger-for]="hand_menu" class="hand-menu">more_vert</mat-icon>
                 <mat-card *ngFor="let card of user.hand" class="mtg-card-user-container"
                      fxFlex fxLayout="column"
-                     (contextmenu)="onRightClick($event, {type: 'user_hand', card: card, from: user.hand})"
+                     (contextmenu)="onRightClick($event, {type: 'user_hand', card: card, from: user.hand}); selectCard(card, user.hand);"
                      (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
                      (click)="toggleCardSelect(card, user.hand)"
                      (cdkDragStarted)="hovered_card=null; selectCard(card, user.hand);"
