@@ -71,9 +71,9 @@
 
         <div *ngIf="rightclicked_item.type === 'zone_card'">
           <button mat-menu-item [matMenuTriggerFor]="sendTo">Send To</button>
-          <button mat-menu-item>Alt Face</button>
-          <button mat-menu-item>Flip Face</button>
-          <button mat-menu-item>Shake</button>
+          <button *ngIf="rightclicked_item.card.back_face" mat-menu-item (click)="altFaceCard(rightclicked_item.card)">Alt Face</button>
+          <button *ngIf="rightclicked_item.zone === 'exile' || rightclicked_item.zone === 'temp_zone'" mat-menu-item>Flip Face</button>
+          <button mat-menu-item (click)="shakeCard(rightclicked_item.card)">Shake</button>
         </div>
 
         <div *ngIf="rightclicked_item.type === 'scry_card'">
@@ -123,7 +123,7 @@
 
         <div *ngIf="rightclicked_item.type === 'deck_card'">
           <button mat-menu-item [matMenuTriggerFor]="sendTo">Send To</button>
-          <button mat-menu-item>Shake</button>
+          <button mat-menu-item (click)="shakeCard(rightclicked_item.card)">Shake</button>
         </div>
       </div>
     </ng-template>
@@ -131,14 +131,14 @@
 </mat-menu>
 
 <mat-menu #hand_menu="matMenu">
-  <button mat-menu-item>Select Random</button>
+  <button mat-menu-item (click)="selectRandom(user.hand)" >Select Random</button>
   <button mat-menu-item [matMenuTriggerFor]="sendAll">Send All To</button>
   <button mat-menu-item [matMenuTriggerFor]="revealAll">Reveal All To</button>
   <div>
     <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
       <mat-label>Mulligan</mat-label>
       <input #mulligan type="text" matInput (click)="$event.stopPropagation()" value="7">
-      <button matSuffix mat-icon-button aria-label="Draw"><mat-icon>refresh</mat-icon></button>
+      <button matSuffix mat-icon-button aria-label="Draw" (click)="mulliganHand(mulligan.value)"><mat-icon>refresh</mat-icon></button>
     </mat-form-field>
   </div>
 </mat-menu>
@@ -157,13 +157,13 @@
 </mat-menu>
 
 <mat-menu #sendTo="matMenu">
-  <button mat-menu-item>Hand</button>
-  <button mat-menu-item>Graveyard</button>
-  <button mat-menu-item>Exile</button>
-  <button mat-menu-item>Deck Top</button>
-  <button mat-menu-item>Deck Bottom</button>
-  <button mat-menu-item>Temp Zone</button>
-  <button mat-menu-item>Selected Player</button>
+  <button mat-menu-item (click)="selectCard(rightclicked_item.card, rightclicked_item.from);sendCardToZone(rightclicked_item.card, rightclicked_item.from, 'hand')">Hand</button>
+  <button mat-menu-item (click)="selectCard(rightclicked_item.card, rightclicked_item.from);sendCardToZone(rightclicked_item.card, rightclicked_item.from, 'grave')">Graveyard</button>
+  <button mat-menu-item (click)="selectCard(rightclicked_item.card, rightclicked_item.from);sendCardToZone(rightclicked_item.card, rightclicked_item.from, 'exile')">Exile</button>
+  <button mat-menu-item (click)="selectCard(rightclicked_item.card, rightclicked_item.from);sendCardToZone(rightclicked_item.card, rightclicked_item.from, 'deck')">Deck Top</button>
+  <button mat-menu-item (click)="selectCard(rightclicked_item.card, rightclicked_item.from);sendCardToZone(rightclicked_item.card, rightclicked_item.from, 'deck_bottom')">Deck Bottom</button>
+  <button mat-menu-item (click)="selectCard(rightclicked_item.card, rightclicked_item.from);sendCardToZone(rightclicked_item.card, rightclicked_item.from, 'temp_zone')">Temp Zone</button>
+  <button mat-menu-item (click)="selectCard(rightclicked_item.card, rightclicked_item.from);sendCardToZone(rightclicked_item.card, rightclicked_item.from, 'selected')">Selected Player</button>
 </mat-menu>
 
 <mat-menu #sendAll="matMenu">
@@ -177,14 +177,21 @@
 </mat-menu>
 
 <mat-menu #revealTo="matMenu">
-  <button mat-menu-item *ngFor="let player of players" (click)="revealCard(rightclicked_item.card, player.id)">{{player.name}}</button>
+  <button mat-menu-item *ngFor="let player of players" (click)="revealCard(rightclicked_item.card, player.id)">
+    <div *ngIf="rightclicked_item && rightclicked_item.card">
+      <mat-icon *ngIf="rightclicked_item.card.visible.includes(player.id)">visibility</mat-icon>
+      <mat-icon *ngIf="!rightclicked_item.card.visible.includes(player.id)">visibility_off</mat-icon>
+      <span>{{player.name}}</span>
+    </div>
+  </button>
   <button mat-menu-item (click)="revealCard(rightclicked_item.card, 'All')">All</button>
   <button mat-menu-item (click)="revealCard(rightclicked_item.card, 'None')">None</button>
 </mat-menu>
 
 <mat-menu #revealAll="matMenu">
-  <button mat-menu-item *ngFor="let player of players">{{player.name}}</button>
-  <button mat-menu-item>All</button>
+  <button mat-menu-item *ngFor="let player of players" (click)="revealAllTo(getZone(rightclicked_item.zone), player.id)">{{player.name}}</button>
+  <button mat-menu-item (click)="revealAllTo(getZone(rightclicked_item.zone), 'All')">All</button>
+  <button mat-menu-item (click)="revealAllTo(getZone(rightclicked_item.zone), 'None')">None</button>
 </mat-menu>
 
 <mat-menu #play_counter="matMenu">

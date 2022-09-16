@@ -665,29 +665,6 @@ export class PlaymatResizedComponent implements OnInit {
     })
   }
 
-  revealCard(card: any, whomst: any, besides?: any) {
-    if (whomst === 'All') {
-      card.visible = [];
-      for (let player of this.players) {
-        card.visible.push(player.id)
-      }
-    }
-    else if (whomst === 'None') {
-      card.visible = [];
-      if (besides) {
-        card.visible.push(besides);
-      }
-    }
-    else {
-      if (card.visible.includes(whomst)) {
-        card.visible.splice(card.visible.indexOf(whomst), 1);
-      }
-      else {
-        card.visible.push(whomst);
-      }
-    }
-  }
-
   scoopDeck(): void {
     this.clearSelection();
     for (let player of this.players) {
@@ -1013,6 +990,38 @@ export class PlaymatResizedComponent implements OnInit {
     }
   }
 
+  revealCard(card: any, whomst: any, besides?: any) {
+    if (whomst === 'All') {
+      card.visible = [];
+      for (let player of this.players) {
+        card.visible.push(player.id)
+      }
+    }
+    else if (whomst === 'None') {
+      card.visible = [];
+      if (besides) {
+        card.visible.push(besides);
+      }
+    }
+    else {
+      if (card.visible.includes(whomst)) {
+        card.visible.splice(card.visible.indexOf(whomst), 1);
+      }
+      else {
+        card.visible.push(whomst);
+      }
+    }
+  }
+
+  revealAllTo(from: any[], whomst: any) {
+    if (from.length > 0) {
+      this.clearSelection();
+      for (let card of from) {
+        this.revealCard(card, whomst);
+      }
+    }
+  }
+
   sendSelectedToSpot(destination: any, location: string) {
     let event:any = {}
     event.container = {}
@@ -1048,6 +1057,13 @@ export class PlaymatResizedComponent implements OnInit {
       this.user.hand.push(this.user.deck.cards[0]);
       this.user.deck.cards.splice(0, 1);
     }
+  }
+
+  mulliganHand(count: any) {
+    let num_count = Number(count);
+    this.sendAllTo(this.user.hand, 'deck_bottom');
+    this.shuffleDeck(this.user.deck.cards);
+    this.drawX(num_count);
   }
 
   /**
