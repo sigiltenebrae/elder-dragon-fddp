@@ -24,8 +24,8 @@
         </div>
 
         <div *ngIf="rightclicked_item.type === 'user_playmat'">
-          <button mat-menu-item>Untap All</button>
-          <button mat-menu-item>Insert Token</button>
+          <button mat-menu-item (click)="untapAll()">Untap All</button>
+          <button mat-menu-item (click)="openTokenDialog()">Insert Token</button>
           <button mat-menu-item [matMenuTriggerFor]="play_counter">Insert Counter</button>
           <button mat-menu-item (click)="nextTurn()">End Turn</button>
         </div>
@@ -364,7 +364,8 @@
           <button *ngIf="counter.type === 'play'" cdkDrag mat-fab (click)="counter.value = counter.value + 1"
                   (contextmenu)="onRightClick($event, {type: 'custom_counter', counter: counter})"
                   (keyup.escape)="deleteCounter(counter)"
-                  style="background: {{counter.color}}; pointer-events: all;">{{counter.value}}</button>
+                  [style.background]="counter.color"
+                  style="pointer-events: all;">{{counter.value}}</button>
         </div>
       </div>
     </div>
@@ -592,7 +593,7 @@
                        [alt]="user.grave[0].visible.includes(user.id) ? user.grave[0].name: ''"
                        (pointerleave)="hovered_card=null"
                        (cdkDragStarted)="hovered_card=null; selectCard(user.grave[0], user.grave);"
-                       cdkDrag loading="lazy">
+                       cdkDrag loading="eager">
                 </mat-card>
               </div>
               <div class="user-exile">
@@ -610,7 +611,7 @@
                        src="{{user.exile[0].image}}"
                        (pointerleave)="hovered_card=null"
                        (cdkDragStarted)="hovered_card=null; selectCard(user.exile[0], user.exile);"
-                       cdkDrag loading="lazy">
+                       cdkDrag loading="eager">
                 </mat-card>
               </div>
               <div class="user-temp-zone">
@@ -627,7 +628,7 @@
                        [alt]="user.temp_zone[0].visible.includes(user.id) ? user.temp_zone[0].name: ''"
                        (pointerleave)="hovered_card=null"
                        (cdkDragStarted)="hovered_card=null; selectCard(user.temp_zone[0], user.temp_zone);"
-                       cdkDrag loading="lazy">
+                       cdkDrag loading="eager">
                 </mat-card>
               </div>
               <div class="commander-viewer" cdkDropList

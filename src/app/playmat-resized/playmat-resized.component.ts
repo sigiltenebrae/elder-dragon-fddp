@@ -421,6 +421,8 @@ export class PlaymatResizedComponent implements OnInit {
     card.locked = false;
     card.primed = false;
     card.triggered = false;
+    card.facedown = false;
+    card.shaken = false;
     if (card.alt) {
       this.altFaceCard(card);
     }
@@ -528,6 +530,10 @@ export class PlaymatResizedComponent implements OnInit {
     card_clone.is_token = true;
     card_clone.selected = false;
     this.clearCard(card_clone);
+    card_clone.visible = [];
+    for(let player of this.players) {
+      card_clone.visible.push(player.id);
+    }
     this.user.temp_zone.push(card_clone);
   }
 
@@ -539,6 +545,10 @@ export class PlaymatResizedComponent implements OnInit {
         out_token.is_token = true;
         out_token.selected = false;
         this.clearCard(out_token);
+        out_token.visible = [];
+        for(let player of this.players) {
+          out_token.visible.push(player.id);
+        }
         this.user.temp_zone.push(out_token);
         return;
       }
@@ -565,6 +575,10 @@ export class PlaymatResizedComponent implements OnInit {
       out_token.selected = false;
       out_token.image = result.image;
       this.clearCard(out_token);
+      out_token.visible = [];
+      for(let player of this.players) {
+        out_token.visible.push(player.id);
+      }
       this.user.temp_zone.push(out_token);
       return;
     });
