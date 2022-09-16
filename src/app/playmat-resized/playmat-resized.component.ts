@@ -36,8 +36,8 @@ import { shakeX } from 'ng-animate';
       transition('untapped => tapped', animate('250ms ease-in'))
     ]),
     trigger('opponentTappedState', [
-      state('untapped', style({ transform: 'rotate(180deg)' })),
-      state('tapped', style({ transform: 'rotate(270deg)' })),
+      state('untapped', style({ transform: 'rotate(0)' })),
+      state('tapped', style({ transform: 'rotate(90deg)' })),
       transition('tapped => untapped', animate('250ms ease-out')),
       transition('untapped => tapped', animate('250ms ease-in'))
     ]),

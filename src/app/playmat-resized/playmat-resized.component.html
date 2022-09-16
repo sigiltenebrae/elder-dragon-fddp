@@ -20,7 +20,7 @@
         </div>
 
         <div *ngIf="rightclicked_item.type === 'opponent_play'">
-          <button mat-menu-item>Shake</button>
+          <button mat-menu-item (click)="shakeCard(rightclicked_item.card)">Shake</button>
         </div>
 
         <div *ngIf="rightclicked_item.type === 'user_playmat'">
@@ -430,7 +430,8 @@
                       <div *ngFor="let spot of reversePlaymat(player.playmat)" class="mtg-card-holder-opponent">
                         <div *ngFor="let card of spot; let i = index">
                           <div [ngClass]="{'stack-1': i == 0,'stack-2': i == 1,'stack-3': i == 2}" class="mtg-card-opponent-container"
-                               (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null" [@opponentTappedState]="card.tapped">
+                               (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null" [@opponentTappedState]="card.tapped"
+                               [@shakeCard]="card.shaken">
                             <img class="mtg-card-opponent"
                                  [src]="card.visible.includes(user.id) ? card.image: player.deck.sleeves"
                                  [alt]="card.visible.includes(user.id) ? card.name: ''"
