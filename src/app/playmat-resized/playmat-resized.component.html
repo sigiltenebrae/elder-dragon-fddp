@@ -11,7 +11,7 @@
         <div *ngIf="rightclicked_item.type === 'user_play'">
           <button mat-menu-item (click)="tapSelected()">Toggle Tap</button>
           <button mat-menu-item (click)="rightclicked_item.card.locked=!rightclicked_item.card.locked">(Un)Lock Tap</button>
-          <button mat-menu-item>Shake</button>
+          <button mat-menu-item (click)="shakeCard(rightclicked_item.card)">Shake</button>
           <button mat-menu-item (click)="cloneCard(rightclicked_item.card)">Clone</button>
           <button mat-menu-item [matMenuTriggerFor]="counters">Counters</button>
           <button mat-menu-item [matMenuTriggerFor]="orient">Orient</button>
@@ -489,6 +489,7 @@
                          (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
                          (cdkDragStarted)="hovered_card=null; selectCard(card, spot);"
                          class="mtg-card-user-container" [@userTappedState]="card.tapped"
+                         [@shakeCard]="card.shaken"
                          cdkDrag>
                       <div *ngIf="card.locked" class="mtg-lock"><mat-icon>lock</mat-icon></div>
                       <img [ngClass]="{'mtg-card-user-selected': card.selected, 'mtg-card-clone': card.is_token && !card.types.includes('Token') }"

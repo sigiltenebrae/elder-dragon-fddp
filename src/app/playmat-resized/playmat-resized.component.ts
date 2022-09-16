@@ -1,6 +1,6 @@
 import {Component, HostListener, Inject, Injectable, OnInit, ViewChild} from '@angular/core';
 import {CdkDrag, CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
-import {animate, state, style, transition, trigger} from "@angular/animations";
+import {animate, state, style, transition, trigger, useAnimation} from "@angular/animations";
 import {MatMenuTrigger} from "@angular/material/menu";
 import { RightclickHandlerServiceService } from "../../services/rightclick-handler-service.service";
 import {MatSelectionListChange} from "@angular/material/list";
@@ -21,6 +21,7 @@ import {
   tap
 } from 'rxjs';
 import * as Scry from "scryfall-sdk";
+import { shakeX } from 'ng-animate';
 
 @Component({
   selector: 'app-playmat-resized',
@@ -39,7 +40,8 @@ import * as Scry from "scryfall-sdk";
       state('tapped', style({ transform: 'rotate(270deg)' })),
       transition('tapped => untapped', animate('250ms ease-out')),
       transition('untapped => tapped', animate('250ms ease-in'))
-    ])
+    ]),
+    trigger('shakeCard', [transition('false => true', useAnimation(shakeX))])
   ]
 })
 export class PlaymatResizedComponent implements OnInit {
@@ -160,6 +162,7 @@ export class PlaymatResizedComponent implements OnInit {
             card.visible = [];
             card.alt = false;
             card.facedown = false;
+            card.shaken = false;
             if (card.iscommander) {
               out_player.deck.commander.push(card);
             }
@@ -210,6 +213,13 @@ export class PlaymatResizedComponent implements OnInit {
       }
     }
     return null;
+  }
+
+  shakeCard(card: any) {
+    card.shaken = true;
+    setTimeout(() => {
+      card.shaken = false;
+    }, 3000);
   }
 
   nextTurn() {
