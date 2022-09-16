@@ -544,6 +544,7 @@ export class PlaymatResizedComponent implements OnInit {
         out_token = JSON.parse(JSON.stringify(tok));
         out_token.is_token = true;
         out_token.selected = false;
+        out_token.owner = -1;
         this.clearCard(out_token);
         out_token.visible = [];
         for(let player of this.players) {
@@ -610,6 +611,7 @@ export class PlaymatResizedComponent implements OnInit {
     if (this.user) {
       this.players.splice(this.players.indexOf(this.user), 1);
     }
+    this.clearSelection();
     this.loadPlayer(this.user.name, this.user.id, deck.id, this.user.turn).then(() => {
       this.players.sort((a: any, b: any) => (a.turn > b.turn) ? 1: -1);
       for (let player of this.players) {
@@ -633,6 +635,36 @@ export class PlaymatResizedComponent implements OnInit {
       }
     })
   }
+
+  scoopDeck(): void {
+    this.clearSelection();
+    for (let player of this.players) {
+      for (let spot of player.playmat) {
+        for (let card of spot) {
+          if (card.owner == this.user.id) {
+            this.sendCardToZone(card, spot, 'deck');
+          }
+        }
+      }
+    }
+    this.sendAllTo(this.user.hand, 'deck');
+    this.sendAllTo(this.user.grave, 'deck');
+    this.sendAllTo(this.user.exile, 'deck');
+    this.sendAllTo(this.user.temp_zone, 'deck');
+    for (let spot of this.user.playmat) {
+      for(let card of spot) {
+        this.selectCard(card, spot);
+        if (card.owner != this.user.id) {
+          this.sendCardToZone(card, spot, 'temp_zone');
+        }
+        else {
+          this.sendCardToZone(card, spot, 'deck');
+        }
+      }
+    }
+
+  }
+
 
   /**------------------------------------------------
    *          Card Transfer Helper Functions        *
@@ -917,6 +949,16 @@ export class PlaymatResizedComponent implements OnInit {
         break;
     }
     this.moveCardToZone(event, location);
+  }
+
+  sendAllTo(from: any[], dest: string) {
+    if (from.length > 0) {
+      this.clearSelection();
+      for (let card of from) {
+        this.selectCard(card, from);
+      }
+      this.sendCardToZone(from[0], from, dest);
+    }
   }
 
   sendSelectedToSpot(destination: any, location: string) {

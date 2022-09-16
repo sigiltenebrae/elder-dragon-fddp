@@ -39,8 +39,8 @@
         </div>
 
         <div *ngIf="rightclicked_item.type === 'commander'">
-          <button mat-menu-item>Change Deck</button>
-          <button mat-menu-item>Scoop Deck</button>
+          <button mat-menu-item (click)="openDeckSelectDialog()">Change Deck</button>
+          <button mat-menu-item (click)="scoopDeck()">Scoop Deck</button>
         </div>
 
         <div *ngIf="rightclicked_item.type === 'user_hand'">
