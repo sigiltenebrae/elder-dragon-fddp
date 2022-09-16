@@ -144,10 +144,10 @@
 </mat-menu>
 
 <mat-menu #counters="matMenu">
-  <button mat-menu-item>Counter 1</button>
-  <button mat-menu-item>Counter 2</button>
-  <button mat-menu-item>Counter 3</button>
-  <button mat-menu-item>Multiplier</button>
+  <button mat-menu-item (click)="rightclicked_item.card.counter_1 = !rightclicked_item.card.counter_1">Counter 1</button>
+  <button mat-menu-item (click)="rightclicked_item.card.counter_2 = !rightclicked_item.card.counter_2">Counter 2</button>
+  <button mat-menu-item (click)="rightclicked_item.card.counter_3 = !rightclicked_item.card.counter_3">Counter 3</button>
+  <button mat-menu-item (click)="rightclicked_item.card.multiplier = !rightclicked_item.card.multiplier">Multiplier</button>
 </mat-menu>
 
 <mat-menu #orient="matMenu">
@@ -506,7 +506,7 @@
                      (cdkDropListDropped)="moveCardToZone($event, 'play')"
                       (dblclick)="sendSelectedToSpot(spot, 'play')"
                      (contextmenu)="onRightClick($event, {type: 'user_playmat', spot: spot})">
-                  <div *ngFor="let card of spot; let i = index">
+                  <div *ngFor="let card of spot; let i = index" (dblclick)="$event.stopPropagation()">
                     <div [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2}"
                          (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
                          (cdkDragStarted)="hovered_card=null; selectCard(card, spot);"
