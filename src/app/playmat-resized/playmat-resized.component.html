@@ -30,6 +30,10 @@
           <button mat-menu-item (click)="nextTurn()">End Turn</button>
         </div>
 
+        <div *ngIf="rightclicked_item.type === 'type_counter'">
+          <button mat-menu-item (click)="deleteCounter(rightclicked_item.counter)">Delete</button>
+        </div>
+
         <div *ngIf="rightclicked_item.type === 'opponent_playmat'">
           <button mat-menu-item>Taunt</button>
         </div>
@@ -337,7 +341,8 @@
         <!---->
         <div *ngFor="let counter of user.counters">
           <mat-card *ngIf="counter.type === 'type'" class="commander-dashboard-custom-counter"
-                     style="padding: 0" cdkDrag>
+                    (contextmenu)="onRightClick($event, {type: 'type_counter', counter: counter})"
+                     style="padding: 0" cdkDrag (keydown.escape)="deleteCounter(counter)">
             <mat-form-field appearance="fill" class="commander-dashboard-input">
               <mat-label>Enter a Type</mat-label>
               <input #custom_search matInput>
@@ -363,7 +368,7 @@
           </mat-card>
           <button *ngIf="counter.type === 'play'" cdkDrag mat-fab (click)="counter.value = counter.value + 1"
                   (contextmenu)="onRightClick($event, {type: 'custom_counter', counter: counter})"
-                  (keyup.escape)="deleteCounter(counter)"
+                  (keydown.escape)="deleteCounter(counter)"
                   [style.background]="counter.color"
                   style="pointer-events: all;">{{counter.value}}</button>
         </div>
