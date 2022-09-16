@@ -63,6 +63,8 @@ export class PlaymatResizedComponent implements OnInit {
   scrying = false;
   temp_scry_zone: any[] = [];
 
+  draw_to_count = '1'
+
   rightclicked_item: any = null;
   sidenav_type: any = null;
   sidenav_sort_type: string = '';
@@ -1051,11 +1053,26 @@ export class PlaymatResizedComponent implements OnInit {
   drawX(count: any) {
     let num_count = Number(count);
     for (let i = 0; i < num_count; i++) {
+      if (this.user.deck.cards.length == 0) {
+        break;
+      }
       if (!this.user.deck.cards[0].visible.includes(this.user.id)) {
         this.user.deck.cards[0].visible.push(this.user.id);
       }
       this.user.hand.push(this.user.deck.cards[0]);
       this.user.deck.cards.splice(0, 1);
+    }
+  }
+
+  drawToX(zone: string) {
+    let num_count = Number(this.draw_to_count);
+    this.clearSelection();
+    for (let i = 0; i < num_count; i++) {
+      if (this.user.deck.cards.length == 0) {
+        break;
+      }
+      this.selectCard(this.user.deck.cards[0], this.user.deck.cards);
+      this.sendCardToZone(this.user.deck.cards[0], this.user.deck.cards, zone);
     }
   }
 

@@ -72,7 +72,7 @@
         <div *ngIf="rightclicked_item.type === 'zone_card'">
           <button mat-menu-item [matMenuTriggerFor]="sendTo">Send To</button>
           <button *ngIf="rightclicked_item.card.back_face" mat-menu-item (click)="altFaceCard(rightclicked_item.card)">Alt Face</button>
-          <button *ngIf="rightclicked_item.zone === 'exile' || rightclicked_item.zone === 'temp_zone'" mat-menu-item>Flip Face</button>
+          <button *ngIf="rightclicked_item.zone === 'exile' || rightclicked_item.zone === 'temp_zone'" mat-menu-item (click)="rightclicked_item.card.facedown=!rightclicked_item.card.facedown">Flip Face</button>
           <button mat-menu-item (click)="shakeCard(rightclicked_item.card)">Shake</button>
         </div>
 
@@ -83,40 +83,40 @@
         <div *ngIf="rightclicked_item.type === 'deck'">
           <button mat-menu-item>Flip Top</button>
           <button mat-menu-item (click)="openSideNav('deck')">Search</button>
-          <button mat-menu-item>Shuffle</button>
+          <button mat-menu-item (click)="shuffleDeck(user.deck.cards)">Shuffle</button>
           <div>
             <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
               <mat-label>Scry</mat-label>
               <input #scry_count type="text" matInput (click)="$event.stopPropagation()" value="1">
-              <button matSuffix mat-icon-button aria-label="Scry"><mat-icon>visibility</mat-icon></button>
+              <button matSuffix mat-icon-button aria-label="Scry" (click)="scryX(scry_count.value)"><mat-icon>visibility</mat-icon></button>
             </mat-form-field>
           </div>
           <div>
             <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
               <mat-label>Draw</mat-label>
               <input #draw_count type="text" matInput (click)="$event.stopPropagation()" value="1">
-              <button matSuffix mat-icon-button aria-label="Draw"><mat-icon>add_circle</mat-icon></button>
+              <button matSuffix mat-icon-button aria-label="Draw" (click)="drawX(draw_count.value)"><mat-icon>add_circle</mat-icon></button>
             </mat-form-field>
           </div>
           <div>
             <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
               <mat-label>Draw To</mat-label>
-              <input #draw_to_count type="text" matInput (click)="$event.stopPropagation()" value="1">
-              <button matSuffix mat-icon-button aria-label="Draw" (click)="$event.stopPropagation()" [mat-menu-trigger-for]="drawTo"><mat-icon>navigate_next</mat-icon></button>
+              <input [(ngModel)]="draw_to_count" type="text" matInput (click)="$event.stopPropagation()" value="1">
+              <button matSuffix mat-icon-button aria-label="DrawTo" (click)="$event.stopPropagation()" [mat-menu-trigger-for]="drawTo"><mat-icon>navigate_next</mat-icon></button>
             </mat-form-field>
           </div>
           <div>
             <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
               <mat-label>Draw Until</mat-label>
               <input #draw_until type="text" matInput (click)="$event.stopPropagation()" value="">
-              <button matSuffix mat-icon-button aria-label="Draw"><mat-icon>fast_forward</mat-icon></button>
+              <button matSuffix mat-icon-button aria-label="DrawUntil" (click)="drawUntil(draw_until.value)"><mat-icon>fast_forward</mat-icon></button>
             </mat-form-field>
           </div>
           <div>
             <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
               <mat-label>Cascade</mat-label>
               <input #cascade_until type="text" matInput (click)="$event.stopPropagation()" value="">
-              <button matSuffix mat-icon-button aria-label="Draw"><mat-icon>fast_forward</mat-icon></button>
+              <button matSuffix mat-icon-button aria-label="Cascade" (click)="cascade(cascade_until.value)"><mat-icon>fast_forward</mat-icon></button>
             </mat-form-field>
           </div>
         </div>
@@ -200,10 +200,10 @@
 </mat-menu>
 
 <mat-menu #drawTo="matMenu">
-  <button mat-menu-item>Graveyard</button>
-  <button mat-menu-item>Exile</button>
-  <button mat-menu-item>Temp Zone</button>
-  <button mat-menu-item>Play</button>
+  <button mat-menu-item (click)="drawToX('grave')">Graveyard</button>
+  <button mat-menu-item (click)="drawToX('exile')">Exile</button>
+  <button mat-menu-item (click)="drawToX('temp_zone')">Temp Zone</button>
+  <button mat-menu-item (click)="drawToX('play')">Play</button>
 </mat-menu>
 
 <div class="fddp-hover-holder" [style.display]="hovered_card || preview ? 'block': 'none'" [style.pointer-events]="preview ? 'all': 'none'">
