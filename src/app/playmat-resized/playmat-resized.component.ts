@@ -738,7 +738,7 @@ export class PlaymatResizedComponent implements OnInit {
               moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex);
             }
             else {
-              card_select.card.visible = [this.user.id];
+              card_select.card.visible = [card_select.card.owner];
               card_select.facedown = false;
               transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).hand, card_select.from.indexOf(card_select.card), event.currentIndex);
             }
