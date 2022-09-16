@@ -676,22 +676,22 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 
 .mtg-card-holder-opponent .stack-1 {
   position: absolute;
-  bottom: 0;
-  right: 0;
+  top: 0;
+  left: 0;
   z-index: 2;
 }
 
 .mtg-card-holder-opponent .stack-2 {
   position: absolute;
-  bottom: 7px;
-  right: 5px;
+  top: 7px;
+  left: 5px;
   z-index: 12;
 }
 
 .mtg-card-holder-opponent .stack-3 {
   position: absolute;
-  bottom: 14px;
-  right: 10px;
+  top: 14px;
+  left: 10px;
   z-index: 22;
 }
 
