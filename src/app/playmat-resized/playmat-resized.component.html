@@ -45,21 +45,28 @@
 
         <div *ngIf="rightclicked_item.type === 'user_hand'">
           <button mat-menu-item [matMenuTriggerFor]="sendTo">Send To</button>
-          <button mat-menu-item>Send to Play Face Down</button>
-          <button mat-menu-item>Alt Face</button>
-          <button mat-menu-item>Shake</button>
+          <button mat-menu-item
+                  (click)="rightclicked_item.card.facedown=true;
+                  rightclicked_item.card.visible=[];
+                  clearSelection();
+                  selectCard(rightclicked_item.card, rightclicked_item.from);
+                  sendCardToZone(rightclicked_item.card, rightclicked_item.from, 'play')">
+            Send to Play Face Down
+          </button>
+          <button *ngIf="rightclicked_item.card.back_face" mat-menu-item (click)="altFaceCard(rightclicked_item.card)">Alt Face</button>
+          <button mat-menu-item (click)="shakeCard(rightclicked_item.card)">Shake</button>
           <button mat-menu-item [matMenuTriggerFor]="revealTo">Reveal To</button>
         </div>
 
         <div *ngIf="rightclicked_item.type === 'opponent_hand'">
-          <button mat-menu-item>Shake</button>
+          <button mat-menu-item (click)="shakeCard(rightclicked_item.card)">Shake</button>
         </div>
 
         <div *ngIf="rightclicked_item.type === 'zone'">
           <button mat-menu-item (click)="openSideNav(rightclicked_item.zone)">View Zone</button>
-          <button mat-menu-item>Select Random</button>
-          <button mat-menu-item [matMenuTriggerFor]="sendAllTo">Send All To</button>
-          <button mat-menu-item [matMenuTriggerFor]="revealAllTo">Reveal All To</button>
+          <button mat-menu-item (click)="selectRandom(getZone(rightclicked_item.zone))">Select Random</button>
+          <button mat-menu-item [matMenuTriggerFor]="sendAll">Send All To</button>
+          <button mat-menu-item [matMenuTriggerFor]="revealAll">Reveal All To</button>
         </div>
 
         <div *ngIf="rightclicked_item.type === 'zone_card'">
@@ -125,8 +132,8 @@
 
 <mat-menu #hand_menu="matMenu">
   <button mat-menu-item>Select Random</button>
-  <button mat-menu-item [matMenuTriggerFor]="sendAllTo">Send All To</button>
-  <button mat-menu-item [matMenuTriggerFor]="revealAllTo">Reveal All To</button>
+  <button mat-menu-item [matMenuTriggerFor]="sendAll">Send All To</button>
+  <button mat-menu-item [matMenuTriggerFor]="revealAll">Reveal All To</button>
   <div>
     <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
       <mat-label>Mulligan</mat-label>
@@ -159,22 +166,23 @@
   <button mat-menu-item>Selected Player</button>
 </mat-menu>
 
-<mat-menu #sendAllTo="matMenu">
-  <button mat-menu-item>Hand</button>
-  <button mat-menu-item>Graveyard</button>
-  <button mat-menu-item>Exile</button>
-  <button mat-menu-item>Deck Top</button>
-  <button mat-menu-item>Deck Bottom</button>
-  <button mat-menu-item>Temp Zone</button>
-  <button mat-menu-item>Selected Player</button>
+<mat-menu #sendAll="matMenu">
+  <button mat-menu-item (click)="sendAllTo(getZone(rightclicked_item.zone), 'hand')">Hand</button>
+  <button mat-menu-item (click)="sendAllTo(getZone(rightclicked_item.zone), 'grave')">Graveyard</button>
+  <button mat-menu-item (click)="sendAllTo(getZone(rightclicked_item.zone), 'exile')">Exile</button>
+  <button mat-menu-item (click)="sendAllTo(getZone(rightclicked_item.zone), 'deck')">Deck Top</button>
+  <button mat-menu-item (click)="sendAllTo(getZone(rightclicked_item.zone), 'deck_bottom')">Deck Bottom</button>
+  <button mat-menu-item (click)="sendAllTo(getZone(rightclicked_item.zone), 'temp_zone')">Temp Zone</button>
+  <button mat-menu-item (click)="sendAllTo(getZone(rightclicked_item.zone), 'selected')">Selected Player</button>
 </mat-menu>
 
 <mat-menu #revealTo="matMenu">
-  <button mat-menu-item *ngFor="let player of players">{{player.name}}</button>
-  <button mat-menu-item>All</button>
+  <button mat-menu-item *ngFor="let player of players" (click)="revealCard(rightclicked_item.card, player.id)">{{player.name}}</button>
+  <button mat-menu-item (click)="revealCard(rightclicked_item.card, 'All')">All</button>
+  <button mat-menu-item (click)="revealCard(rightclicked_item.card, 'None')">None</button>
 </mat-menu>
 
-<mat-menu #revealAllTo="matMenu">
+<mat-menu #revealAll="matMenu">
   <button mat-menu-item *ngFor="let player of players">{{player.name}}</button>
   <button mat-menu-item>All</button>
 </mat-menu>
@@ -358,9 +366,9 @@
               <mat-form-field appearance="outline" class="commander-dashboard-select">
                 <mat-label>Zone</mat-label>
                 <mat-select #search_zone>
-                  <mat-option [value]="'Play'">Play</mat-option>
-                  <mat-option [value]="'Grave'">Graveyard</mat-option>
-                  <mat-option [value]="'Exile'">Exile</mat-option>
+                  <mat-option [value]="'play'">Play</mat-option>
+                  <mat-option [value]="'grave'">Graveyard</mat-option>
+                  <mat-option [value]="'exile'">Exile</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -448,10 +456,10 @@
                             <button *ngIf="card.counter_3" class="mtg-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true"><p>{{card.counter_3_value}}</p></button>
                             <button *ngIf="card.multiplier" class="mtg-multiplier-counter" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>{{card.multiplier_value}}</p></button>
 
-                            <h5 *ngIf="card.power && card.toughness && card.power != null && card.toughness != null" class="mtg-card-power-tough">
+                            <h5 *ngIf="card.power && card.toughness && card.power != null && card.toughness != null && card.visible.includes(user.id)" class="mtg-card-power-tough">
                               <a [ngClass]="{'mat-card-power-tough-text-up': card.power_mod > 0, 'mat-card-power-tough-text-down': card.power_mod < 0}" class="mat-card-power-tough-text">{{card.power + card.power_mod}}</a>/
                               <a [ngClass]="{'mat-card-power-tough-text-up': card.toughness_mod > 0, 'mat-card-power-tough-text-down': card.toughness_mod < 0}" class="mat-card-power-tough-text">{{card.toughness + card.toughness_mod}}</a></h5>
-                            <h5 *ngIf="card.loyalty && card.loyalty != null" class="mtg-card-loyalty"><a class="mat-card-power-tough-text" [ngClass]="{'mat-card-power-tough-text-up': card.loyalty_mod > 0, 'mat-card-power-tough-text-down': card.loyalty_mod < 0}">{{card.loyalty + card.loyalty_mod}}</a></h5>
+                            <h5 *ngIf="card.loyalty && card.loyalty != null && card.visible.includes(user.id)" class="mtg-card-loyalty"><a class="mat-card-power-tough-text" [ngClass]="{'mat-card-power-tough-text-up': card.loyalty_mod > 0, 'mat-card-power-tough-text-down': card.loyalty_mod < 0}">{{card.loyalty + card.loyalty_mod}}</a></h5>
                           </div>
                         </div>
                       </div>

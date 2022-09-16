@@ -78,7 +78,7 @@ export class PlaymatResizedComponent implements OnInit {
    *              Game Setup Functions              *
    ------------------------------------------------**/
   constructor(private rightClickHandler: RightclickHandlerServiceService, private fddp_data: FddpApiService,
-              private snackBar: MatSnackBar, public dialog: MatDialog) { }
+              private snackBar: MatSnackBar, public dialog: MatDialog, private snackbar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.loading = true;
@@ -379,6 +379,32 @@ export class PlaymatResizedComponent implements OnInit {
     this.selected_cards = saving? [saving]: [];
   }
 
+  selectRandom(zone: any[]) {
+    if (zone.length == 1) {
+      this.snackbar.open('Selected ' + zone[0].name + ' at random.',
+        'dismiss', {duration: 3000});
+    }
+    else if (zone.length > 1) {
+      this.snackbar.open('Selected ' + '"' + zone[Math.floor(Math.random() * zone.length)].name + '"' + ' at random.',
+        'dismiss', {duration: 3000});
+    }
+  }
+
+  getZone(zone: string) {
+    switch(zone) {
+      case 'grave':
+        return this.user.grave;
+      case 'exile':
+        return this.user.exile;
+      case 'temp_zone':
+        return this.user.temp_zone;
+      case 'hand':
+        return this.user.hand;
+      case 'deck':
+        return this.user.deck.cards;
+    }
+  }
+
   altFaceCard(card: any) {
     if (card.back_face) {
       let temp_image = card.image;
@@ -473,7 +499,7 @@ export class PlaymatResizedComponent implements OnInit {
         players = [player];
       }
       for (let play of players) {
-        if (zone === 'Grave') {
+        if (zone === 'grave') {
           for (let card of play.grave) {
             if (card.types) {
               for (let card_type of card.types) {
@@ -484,7 +510,7 @@ export class PlaymatResizedComponent implements OnInit {
             }
           }
         }
-        else if (zone === 'Exile') {
+        else if (zone === 'exile') {
           for (let card of play.exile) {
             if (card.types) {
               for (let card_type of card.types) {
@@ -495,7 +521,7 @@ export class PlaymatResizedComponent implements OnInit {
             }
           }
         }
-        else if (zone === 'Play') {
+        else if (zone === 'play') {
           for (let spot of play.playmat) {
             for (let card of spot) {
               if (card.types) {
@@ -597,14 +623,17 @@ export class PlaymatResizedComponent implements OnInit {
   openTokenDialog(): void {
     const tokDialogRef = this.dialog.open(TokenInsertDialog, {
       width: '800px',
-      data: {}
+      data: {},
     });
+
+    tokDialogRef.beforeClosed().subscribe(() => {
+    })
 
     tokDialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.createTokenFromImage(result);
       }
-    })
+    });
   }
 
   selectDeck(deck: any) {
@@ -634,6 +663,29 @@ export class PlaymatResizedComponent implements OnInit {
         this.selectDeck(result);
       }
     })
+  }
+
+  revealCard(card: any, whomst: any, besides?: any) {
+    if (whomst === 'All') {
+      card.visible = [];
+      for (let player of this.players) {
+        card.visible.push(player.id)
+      }
+    }
+    else if (whomst === 'None') {
+      card.visible = [];
+      if (besides) {
+        card.visible.push(besides);
+      }
+    }
+    else {
+      if (card.visible.includes(whomst)) {
+        card.visible.splice(card.visible.indexOf(whomst), 1);
+      }
+      else {
+        card.visible.push(whomst);
+      }
+    }
   }
 
   scoopDeck(): void {
@@ -1260,7 +1312,7 @@ export class TokenInsertDialog {
   }
 
   onNoClick(): void {
-    this.dialogRef.close();
+    this.dialogRef.close(null);
   }
 
   createToken(res: any) {
