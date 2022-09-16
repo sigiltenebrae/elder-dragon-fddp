@@ -276,6 +276,18 @@ export class PlaymatResizedComponent implements OnInit {
     this.clearSelection();
   }
 
+  @HostListener('document:keydown.d', ['$event']) ondDown(event: KeyboardEvent) {
+    this.drawX(1);
+  }
+
+  @HostListener('document:keydown.p', ['$event']) onpDown(event: KeyboardEvent) {
+    this.togglePreview()
+  }
+
+  @HostListener('document:keydown.m', ['$event']) onmDown(event: KeyboardEvent) {
+    this.mulliganHand(7);
+  }
+
   togglePreview() {
     this.preview = !this.preview;
   }
