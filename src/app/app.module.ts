@@ -43,6 +43,7 @@ import { CustomImageManagerComponent } from './custom-image-manager/custom-image
 import { DeckManagerComponent } from './deck-manager/deck-manager.component';
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { MatDialogModule } from "@angular/material/dialog";
+import { TestWsComponent } from './test-ws/test-ws.component';
 
 
 @NgModule({
@@ -54,7 +55,8 @@ import { MatDialogModule } from "@angular/material/dialog";
     CustomImageManagerComponent,
     DeckManagerComponent,
     TokenInsertDialog,
-    DeckSelectDialog
+    DeckSelectDialog,
+    TestWsComponent
   ],
   imports: [
     BrowserModule,
@@ -89,7 +91,8 @@ import { MatDialogModule } from "@angular/material/dialog";
       {path: 'game', component: PlaymatResizedComponent},
       {path: 'decks/:deckid', component: DeckEditComponent},
       {path: 'upload', component: CustomImagesComponent},
-      {path: 'custom', component: CustomImageManagerComponent}
+      {path: 'custom', component: CustomImageManagerComponent},
+      {path: 'testws', component: TestWsComponent}
     ]),
     FlexLayoutModule,
     DragDropModule,

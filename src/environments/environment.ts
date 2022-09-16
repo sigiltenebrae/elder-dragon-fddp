@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  fddp_api_url: 'http://localhost:2999/api'
+  fddp_api_url: 'http://localhost:2999/api',
+  fddp_websocket_url: 'ws://localhost:8191'
 };
 
 /*

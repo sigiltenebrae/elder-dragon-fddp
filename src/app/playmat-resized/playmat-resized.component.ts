@@ -178,6 +178,7 @@ export class PlaymatResizedComponent implements OnInit {
           out_player.selected = false;
           this.shuffleDeck(out_player.deck.cards);
           this.players.push(out_player);
+          console.log(out_player);
           resolve();
         }
         else{
