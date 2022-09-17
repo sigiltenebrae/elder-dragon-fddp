@@ -587,7 +587,6 @@ export class GameHandlerComponent implements OnInit {
     if (card.alt) {
       this.altFaceCard(card);
     }
-    this.sendPlayerUpdate();
   }
 
   shuffleDeck(cards: any[], update?: boolean) {
@@ -600,14 +599,15 @@ export class GameHandlerComponent implements OnInit {
     if (update) {
       this.sendPlayerUpdate();
     }
-
   }
 
   isPermanent(card: any) {
-    return card.types.includes("Creature") ||
-      card.types.includes("Artifact") ||
-      card.types.includes("Enchantment") ||
-      card.types.includes("Land");
+    if (card.types) {
+      return card.types.includes("Creature") ||
+        card.types.includes("Artifact") ||
+        card.types.includes("Enchantment") ||
+        card.types.includes("Land");
+    }
   }
 
   devotionCount(player: any, color: string) {
@@ -640,10 +640,17 @@ export class GameHandlerComponent implements OnInit {
       for (let play of players) {
         if (zone === 'grave') {
           for (let card of play.grave) {
-            if (card.types) {
-              for (let card_type of card.types) {
-                if (type.toLowerCase() === card_type.toLowerCase()) {
-                  count++;
+            if (type.toLowerCase() === 'permanent') {
+              if (this.isPermanent(card)) {
+                count++;
+              }
+            }
+            else {
+              if (card.types) {
+                for (let card_type of card.types) {
+                  if (type.toLowerCase() === card_type.toLowerCase()) {
+                    count++;
+                  }
                 }
               }
             }
@@ -651,10 +658,17 @@ export class GameHandlerComponent implements OnInit {
         }
         else if (zone === 'exile') {
           for (let card of play.exile) {
-            if (card.types) {
-              for (let card_type of card.types) {
-                if (type.toLowerCase() === card_type.toLowerCase()) {
-                  count++;
+            if (type.toLowerCase() === 'permanent') {
+              if (this.isPermanent(card)) {
+                count++;
+              }
+            }
+            else {
+              if (card.types) {
+                for (let card_type of card.types) {
+                  if (type.toLowerCase() === card_type.toLowerCase()) {
+                    count++;
+                  }
                 }
               }
             }
@@ -663,14 +677,26 @@ export class GameHandlerComponent implements OnInit {
         else if (zone === 'play') {
           for (let spot of play.playmat) {
             for (let card of spot) {
-              if (card.types) {
-                for (let card_type of card.types) {
-                  if (type.toLowerCase() === card_type.toLowerCase()) {
-                    if (card.multiplier) {
-                      count += card.multiplier_value;
-                    }
-                    else {
-                      count++;
+              if (type.toLowerCase() === 'permanent') {
+                if (this.isPermanent(card)) {
+                  if (card.multiplier) {
+                    count += card.multiplier_value;
+                  }
+                  else {
+                    count++;
+                  }
+                }
+              }
+              else {
+                if (card.types) {
+                  for (let card_type of card.types) {
+                    if (type.toLowerCase() === card_type.toLowerCase()) {
+                      if (card.multiplier) {
+                        count += card.multiplier_value;
+                      }
+                      else {
+                        count++;
+                      }
                     }
                   }
                 }
@@ -830,7 +856,7 @@ export class GameHandlerComponent implements OnInit {
         }
       }
     }
-
+    this.sendPlayerUpdate();
   }
 
 
@@ -865,7 +891,7 @@ export class GameHandlerComponent implements OnInit {
    * @param location string value of where to move the card.
    * Accepts: 'hand', 'deck', 'grave', 'exile', 'temp_zone', 'command_zone' or 'play'
    */
-  moveCardToZone(event: any, location: string, sidebar?: boolean, facedown?: boolean) {
+  moveCardToZone(event: any, location: string, sidebar?: boolean, facedown?: boolean, noupdate?: boolean) {
     //Hand, Command Zone, Deck, Grave, Exile, Temp Zone, Play
     if (location !== 'play') {
       for (let card_select of this.selected_cards) {
@@ -1064,7 +1090,12 @@ export class GameHandlerComponent implements OnInit {
       }
     }
     this.selected_cards = [];
-    this.sendPlayerUpdate();
+    if (noupdate) {
+
+    }
+    else {
+      this.sendPlayerUpdate();
+    }
   }
 
   /**
@@ -1074,7 +1105,7 @@ export class GameHandlerComponent implements OnInit {
    * @param location string value of where to move the card.
    * Accepts: 'hand', 'deck_top', 'deck_bottom', 'grave', 'exile', 'temp_zone', 'selected', 'command_zone' or 'play'
    */
-  sendCardToZone(card: any, from: any[], location: string) {
+  sendCardToZone(card: any, from: any[], location: string, noupdate?: boolean) {
     let event:any = {}
     event.previousContainer = {}
     event.container = {}
@@ -1122,7 +1153,12 @@ export class GameHandlerComponent implements OnInit {
         event.currentIndex = 0;
         break;
     }
-    this.moveCardToZone(event, location);
+    if (noupdate) {
+      this.moveCardToZone(event, location, undefined, undefined, noupdate);
+    }
+    else {
+      this.moveCardToZone(event, location);
+    }
   }
 
   sendAllTo(from: any[], dest: string) {
@@ -1166,6 +1202,7 @@ export class GameHandlerComponent implements OnInit {
         this.revealCard(card, whomst);
       }
     }
+    this.sendPlayerUpdate();
   }
 
   sendSelectedToSpot(destination: any, location: string) {
@@ -1218,8 +1255,9 @@ export class GameHandlerComponent implements OnInit {
         break;
       }
       this.selectCard(this.user.deck.cards[0], this.user.deck.cards);
-      this.sendCardToZone(this.user.deck.cards[0], this.user.deck.cards, zone);
+      this.sendCardToZone(this.user.deck.cards[0], this.user.deck.cards, zone, true);
     }
+    this.sendPlayerUpdate();
   }
 
   mulliganHand(count: any) {
@@ -1304,7 +1342,7 @@ export class GameHandlerComponent implements OnInit {
       if (this.user.deck.cards.length > 0) {
         let cur_card = this.user.deck.cards[0];
         this.selectCard(cur_card, this.user.deck.cards);
-        this.sendCardToZone(cur_card, this.user.deck.cards, 'temp_zone');
+        this.sendCardToZone(cur_card, this.user.deck.cards, 'temp_zone', true);
         if (cur_card.cmc != null) {
           if (cur_card.cmc < cmc) {
             if (cur_card.cmc > 0) {
