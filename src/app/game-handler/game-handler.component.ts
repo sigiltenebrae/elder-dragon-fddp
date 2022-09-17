@@ -272,6 +272,7 @@ export class GameHandlerComponent implements OnInit {
             card.alt = false;
             card.facedown = false;
             card.shaken = false;
+            card.inverted = false;
             if (card.iscommander) {
               out_player.deck.commander.push(card);
             }
@@ -467,6 +468,17 @@ export class GameHandlerComponent implements OnInit {
     this.sendPlayerUpdate();
   }
 
+  invertCard(card:any) {
+    card.inverted = !card.inverted;
+    this.sendPlayerUpdate();
+  }
+
+  flipCard(card:any) {
+    card.facedown = !card.facedown;
+    card.visible = [];
+    this.sendPlayerUpdate();
+  }
+
   tapSelected() {
     for (let card_select of this.selected_cards) {
       this.tapCard(card_select.card);
@@ -628,6 +640,7 @@ export class GameHandlerComponent implements OnInit {
     card.triggered = false;
     card.facedown = false;
     card.shaken = false;
+    card.inverted = false;
     if (card.alt) {
       this.altFaceCard(card);
     }
@@ -1215,7 +1228,7 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
-  revealCard(card: any, whomst: any, besides?: any) {
+  revealCard(card: any, whomst: any, besides?: any, noupdate?: boolean) {
     if (whomst === 'All') {
       card.visible = [];
       for (let player of this.game_data.players) {
@@ -1236,7 +1249,12 @@ export class GameHandlerComponent implements OnInit {
         card.visible.push(whomst);
       }
     }
-    this.sendPlayerUpdate();
+    if (noupdate) {
+
+    }
+    else {
+      this.sendPlayerUpdate();
+    }
   }
 
   revealAllTo(from: any[], whomst: any) {

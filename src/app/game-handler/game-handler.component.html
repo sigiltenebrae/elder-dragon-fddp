@@ -74,7 +74,7 @@
         <div *ngIf="rightclicked_item.type === 'zone_card'">
           <button mat-menu-item [matMenuTriggerFor]="sendTo">Send To</button>
           <button *ngIf="rightclicked_item.card.back_face" mat-menu-item (click)="altFaceCard(rightclicked_item.card)">Alt Face</button>
-          <button *ngIf="rightclicked_item.zone === 'exile' || rightclicked_item.zone === 'temp_zone'" mat-menu-item (click)="rightclicked_item.card.facedown=!rightclicked_item.card.facedown">Flip Face</button>
+          <button *ngIf="rightclicked_item.zone === 'exile' || rightclicked_item.zone === 'temp_zone'" mat-menu-item (click)="flipCard(rightclicked_item.card)">Flip Face</button>
           <button mat-menu-item (click)="shakeCard(rightclicked_item.card, sidenav_selected_player.id, rightclicked_item.zone)">Shake</button>
         </div>
 
@@ -161,8 +161,8 @@
 
 <mat-menu #orient="matMenu">
   <button mat-menu-item (click)="altFaceCard(rightclicked_item.card)">Alt Face</button>
-  <button mat-menu-item>Invert</button>
-  <button mat-menu-item (click)="rightclicked_item.card.facedown=!rightclicked_item.card.facedown">Flip Face</button>
+  <button mat-menu-item (click)="invertCard(rightclicked_item.card)">Invert</button>
+  <button mat-menu-item (click)="flipCard(rightclicked_item.card)">Flip Face</button>
 </mat-menu>
 
 <mat-menu #sendTo="matMenu">
@@ -462,7 +462,7 @@
                     <div class="playmat-opponent-card-data">
                       <div *ngFor="let spot of reversePlaymat(player.playmat)" class="mtg-card-holder-opponent">
                         <div *ngFor="let card of spot; let i = index">
-                          <div [ngClass]="{'stack-1': i == 0,'stack-2': i == 1,'stack-3': i == 2}" class="mtg-card-opponent-container"
+                          <div [ngClass]="{'stack-1': i == 0,'stack-2': i == 1,'stack-3': i == 2, 'mtg-card-invert': card.inverted}" class="mtg-card-opponent-container"
                                (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null" [@opponentTappedState]="card.tapped"
                                [@shakeCard]="card.shaken">
                             <img class="mtg-card-opponent"
@@ -519,7 +519,7 @@
                       (dblclick)="sendSelectedToSpot(spot, 'play')"
                      (contextmenu)="onRightClick($event, {type: 'user_playmat', spot: spot})">
                   <div *ngFor="let card of spot; let i = index" (dblclick)="$event.stopPropagation()">
-                    <div [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2}"
+                    <div [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2, 'mtg-card-invert': card.inverted}"
                          (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
                          (cdkDragStarted)="hovered_card=null; selectCard(card, spot);"
                          class="mtg-card-user-container" [@userTappedState]="card.tapped"

@@ -232,6 +232,10 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   @include mat.elevation(2);
 }
 
+.mtg-card-invert {
+  rotate: 180deg;
+}
+
 .cdk-drag-placeholder {
   opacity: 0;
 }
