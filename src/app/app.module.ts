@@ -30,9 +30,9 @@ import {FlexLayoutModule} from "@angular/flex-layout";
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import {
   DeckSelectDialog,
-  PlaymatResizedComponent,
+  GameHandlerComponent,
   TokenInsertDialog
-} from './playmat-resized/playmat-resized.component';
+} from './game-handler/game-handler.component';
 import {MatMenuModule} from "@angular/material/menu";
 import {FormsModule} from "@angular/forms";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
@@ -50,7 +50,7 @@ import { GameManagerComponent } from './game-manager/game-manager.component';
 @NgModule({
   declarations: [
     AppComponent,
-    PlaymatResizedComponent,
+    GameHandlerComponent,
     DeckEditComponent,
     CustomImagesComponent,
     CustomImageManagerComponent,
@@ -91,6 +91,7 @@ import { GameManagerComponent } from './game-manager/game-manager.component';
     RouterModule.forRoot([
       {path: '', component: DeckManagerComponent},
       {path: 'game', component: GameManagerComponent},
+      {path: 'games/:gameid', component: GameHandlerComponent},
       {path: 'decks/:deckid', component: DeckEditComponent},
       {path: 'upload', component: CustomImagesComponent},
       {path: 'custom', component: CustomImageManagerComponent},

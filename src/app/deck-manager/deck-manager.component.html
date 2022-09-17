@@ -1,7 +1,7 @@
 <div *ngIf="loading" fxLayout="row" fxFlex="100" fxLayoutAlign="center center" style="margin: 20px;">
   <mat-spinner></mat-spinner>
 </div>
-<div *ngIf="!loading" fxFlex="100" fxLayout="row wrap" fxLayoutAlign="center center" style="margin: 20px">
+<div *ngIf="!loading && user" fxFlex="100" fxLayout="row wrap" fxLayoutAlign="center center" style="margin: 20px">
   <div *ngFor="let deck of decks" fxLayout="column" style="margin: 10px;">
     <mat-card class="deck-manager-commander-viewer" matRipple [matRippleCentered]="false" [matRippleDisabled]="!deck.hovered">
       <div [ngClass]="{'deck-manager-background-card-closed': deck.hovered, 'deck-manager-background-card-open': !deck.hovered}">

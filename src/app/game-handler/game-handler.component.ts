@@ -22,11 +22,12 @@ import {
 } from 'rxjs';
 import * as Scry from "scryfall-sdk";
 import { shakeX } from 'ng-animate';
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
-  selector: 'app-playmat-resized',
-  templateUrl: './playmat-resized.component.html',
-  styleUrls: ['./playmat-resized.component.scss'],
+  selector: 'app-game-handler',
+  templateUrl: './game-handler.component.html',
+  styleUrls: ['./game-handler.component.scss'],
   animations: [
     // Each unique animation requires its own trigger. The first argument of the trigger function is the name
     trigger('userTappedState', [
@@ -44,11 +45,13 @@ import { shakeX } from 'ng-animate';
     trigger('shakeCard', [transition('false => true', useAnimation(shakeX))])
   ]
 })
-export class PlaymatResizedComponent implements OnInit {
+export class GameHandlerComponent implements OnInit {
 
   /**------------------------------------------------
    *                  Variables                     *
    ------------------------------------------------**/
+  gameid = -1;
+
   players: any = [];
 
   user: any = null;
@@ -80,11 +83,16 @@ export class PlaymatResizedComponent implements OnInit {
    *              Game Setup Functions              *
    ------------------------------------------------**/
   constructor(private rightClickHandler: RightclickHandlerServiceService, private fddp_data: FddpApiService,
-              private snackBar: MatSnackBar, public dialog: MatDialog, private snackbar: MatSnackBar) { }
+              private snackbar: MatSnackBar, public dialog: MatDialog, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+
     this.loading = true;
     this.rightClickHandler.overrideRightClick();
+
+    const routeParams = this.route.snapshot.paramMap;
+    this.gameid = Number(routeParams.get('deckid'));
+
     let game_promises: any[] = [];
     game_promises.push(this.loadPlayer("Christian", 1, 16, 1));
     game_promises.push(this.loadPlayer("Ray", 3, 13, 0));
@@ -1051,7 +1059,7 @@ export class PlaymatResizedComponent implements OnInit {
       this.sendCardToZone(commander, this.user.deck.commander, 'play');
     }
     else {
-      this.snackBar.open('Commander is not in the command zone!', 'Dismiss', { duration: 3000});
+      this.snackbar.open('Commander is not in the command zone!', 'Dismiss', { duration: 3000});
     }
   }
 

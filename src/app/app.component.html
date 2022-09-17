@@ -18,6 +18,14 @@
       <a mat-list-item [routerLink]="'/game'">Game</a>
       <a mat-list-item [routerLink]="'/custom'">Custom Cards</a>
       <a mat-list-item [routerLink]="'/upload'">Add Custom</a>
+      <mat-form-field appearance="standard" style="margin-left: 15px">
+        <mat-label>User</mat-label>
+        <mat-select [(ngModel)]="current_user" (ngModelChange)="signIn(current_user)">
+          <mat-option *ngFor="let user of users" [value]="user">
+            {{user.name}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>

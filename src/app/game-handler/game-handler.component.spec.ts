@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PlaymatResizedComponent } from './playmat-resized.component';
+import { GameHandlerComponent } from './game-handler.component';
 
 describe('PlaymatResizedComponent', () => {
-  let component: PlaymatResizedComponent;
-  let fixture: ComponentFixture<PlaymatResizedComponent>;
+  let component: GameHandlerComponent;
+  let fixture: ComponentFixture<GameHandlerComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PlaymatResizedComponent ]
+      declarations: [ GameHandlerComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PlaymatResizedComponent);
+    fixture = TestBed.createComponent(GameHandlerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

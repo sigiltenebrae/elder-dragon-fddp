@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FddpApiService} from "../../services/fddp-api.service";
+import {TokenStorageService} from "../../services/token-storage.service";
 
 @Component({
   selector: 'app-deck-manager',
@@ -7,55 +8,32 @@ import {FddpApiService} from "../../services/fddp-api.service";
   styleUrls: ['./deck-manager.component.scss']
 })
 export class DeckManagerComponent implements OnInit {
-  users: any = [
-    {
-      "id": 1,
-      "name": "Christian"
-    },
-    {
-      "id": 2,
-      "name": "David"
-    },
-    {
-      "id": 3,
-      "name": "Ray"
-    },
-    {
-      "id": 4,
-      "name": "Liam"
-    },
-    {
-      "id": 5,
-      "name": "Ryan"
-    },
-    {
-      "id": 6,
-      "name": "George"
-    }
-  ];
-  user = this.users[3];
-
+  user: any = null;
   loading = false;
   decks: any[] = [];
 
-  constructor(private fddp_data: FddpApiService) { }
+  temp = false;
+
+  constructor(private fddp_data: FddpApiService, private tokenStorage: TokenStorageService) { }
 
   ngOnInit(): void {
     this.loading = true;
-    this.fddp_data.getDecksBasic(this.user.id).then((decks: any) => {
-      let temp_decks = decks;
-      let deck_promises: any[] = [];
-      temp_decks.forEach((deck: any) => {
-        deck_promises.push(this.getDeckData(deck.id));
+    this.user = this.tokenStorage.getUser();
+    if(this.user && this.user.id) {
+      this.fddp_data.getDecksBasic(this.user.id).then((decks: any) => {
+        let temp_decks = decks;
+        let deck_promises: any[] = [];
+        temp_decks.forEach((deck: any) => {
+          deck_promises.push(this.getDeckData(deck.id));
+        });
+        Promise.all(deck_promises).then(() => {
+          for (let deck of this.decks) {
+            deck.hovered = false;
+          }
+          this.loading = false;
+        });
       });
-      Promise.all(deck_promises).then(() => {
-        for(let i = 0; i < 20; i++) {this.decks.push(this.decks[0])}
-        for (let deck of this.decks) {
-          deck.hovered = false;
-        }
-        this.loading = false;
-      });
-    });
+    }
   }
 
   getDeckData(deckid: number): Promise<void> {

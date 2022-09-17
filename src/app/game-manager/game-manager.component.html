@@ -9,24 +9,24 @@
               <div fxFlex fxLayout="row" fxLayoutAlign="center" fxLayoutGap="20">
                 <mat-form-field fxFlex="50" appearance="fill">
                   <mat-label>Game Name</mat-label>
-                  <input matInput placeholder="08805" value="08805">
+                  <input #game_name_input matInput placeholder="08805" value="08805">
                 </mat-form-field>
                 <mat-form-field fxFlex="20" appearance="fill">
                   <mat-label>Max Players</mat-label>
-                  <input matInput type="number" value="5">
+                  <input #max_player_input matInput type="number" value="5">
                 </mat-form-field>
               </div>
               <div fxFlex fxLayout="row" fxLayoutAlign="center">
                 <mat-form-field appearance="fill">
                   <mat-label>Game Type</mat-label>
-                  <mat-select #game_type value="commander">
+                  <mat-select #game_type_input value="commander">
                     <mat-option value="commander">Commander</mat-option>
                     <mat-option value="twohead">Two-Headed Giant</mat-option>
                     <mat-option value="star">Star</mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
-              <button mat-raised-button color="primary" style="max-width: 80px">Create</button>
+              <button (click)="createGame(game_name_input.value, max_player_input.value, game_type_input.value)" mat-raised-button color="primary" style="max-width: 80px">Create</button>
             </div>
           </div>
         </mat-card-content>
@@ -39,7 +39,7 @@
         <mat-card-content class="game-manager-content" fxFlex fxLayout="column" fxLayoutAlign="center">
           <div fxFlex fxLayout="row" fxLayoutAlign="center center">
             <div fxLayout="column" fxLayoutAlign="center center">
-              <h2>Game</h2>
+              <h2>{{game.name}}</h2>
               <h3>Christian, Ray, David, George, Liam</h3>
               <h5>Running Time: 00:00</h5>
               <button mat-raised-button color="primary" style="max-width: 50px">Join</button>
