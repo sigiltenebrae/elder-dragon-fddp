@@ -276,6 +276,14 @@ export class DeckEditComponent implements OnInit {
     this.deck.tokens.splice(this.deck.tokens.indexOf(token), 1);
   }
 
+  getTotal(cards: any) {
+    let count = 0;
+    for (let card of cards) {
+      count += card.count;
+    }
+    return count;
+  }
+
   saveDeck() {
     if (this.deckid == -1) { //create
       this.fddp_data.createDeck(this.deck).then(() => {

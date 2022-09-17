@@ -70,7 +70,7 @@
                [ngbTypeahead]="card_search" [(ngModel)]="new_card_temp" [editable]="false">
         <button mat-icon-button matSuffix type="button" (click)="addCardToDeck()"><mat-icon>add</mat-icon></button>
       </mat-form-field>
-      <h4 *ngIf="card_type === 'cards'">Cards: {{deck.cards.length}}</h4>
+      <h4 *ngIf="card_type === 'cards'">Cards: {{getTotal(deck.cards)}}/{{deck.cards.length}}</h4>
       <div *ngIf="card_type === 'cards'" class="deck-form-card-list">
         <mat-list>
           <div *ngFor="let card of deck.cards; let i = index" class="deck-form-card-display">
