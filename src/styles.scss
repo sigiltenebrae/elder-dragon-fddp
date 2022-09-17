@@ -1428,3 +1428,23 @@ commander-dashboard-select-zone {
   border-radius: 50%;
   @include mat.elevation(2);
 }
+
+.game-manager-game-viewer {
+  font-family: Beleren, "Helvetica Neue", sans-serif;
+  position: relative;
+  float: left;
+  overflow: hidden;
+  width: 400px;
+  text-align: center;
+  height: 300px;
+  border: none;
+}
+
+.game-manager-game-viewer .game-manager-content {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  float: left;
+  left: 0;
+  top: 0;
+}

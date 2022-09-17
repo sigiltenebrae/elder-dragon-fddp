@@ -44,6 +44,7 @@ import { DeckManagerComponent } from './deck-manager/deck-manager.component';
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { MatDialogModule } from "@angular/material/dialog";
 import { TestWsComponent } from './test-ws/test-ws.component';
+import { GameManagerComponent } from './game-manager/game-manager.component';
 
 
 @NgModule({
@@ -56,7 +57,8 @@ import { TestWsComponent } from './test-ws/test-ws.component';
     DeckManagerComponent,
     TokenInsertDialog,
     DeckSelectDialog,
-    TestWsComponent
+    TestWsComponent,
+    GameManagerComponent
   ],
   imports: [
     BrowserModule,
@@ -88,7 +90,7 @@ import { TestWsComponent } from './test-ws/test-ws.component';
     HttpClientModule,
     RouterModule.forRoot([
       {path: '', component: DeckManagerComponent},
-      {path: 'game', component: PlaymatResizedComponent},
+      {path: 'game', component: GameManagerComponent},
       {path: 'decks/:deckid', component: DeckEditComponent},
       {path: 'upload', component: CustomImagesComponent},
       {path: 'custom', component: CustomImageManagerComponent},
