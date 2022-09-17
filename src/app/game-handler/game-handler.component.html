@@ -12,7 +12,7 @@
         <div *ngIf="rightclicked_item.type === 'user_play'">
           <button mat-menu-item (click)="tapSelected()">Toggle Tap</button>
           <button mat-menu-item (click)="rightclicked_item.card.locked=!rightclicked_item.card.locked">(Un)Lock Tap</button>
-          <button mat-menu-item (click)="shakeCard(rightclicked_item.card)">Shake</button>
+          <button mat-menu-item (click)="shakeCard(rightclicked_item.card, user.id, 'play')">Shake</button>
           <button mat-menu-item (click)="cloneCard(rightclicked_item.card)">Clone</button>
           <button mat-menu-item [matMenuTriggerFor]="counters">Counters</button>
           <button mat-menu-item [matMenuTriggerFor]="token_menu" *ngIf="rightclicked_item && rightclicked_item.card && rightclicked_item.card.tokens && rightclicked_item.card.tokens.length> 0">Tokens</button>
@@ -22,7 +22,7 @@
         </div>
 
         <div *ngIf="rightclicked_item.type === 'opponent_play'">
-          <button mat-menu-item (click)="shakeCard(rightclicked_item.card)">Shake</button>
+          <button mat-menu-item (click)="shakeCard(rightclicked_item.card, rightclicked_item.userid, 'play')">Shake</button>
         </div>
 
         <div *ngIf="rightclicked_item.type === 'user_playmat'">
@@ -56,12 +56,12 @@
             Send to Play Face Down
           </button>
           <button *ngIf="rightclicked_item.card.back_face" mat-menu-item (click)="altFaceCard(rightclicked_item.card)">Alt Face</button>
-          <button mat-menu-item (click)="shakeCard(rightclicked_item.card)">Shake</button>
+          <button mat-menu-item (click)="shakeCard(rightclicked_item.card, user.id, 'hand')">Shake</button>
           <button mat-menu-item [matMenuTriggerFor]="revealTo">Reveal To</button>
         </div>
 
         <div *ngIf="rightclicked_item.type === 'opponent_hand'">
-          <button mat-menu-item (click)="shakeCard(rightclicked_item.card)">Shake</button>
+          <button mat-menu-item (click)="shakeCard(rightclicked_item.card, rightclicked_item.userid, 'hand')">Shake</button>
         </div>
 
         <div *ngIf="rightclicked_item.type === 'zone'">
@@ -75,7 +75,7 @@
           <button mat-menu-item [matMenuTriggerFor]="sendTo">Send To</button>
           <button *ngIf="rightclicked_item.card.back_face" mat-menu-item (click)="altFaceCard(rightclicked_item.card)">Alt Face</button>
           <button *ngIf="rightclicked_item.zone === 'exile' || rightclicked_item.zone === 'temp_zone'" mat-menu-item (click)="rightclicked_item.card.facedown=!rightclicked_item.card.facedown">Flip Face</button>
-          <button mat-menu-item (click)="shakeCard(rightclicked_item.card)">Shake</button>
+          <button mat-menu-item (click)="shakeCard(rightclicked_item.card, sidenav_selected_player.id, rightclicked_item.zone)">Shake</button>
         </div>
 
         <div *ngIf="rightclicked_item.type === 'scry_card'">
@@ -126,7 +126,7 @@
 
         <div *ngIf="rightclicked_item.type === 'deck_card'">
           <button mat-menu-item [matMenuTriggerFor]="sendTo">Send To</button>
-          <button mat-menu-item (click)="shakeCard(rightclicked_item.card)">Shake</button>
+          <button mat-menu-item>Shake</button>
         </div>
       </div>
     </ng-template>
@@ -468,7 +468,7 @@
                             <img class="mtg-card-opponent"
                                  [src]="card.visible.includes(user.id) ? card.image: player.deck.sleeves"
                                  [alt]="card.visible.includes(user.id) ? card.name: ''"
-                                 loading="lazy" (contextmenu)="onRightClick($event,{type: 'opponent_play', card: card, spot: spot})">
+                                 loading="lazy" (contextmenu)="onRightClick($event,{type: 'opponent_play', card: card, spot: spot, userid: player.id})">
 
                             <button *ngIf="card.counter_1" class="mtg-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true"><p>{{card.counter_1_value}}</p></button>
                             <button *ngIf="card.counter_2" class="mtg-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>{{card.counter_2_value}}</p></button>
@@ -556,8 +556,8 @@
                      class="mtg-card-opponent"
                      [src]="card.visible.includes(user.id) ? card.image: selected_player.deck.sleeves"
                      [alt]="card.visible.includes(user.id) ? card.name: ''"
-                     (contextmenu)="onRightClick($event, {type: 'opponent_hand', card: card})"
-                     (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null" loading="lazy">
+                     (contextmenu)="onRightClick($event, {type: 'opponent_hand', card: card, userid: selected_player.id})"
+                     (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null" loading="lazy" [@shakeCard]="card.shaken">
               </div>
             </div>
           </div>
@@ -575,7 +575,7 @@
                      (contextmenu)="onRightClick($event, {type: 'user_hand', card: card, from: user.hand}); selectCard(card, user.hand);"
                      (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
                      (click)="toggleCardSelect(card, user.hand)"
-                     (cdkDragStarted)="hovered_card=null; selectCard(card, user.hand);"
+                     (cdkDragStarted)="hovered_card=null; selectCard(card, user.hand);" [@shakeCard]="card.shaken"
                      cdkDrag>
                   <img [ngClass]="{ 'mtg-card-user-selected': card.selected }"
                        class="mtg-card-user"

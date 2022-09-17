@@ -170,6 +170,10 @@ export class GameHandlerComponent implements OnInit {
         this.game_data.turn_count = json_data.turn_data.turn_count;
         this.game_data.current_turn = json_data.turn_data.current_turn;
       }
+      else if (json_data.shake_data) {
+        console.log('shake received');
+        this.cardShake(json_data.shake_data.cardid, json_data.shake_data.userid, json_data.shake_data.location);
+      }
     });
 
 
@@ -353,11 +357,55 @@ export class GameHandlerComponent implements OnInit {
     return null;
   }
 
-  shakeCard(card: any) {
+  shakeCard(card: any, id: number, location: string) {
     card.shaken = true;
     setTimeout(() => {
       card.shaken = false;
     }, 3000);
+    this.sendMsg({
+      request: 'shake',
+      game_id: this.game_id,
+      card: {
+        id: card.id,
+        user: id,
+        location: location
+      }
+    });
+  }
+
+  cardShake(cardid: number, userid: number, location: string) {
+    let shake_player = this.getPlayer(userid);
+    if (shake_player) {
+      switch (location) {
+        case 'hand':
+          for (let card of shake_player.hand) {
+            if (card.id == cardid) {
+              card.shaken = true;
+              setTimeout(() => {
+                card.shaken = false;
+              }, 3000);
+              break;
+            }
+          }
+          break;
+        case 'play':
+          for (let spot of shake_player.playmat) {
+            for (let card of spot) {
+              if (card.id == cardid) {
+                card.shaken = true;
+                setTimeout(() => {
+                  card.shaken = false;
+                }, 3000);
+                return;
+              }
+            }
+          }
+          break;
+        default:
+          console.log('shake');
+          break;
+      }
+    }
   }
 
   /**------------------------------------------------
