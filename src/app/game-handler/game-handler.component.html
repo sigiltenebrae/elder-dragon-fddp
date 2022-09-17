@@ -23,6 +23,7 @@
 
         <div *ngIf="rightclicked_item.type === 'opponent_play'">
           <button mat-menu-item (click)="shakeCard(rightclicked_item.card, rightclicked_item.userid, 'play')">Shake</button>
+          <button mat-menu-item (click)="cloneCard(rightclicked_item.card)">Clone</button>
         </div>
 
         <div *ngIf="rightclicked_item.type === 'user_playmat'">
@@ -462,7 +463,7 @@
                     <div class="playmat-opponent-card-data">
                       <div *ngFor="let spot of reversePlaymat(player.playmat)" class="mtg-card-holder-opponent">
                         <div *ngFor="let card of spot; let i = index">
-                          <div [ngClass]="{'stack-1': i == 0,'stack-2': i == 1,'stack-3': i == 2, 'mtg-card-invert': card.inverted}" class="mtg-card-opponent-container"
+                          <div [ngClass]="{'stack-1': i == 0,'stack-2': i == 1,'stack-3': i == 2, 'mtg-card-invert': card.inverted, 'mtg-card-clone': card.is_token && !card.types.includes('Token')}" class="mtg-card-opponent-container"
                                (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null" [@opponentTappedState]="card.tapped"
                                [@shakeCard]="card.shaken">
                             <img class="mtg-card-opponent"
