@@ -78,6 +78,7 @@ export class GameHandlerComponent implements OnInit {
   hidden = false;
   loading = false;
 
+  counts: any[] = [];
 
   /**------------------------------------------------
    *              Game Setup Functions              *
@@ -106,11 +107,13 @@ export class GameHandlerComponent implements OnInit {
         }
         this.game_data = json_data.game_data;
         console.log(this.game_data);
-        for (let player of this.game_data.players) {
-          if (player.id == this.current_user.id) {
-            this.user = player;
-            console.log('user registered');
-            console.log(this.user);
+        if (this.game_data.players){
+          for (let player of this.game_data.players) {
+            if (player.id == this.current_user.id) {
+              this.user = player;
+              console.log('user registered');
+              console.log(this.user);
+            }
           }
         }
         if (this.user == null) { //user is not in the game
@@ -150,26 +153,14 @@ export class GameHandlerComponent implements OnInit {
         console.log(this.user);
       }
     });
+
+
     this.sleep(1500).then(() => {
       this.sendMsg({
         request: 'game_data',
         game_id: this.game_id
       });
     });
-
-    //game_promises.push(this.loadPlayer("Christian", 1, 16, 1));
-    //game_promises.push(this.loadPlayer("Ray", 3, 13, 0));
-    //game_promises.push(this.loadPlayer("David", 2, 11, 2));
-    //game_promises.push(this.loadPlayer("George", 6, 12, 3));
-    //Promise.all(game_promises).then(() => {
-      //for (let player of this.game_data.players) {
-        //if (player.name === "Ray") {
-          //this.user = player;
-        //}
-      //}
-      //this.game_data.players.sort((a: any, b: any) => (a.turn > b.turn) ? 1: -1);
-      //this.loading = false;
-    //});
   }
 
   sendMsg(content: any) {
@@ -188,11 +179,16 @@ export class GameHandlerComponent implements OnInit {
     });
   }
 
+
+
   /**
    * Sends a message to the web socket to add / update the deck for a player
-   * @param name
+   * @param name name of the player
+   * @param id id of the player
+   * @param deckid id of the selected deck
    */
   setPlayerDeck(name: string, id: number, deckid: number): Promise<void> {
+    console.log(this.current_user.id)
     return new Promise<void>((resolve) => {
       this.fddp_data.getDeckForPlay(deckid).then((deck_data: any) => {
         if (deck_data) {
@@ -230,7 +226,6 @@ export class GameHandlerComponent implements OnInit {
           out_player.grave = [];
           out_player.exile = [];
           out_player.temp_zone = [];
-          out_player.counters = [];
           out_player.deck.cards.forEach((card: any) => {
             card.counter_1 = false;
             card.counter_2 = false;
@@ -268,7 +263,7 @@ export class GameHandlerComponent implements OnInit {
           this.shuffleDeck(out_player.deck.cards);
 
           this.sendMsg({
-            request: 'player_reset',
+            request: 'player_change',
             game_id: this.game_id,
             player_data:
               {
@@ -282,6 +277,24 @@ export class GameHandlerComponent implements OnInit {
           resolve();
         }
       });
+    });
+  }
+
+  endTurn() {
+    this.sendMsg({
+      request: 'end_turn',
+    });
+  }
+
+  sendPlayerUpdate() {
+    this.sendMsg({
+      request: 'player_change',
+      game_id: this.game_id,
+      player_data:
+        {
+          id: this.current_user.id,
+          player: this.user
+        }
     });
   }
 
@@ -402,10 +415,12 @@ export class GameHandlerComponent implements OnInit {
     for (let card of spot) {
       card.tapped = card.tapped === 'tapped'? 'untapped': 'tapped';
     }
+    this.sendPlayerUpdate();
   }
 
   tapCard(card: any) {
     card.tapped = card.tapped === 'tapped'? 'untapped': 'tapped';
+    this.sendPlayerUpdate();
   }
 
   tapSelected() {
@@ -413,6 +428,7 @@ export class GameHandlerComponent implements OnInit {
       this.tapCard(card_select.card);
     }
     this.clearSelection();
+    this.sendPlayerUpdate();
   }
 
   untapAll() {
@@ -423,6 +439,7 @@ export class GameHandlerComponent implements OnInit {
         }
       }
     }
+    this.sendPlayerUpdate();
   }
 
   /**
@@ -545,17 +562,23 @@ export class GameHandlerComponent implements OnInit {
 
       card.alt = !card.alt;
     }
+    this.sendPlayerUpdate();
   }
 
   clearCard(card: any) {
     card.tapped = 'untapped';
     card.power_mod = 0;
     card.toughness_mod = 0;
+    card.loyalty = 0;
     card.loyalty_mod = 0;
     card.counter_1 = false;
+    card.counter_1_value = 0;
     card.counter_2 = false;
+    card.counter_2_value = 0;
     card.counter_3 = false;
+    card.counter_3_value = 0;
     card.multiplier = false;
+    card.multiplier_value = 0;
     card.locked = false;
     card.primed = false;
     card.triggered = false;
@@ -564,14 +587,18 @@ export class GameHandlerComponent implements OnInit {
     if (card.alt) {
       this.altFaceCard(card);
     }
+    this.sendPlayerUpdate();
   }
 
-  shuffleDeck(cards: any[]) {
+  shuffleDeck(cards: any[], update?: boolean) {
     for (let i = 0; i < cards.length; i++) {
       let r = i + Math.floor(Math.random() * (cards.length - i));
       let temp = cards[r];
       cards[r] = cards[i];
       cards[i] = temp;
+    }
+    if (update) {
+      this.sendPlayerUpdate();
     }
 
   }
@@ -639,7 +666,12 @@ export class GameHandlerComponent implements OnInit {
               if (card.types) {
                 for (let card_type of card.types) {
                   if (type.toLowerCase() === card_type.toLowerCase()) {
-                    count++;
+                    if (card.multiplier) {
+                      count += card.multiplier_value;
+                    }
+                    else {
+                      count++;
+                    }
                   }
                 }
               }
@@ -652,15 +684,16 @@ export class GameHandlerComponent implements OnInit {
   }
 
   createCounter(type: string) {
-    this.user.counters.push({
+    this.counts.push({
       color: '#' + Math.floor(Math.random()*16777215).toString(16),
       value: 0,
+      search_type: '',
       type: type
     })
   }
 
   deleteCounter(counter: any) {
-    this.user.counters.splice(this.user.counters.indexOf(counter), 1);
+    this.counts.splice(this.counts.indexOf(counter), 1);
   }
 
   cloneCard(card: any) {
@@ -673,6 +706,7 @@ export class GameHandlerComponent implements OnInit {
       card_clone.visible.push(player.id);
     }
     this.user.temp_zone.push(card_clone);
+    this.sendPlayerUpdate();
   }
 
   createToken(token: any) {
@@ -689,6 +723,8 @@ export class GameHandlerComponent implements OnInit {
           out_token.visible.push(player.id);
         }
         this.user.temp_zone.push(out_token);
+        this.clearSelection();
+        this.sendPlayerUpdate();
         return;
       }
     }
@@ -701,6 +737,7 @@ export class GameHandlerComponent implements OnInit {
         out_token.image = images.length > 0 ? images[0]: null;
         this.clearCard(out_token);
         this.user.temp_zone.push(out_token);
+        this.sendPlayerUpdate();
         return;
       });
     })
@@ -719,6 +756,7 @@ export class GameHandlerComponent implements OnInit {
         out_token.visible.push(player.id);
       }
       this.user.temp_zone.push(out_token);
+      this.sendPlayerUpdate();
       return;
     });
 
@@ -804,13 +842,18 @@ export class GameHandlerComponent implements OnInit {
     this.clearSelection();
     for (let spot of this.user.playmat) {
       for (let card of spot) {
-        if (card.types) {
-          for (let card_type of card.types) {
-            if (type.toLowerCase() === card_type.toLowerCase()) {
-              this.toggleCardSelect(card, spot);
-              break;
+        if (type !== '') {
+          if (card.types) {
+            for (let card_type of card.types) {
+              if (type.toLowerCase() === card_type.toLowerCase()) {
+                this.selectCard(card, spot);
+                break;
+              }
             }
           }
+        }
+        else {
+
         }
       }
     }
@@ -1021,6 +1064,7 @@ export class GameHandlerComponent implements OnInit {
       }
     }
     this.selected_cards = [];
+    this.sendPlayerUpdate();
   }
 
   /**
@@ -1112,6 +1156,7 @@ export class GameHandlerComponent implements OnInit {
         card.visible.push(whomst);
       }
     }
+    this.sendPlayerUpdate();
   }
 
   revealAllTo(from: any[], whomst: any) {
@@ -1147,6 +1192,7 @@ export class GameHandlerComponent implements OnInit {
       this.user.deck.commander_saved[0] = this.user.deck.commander_saved[1];
       this.user.deck.commander_saved[1] = temp;
     }
+    this.sendPlayerUpdate();
   }
 
   drawX(count: any) {
@@ -1161,6 +1207,7 @@ export class GameHandlerComponent implements OnInit {
       this.user.hand.push(this.user.deck.cards[0]);
       this.user.deck.cards.splice(0, 1);
     }
+    this.sendPlayerUpdate();
   }
 
   drawToX(zone: string) {
@@ -1205,6 +1252,7 @@ export class GameHandlerComponent implements OnInit {
         break;
       }
     }
+    this.sendPlayerUpdate();
   }
 
   scryX(count: any) {
@@ -1215,6 +1263,7 @@ export class GameHandlerComponent implements OnInit {
       this.user.deck.cards.splice(0, 1);
     }
     this.scrying = true;
+    this.sendPlayerUpdate();
   }
 
   endScry() {
@@ -1226,6 +1275,7 @@ export class GameHandlerComponent implements OnInit {
     }
     this.user.temp_scry_zone = [];
     this.scrying = false;
+    this.sendPlayerUpdate();
   }
 
   scrySendTo(card: any, type: string) {
@@ -1241,6 +1291,7 @@ export class GameHandlerComponent implements OnInit {
         this.sendCardToZone(card, this.user.temp_scry_zone, 'temp_zone');
         break;
     }
+    this.sendPlayerUpdate();
   }
 
   /**
@@ -1274,6 +1325,7 @@ export class GameHandlerComponent implements OnInit {
         break;
       }
     }
+    this.sendPlayerUpdate();
   }
 
   /**------------------------------------------------

@@ -15,6 +15,7 @@
           <button mat-menu-item (click)="shakeCard(rightclicked_item.card)">Shake</button>
           <button mat-menu-item (click)="cloneCard(rightclicked_item.card)">Clone</button>
           <button mat-menu-item [matMenuTriggerFor]="counters">Counters</button>
+          <button mat-menu-item [matMenuTriggerFor]="token_menu" *ngIf="rightclicked_item && rightclicked_item.card && rightclicked_item.card.tokens && rightclicked_item.card.tokens.length> 0">Tokens</button>
           <button mat-menu-item [matMenuTriggerFor]="orient">Orient</button>
           <button mat-menu-item [matMenuTriggerFor]="sendTo">Send To</button>
           <button mat-menu-item [matMenuTriggerFor]="revealTo">Reveal To</button>
@@ -84,7 +85,7 @@
         <div *ngIf="rightclicked_item.type === 'deck'">
           <button mat-menu-item>Flip Top</button>
           <button mat-menu-item (click)="openSideNav('deck')">Search</button>
-          <button mat-menu-item (click)="shuffleDeck(user.deck.cards)">Shuffle</button>
+          <button mat-menu-item (click)="shuffleDeck(user.deck.cards, true)">Shuffle</button>
           <div>
             <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
               <mat-label>Scry</mat-label>
@@ -149,6 +150,12 @@
   <button mat-menu-item (click)="rightclicked_item.card.counter_2 = !rightclicked_item.card.counter_2">Counter 2</button>
   <button mat-menu-item (click)="rightclicked_item.card.counter_3 = !rightclicked_item.card.counter_3">Counter 3</button>
   <button mat-menu-item (click)="rightclicked_item.card.multiplier = !rightclicked_item.card.multiplier">Multiplier</button>
+</mat-menu>
+
+<mat-menu #token_menu="matMenu">
+  <div *ngIf="rightclicked_item && rightclicked_item.card && rightclicked_item.card.tokens">
+    <button *ngFor="let token of rightclicked_item.card.tokens" mat-menu-item (click)="createToken(token)">Create {{token.name}} Token</button>
+  </div>
 </mat-menu>
 
 <mat-menu #orient="matMenu">
@@ -358,7 +365,7 @@
     <div *ngIf="user != null" class="counter-creator" fxLayout="column">
       <div class="counter-container">
         <!---->
-        <div *ngFor="let counter of user.counters">
+        <div *ngFor="let counter of counts">
           <mat-card *ngIf="counter.type === 'type'" class="commander-dashboard-custom-counter"
                     (contextmenu)="onRightClick($event, {type: 'type_counter', counter: counter})"
                      style="padding: 0" cdkDrag (keydown.escape)="deleteCounter(counter)">
@@ -600,9 +607,9 @@
         <div class="zone-hider-inner">
           <div [ngClass]="{'zone-container': !hidden, 'zone-container-hidden': hidden}">
             <div class="zone-holder">
-              <button [style.display]="'none'" mat-mini-fab class="zone-toggle-button"
+              <!--<button [style.display]="'none'" mat-mini-fab class="zone-toggle-button"
               (click)="hidden=!hidden"><mat-icon
-                [ngClass]="{'zones-arrow-on': !hidden, 'zones-arrow-off': hidden}">keyboard_arrow_right</mat-icon></button>
+                [ngClass]="{'zones-arrow-on': !hidden, 'zones-arrow-off': hidden}">keyboard_arrow_right</mat-icon></button>-->
               <div class="user-grave">
                 <mat-card class="zone-data" (dblclick)="sendSelectedToSpot(user.grave, 'grave')"
                           (contextmenu)="onRightClick($event, {type: 'zone', zone: 'grave'})"
