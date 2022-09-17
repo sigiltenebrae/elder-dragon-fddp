@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterContentInit, AfterViewInit, Component, OnInit} from '@angular/core';
 import {FddpWebsocketService} from "../../services/fddp-websocket.service";
 
 @Component({
@@ -37,18 +37,25 @@ export class GameManagerComponent implements OnInit {
     );
   }
 
+  refresh() {
+    this.sendMsg({request: 'games'});
+  }
+
   ngOnInit(): void {
     this.WebsocketService.messages.subscribe(msg => {
       let json_data = msg;
-      this.received.push(json_data);
+      if (json_data.games) {
+        this.games = json_data.games;
+      }
     });
-    //replace this with a refresh button?
-    let game_interval = setInterval(() => {
-      this.sendMsg({request: 'games'});
-      console.log('received games');
-      this.games = this.received[0];
-      this.received.splice(0, 1);
-    }, 5000);
+    this.sleep(1500).then(() => {
+      this.refresh();
+    })
   }
 
+  sleep(ms: number) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
+  }
 }

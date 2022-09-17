@@ -1,3 +1,4 @@
+
 <div style="visibility: hidden; position: fixed"
      [style.left]="menuTopLeftPosition.x"
      [style.top]="menuTopLeftPosition.y"
@@ -47,10 +48,10 @@
           <button mat-menu-item [matMenuTriggerFor]="sendTo">Send To</button>
           <button mat-menu-item
                   (click)="rightclicked_item.card.facedown=true;
-                  rightclicked_item.card.visible=[];
-                  clearSelection();
-                  selectCard(rightclicked_item.card, rightclicked_item.from);
-                  sendCardToZone(rightclicked_item.card, rightclicked_item.from, 'play')">
+                rightclicked_item.card.visible=[];
+                clearSelection();
+                selectCard(rightclicked_item.card, rightclicked_item.from);
+                sendCardToZone(rightclicked_item.card, rightclicked_item.from, 'play')">
             Send to Play Face Down
           </button>
           <button *ngIf="rightclicked_item.card.back_face" mat-menu-item (click)="altFaceCard(rightclicked_item.card)">Alt Face</button>
@@ -177,21 +178,25 @@
 </mat-menu>
 
 <mat-menu #revealTo="matMenu">
-  <button mat-menu-item *ngFor="let player of players" (click)="revealCard(rightclicked_item.card, player.id)">
-    <div *ngIf="rightclicked_item && rightclicked_item.card">
-      <mat-icon *ngIf="rightclicked_item.card.visible.includes(player.id)">visibility</mat-icon>
-      <mat-icon *ngIf="!rightclicked_item.card.visible.includes(player.id)">visibility_off</mat-icon>
-      <span>{{player.name}}</span>
-    </div>
-  </button>
-  <button mat-menu-item (click)="revealCard(rightclicked_item.card, 'All')">All</button>
-  <button mat-menu-item (click)="revealCard(rightclicked_item.card, 'None')">None</button>
+  <div *ngIf="game_data != null">
+    <button mat-menu-item *ngFor="let player of game_data.players" (click)="revealCard(rightclicked_item.card, player.id)">
+      <div *ngIf="rightclicked_item && rightclicked_item.card">
+        <mat-icon *ngIf="rightclicked_item.card.visible.includes(player.id)">visibility</mat-icon>
+        <mat-icon *ngIf="!rightclicked_item.card.visible.includes(player.id)">visibility_off</mat-icon>
+        <span>{{player.name}}</span>
+      </div>
+    </button>
+    <button mat-menu-item (click)="revealCard(rightclicked_item.card, 'All')">All</button>
+    <button mat-menu-item (click)="revealCard(rightclicked_item.card, 'None')">None</button>
+  </div>
 </mat-menu>
 
 <mat-menu #revealAll="matMenu">
-  <button mat-menu-item *ngFor="let player of players" (click)="revealAllTo(getZone(rightclicked_item.zone), player.id)">{{player.name}}</button>
-  <button mat-menu-item (click)="revealAllTo(getZone(rightclicked_item.zone), 'All')">All</button>
-  <button mat-menu-item (click)="revealAllTo(getZone(rightclicked_item.zone), 'None')">None</button>
+  <div *ngIf="game_data != null">
+    <button mat-menu-item *ngFor="let player of game_data.players" (click)="revealAllTo(getZone(rightclicked_item.zone), player.id)">{{player.name}}</button>
+    <button mat-menu-item (click)="revealAllTo(getZone(rightclicked_item.zone), 'All')">All</button>
+    <button mat-menu-item (click)="revealAllTo(getZone(rightclicked_item.zone), 'None')">None</button>
+  </div>
 </mat-menu>
 
 <mat-menu #play_counter="matMenu">
@@ -205,6 +210,8 @@
   <button mat-menu-item (click)="drawToX('temp_zone')">Temp Zone</button>
   <button mat-menu-item (click)="drawToX('play')">Play</button>
 </mat-menu>
+
+
 
 <div class="fddp-hover-holder" [style.display]="hovered_card || preview ? 'block': 'none'" [style.pointer-events]="preview ? 'all': 'none'">
   <mat-card class="fddp-hover-box" cdkDrag [cdkDragFreeDragPosition]="hoverdata.position">
@@ -264,10 +271,10 @@
       </div>
 
       <div fxLayout="row wrap" fxLayoutAlign="center start">
-        <div *ngFor="let card of temp_scry_zone; let i = index" class="scrydata-card-container">
+        <div *ngFor="let card of user.temp_scry_zone; let i = index" class="scrydata-card-container">
           <img class="scrydata-card" src="{{card.image}}"
                [ngClass]="{'mtg-card-user-selected': card.selected}"
-               (click)="toggleCardSelect(card, temp_scry_zone);"
+               (click)="toggleCardSelect(card, user.temp_scry_zone);"
                (contextmenu)="onRightClick($event,{type: 'scry_card', card: card});">
           <h1 class="scrydata-card-count">{{i + 1}}</h1>
         </div>
@@ -279,8 +286,8 @@
   </div>
 </div>
 
-<mat-sidenav-container fxFlexFill cdkDropListGroup hasBackdrop="false" *ngIf="!loading">
-  <mat-sidenav #fddp_sidenav disableClose>
+<mat-sidenav-container fxFlexFill cdkDropListGroup hasBackdrop="false" *ngIf="user != null">
+  <mat-sidenav #fddp_sidenav disableClose *ngIf="game_data != null">
     <mat-toolbar color="primary">
       <div fxFlex="100" fxLayout="row" fxLayoutAlign="space-between center">
         <h2 fxFlex *ngIf="sidenav_type==='grave'">Graveyards</h2>
@@ -297,7 +304,7 @@
         <mat-form-field appearance="outline" fxFlex style="margin: 5px;" *ngIf="sidenav_type !== 'deck'">
           <mat-label>Player</mat-label>
           <mat-select [(ngModel)]="sidenav_selected_player" name="player_select_sidenav" (ngModelChange)="getSidenavSort()">
-            <mat-option *ngFor="let player of players" [value]="player">
+            <mat-option *ngFor="let player of game_data.players" [value]="player">
               {{player.name}}
             </mat-option>
           </mat-select>
@@ -347,9 +354,6 @@
       </div>
     </div>
   </mat-sidenav>
-
-
-
   <mat-sidenav-content>
     <div *ngIf="user != null" class="counter-creator" fxLayout="column">
       <div class="counter-container">
@@ -366,7 +370,7 @@
               <mat-form-field appearance="outline" class="commander-dashboard-select">
                 <mat-label>Player</mat-label>
                 <mat-select #search_player>
-                  <mat-option *ngFor="let player of players" [value]="player">{{player.name}}</mat-option>
+                  <mat-option *ngFor="let player of game_data.players" [value]="player">{{player.name}}</mat-option>
                   <mat-option [value]="'All'">All</mat-option>
                 </mat-select>
               </mat-form-field>
@@ -389,13 +393,13 @@
         </div>
       </div>
     </div>
-    <div class="player-list">
+    <div class="player-list" *ngIf="game_data != null">
       <mat-card style="padding:5px 10px 0 0">
         <mat-list>
           <mat-divider></mat-divider>
-          <div *ngFor="let player of players; let j = index">
+          <div *ngFor="let player of game_data.players; let j = index">
             <mat-list-item [ngClass]="{'player-button-selected': player.selected,
-                                'player-button-turn': player.turn == current_turn}">
+                                'player-button-turn': player.turn == game_data.current_turn}">
               <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
                 <div fxLayout="column" fxFlex="100">
                   <button (pointerenter)="hovered_card=isOpponent(player) ? player.deck.commander_saved[0]: null" (pointerleave)="hovered_card=null"
@@ -429,21 +433,21 @@
                 </div>
               </div>
             </mat-list-item>
-            <mat-divider *ngIf="j != players.length - 1"></mat-divider>
+            <mat-divider *ngIf="j != game_data.players.length - 1"></mat-divider>
           </div>
         </mat-list>
       </mat-card>
     </div>
-    <div fxFlexFill (contextmenu)="onRightClick($event, {type: 'none'})">
+    <div fxFlexFill (contextmenu)="onRightClick($event, {type: 'none'})" *ngIf="user != null">
       <div class="container" fxLayout="row" fxLayoutAlign="center end" fxFlexFill>
         <div fxLayout="column" fxLayoutAlign="start center" fxFlexFill style="margin: 10px;">
           <!-- &&Opponents -->
           <div class="opponent-holder" fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
-            <div class="opponent-playmat-holder" fxLayout="row wrap" fxLayout.lt-md="column" fxLayoutAlign="center">
-              <div *ngFor="let player of players">
+            <div class="opponent-playmat-holder" fxLayout="row wrap" fxLayout.lt-md="column" fxLayoutAlign="center" *ngIf="game_data">
+              <div *ngFor="let player of game_data.players">
                 <mat-card *ngIf="isOpponent(player)" class="playmat-opponent" fxLayout="row wrap" fxLayoutAlign="center center">
                   <div class="playmat-opponent-data" (contextmenu)="onRightClick($event, {type: 'opponent_playmat'})">
-                    <div class="opponent-information">
+                    <div class="opponent-information" *ngIf="player.hand && player.deck.cards && player.grave && player.exile">
                       <h3>Hand: {{player.hand.length}}, Deck: {{player.deck.cards.length}}, Graveyard: {{player.grave.length}}, Exile: {{player.exile.length}}</h3>
                     </div>
                     <div class="playmat-opponent-selector" [ngClass]="{'playmat-opponent-selected': player.selected}"></div>
@@ -478,7 +482,7 @@
           </div>
           <!-- &&Playmat User -->
           <div fxLayout="row" fxFlex fxLayoutAlign="center">
-            <div class="playmat-user-holder">
+            <div class="playmat-user-holder" *ngIf="user != null">
               <div class="playmat-user-devotions" >
                 <div fxFlexFill fxLayout="column" fxLayoutAlign="space-evenly start">
                   <div class="devotion-holder">
@@ -592,7 +596,7 @@
                cdkDrag loading="lazy">
         </mat-card>
       </div>
-      <div class="zone-hider-outer">
+      <div class="zone-hider-outer" *ngIf="user != null">
         <div class="zone-hider-inner">
           <div [ngClass]="{'zone-container': !hidden, 'zone-container-hidden': hidden}">
             <div class="zone-holder">
@@ -702,5 +706,4 @@
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
-
 

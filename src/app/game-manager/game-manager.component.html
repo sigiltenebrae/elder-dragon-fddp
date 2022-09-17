@@ -33,16 +33,19 @@
       </mat-card>
     </div>
   </div>
-  <div fxFlex fxLayout="row wrap" fxLayoutAlign="center center" style="margin: 20px;">
+  <div fxLayout="row" fxLayoutAlign="center start" style="max-height: 128px;">
+    <button mat-raised-button (click)="refresh()">Refresh</button>
+  </div>
+  <div fxFlex fxLayout="row wrap" fxLayoutAlign="center start" style="margin: 20px; ">
     <div *ngFor="let game of games" fxLayout="column" style="margin: 10px;">
       <mat-card class="game-manager-game-viewer">
         <mat-card-content class="game-manager-content" fxFlex fxLayout="column" fxLayoutAlign="center">
           <div fxFlex fxLayout="row" fxLayoutAlign="center center">
             <div fxLayout="column" fxLayoutAlign="center center">
               <h2>{{game.name}}</h2>
-              <h3>Christian, Ray, David, George, Liam</h3>
               <h5>Running Time: 00:00</h5>
-              <button mat-raised-button color="primary" style="max-width: 50px">Join</button>
+              <button mat-raised-button color="primary" style="max-width: 50px"
+              [routerLink]="'/games/' + game.id">Join</button>
             </div>
           </div>
         </mat-card-content>

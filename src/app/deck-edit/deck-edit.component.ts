@@ -4,6 +4,7 @@ import { FormControl } from "@angular/forms";
 import { FddpApiService } from "../../services/fddp-api.service";
 import * as Scry from "scryfall-sdk";
 import {ActivatedRoute, Router} from "@angular/router";
+import {TokenStorageService} from "../../services/token-storage.service";
 
 @Component({
   selector: 'app-deck-edit',
@@ -14,6 +15,7 @@ export class DeckEditComponent implements OnInit {
 
   loading = false;
   users: any = []
+  current_user: any = null;
 
   deckid = -1;
   deck: any = null;
@@ -27,7 +29,7 @@ export class DeckEditComponent implements OnInit {
   deleting = false;
   card_type = 'cards';
 
-  constructor(private fddp_data: FddpApiService, private route: ActivatedRoute, private router: Router) {
+  constructor(private fddp_data: FddpApiService, private route: ActivatedRoute, private router: Router, private tokenStorage: TokenStorageService) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
 
@@ -37,6 +39,7 @@ export class DeckEditComponent implements OnInit {
     });
     const routeParams = this.route.snapshot.paramMap;
     this.deckid = Number(routeParams.get('deckid'));
+    this.current_user = this.tokenStorage.getUser();
     if (this.deckid == -1) {
       this.deck = {};
       this.deck.id = this.deckid;
@@ -48,6 +51,7 @@ export class DeckEditComponent implements OnInit {
       this.deck.owner = 0;
       this.deck.cards = [];
       this.deck.tokens = [];
+      this.deck.owner = this.current_user.id;
     }
     else if (this.deckid < 0) {
       this.router.navigate(['/']);
