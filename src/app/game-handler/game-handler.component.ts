@@ -165,6 +165,11 @@ export class GameHandlerComponent implements OnInit {
         this.game_data.players.sort((a: any, b: any) => (a.turn > b.turn) ? 1: -1);
         this.game_data.turn_count = 1;
       }
+      else if (json_data.turn_data) {
+        console.log('turn update received');
+        this.game_data.turn_count = json_data.turn_data.turn_count;
+        this.game_data.current_turn = json_data.turn_data.current_turn;
+      }
     });
 
 
@@ -301,6 +306,7 @@ export class GameHandlerComponent implements OnInit {
   endTurn() {
     this.sendMsg({
       request: 'end_turn',
+      game_id: this.game_id,
     });
   }
 
@@ -351,35 +357,6 @@ export class GameHandlerComponent implements OnInit {
     setTimeout(() => {
       card.shaken = false;
     }, 3000);
-  }
-
-  nextTurn() {
-    this.game_data.current_turn ++;
-    let max_turn = 0;
-    let max_player = null;
-    for (let player of this.game_data.players) {
-      if (player.turn > max_turn) {
-        max_turn = player.turn;
-        max_player = player;
-      }
-    }
-    if (this.game_data.current_turn > max_turn) {
-      this.game_data.current_turn = 0;
-      for (let player of this.game_data.players) {
-        if (player.turn == 0) {
-          max_player = player;
-          break;
-        }
-      }
-    }
-
-    //DEBUG
-    for (let player of this.game_data.players) {
-      if (player.turn == this.game_data.current_turn) {
-        this.user = player;
-      }
-    }
-
   }
 
   /**------------------------------------------------
