@@ -287,7 +287,8 @@ export class GameHandlerComponent implements OnInit {
             player_data:
               {
                 id: id,
-                player: out_player
+                player: out_player,
+                new_deck: true
               }
           });
           console.log(out_player);
