@@ -152,6 +152,19 @@ export class GameHandlerComponent implements OnInit {
         console.log('user: ');
         console.log(this.user);
       }
+      else if (json_data.play_order) {
+        console.log('play order received');
+        console.log(json_data.play_order);
+        for (let play of json_data.play_order) {
+          for (let player of this.game_data.players) {
+            if (player.id == play.id) {
+              player.turn = play.turn;
+            }
+          }
+        }
+        this.game_data.players.sort((a: any, b: any) => (a.turn > b.turn) ? 1: -1);
+        this.game_data.turn_count = 1;
+      }
     });
 
 
@@ -217,6 +230,7 @@ export class GameHandlerComponent implements OnInit {
           out_player.life = 40;
           out_player.infect = 0;
           out_player.playmat = []
+          out_player.turn = -1;
           out_player.command_tax_1 = 0;
           out_player.command_tax_2 = 0;
           for (let i = 0; i < 36; i++) {
@@ -278,6 +292,10 @@ export class GameHandlerComponent implements OnInit {
         }
       });
     });
+  }
+
+  startGame() {
+    this.sendMsg({start: true, game_id: this.game_id});
   }
 
   endTurn() {
