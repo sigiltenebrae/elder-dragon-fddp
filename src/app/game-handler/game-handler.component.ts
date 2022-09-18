@@ -67,7 +67,8 @@ export class GameHandlerComponent implements OnInit {
 
   scrying = false;
 
-  draw_to_count = '1'
+  draw_to_count = '1';
+  draw_until = '';
 
   rightclicked_item: any = null;
   sidenav_type: any = null;

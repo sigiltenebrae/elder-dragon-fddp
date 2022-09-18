@@ -114,8 +114,8 @@
           <div>
             <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
               <mat-label>Draw Until</mat-label>
-              <input #draw_until type="text" matInput (click)="$event.stopPropagation()" value="">
-              <button matSuffix mat-icon-button aria-label="DrawUntil" (click)="drawUntil(draw_until.value)"><mat-icon>fast_forward</mat-icon></button>
+              <input [(ngModel)]="draw_until" type="text" matInput (click)="$event.stopPropagation()" value="draw_until">
+              <button matSuffix mat-icon-button aria-label="DrawUntil" (click)="drawUntil(draw_until)"><mat-icon>fast_forward</mat-icon></button>
             </mat-form-field>
           </div>
           <div>
