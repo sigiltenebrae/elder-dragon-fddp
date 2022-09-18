@@ -351,10 +351,12 @@ export class GameHandlerComponent implements OnInit {
   }
 
   endTurn() {
-    this.sendMsg({
-      request: 'end_turn',
-      game_id: this.game_id,
-    });
+    if (this.game_data.current_turn == this.user.turn) {
+      this.sendMsg({
+        request: 'end_turn',
+        game_id: this.game_id,
+      });
+    }
   }
 
   sendPlayerUpdate() {
@@ -478,35 +480,70 @@ export class GameHandlerComponent implements OnInit {
    *      Keybind Functions        *
    ------------------------------------------------**/
 
-  @HostListener('document:keydown.shift', ['$event']) onShiftDown(event: KeyboardEvent) {
-    this.hoverdata.shift_pressed = !this.hoverdata.shift_pressed;
+  @HostListener('document:keydown.shift', ['$event']) onShiftDown(event: any) {
+    if (event.target.nodeName !== "INPUT") {
+      this.hoverdata.shift_pressed = !this.hoverdata.shift_pressed;
+    }
   }
 
-  @HostListener('document:keyup.shift', ['$event']) onShiftUp(event: KeyboardEvent) {
+  @HostListener('document:keydown.control', ['$event']) onCtrlDown(event: any) {
+    if (event.target.nodeName !== "INPUT") {
+      this.hoverdata.control_pressed = true;
+    }
   }
 
-  @HostListener('document:keydown.control', ['$event']) onCtrlDown(event: KeyboardEvent) {
-    this.hoverdata.control_pressed = true;
+  @HostListener('document:keyup.control', ['$event']) onCtrlUp(event: any) {
+    if (event.target.nodeName !== "INPUT") {
+      this.hoverdata.control_pressed = false;
+    }
   }
 
-  @HostListener('document:keyup.control', ['$event']) onCtrlUp(event: KeyboardEvent) {
-    this.hoverdata.control_pressed = false;
+  @HostListener('document:keydown.escape', ['$event']) onEscape(event: any) {
+    if (event.target.nodeName !== "INPUT") {
+      this.clearSelection();
+    }
   }
 
-  @HostListener('document:keydown.escape', ['$event']) onEscape(event: KeyboardEvent) {
-    this.clearSelection();
+  @HostListener('document:keydown.d', ['$event']) ondDown(event: any) {
+    if (event.target.nodeName !== "INPUT") {
+      this.drawX(1);
+    }
   }
 
-  @HostListener('document:keydown.d', ['$event']) ondDown(event: KeyboardEvent) {
-    //this.drawX(1);
+  @HostListener('document:keydown.p', ['$event']) onpDown(event: any) {
+    if (event.target.nodeName !== "INPUT") {
+      this.togglePreview()
+    }
   }
 
-  @HostListener('document:keydown.p', ['$event']) onpDown(event: KeyboardEvent) {
-    this.togglePreview()
+  @HostListener('document:keydown.m', ['$event']) onmDown(event: any) {
+    if (event.target.nodeName !== "INPUT") {
+      this.mulliganHand(7);
+    }
   }
 
-  @HostListener('document:keydown.m', ['$event']) onmDown(event: KeyboardEvent) {
-    //this.mulliganHand(7);
+  @HostListener('document:keydown.e', ['$event']) oneDown(event: any) {
+    if (event.target.nodeName !== "INPUT") {
+      this.endTurn();
+    }
+  }
+
+  @HostListener('document:keydown.s', ['$event']) onsDown(event: any) {
+    if (event.target.nodeName !== "INPUT") {
+      this.shuffleDeck(this.user.deck.cards, true);
+    }
+  }
+
+  @HostListener('document:keydown.x', ['$event']) onxDown(event: any) {
+    if (event.target.nodeName !== "INPUT") {
+      this.untapAll();
+    }
+  }
+
+  @HostListener('document:keydown.f', ['$event']) onfDown(event: any) {
+    if (event.target.nodeName !== "INPUT") {
+      this.openSideNav('deck');
+    }
   }
 
   togglePreview() {
