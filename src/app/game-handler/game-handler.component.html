@@ -568,16 +568,18 @@
           <!-- Opponent Hand -->
           <div fxLayout="row" fxFlex fxLayoutAlign="center">
             <div class="opponent-hand" fxLayout="column" fxLayoutAlign="center" [class.mat-elevation-z8]="selected_player != null">
-              <div *ngIf="selected_player != null" class="opponent-hand-list"
-                   fxFlex fxLayout="row" fxLayoutAlign="start">
-                <h1 class="hand-count">{{selected_player.hand.length}}</h1>
-                <img *ngFor="let card of selected_player.hand" fxFlex fxLayout="column"
-                     class="mtg-card-opponent"
-                     [src]="card.visible.includes(user.id) ? card.image: selected_player.deck.sleeves"
-                     [alt]="card.visible.includes(user.id) ? card.name: ''"
-                     (contextmenu)="onRightClick($event, {type: 'opponent_hand', card: card, userid: selected_player.id})"
-                     (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null" loading="lazy" [@shakeCard]="card.shaken">
-              </div>
+
+                <div *ngIf="selected_player != null" class="opponent-hand-list"
+                   fxFlex fxLayout="row" fxLayoutAlign="center start">
+                  <h1 class="hand-count">{{selected_player.hand.length}}</h1>
+                  <img *ngFor="let card of selected_player.hand"
+                       class="mtg-card-opponent"
+                       [src]="card.visible.includes(user.id) ? card.image: selected_player.deck.sleeves"
+                       [alt]="card.visible.includes(user.id) ? card.name: ''"
+                       (contextmenu)="onRightClick($event, {type: 'opponent_hand', card: card, userid: selected_player.id})"
+                       (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null" loading="lazy" [@shakeCard]="card.shaken">
+                </div>
+
             </div>
           </div>
           <!-- User Hand -->

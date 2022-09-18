@@ -118,46 +118,59 @@ export class GameHandlerComponent implements OnInit {
     this.WebsocketService.messages.subscribe(msg => {
       let json_data = msg;
       console.log('got a message');
-      console.log(json_data);
       if (json_data.game_data) { //is the entire board request
         if (!json_data.game_data.id) {
+          console.log('game does not exist')
           this.router.navigate(['/']);
         }
+        console.log('got game')
         this.game_data = json_data.game_data;
-        console.log(this.game_data);
         if (this.game_data.players){
           for (let player of this.game_data.players) {
             if (player.id == this.current_user.id) {
               this.user = player;
-              console.log('user registered');
-              console.log(this.user);
+              console.log('user loaded: ' + this.user.name);
             }
           }
         }
         if (this.user == null) { //user is not in the game
-          console.log('no user')
+          console.log('registering user');
           if(this.game_data.turn_count == 0) { //it is the start of the game
-            console.log('game start')
+            console.log('select deck');
             this.openDeckSelectDialog();
+            console.log('deck selected');
+          }
+          else {
+            console.log('game in progress. spectating not supported, kicking player');
+            this.router.navigate(['/']);
           }
         }
       }
       else if (json_data.player_data) { //is it a player data request (deck change, etc)
+        console.log('player data received');
         if (json_data.player_data != {}) {
           let found = false;
           for (let i = 0; i < this.game_data.players.length; i++) {
             if (this.game_data.players[i].id == json_data.player_data.id) {
+              console.log('player ' + json_data.player_data.id + ' found. Updating data.');
               found = true;
               this.game_data.players[i] = json_data.player_data;
-              if (this.game_data.players[i].id == this.current_user.id) {
+              if (this.game_data.players[i].id == this.current_user.id) { //was the updated player you
                 this.user = this.game_data.players[i];
+              }
+              if (this.selected_player != null && this.game_data.players[i].id == this.selected_player.id ) { //was the updated player your selected
+                this.selected_player = this.game_data.players[i];
+                console.log('updated player was selected.');
               }
               break;
             }
           }
+          console.log('user found in game?: ' + found);
           if (!found) {
+            console.log('adding player to game');
             this.game_data.players.push(json_data.player_data);
             if (json_data.player_data.id == this.current_user.id) {
+              console.log('setting player as user');
               for (let player of this.game_data.players) {
                 if (player.id == this.current_user.id) {
                   this.user = player;
@@ -167,16 +180,20 @@ export class GameHandlerComponent implements OnInit {
             }
           }
         }
-        console.log('user: ');
-        console.log(this.user);
       }
       else if (json_data.player_temp_data) {
-        console.log('temp zone!!')
+        console.log('multiple players modified.');
         for (let i = 0; i < this.game_data.players.length; i++) {
           if (this.game_data.players[i].id === json_data.player_temp_data.id){
             this.game_data.players[i] = json_data.player_temp_data;
+            console.log('main player data updated.');
+            if (this.selected_player != null && this.game_data.players[i].id == this.selected_player.id ) { //was the updated player your selected
+              this.selected_player = this.game_data.players[i];
+              console.log('updated player was selected.');
+            }
           }
           if (this.game_data.players[i].id === json_data.temp_id) {
+            console.log('updating zone for player ' + json_data.temp_id + ': ' + json_data.temp_zone_name);
             switch (json_data.temp_zone_name) {
               case 'grave':
                 this.game_data.players[i].grave = json_data.temp_zone;
@@ -202,7 +219,6 @@ export class GameHandlerComponent implements OnInit {
       }
       else if (json_data.play_order) {
         console.log('play order received');
-        console.log(json_data.play_order);
         for (let play of json_data.play_order) {
           for (let player of this.game_data.players) {
             if (player.id == play.id) {

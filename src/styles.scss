@@ -482,6 +482,10 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   border-radius: 3px;
 }
 
+.ng-scroll-viewport {
+  overscroll-behavior: unset !important;
+}
+
 .mtg-card-opponent-container .mtg-card-opponent {
   position: absolute;
   top: 0;
@@ -579,14 +583,11 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   max-height: 60px;
   max-width: 1144px;
   margin: 5px;
-  overflow-x: auto;
-  overflow-y: hidden;
 }
 
 .opponent-hand-list {
   height: 60px;
   max-height: 60px;
-  overflow-x: scroll;
   display: block;
 }
 
