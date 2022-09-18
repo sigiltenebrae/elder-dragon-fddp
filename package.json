@@ -11,7 +11,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^14.2.1",
-    "@angular/cdk": "^14.2.0",
+    "@angular/cdk": "^14.2.2",
     "@angular/common": "^14.2.1",
     "@angular/compiler": "^14.2.1",
     "@angular/core": "^14.2.1",
@@ -27,6 +27,7 @@
     "bootstrap": "^5.2.0",
     "crypto-js": "^4.1.1",
     "ng-animate": "^2.0.1",
+    "ngx-scrollbar": "^10.0.1",
     "rxjs": "~7.5.0",
     "scryfall-sdk": "^3.2.1",
     "tslib": "^2.3.0",
