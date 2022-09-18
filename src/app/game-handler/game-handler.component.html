@@ -567,9 +567,14 @@
           </div>
           <!-- Opponent Hand -->
           <div fxLayout="row" fxFlex fxLayoutAlign="center">
-            <div class="opponent-hand" fxLayout="column" fxLayoutAlign="center" [class.mat-elevation-z8]="selected_player != null">
-
-                <div *ngIf="selected_player != null" class="opponent-hand-list"
+            <div class="opponent-hand" fxLayout="column" fxLayoutAlign="center">
+              <ng-scrollbar #scrollable *ngIf="selected_player != null"
+                            track="horizontal"
+                            pointerEventsMethod="scrollbar"
+                            [autoWidthDisabled]="false"
+                            [style.width.px]="selected_player.hand.length * 40"
+                            style="margin-top: 0; max-width: 1144px;">
+                <div class="opponent-hand-list" [class.mat-elevation-z8]="true"
                    fxFlex fxLayout="row" fxLayoutAlign="center start">
                   <h1 class="hand-count">{{selected_player.hand.length}}</h1>
                   <img *ngFor="let card of selected_player.hand"
@@ -579,7 +584,7 @@
                        (contextmenu)="onRightClick($event, {type: 'opponent_hand', card: card, userid: selected_player.id})"
                        (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null" loading="lazy" [@shakeCard]="card.shaken">
                 </div>
-
+              </ng-scrollbar>
             </div>
           </div>
           <!-- User Hand -->
