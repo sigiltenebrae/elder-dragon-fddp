@@ -231,8 +231,9 @@
         <div fxLayout="column" fxLayoutAlign="center center" fxFlex>
           <div style="text-align: center">
             <h3 *ngIf="hovered_card.name" style="margin: 2px">{{hovered_card.name}}</h3>
-            <h3 style="margin: 2px" *ngIf="hovered_card.is_token && !hovered_card.types.includes('Token')">(Copy)</h3>
+            <h3 style="margin: 2px" *ngIf="hovered_card.is_token && !hovered_card.types.includes('Token') && !hovered_card.types.includes('Emblem')">(Copy)</h3>
             <h3 style="margin: 2px" *ngIf="hovered_card.is_token && hovered_card.types.includes('Token')">(Token)</h3>
+            <h3 style="margin: 2px" *ngIf="hovered_card.is_token && hovered_card.types.includes('Emblem')">(Emblem)</h3>
             <mat-divider></mat-divider>
             <h3 *ngIf="hovered_card.mana_cost" style="margin: 2px">{{hovered_card.mana_cost.join(' ')}}</h3>
             <h3 *ngIf="hovered_card.types" style="margin: 2px">{{hovered_card.types.join(' ')}}</h3>
@@ -457,13 +458,13 @@
                 <mat-card *ngIf="isOpponent(player)" class="playmat-opponent" fxLayout="row wrap" fxLayoutAlign="center center">
                   <div class="playmat-opponent-data" (contextmenu)="onRightClick($event, {type: 'opponent_playmat'})">
                     <div class="opponent-information" *ngIf="player.hand && player.deck.cards && player.grave && player.exile">
-                      <h3>Hand: {{player.hand.length}}, Deck: {{player.deck.cards.length}}, Graveyard: {{player.grave.length}}, Exile: {{player.exile.length}}</h3>
+                      <h3 style="pointer-events: none">Hand: {{player.hand.length}}, Deck: {{player.deck.cards.length}}, Graveyard: {{player.grave.length}}, Exile: {{player.exile.length}}</h3>
                     </div>
-                    <div class="playmat-opponent-selector" [ngClass]="{'playmat-opponent-selected': player.selected}"></div>
+                    <div class="playmat-opponent-selector" [ngClass]="{'playmat-opponent-turn': player.turn == game_data.current_turn, 'playmat-opponent-selected': player.selected}"></div>
                     <div class="playmat-opponent-card-data">
                       <div *ngFor="let spot of reversePlaymat(player.playmat)" class="mtg-card-holder-opponent">
                         <div *ngFor="let card of spot; let i = index">
-                          <div [ngClass]="{'stack-1': i == 0,'stack-2': i == 1,'stack-3': i == 2, 'mtg-card-invert': card.inverted, 'mtg-card-clone': card.is_token && !card.types.includes('Token')}" class="mtg-card-opponent-container"
+                          <div [ngClass]="{'stack-1': i == 0,'stack-2': i == 1,'stack-3': i == 2, 'mtg-card-invert': card.inverted, 'mtg-card-clone': card.is_token && !card.types.includes('Token') && !card.types.includes('Emblem')}" class="mtg-card-opponent-container"
                                (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null" [@opponentTappedState]="card.tapped"
                                [@shakeCard]="card.shaken">
                             <img class="mtg-card-opponent"
@@ -518,7 +519,7 @@
                      [cdkDropListData]="spot"
                      (cdkDropListDropped)="moveCardToZone($event, 'play')"
                       (dblclick)="sendSelectedToSpot(spot, 'play')"
-                     (contextmenu)="onRightClick($event, {type: 'user_playmat', spot: spot})">
+                     (contextmenu)="onRightClick($event, {type: 'user_playmat', spot: spot, from: spot})">
                   <div *ngFor="let card of spot; let i = index" (dblclick)="$event.stopPropagation()">
                     <div [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2, 'mtg-card-invert': card.inverted}"
                          (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
@@ -527,11 +528,11 @@
                          [@shakeCard]="card.shaken"
                          cdkDrag>
                       <div *ngIf="card.locked" class="mtg-lock"><mat-icon>lock</mat-icon></div>
-                      <img [ngClass]="{'mtg-card-user-selected': card.selected, 'mtg-card-clone': card.is_token && !card.types.includes('Token') }"
+                      <img [ngClass]="{'mtg-card-user-selected': card.selected, 'mtg-card-clone': card.is_token && !card.types.includes('Token') && !card.types.includes('Emblem') }"
                            class="mtg-card-user"
                            [src]="card.visible.includes(user.id) ? card.image: user.deck.sleeves"
                            [alt]="card.visible.includes(user.id) ? card.name: ''"
-                           (contextmenu)="onRightClick($event,{type: 'user_play', card: card, spot: spot}); selectCard(card, spot);"
+                           (contextmenu)="onRightClick($event,{type: 'user_play', card: card, spot: spot, from: spot}); selectCard(card, spot);"
                            (click)="toggleCardSelect(card, spot)" (dblclick)="tapCard(card)" loading="lazy">
                       <button *ngIf="card.counter_1" class="mtg-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true" (click)="card.counter_1_value = card.counter_1_value + 1" (contextmenu)="onRightClick($event, {type: 'counter_1', card: card})"><p>{{card.counter_1_value}}</p></button>
                       <button *ngIf="card.counter_2" class="mtg-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true" (click)="card.counter_2_value = card.counter_2_value + 1" (contextmenu)="onRightClick($event, {type: 'counter_2', card: card})"><p>{{card.counter_2_value}}</p></button>
@@ -666,7 +667,8 @@
               </div>
               <div class="commander-viewer" cdkDropList
                    [cdkDropListData]="user.deck.commander"
-                   (cdkDropListDropped)="moveCardToZone($event, 'command_zone')">
+                   (cdkDropListDropped)="moveCardToZone($event, 'command_zone')"
+                   (contextmenu)="onRightClick($event, {type: 'commander'});">
                 <mat-card class="commander-viewer-mat-card">
                   <div class="commander-counter-holder">
                     <div class="commander-counter-container">

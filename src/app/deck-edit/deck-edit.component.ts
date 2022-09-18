@@ -100,7 +100,6 @@ export class DeckEditComponent implements OnInit {
               iscommander = true;
             }
             if (!this.hasCard(card.card.oracleCard.name)) {
-              console.log('adding ' + card.card.oracleCard.name);
               this.deck.cards.push(
                 {
                   name: card.card.oracleCard.name,
@@ -117,7 +116,6 @@ export class DeckEditComponent implements OnInit {
           let remove_cards: any[] = [];
           for (let card of this.deck.cards) {
             if (this.removeCard(card.name, archidekt_deck.cards)) {
-              console.log('removing ' + card.name);
               remove_cards.push(card);
             }
           }
@@ -145,7 +143,6 @@ export class DeckEditComponent implements OnInit {
           this.deck.tokens.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
           this.deck.tokens.forEach((token: any) => {
             this.getCardImage(token);
-            console.log(this.deck.tokens);
           });
         });
       });
@@ -225,7 +222,6 @@ export class DeckEditComponent implements OnInit {
     card.image = null;
     card.back_image = null;
     this.getCardImage(card).then(() => {
-      console.log('reset images for card')
     });
   }
 
@@ -255,11 +251,11 @@ export class DeckEditComponent implements OnInit {
 
   addTokenToDeck() {
     if (this.new_token_temp !== '') {
-      for (let card of this.deck.tokens) {
-        if (card.name === this.new_token_temp) {
-          return;
-        }
-      }
+      //for (let card of this.deck.tokens) {
+      //  if (card.name === this.new_token_temp) {
+      //    return;
+      //  }
+      //}
       let temp_card = {
         name: this.new_token_temp,
         image: '',

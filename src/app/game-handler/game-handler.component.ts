@@ -152,6 +152,17 @@ export class GameHandlerComponent implements OnInit {
         console.log('user: ');
         console.log(this.user);
       }
+      else if (json_data.player_temp_data) {
+        console.log('temp zone!!')
+        for (let i = 0; i < this.game_data.players.length; i++) {
+          if (this.game_data.players[i].id === json_data.player_temp_data.id){
+            this.game_data.players[i] = json_data.player_temp_data;
+          }
+          if (this.game_data.players[i].id === json_data.temp_id) {
+            this.game_data.players[i].temp_zone = json_data.temp_zone;
+          }
+        }
+      }
       else if (json_data.play_order) {
         console.log('play order received');
         console.log(json_data.play_order);
@@ -317,6 +328,7 @@ export class GameHandlerComponent implements OnInit {
   }
 
   sendPlayerUpdate() {
+    console.log('justp')
     this.sendMsg({
       request: 'player_change',
       game_id: this.game_id,
@@ -325,6 +337,22 @@ export class GameHandlerComponent implements OnInit {
           id: this.current_user.id,
           player: this.user
         }
+    });
+  }
+
+  sendPlayerAndZoneUpdate(zone: string) {
+    console.log('p&t')
+    this.sendMsg({
+      request: 'player_and_temp_change',
+        game_id: this.game_id,
+        player_data:
+          {
+            id: this.current_user.id,
+            player: this.user
+          },
+        temp_id: this.selected_player.id,
+        temp_zone_name: zone,
+        temp_zone: this.selected_player.temp_zone
     });
   }
 
@@ -433,7 +461,7 @@ export class GameHandlerComponent implements OnInit {
   }
 
   @HostListener('document:keydown.d', ['$event']) ondDown(event: KeyboardEvent) {
-    this.drawX(1);
+    //this.drawX(1);
   }
 
   @HostListener('document:keydown.p', ['$event']) onpDown(event: KeyboardEvent) {
@@ -441,7 +469,7 @@ export class GameHandlerComponent implements OnInit {
   }
 
   @HostListener('document:keydown.m', ['$event']) onmDown(event: KeyboardEvent) {
-    this.mulliganHand(7);
+    //this.mulliganHand(7);
   }
 
   togglePreview() {
@@ -893,7 +921,7 @@ export class GameHandlerComponent implements OnInit {
       for (let spot of player.playmat) {
         for (let card of spot) {
           if (card.owner == this.user.id) {
-            this.sendCardToZone(card, spot, 'deck');
+            this.sendCardToZone(card, spot, 'deck', true);
           }
         }
       }
@@ -906,10 +934,10 @@ export class GameHandlerComponent implements OnInit {
       for(let card of spot) {
         this.selectCard(card, spot);
         if (card.owner != this.user.id) {
-          this.sendCardToZone(card, spot, 'temp_zone');
+          this.sendCardToZone(card, spot, 'temp_zone', true);
         }
         else {
-          this.sendCardToZone(card, spot, 'deck');
+          this.sendCardToZone(card, spot, 'deck', true);
         }
       }
     }
@@ -1107,6 +1135,31 @@ export class GameHandlerComponent implements OnInit {
               }
               break;
             }
+            break;
+          case 'selected':
+            if (this.selected_player != null) {
+              card_select.card.visible = [];
+              if (facedown) {
+                card_select.facedown = true;
+              }
+              else {
+                card_select.facedown = false;
+                for (let player of this.game_data.players) {
+                  card_select.card.visible.push(player.id);
+                }
+              }
+              if (card_select.from !== this.selected_player.temp_zone) { //If it is already in their zone
+                transferArrayItem(card_select.from, this.selected_player.temp_zone, card_select.from.indexOf(card_select.card), 0);
+                card_select.card.selected = false;
+                if (noupdate) {
+
+                }
+                else {
+                  this.sendPlayerAndZoneUpdate('temp_zone');
+                }
+              }
+            }
+            break;
         }
         card_select.card.selected = false;
       }
@@ -1196,7 +1249,7 @@ export class GameHandlerComponent implements OnInit {
         break;
       case 'selected':
         if (this.selected_player) {
-          location = 'temp_zone';
+          location = 'selected';
           event.container.data = this.selected_player.temp_zone;
           event.currentIndex = 0;
         }
@@ -1224,8 +1277,9 @@ export class GameHandlerComponent implements OnInit {
       for (let card of from) {
         this.selectCard(card, from);
       }
-      this.sendCardToZone(from[0], from, dest);
+      this.sendCardToZone(from[0], from, dest, true);
     }
+    this.sendPlayerUpdate();
   }
 
   revealCard(card: any, whomst: any, besides?: any, noupdate?: boolean) {

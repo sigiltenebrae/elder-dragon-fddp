@@ -636,6 +636,12 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
    box-shadow: inset 0 0 4px 2px mat.get-color-from-palette($fddp-palette-primary-dark, 200);
  }
 
+ .playmat-opponent-turn {
+   border: solid 2px mat.get-color-from-palette($fddp-palette-accent-dark, 200);
+   border-radius: 5px;
+   box-shadow: inset 0 0 4px 2px mat.get-color-from-palette($fddp-palette-accent-dark, 200);
+ }
+
 .playmat-opponent .playmat-opponent-data {
   min-width: 604px;
   max-width: 604px;
@@ -646,10 +652,15 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 
 .playmat-opponent .opponent-information {
   position: absolute;
+  pointer-events: none;
   top: 0;
   left: 5px;
   z-index: 50;
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+}
+
+.playmat-opponent:hover .opponent-information {
+  opacity: 0.2;
 }
 
 .playmat-opponent-selector {
