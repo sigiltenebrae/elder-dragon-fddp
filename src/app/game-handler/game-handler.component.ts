@@ -81,6 +81,22 @@ export class GameHandlerComponent implements OnInit {
   counts: any[] = [];
 
   zone_transfers: any[] = [];
+  counter_buffer = false;
+
+  /**------------------------------------------------
+   *           General Helper Functions             *
+   ------------------------------------------------**/
+
+  /**
+   * Sleep functions for the desired amount of time
+   * @param ms
+   */
+  sleep(ms: number) {
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
+  }
+
 
   /**------------------------------------------------
    *              Game Setup Functions              *
@@ -226,13 +242,6 @@ export class GameHandlerComponent implements OnInit {
     message.content = content;
     this.WebsocketService.messages.next(message);
   }
-
-  sleep(ms: number) {
-    return new Promise((resolve) => {
-      setTimeout(resolve, ms);
-    });
-  }
-
 
 
   /**
@@ -986,6 +995,13 @@ export class GameHandlerComponent implements OnInit {
       }
     }
     this.sendPlayerUpdate();
+  }
+
+  updateCounter() {
+    if (!this.counter_buffer) {
+      this.counter_buffer = true;
+      setTimeout(() => {this.counter_buffer = false; this.sendPlayerUpdate()}, 3000);
+    }
   }
 
 
@@ -1746,39 +1762,51 @@ export class GameHandlerComponent implements OnInit {
       switch (item.type) {
         case 'life':
           item.player.life --;
+          this.updateCounter();
           break;
         case 'infect':
           item.player.infect --;
+          this.updateCounter();
           break;
         case 'counter_1':
           item.card.counter_1_value --;
+          this.updateCounter();
           break;
         case 'counter_2':
           item.card.counter_2_value --;
+          this.updateCounter();
           break;
         case 'counter_3':
           item.card.counter_3_value --;
+          this.updateCounter();
           break;
         case 'multiplier':
           item.card.multiplier_value --;
+          this.updateCounter();
           break;
         case 'power':
           item.card.power_mod --;
+          this.updateCounter();
           break;
         case 'toughness':
           item.card.toughness_mod --;
+          this.updateCounter();
           break;
         case 'loyalty':
           item.card.loyalty_mod --;
+          this.updateCounter();
           break;
         case 'command_tax_1':
           this.user.command_tax_1 --;
+          this.updateCounter();
           break;
         case 'command_tax_2':
           this.user.command_tax_2 --;
+          this.updateCounter();
           break;
         case 'custom_counter':
           item.counter.value--;
+          this.updateCounter();
           break;
         default:
           this.rightclicked_item = item;

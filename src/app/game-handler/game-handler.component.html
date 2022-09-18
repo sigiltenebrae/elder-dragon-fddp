@@ -395,7 +395,7 @@
             </div>
             <h1 class="commander-dashboard-text" style="text-align: end">Count: {{typeCount(search_player.value, search_zone.value,  custom_search.value)}}</h1>
           </mat-card>
-          <button *ngIf="counter.type === 'play'" cdkDrag mat-fab (click)="counter.value = counter.value + 1"
+          <button *ngIf="counter.type === 'play'" cdkDrag mat-fab (click)="counter.value = counter.value + 1; this.updateCounter();"
                   (contextmenu)="onRightClick($event, {type: 'custom_counter', counter: counter})"
                   (keydown.escape)="deleteCounter(counter)"
                   [style.background]="counter.color"
@@ -426,7 +426,7 @@
                         {{player.life}}
                       </button>
                       <button *ngIf="!isOpponent(player)" class="player-button" mat-button
-                              (click)="player.life = player.life + 1" (contextmenu)="onRightClick($event, {type: 'life', player: player})">
+                              (click)="player.life = player.life + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'life', player: player})">
                         {{player.life}}
                       </button>
                     </div>
@@ -435,7 +435,7 @@
                         {{player.infect}}
                       </button>
                       <button *ngIf="!isOpponent(player)" class="player-button" mat-button
-                              (click)="player.infect = player.infect + 1" (contextmenu)="onRightClick($event, {type: 'infect', player: player})">
+                              (click)="player.infect = player.infect + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'infect', player: player})">
                         {{player.infect}}
                       </button>
                     </div>
@@ -535,14 +535,14 @@
                            [alt]="card.visible.includes(user.id) ? card.name: ''"
                            (contextmenu)="onRightClick($event,{type: 'user_play', card: card, spot: spot, from: spot}); selectCard(card, spot);"
                            (click)="toggleCardSelect(card, spot)" (dblclick)="tapCard(card)" loading="lazy">
-                      <button *ngIf="card.counter_1" class="mtg-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true" (click)="card.counter_1_value = card.counter_1_value + 1" (contextmenu)="onRightClick($event, {type: 'counter_1', card: card})"><p>{{card.counter_1_value}}</p></button>
-                      <button *ngIf="card.counter_2" class="mtg-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true" (click)="card.counter_2_value = card.counter_2_value + 1" (contextmenu)="onRightClick($event, {type: 'counter_2', card: card})"><p>{{card.counter_2_value}}</p></button>
-                      <button *ngIf="card.counter_3" class="mtg-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true" (click)="card.counter_3_value = card.counter_3_value + 1" (contextmenu)="onRightClick($event, {type: 'counter_3', card: card})"><p>{{card.counter_3_value}}</p></button>
+                      <button *ngIf="card.counter_1" class="mtg-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true" (click)="card.counter_1_value = card.counter_1_value + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'counter_1', card: card})"><p>{{card.counter_1_value}}</p></button>
+                      <button *ngIf="card.counter_2" class="mtg-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true" (click)="card.counter_2_value = card.counter_2_value + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'counter_2', card: card})"><p>{{card.counter_2_value}}</p></button>
+                      <button *ngIf="card.counter_3" class="mtg-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true" (click)="card.counter_3_value = card.counter_3_value + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'counter_3', card: card})"><p>{{card.counter_3_value}}</p></button>
                       <button *ngIf="card.multiplier" class="mtg-multiplier-counter" mat-fab color="accent" [class.mat-elevation-z8]="true" (click)="card.multiplier_value = card.multiplier_value + 1" (contextmenu)="onRightClick($event, {type: 'multiplier', card: card})"><p>{{card.multiplier_value}}</p></button>
                       <h4 *ngIf="card.power && card.toughness && card.visible.includes(user.id)" class="mtg-card-power-tough">
-                        <a [ngClass]="{'mat-card-power-tough-text-up': card.power_mod > 0, 'mat-card-power-tough-text-down': card.power_mod < 0}" class="mat-card-power-tough-text" (click)="card.power_mod = card.power_mod + 1" (contextmenu)="onRightClick($event, {type: 'power', card: card})">{{card.power + card.power_mod}}</a>/
-                        <a [ngClass]="{'mat-card-power-tough-text-up': card.toughness_mod > 0, 'mat-card-power-tough-text-down': card.toughness_mod < 0}" class="mat-card-power-tough-text" (click)="card.toughness_mod = card.toughness_mod + 1" (contextmenu)="onRightClick($event, {type: 'toughness', card: card})">{{card.toughness + card.toughness_mod}}</a></h4>
-                      <h4 *ngIf="card.loyalty && card.visible.includes(user.id)" class="mtg-card-loyalty"><a class="mat-card-power-tough-text" [ngClass]="{'mat-card-power-tough-text-up': card.loyalty_mod > 0, 'mat-card-power-tough-text-down': card.loyalty_mod < 0}" (click)="card.loyalty_mod = card.loyalty_mod + 1" (contextmenu)="onRightClick($event, {type: 'loyalty', card: card})">{{card.loyalty + card.loyalty_mod}}</a></h4>
+                        <a [ngClass]="{'mat-card-power-tough-text-up': card.power_mod > 0, 'mat-card-power-tough-text-down': card.power_mod < 0}" class="mat-card-power-tough-text" (click)="card.power_mod = card.power_mod + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'power', card: card})">{{card.power + card.power_mod}}</a>/
+                        <a [ngClass]="{'mat-card-power-tough-text-up': card.toughness_mod > 0, 'mat-card-power-tough-text-down': card.toughness_mod < 0}" class="mat-card-power-tough-text" (click)="card.toughness_mod = card.toughness_mod + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'toughness', card: card})">{{card.toughness + card.toughness_mod}}</a></h4>
+                      <h4 *ngIf="card.loyalty && card.visible.includes(user.id)" class="mtg-card-loyalty"><a class="mat-card-power-tough-text" [ngClass]="{'mat-card-power-tough-text-up': card.loyalty_mod > 0, 'mat-card-power-tough-text-down': card.loyalty_mod < 0}" (click)="card.loyalty_mod = card.loyalty_mod + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'loyalty', card: card})">{{card.loyalty + card.loyalty_mod}}</a></h4>
                     </div>
                   </div>
                 </div>
@@ -673,10 +673,10 @@
                 <mat-card class="commander-viewer-mat-card">
                   <div class="commander-counter-holder">
                     <div class="commander-counter-container">
-                      <button mat-fab class="commander-counter commander-counter-1" (click)="user.command_tax_1 = user.command_tax_1 + 1" (contextmenu)="onRightClick($event, {type: 'command_tax_1'})">
+                      <button mat-fab class="commander-counter commander-counter-1" (click)="user.command_tax_1 = user.command_tax_1 + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'command_tax_1'})">
                         {{user.command_tax_1}}
                       </button>
-                      <button *ngIf="user.deck.commander_saved.length == 2" mat-fab color="primary" class="commander-counter commander-counter-2" (click)="user.command_tax_2 = user.command_tax_2 + 1" (contextmenu)="onRightClick($event, {type: 'command_tax_2'})">
+                      <button *ngIf="user.deck.commander_saved.length == 2" mat-fab color="primary" class="commander-counter commander-counter-2" (click)="user.command_tax_2 = user.command_tax_2 + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'command_tax_2'})">
                         {{user.command_tax_2}}
                       </button>
                     </div>
