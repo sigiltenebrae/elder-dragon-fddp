@@ -302,13 +302,13 @@
 </div>
 
 
-<div cdkDropListGroup>
+<div cdkDropListGroup *ngIf="user != null">
   <div class="player-list" *ngIf="game_data != null && !sidenav_selected_player">
     <mat-card style="padding:5px 10px 0 0">
       <mat-list>
         <mat-divider></mat-divider>
         <div *ngFor="let player of game_data.players; let j = index">
-          <mat-list-item [ngClass]="{'player-button-selected': player.selected,
+          <mat-list-item *ngIf="!player.scooped" [ngClass]="{'player-button-selected': player.selected,
                                 'player-button-turn': player.turn == game_data.current_turn}">
             <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
               <div fxLayout="column" fxFlex="100">
@@ -343,13 +343,13 @@
               </div>
             </div>
           </mat-list-item>
-          <mat-divider *ngIf="j != game_data.players.length - 1"></mat-divider>
+          <mat-divider *ngIf="j != activePlayers() - 1"></mat-divider>
         </div>
       </mat-list>
     </mat-card>
   </div>
 
-  <div class="user-deck" *ngIf="user != null">
+  <div class="user-deck" *ngIf="user != null && !user.scooped">
     <mat-card class="zone-data"
               (dblclick)="drawX(1)"
               (contextmenu)="onRightClick($event, {type: 'deck'})"
@@ -424,7 +424,7 @@
                    cdkDrag loading="eager">
             </mat-card>
           </div>
-          <div class="commander-viewer" cdkDropList
+          <div *ngIf="!user.scooped" class="commander-viewer" cdkDropList
                [cdkDropListData]="user.deck.commander"
                (cdkDropListDropped)="moveCardToZone($event, 'command_zone')"
                (contextmenu)="onRightClick($event, {type: 'commander'});">
@@ -477,12 +477,12 @@
   <div style="position: fixed; left: 50%;
   -ms-transform: translateX(-50%);
   transform: translateX(-50%); z-index: 2;"
-  [style.bottom.px]="game_data && game_data.players.length > 4? 630: 450">
+  [style.bottom.px]="game_data && activePlayers() > 4? 630: 450">
     <ng-scrollbar visibility="hover" pointerEventsMethod="scrollbar" track="vertical" style="margin-top: 20px; height: 455px; width: 100vw">
       <div fxLayout="row" fxLayoutAlign="center" style="height: 455px; width: 100vw; margin-top: 10px;">
           <div fxLayout="row wrap" fxLayoutAlign="center" fxFlexFill *ngIf="game_data" style="height: 455px; width: 100vw;">
             <div *ngFor="let player of game_data.players">
-              <mat-card *ngIf="isOpponent(player)" class="playmat-opponent" fxLayout="row wrap" fxLayoutAlign="center center">
+              <mat-card *ngIf="isOpponent(player) && !player.scooped" class="playmat-opponent" fxLayout="row wrap" fxLayoutAlign="center center">
                 <div class="playmat-opponent-data" (contextmenu)="onRightClick($event, {type: 'opponent_playmat'})">
                   <div class="opponent-information" fxFlexFill fxLayout="row" fxLayoutAlign="space-between" *ngIf="player.hand && player.deck.cards && player.grave && player.exile">
                     <h3>{{player.name}}</h3>
@@ -585,7 +585,7 @@
   left: 50%;
   -ms-transform: translateX(-50%);
   transform: translateX(-50%); z-index: 3;">
-    <div *ngIf="selected_player != null" class="opponent-hand" fxLayout="column" fxLayoutAlign="center">
+    <div *ngIf="selected_player != null" class="opponent-hand invisible_scroll" fxLayout="column" fxLayoutAlign="center">
       <div scrollViewport class="opponent-hand-list" [class.mat-elevation-z8]="true"
            fxFlexFill fxLayout="row" fxLayoutAlign="start">
         <h1 class="hand-count">{{selected_player.hand.length}}</h1>
@@ -654,9 +654,9 @@
             <mat-form-field appearance="outline" fxFlex style="margin: 5px;" *ngIf="sidenav_type !== 'deck'">
               <mat-label>Player</mat-label>
               <mat-select [(ngModel)]="sidenav_selected_player" name="player_select_sidenav" (ngModelChange)="getSidenavSort()">
-                <mat-option *ngFor="let player of game_data.players" [value]="player">
-                  {{player.name}}
-                </mat-option>
+                <div *ngFor="let player of game_data.players">
+                  <mat-option *ngIf="!player.scooped || sidenav_type === 'temp_zone'" [value]="player">{{player.name}}</mat-option>
+                </div>
               </mat-select>
             </mat-form-field>
           </div>
@@ -731,7 +731,9 @@
                   <mat-form-field appearance="outline" class="commander-dashboard-select">
                     <mat-label>Player</mat-label>
                     <mat-select #search_player>
-                      <mat-option *ngFor="let player of game_data.players" [value]="player">{{player.name}}</mat-option>
+                      <div *ngFor="let player of game_data.players">
+                        <mat-option *ngIf="!player.scooped" [value]="player">{{player.name}}</mat-option>
+                      </div>
                       <mat-option [value]="'All'">All</mat-option>
                     </mat-select>
                   </mat-form-field>

@@ -299,6 +299,7 @@ export class GameHandlerComponent implements OnInit {
           out_player.turn = -1;
           out_player.command_tax_1 = 0;
           out_player.command_tax_2 = 0;
+          out_player.scooped = false;
           for (let i = 0; i < 36; i++) {
             out_player.playmat.push([])
           }
@@ -375,23 +376,38 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  sendScoopUpdate() {
+    if (this.user.scooped) {
+      this.sendMsg({
+        request: 'player_change',
+        game_id: this.game_id,
+        player_data:
+          {
+            id: this.current_user.id,
+            player: this.user
+          }
+      });
+    }
+  }
+
   sendPlayerUpdate() {
-    console.log('justp')
-    this.sendMsg({
-      request: 'player_change',
-      game_id: this.game_id,
-      player_data:
-        {
-          id: this.current_user.id,
-          player: this.user
-        }
-    });
+    if (!this.user.scooped) {
+      this.sendMsg({
+        request: 'player_change',
+        game_id: this.game_id,
+        player_data:
+          {
+            id: this.current_user.id,
+            player: this.user
+          }
+      });
+    }
   }
 
   sendPlayerAndZoneUpdate(zone: string, new_zone: any, to_id: number) {
-    console.log('p&t')
-    this.sendMsg({
-      request: 'player_and_temp_change',
+    if (!this.user.scooped) {
+      this.sendMsg({
+        request: 'player_and_temp_change',
         game_id: this.game_id,
         player_data:
           {
@@ -401,12 +417,16 @@ export class GameHandlerComponent implements OnInit {
         temp_id: to_id,
         temp_zone_name: zone,
         temp_zone: new_zone
-    });
+      });
+    }
   }
 
   sendPlayerAndZoneUpdateBulk() {
-    for (let zone of this.zone_transfers) {
-      this.sendPlayerAndZoneUpdate(zone.zone, zone.new_zone, zone.to_id);
+    if (!this.user.scooped) {
+      for (let zone of this.zone_transfers) {
+        this.sendPlayerAndZoneUpdate(zone.zone, zone.new_zone, zone.to_id);
+      }
+
     }
     this.zone_transfers = [];
   }
@@ -490,6 +510,16 @@ export class GameHandlerComponent implements OnInit {
           break;
       }
     }
+  }
+
+  activePlayers() {
+    let count = 0;
+    for (let player of this.game_data.players) {
+      if (!player.scooped) {
+        count++;
+      }
+    }
+    return count;
   }
 
   /**------------------------------------------------
@@ -1056,7 +1086,9 @@ export class GameHandlerComponent implements OnInit {
         }
       }
     }
-    this.sendPlayerUpdate();
+    this.user.deck = null;
+    this.user.scooped = true;
+    this.sendScoopUpdate();
   }
 
   updateCounter() {
