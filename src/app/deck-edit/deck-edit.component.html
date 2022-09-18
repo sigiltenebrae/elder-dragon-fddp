@@ -18,7 +18,7 @@
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Deck Link</mat-label>
-        <input matInput [type]="'text'" name="decklink" [(ngModel)]="deck.link">
+        <input (keydown.enter)="syncWithArchidekt()" matInput [type]="'text'" name="decklink" [(ngModel)]="deck.link">
         <button mat-icon-button matSuffix type="button" (click)="syncWithArchidekt()"><mat-icon>cached</mat-icon></button>
       </mat-form-field>
       <!--<mat-form-field appearance="fill">
@@ -66,7 +66,7 @@
       </mat-form-field>
       <mat-form-field appearance="fill" *ngIf="card_type === 'cards'">
         <mat-label>Add Card</mat-label>
-        <input type="text" placeholder="Enter Card" matInput
+        <input (keydown.enter)="addCardToDeck()" type="text" placeholder="Enter Card" matInput
                [ngbTypeahead]="card_search" [(ngModel)]="new_card_temp" [editable]="false">
         <button mat-icon-button matSuffix type="button" (click)="addCardToDeck()"><mat-icon>add</mat-icon></button>
       </mat-form-field>
@@ -94,7 +94,7 @@
 
       <mat-form-field appearance="fill" *ngIf="card_type === 'tokens'">
         <mat-label>Add Card</mat-label>
-        <input type="text" placeholder="Enter Token" matInput
+        <input (keydown.enter)="addTokenToDeck()" type="text" placeholder="Enter Token" matInput
                [(ngModel)]="new_token_temp">
         <button mat-icon-button matSuffix type="button" (click)="addTokenToDeck()"><mat-icon>add</mat-icon></button>
       </mat-form-field>

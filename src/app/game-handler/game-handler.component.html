@@ -31,7 +31,7 @@
           <button mat-menu-item (click)="openTokenDialog()">Insert Token</button>
           <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
             <mat-label>Quick Insert Token</mat-label>
-            <input #quick_token type="text" matInput (click)="$event.stopPropagation()">
+            <input (keydown.enter)="createToken({name: quick_token.value})" #quick_token type="text" matInput (click)="$event.stopPropagation()">
             <button matSuffix mat-icon-button aria-label="Draw" (click)="createToken({name: quick_token.value})"><mat-icon>add</mat-icon></button>
           </mat-form-field>
           <button mat-menu-item [matMenuTriggerFor]="play_counter">Insert Counter</button>
@@ -93,7 +93,7 @@
           <div>
             <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
               <mat-label>Scry</mat-label>
-              <input #scry_count type="text" matInput (click)="$event.stopPropagation()" value="1">
+              <input (keydown.enter)="scryX(scry_count.value)" #scry_count type="text" matInput (click)="$event.stopPropagation()" value="1">
               <button matSuffix mat-icon-button aria-label="Scry" (click)="scryX(scry_count.value)"><mat-icon>visibility</mat-icon></button>
             </mat-form-field>
           </div>
@@ -114,14 +114,14 @@
           <div>
             <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
               <mat-label>Draw Until</mat-label>
-              <input [(ngModel)]="draw_until" type="text" matInput (click)="$event.stopPropagation()" value="draw_until">
+              <input (keydown.enter)="drawUntil(draw_until)" [(ngModel)]="draw_until" type="text" matInput (click)="$event.stopPropagation()" value="draw_until">
               <button matSuffix mat-icon-button aria-label="DrawUntil" (click)="drawUntil(draw_until)"><mat-icon>fast_forward</mat-icon></button>
             </mat-form-field>
           </div>
           <div>
             <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
               <mat-label>Cascade</mat-label>
-              <input #cascade_until type="text" matInput (click)="$event.stopPropagation()" value="">
+              <input #cascade_until (keydown.enter)="cascade(cascade_until.value)" type="text" matInput (click)="$event.stopPropagation()" value="">
               <button matSuffix mat-icon-button aria-label="Cascade" (click)="cascade(cascade_until.value)"><mat-icon>fast_forward</mat-icon></button>
             </mat-form-field>
           </div>
@@ -143,7 +143,7 @@
   <div>
     <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
       <mat-label>Mulligan</mat-label>
-      <input #mulligan type="text" matInput (click)="$event.stopPropagation()" value="7">
+      <input (keydown.enter)="mulliganHand(mulligan.value)" #mulligan type="text" matInput (click)="$event.stopPropagation()" value="7">
       <button matSuffix mat-icon-button aria-label="Draw" (click)="mulliganHand(mulligan.value)"><mat-icon>refresh</mat-icon></button>
     </mat-form-field>
   </div>
