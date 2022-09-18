@@ -666,9 +666,9 @@
   -ms-transform: translateX(-50%);
   transform: translateX(-50%); z-index: 3;">
       <div *ngIf="selected_player != null" class="opponent-hand invisible_scroll" fxLayout="column" fxLayoutAlign="center">
-        <div scrollViewport class="opponent-hand-list" [class.mat-elevation-z8]="true"
+        <h1 class="hand-count">{{selected_player.hand.length}}</h1>
+        <div class="opponent-hand-list" [class.mat-elevation-z8]="true"
              fxFlexFill fxLayout="row" fxLayoutAlign="start">
-          <h1 class="hand-count">{{selected_player.hand.length}}</h1>
           <img *ngFor="let card of selected_player.hand"
                class="mtg-card-opponent"
                [src]="card.visible.includes(user.id) ? card.image: selected_player.deck.sleeves"
@@ -685,6 +685,8 @@
   -ms-transform: translateX(-50%);
   transform: translateX(-50%); z-index: 2;">
       <div *ngIf="user != null" class="user-hand" fxFlex fxLayout="column" fxLayoutAlign="center" [class.mat-elevation-z8]="true">
+        <h1 class="hand-count">{{user.hand.length}}</h1>
+        <mat-icon [mat-menu-trigger-for]="hand_menu" (click)="rightclicked_item={zone: 'hand'}" class="hand-menu">more_vert</mat-icon>
         <ng-scrollbar track="horizontal" visibility="hover"
                       pointerEventsMethod="scrollbar"
                       [style.width.px]="user.hand.length * 75"
@@ -693,8 +695,6 @@
                cdkDropListOrientation="horizontal"
                [cdkDropListData]="user.hand"
                (cdkDropListDropped)="moveCardToZone($event, 'hand')" fxFlexFill fxLayout="row" fxLayoutAlign="start">
-            <h1 class="hand-count">{{user.hand.length}}</h1>
-            <mat-icon [mat-menu-trigger-for]="hand_menu" class="hand-menu">more_vert</mat-icon>
             <mat-card *ngFor="let card of user.hand" class="mtg-card-user-container"
                       fxFlex fxLayout="column"
                       (contextmenu)="onRightClick($event, {type: 'user_hand', card: card, from: user.hand}); selectCard(card, user.hand);"
