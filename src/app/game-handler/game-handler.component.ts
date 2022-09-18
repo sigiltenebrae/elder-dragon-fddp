@@ -952,9 +952,6 @@ export class GameHandlerComponent implements OnInit {
       data: {},
     });
 
-    tokDialogRef.beforeClosed().subscribe(() => {
-    })
-
     tokDialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.createTokenFromImage(result);
@@ -1894,7 +1891,7 @@ export class DeckSelectDialog {
   loading = false;
 
   constructor(
-    public dialogRef: MatDialogRef<TokenInsertDialog>,
+    public dialogRef: MatDialogRef<DeckSelectDialog>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fddp_data: FddpApiService
   )

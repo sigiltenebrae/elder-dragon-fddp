@@ -29,6 +29,11 @@
         <div *ngIf="rightclicked_item.type === 'user_playmat'">
           <button mat-menu-item (click)="untapAll()">Untap All</button>
           <button mat-menu-item (click)="openTokenDialog()">Insert Token</button>
+          <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
+            <mat-label>Quick Insert Token</mat-label>
+            <input #quick_token type="text" matInput (click)="$event.stopPropagation()">
+            <button matSuffix mat-icon-button aria-label="Draw" (click)="createToken({name: quick_token.value})"><mat-icon>add</mat-icon></button>
+          </mat-form-field>
           <button mat-menu-item [matMenuTriggerFor]="play_counter">Insert Counter</button>
           <button *ngIf="user != null && game_data != null && user.turn == game_data.current_turn" mat-menu-item (click)="endTurn()">End Turn</button>
         </div>
