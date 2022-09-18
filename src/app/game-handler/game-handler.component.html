@@ -457,7 +457,8 @@
               <div *ngFor="let player of game_data.players">
                 <mat-card *ngIf="isOpponent(player)" class="playmat-opponent" fxLayout="row wrap" fxLayoutAlign="center center">
                   <div class="playmat-opponent-data" (contextmenu)="onRightClick($event, {type: 'opponent_playmat'})">
-                    <div class="opponent-information" *ngIf="player.hand && player.deck.cards && player.grave && player.exile">
+                    <div class="opponent-information" fxFlexFill fxLayout="row" fxLayoutAlign="space-between" *ngIf="player.hand && player.deck.cards && player.grave && player.exile">
+                      <h3>{{player.name}}</h3>
                       <h3 style="pointer-events: none">Hand: {{player.hand.length}}, Deck: {{player.deck.cards.length}}, Graveyard: {{player.grave.length}}, Exile: {{player.exile.length}}</h3>
                     </div>
                     <div class="playmat-opponent-selector" [ngClass]="{'playmat-opponent-turn': player.turn == game_data.current_turn, 'playmat-opponent-selected': player.selected}"></div>
