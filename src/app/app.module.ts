@@ -34,7 +34,7 @@ import {
   DeckSelectDialog,
   GameHandlerComponent,
   TokenInsertDialog,
-  TokenSelectDialog
+  TokenSelectDialog,
 } from './game-handler/game-handler.component';
 import {MatMenuModule} from "@angular/material/menu";
 import {FormsModule} from "@angular/forms";
@@ -63,7 +63,7 @@ import { GameManagerComponent } from './game-manager/game-manager.component';
     TokenSelectDialog,
     DeckSelectDialog,
     TestWsComponent,
-    GameManagerComponent
+    GameManagerComponent,
   ],
   imports: [
     BrowserModule,

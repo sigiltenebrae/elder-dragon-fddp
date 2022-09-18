@@ -84,10 +84,6 @@
           <button mat-menu-item (click)="shakeCard(rightclicked_item.card, sidenav_selected_player.id, rightclicked_item.zone)">Shake</button>
         </div>
 
-        <div *ngIf="rightclicked_item.type === 'scry_card'">
-          <button mat-menu-item [matMenuTriggerFor]="sendTo">Send To</button>
-        </div>
-
         <div *ngIf="rightclicked_item.type === 'deck'">
           <button mat-menu-item>Flip Top</button>
           <button mat-menu-item *ngIf="game_data && game_data.current_turn == 0" (click)="startGame()">Start Game</button>
@@ -278,208 +274,264 @@
   </mat-card>
 </div>
 
-<div *ngIf="scrying" class="scrydata-holder">
-  <div fxFlexFill fxLayout="row" fxLayoutAlign="center center">
-    <mat-card fxFlex="70" class="scrydata-card-holder" fxLayout="column" fxLayoutAlign="start center">
-      <div fxLayout="row" fxLayoutAlign="center">
-        <h2>Scrying</h2>
+<mat-sidenav-container cdkDropListGroup fxFlexFill hasBackdrop="false" *ngIf="user != null" style="overflow: hidden; position: fixed; top: 0; left: 0; z-index: 900">
+  <mat-sidenav #fddp_sidenav disableClose *ngIf="game_data != null" style="overflow: hidden">
+    <mat-toolbar color="primary">
+      <div fxFlex="100" fxLayout="row" fxLayoutAlign="space-between center">
+        <h2 fxFlex *ngIf="sidenav_type==='grave'">Graveyards</h2>
+        <h2 fxFlex *ngIf="sidenav_type==='exile'">Exile</h2>
+        <h2 fxFlex *ngIf="sidenav_type==='temp_zone'">Temp Zones</h2>
+        <h2 fxFlex *ngIf="sidenav_type==='deck'">Searching Deck</h2>
+        <h2 fxFlex *ngIf="sidenav_type==='scry'">Scrying</h2>
+        <button mat-icon-button (click)="closeSideNav()">
+          <mat-icon>close</mat-icon>
+        </button>
       </div>
-
-      <div fxLayout="row wrap" fxLayoutAlign="center start">
-        <div *ngFor="let card of user.temp_scry_zone; let i = index" class="scrydata-card-container">
-          <img class="scrydata-card" src="{{card.image}}"
-               [ngClass]="{'mtg-card-user-selected': isSelected(card)}"
-               (click)="toggleCardSelect(card, user.temp_scry_zone);"
-               (contextmenu)="onRightClick($event,{type: 'scry_card', card: card});">
-          <h1 class="scrydata-card-count">{{i + 1}}</h1>
-        </div>
-      </div>
-      <div class="scrydata-card-close">
-        <mat-icon (click)="endScry()">close</mat-icon>
-      </div>
-    </mat-card>
-  </div>
-</div>
-
-
-<div cdkDropListGroup *ngIf="user != null">
-  <div class="player-list" *ngIf="game_data != null && !sidenav_selected_player">
-    <mat-card style="padding:5px 10px 0 0">
-      <mat-list>
-        <mat-divider></mat-divider>
-        <div *ngFor="let player of game_data.players; let j = index">
-          <mat-list-item *ngIf="!player.scooped" [ngClass]="{'player-button-selected': player.selected,
-                                'player-button-turn': player.turn == game_data.current_turn}">
-            <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
-              <div fxLayout="column" fxFlex="100">
-                <button (pointerenter)="hovered_card=isOpponent(player) ? player.deck.commander_saved[0]: null" (pointerleave)="hovered_card=null"
-                        class="player-button"
-                        mat-button
-                        (click)="selectPlayer(player)">
-                  {{player.name}}
-                </button>
+    </mat-toolbar>
+    <div>
+      <div fxLayout="column">
+        <div fxLayout="row" style="height: 64px">
+          <mat-form-field appearance="outline" fxFlex style="margin: 5px;" *ngIf="sidenav_type !== 'deck' && sidenav_type !== 'scry'">
+            <mat-label>Player</mat-label>
+            <mat-select [(ngModel)]="sidenav_selected_player" name="player_select_sidenav" (ngModelChange)="getSidenavSort()">
+              <div *ngFor="let player of game_data.players">
+                <mat-option *ngIf="!player.scooped || sidenav_type === 'temp_zone'" [value]="player">{{player.name}}</mat-option>
               </div>
-              <div fxLayout="column" fxFlex="100">
-                <div fxLayout="row" fxFlex>
-                  <div class="column" fxFlex>
-                    <button (pointerenter)="hovered_card=player.deck.commander_saved.length>1 ? player.deck.commander_saved[1] : null" (pointerleave)="hovered_card=null" *ngIf="isOpponent(player)" class="player-button" mat-button disabled style="color: white">
-                      {{player.life}}
-                    </button>
-                    <button *ngIf="!isOpponent(player)" class="player-button" mat-button
-                            (click)="player.life = player.life + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'life', player: player})">
-                      {{player.life}}
-                    </button>
-                  </div>
-                  <div class="column" fxFlex>
-                    <button *ngIf="isOpponent(player)" class="player-button" mat-button disabled style="color: white">
-                      {{player.infect}}
-                    </button>
-                    <button *ngIf="!isOpponent(player)" class="player-button" mat-button
-                            (click)="player.infect = player.infect + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'infect', player: player})">
-                      {{player.infect}}
-                    </button>
-                  </div>
-                </div>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div fxLayout="row" style="height: 64px">
+          <mat-form-field fxFlex style="margin: 5px;" appearance="outline" *ngIf="sidenav_type !== 'scry'">
+            <mat-label>Search</mat-label>
+            <input type="text" placeholder="Card Name"
+                   matInput [matAutocomplete]="card_name"
+                   [(ngModel)]="sidenav_sort" (ngModelChange)="getSidenavSort()">
+            <mat-autocomplete #card_name>
+              <mat-option *ngFor="let card of getSidenavList()" [value]="card.name">
+                {{card.name}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+        <div fxLayout="row" style="height: 64px">
+          <mat-form-field fxFlex appearance="outline" style="margin: 5px;" *ngIf="sidenav_type !== 'scry'">
+            <mat-label>Type</mat-label>
+            <input type="text"
+                   placeholder="Card Type"
+                   matInput [(ngModel)]="sidenav_sort_type"
+                   (ngModelChange)="getSidenavSort()">
+          </mat-form-field>
+        </div>
+        <ng-scrollbar visibility="hover"
+                      track="vertical"
+                      pointerEventsMethod="scrollbar"
+                      style="height: calc(100vh - 261px); width: 500px; margin-top: 5px;">
+          <div class="sidenav-list" cdkDropList
+               (cdkDropListDropped)="moveCardToZone($event, sidenav_type, true)"
+               [cdkDropListData]="getSidenavList()">
+            <div *ngFor="let card of getSidenavList()">
+              <div *ngIf="card.sidenav_visible && (card.visible.includes(user.id) || sidenav_type === 'deck' || sidenav_type === 'scry')" class="sidenav-list-item"
+                   [ngClass]="{'sidenav-list-item-selected': isSelected(card)}"
+                   (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
+                   (cdkDragStarted)="hovered_card=null; selectCard(card, getSidenavList());"
+                   (click)="toggleCardSelect(card, getSidenavList(), card.sidenav_visible)"
+                   (contextmenu)="onRightClick($event, {type: 'zone_card', card: card, from: getSidenavList()})"
+                   cdkDrag>
+                {{card.name}}
+                <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="mtg-card-user" loading="lazy">
+                <img *cdkDragPlaceholder class="mtg-card-user" [src]="card.image" [alt]="card.name" loading="lazy">
+              </div>
+              <div *ngIf="card.sidenav_visible && !card.visible.includes(user.id) && sidenav_type !== 'deck' && sidenav_type!=='scry'" class="sidenav-list-item"
+                   [ngClass]="{'sidenav-list-item-selected': isSelected(card)}"
+                   (pointerenter)="hovered_card=null" (pointerleave)="hovered_card=null"
+                   [cdkDragDisabled]="true" (contextmenu)="onRightClick($event, {type: 'zone_card', card: card, from: getSidenavList()})"
+                   cdkDrag>
+                -------- Hidden --------
               </div>
             </div>
-          </mat-list-item>
-          <mat-divider *ngIf="j != activePlayers() - 1"></mat-divider>
-        </div>
-      </mat-list>
-    </mat-card>
-  </div>
+          </div>
+        </ng-scrollbar>
+      </div>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content *ngIf="user != null">
+    <div class="player-list" *ngIf="game_data != null && !sidenav_selected_player">
+      <mat-card style="padding:5px 10px 0 0">
+        <mat-list>
+          <mat-divider></mat-divider>
+          <div *ngFor="let player of game_data.players; let j = index">
+            <mat-list-item *ngIf="!player.scooped" [ngClass]="{'player-button-selected': player.selected,
+                                'player-button-turn': player.turn == game_data.current_turn}">
+              <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
+                <div fxLayout="column" fxFlex="100">
+                  <button (pointerenter)="hovered_card=isOpponent(player) ? player.deck.commander_saved[0]: null" (pointerleave)="hovered_card=null"
+                          class="player-button"
+                          mat-button
+                          (click)="selectPlayer(player)">
+                    {{player.name}}
+                  </button>
+                </div>
+                <div fxLayout="column" fxFlex="100">
+                  <div fxLayout="row" fxFlex>
+                    <div class="column" fxFlex>
+                      <button (pointerenter)="hovered_card=player.deck.commander_saved.length>1 ? player.deck.commander_saved[1] : null" (pointerleave)="hovered_card=null" *ngIf="isOpponent(player)" class="player-button" mat-button disabled style="color: white">
+                        {{player.life}}
+                      </button>
+                      <button *ngIf="!isOpponent(player)" class="player-button" mat-button
+                              (click)="player.life = player.life + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'life', player: player})">
+                        {{player.life}}
+                      </button>
+                    </div>
+                    <div class="column" fxFlex>
+                      <button *ngIf="isOpponent(player)" class="player-button" mat-button disabled style="color: white">
+                        {{player.infect}}
+                      </button>
+                      <button *ngIf="!isOpponent(player)" class="player-button" mat-button
+                              (click)="player.infect = player.infect + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'infect', player: player})">
+                        {{player.infect}}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </mat-list-item>
+            <mat-divider *ngIf="j != activePlayers() - 1"></mat-divider>
+          </div>
+        </mat-list>
+      </mat-card>
+    </div>
 
-  <div class="user-deck" *ngIf="user != null && !user.scooped">
-    <mat-card class="zone-data"
-              (dblclick)="drawX(1)"
-              (contextmenu)="onRightClick($event, {type: 'deck'})"
-              cdkDropList [cdkDropListData]="user.deck.cards"
-              cdkDropListOrientation="horizontal"
-              (cdkDropListDropped)="moveCardToZone($event, 'deck')">
-      <h1 class="zone-count">{{user.deck.cards.length}}</h1>
-      <img class="mtg-card-user"
-           [src]="user.deck.cards.length > 0 && user.deck.cards[0].visible.includes(user.id) ? user.deck.cards[0].image: user.deck.sleeves"
-           [alt]="user.deck.cards.length > 0 && user.deck.cards[0].visible.includes(user.id) ? user.deck.cards[0].name: ''"
-           (pointerleave)="hovered_card=null"
-           (cdkDragStarted)="hovered_card=null; clearSelection(); selectCard(user.deck.cards[0], user.deck.cards);"
-           cdkDrag loading="lazy">
-    </mat-card>
-  </div>
-  <div class="zone-hider-outer" *ngIf="user != null">
-    <div class="zone-hider-inner">
-      <div [ngClass]="{'zone-container': !hidden, 'zone-container-hidden': hidden}">
-        <div class="zone-holder">
-          <!--<button [style.display]="'none'" mat-mini-fab class="zone-toggle-button"
-          (click)="hidden=!hidden"><mat-icon
-            [ngClass]="{'zones-arrow-on': !hidden, 'zones-arrow-off': hidden}">keyboard_arrow_right</mat-icon></button>-->
-          <div class="user-grave">
-            <mat-card class="zone-data" (dblclick)="sendSelectedToSpot(user.grave, 'grave')"
-                      (contextmenu)="onRightClick($event, {type: 'zone', zone: 'grave'})"
-                      cdkDropList [cdkDropListData]="user.grave"
-                      cdkDropListOrientation="horizontal"
-                      (cdkDropListDropped)="moveCardToZone($event, 'grave')">
-              <div class="zone-title"><h5>Graveyard</h5></div>
-              <h1 class="zone-count">{{user.grave.length}}</h1>
-              <div *ngIf="user.grave.length == 0" class="mtg-card-user"></div>
-              <img *ngIf="user.grave.length > 0" class="mtg-card-user"
-                   [src]="user.grave[0].visible.includes(user.id) ? user.grave[0].image: user.deck.sleeves"
-                   [alt]="user.grave[0].visible.includes(user.id) ? user.grave[0].name: ''"
-                   (pointerleave)="hovered_card=null"
-                   (cdkDragStarted)="hovered_card=null; selectCard(user.grave[0], user.grave);"
-                   cdkDrag loading="eager">
-            </mat-card>
-          </div>
-          <div class="user-exile">
-            <mat-card class="zone-data" (dblclick)="sendSelectedToSpot(user.exile, 'exile')"
-                      (contextmenu)="onRightClick($event, {type: 'zone', zone: 'exile'})"
-                      cdkDropList [cdkDropListData]="user.exile"
-                      cdkDropListOrientation="horizontal"
-                      (cdkDropListDropped)="moveCardToZone($event, 'exile')">
-              <div class="zone-title"><h5>Exile</h5></div>
-              <h1 class="zone-count">{{user.exile.length}}</h1>
-              <div *ngIf="user.exile.length == 0" class="mtg-card-user"></div>
-              <img *ngIf="user.exile.length > 0" class="mtg-card-user"
-                   [src]="user.exile[0].visible.includes(user.id) ? user.exile[0].image: user.deck.sleeves"
-                   [alt]="user.exile[0].visible.includes(user.id) ? user.exile[0].name: ''"
-                   src="{{user.exile[0].image}}"
-                   (pointerleave)="hovered_card=null"
-                   (cdkDragStarted)="hovered_card=null; selectCard(user.exile[0], user.exile);"
-                   cdkDrag loading="eager">
-            </mat-card>
-          </div>
-          <div class="user-temp-zone">
-            <mat-card class="zone-data" (dblclick)="sendSelectedToSpot(user.temp_zone, 'temp_zone')"
-                      (contextmenu)="onRightClick($event, {type: 'zone', zone: 'temp_zone'})"
-                      cdkDropList [cdkDropListData]="user.temp_zone"
-                      cdkDropListOrientation="horizontal"
-                      (cdkDropListDropped)="moveCardToZone($event, 'temp_zone')">
-              <div class="zone-title"><h5>Temp</h5></div>
-              <h1 class="zone-count">{{user.temp_zone.length}}</h1>
-              <div *ngIf="user.temp_zone.length == 0" class="mtg-card-user"></div>
-              <img *ngIf="user.temp_zone.length > 0" class="mtg-card-user"
-                   [src]="user.temp_zone[0].visible.includes(user.id) ? user.temp_zone[0].image: user.deck.sleeves"
-                   [alt]="user.temp_zone[0].visible.includes(user.id) ? user.temp_zone[0].name: ''"
-                   (pointerleave)="hovered_card=null"
-                   (cdkDragStarted)="hovered_card=null; selectCard(user.temp_zone[0], user.temp_zone);"
-                   cdkDrag loading="eager">
-            </mat-card>
-          </div>
-          <div *ngIf="!user.scooped" class="commander-viewer" cdkDropList
-               [cdkDropListData]="user.deck.commander"
-               (cdkDropListDropped)="moveCardToZone($event, 'command_zone')"
-               (contextmenu)="onRightClick($event, {type: 'commander'});">
-            <mat-card class="commander-viewer-mat-card">
-              <div class="commander-counter-holder">
-                <div class="commander-counter-container">
-                  <button mat-fab class="commander-counter commander-counter-1" (click)="user.command_tax_1 = user.command_tax_1 + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'command_tax_1'})">
-                    {{user.command_tax_1}}
-                  </button>
-                  <button *ngIf="user.deck.commander_saved.length == 2" mat-fab color="primary" class="commander-counter commander-counter-2" (click)="user.command_tax_2 = user.command_tax_2 + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'command_tax_2'})">
-                    {{user.command_tax_2}}
-                  </button>
+    <div class="user-deck" *ngIf="user != null && !user.scooped">
+      <mat-card class="zone-data"
+                (dblclick)="drawX(1)"
+                (contextmenu)="onRightClick($event, {type: 'deck'})"
+                cdkDropList [cdkDropListData]="user.deck.cards"
+                cdkDropListOrientation="horizontal"
+                (cdkDropListDropped)="moveCardToZone($event, 'deck')">
+        <h1 class="zone-count">{{user.deck.cards.length}}</h1>
+        <img class="mtg-card-user"
+             [src]="user.deck.cards.length > 0 && user.deck.cards[0].visible.includes(user.id) ? user.deck.cards[0].image: user.deck.sleeves"
+             [alt]="user.deck.cards.length > 0 && user.deck.cards[0].visible.includes(user.id) ? user.deck.cards[0].name: ''"
+             (pointerleave)="hovered_card=null"
+             (cdkDragStarted)="hovered_card=null; clearSelection(); selectCard(user.deck.cards[0], user.deck.cards);"
+             cdkDrag loading="lazy">
+      </mat-card>
+    </div>
+    <div class="zone-hider-outer" *ngIf="user != null">
+      <div class="zone-hider-inner">
+        <div [ngClass]="{'zone-container': !hidden, 'zone-container-hidden': hidden}">
+          <div class="zone-holder">
+            <!--<button [style.display]="'none'" mat-mini-fab class="zone-toggle-button"
+            (click)="hidden=!hidden"><mat-icon
+              [ngClass]="{'zones-arrow-on': !hidden, 'zones-arrow-off': hidden}">keyboard_arrow_right</mat-icon></button>-->
+            <div class="user-grave">
+              <mat-card class="zone-data" (dblclick)="sendSelectedToSpot(user.grave, 'grave')"
+                        (contextmenu)="onRightClick($event, {type: 'zone', zone: 'grave'})"
+                        cdkDropList [cdkDropListData]="user.grave"
+                        cdkDropListOrientation="horizontal"
+                        (cdkDropListDropped)="moveCardToZone($event, 'grave')">
+                <div class="zone-title"><h5>Graveyard</h5></div>
+                <h1 class="zone-count">{{user.grave.length}}</h1>
+                <div *ngIf="user.grave.length == 0" class="mtg-card-user"></div>
+                <img *ngIf="user.grave.length > 0" class="mtg-card-user"
+                     [src]="user.grave[0].visible.includes(user.id) ? user.grave[0].image: user.deck.sleeves"
+                     [alt]="user.grave[0].visible.includes(user.id) ? user.grave[0].name: ''"
+                     (pointerleave)="hovered_card=null"
+                     (cdkDragStarted)="hovered_card=null; selectCard(user.grave[0], user.grave);"
+                     cdkDrag loading="eager">
+              </mat-card>
+            </div>
+            <div class="user-exile">
+              <mat-card class="zone-data" (dblclick)="sendSelectedToSpot(user.exile, 'exile')"
+                        (contextmenu)="onRightClick($event, {type: 'zone', zone: 'exile'})"
+                        cdkDropList [cdkDropListData]="user.exile"
+                        cdkDropListOrientation="horizontal"
+                        (cdkDropListDropped)="moveCardToZone($event, 'exile')">
+                <div class="zone-title"><h5>Exile</h5></div>
+                <h1 class="zone-count">{{user.exile.length}}</h1>
+                <div *ngIf="user.exile.length == 0" class="mtg-card-user"></div>
+                <img *ngIf="user.exile.length > 0" class="mtg-card-user"
+                     [src]="user.exile[0].visible.includes(user.id) ? user.exile[0].image: user.deck.sleeves"
+                     [alt]="user.exile[0].visible.includes(user.id) ? user.exile[0].name: ''"
+                     src="{{user.exile[0].image}}"
+                     (pointerleave)="hovered_card=null"
+                     (cdkDragStarted)="hovered_card=null; selectCard(user.exile[0], user.exile);"
+                     cdkDrag loading="eager">
+              </mat-card>
+            </div>
+            <div class="user-temp-zone">
+              <mat-card class="zone-data" (dblclick)="sendSelectedToSpot(user.temp_zone, 'temp_zone')"
+                        (contextmenu)="onRightClick($event, {type: 'zone', zone: 'temp_zone'})"
+                        cdkDropList [cdkDropListData]="user.temp_zone"
+                        cdkDropListOrientation="horizontal"
+                        (cdkDropListDropped)="moveCardToZone($event, 'temp_zone')">
+                <div class="zone-title"><h5>Temp</h5></div>
+                <h1 class="zone-count">{{user.temp_zone.length}}</h1>
+                <div *ngIf="user.temp_zone.length == 0" class="mtg-card-user"></div>
+                <img *ngIf="user.temp_zone.length > 0" class="mtg-card-user"
+                     [src]="user.temp_zone[0].visible.includes(user.id) ? user.temp_zone[0].image: user.deck.sleeves"
+                     [alt]="user.temp_zone[0].visible.includes(user.id) ? user.temp_zone[0].name: ''"
+                     (pointerleave)="hovered_card=null"
+                     (cdkDragStarted)="hovered_card=null; selectCard(user.temp_zone[0], user.temp_zone);"
+                     cdkDrag loading="eager">
+              </mat-card>
+            </div>
+            <div *ngIf="!user.scooped" class="commander-viewer" cdkDropList
+                 [cdkDropListData]="user.deck.commander"
+                 (cdkDropListDropped)="moveCardToZone($event, 'command_zone')"
+                 (contextmenu)="onRightClick($event, {type: 'commander'});">
+              <mat-card class="commander-viewer-mat-card">
+                <div class="commander-counter-holder">
+                  <div class="commander-counter-container">
+                    <button mat-fab class="commander-counter commander-counter-1" (click)="user.command_tax_1 = user.command_tax_1 + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'command_tax_1'})">
+                      {{user.command_tax_1}}
+                    </button>
+                    <button *ngIf="user.deck.commander_saved.length == 2" mat-fab color="primary" class="commander-counter commander-counter-2" (click)="user.command_tax_2 = user.command_tax_2 + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'command_tax_2'})">
+                      {{user.command_tax_2}}
+                    </button>
+                  </div>
                 </div>
-              </div>
-              <div *ngIf="user.deck.commander.length == 1">
-                <img class="commander-viewer-single"
-                     src="{{user.deck.commander[0].image}}"
-                     loading="lazy"
-                     (contextmenu)="onRightClick($event, {type: 'commander', card: user.deck.commander[0]});
+                <div *ngIf="user.deck.commander.length == 1">
+                  <img class="commander-viewer-single"
+                       src="{{user.deck.commander[0].image}}"
+                       loading="lazy"
+                       (contextmenu)="onRightClick($event, {type: 'commander', card: user.deck.commander[0]});
                                   selectCard(user.deck.commander[0], user.deck.commander, true);"
-                     (pointerenter)="hovered_card=user.deck.commander[0]" (pointerleave)="hovered_card=null"
-                     cdkDrag
-                     (cdkDragStarted)="hovered_card=null; selectCard(user.deck.commander[0], user.deck.commander);">
-              </div>
-              <div *ngIf="user.deck.commander.length == 2" class="commander-viewer-partner-holder">
-                <div class="commander-viewer-partner-1"
-                     (pointerenter)="hovered_card=user.deck.commander[0]"
-                     (pointerleave)="hovered_card=null"
-                     cdkDrag
-                     (cdkDragStarted)="hovered_card=null; selectCard(user.deck.commander[0], user.deck.commander);"
-                     (contextmenu)="onRightClick($event, {type: 'commander', card: user.deck.commander[0]}); selectCard(user.deck.commander[0], user.deck.commander, true);">
-                  <img class="commander-viewer-partner-image" src="{{user.deck.commander[0].image}}" loading="lazy">
+                       (pointerenter)="hovered_card=user.deck.commander[0]" (pointerleave)="hovered_card=null"
+                       cdkDrag
+                       (cdkDragStarted)="hovered_card=null; selectCard(user.deck.commander[0], user.deck.commander);">
                 </div>
-                <div class="commander-viewer-partner-2"
-                     (pointerenter)="hovered_card=user.deck.commander[1]"
-                     (pointerleave)="hovered_card=null"
-                     cdkDrag
-                     (cdkDragStarted)="hovered_card=null; selectCard(user.deck.commander[1], user.deck.commander);"
-                     (contextmenu)="onRightClick($event, {type: 'commander', card: user.deck.commander[1]}); selectCard(user.deck.commander[1], user.deck.commander, true);">
-                  <img class="commander-viewer-partner-image" src="{{user.deck.commander[1].image}}" loading="lazy">
+                <div *ngIf="user.deck.commander.length == 2" class="commander-viewer-partner-holder">
+                  <div class="commander-viewer-partner-1"
+                       (pointerenter)="hovered_card=user.deck.commander[0]"
+                       (pointerleave)="hovered_card=null"
+                       cdkDrag
+                       (cdkDragStarted)="hovered_card=null; selectCard(user.deck.commander[0], user.deck.commander);"
+                       (contextmenu)="onRightClick($event, {type: 'commander', card: user.deck.commander[0]}); selectCard(user.deck.commander[0], user.deck.commander, true);">
+                    <img class="commander-viewer-partner-image" src="{{user.deck.commander[0].image}}" loading="lazy">
+                  </div>
+                  <div class="commander-viewer-partner-2"
+                       (pointerenter)="hovered_card=user.deck.commander[1]"
+                       (pointerleave)="hovered_card=null"
+                       cdkDrag
+                       (cdkDragStarted)="hovered_card=null; selectCard(user.deck.commander[1], user.deck.commander);"
+                       (contextmenu)="onRightClick($event, {type: 'commander', card: user.deck.commander[1]}); selectCard(user.deck.commander[1], user.deck.commander, true);">
+                    <img class="commander-viewer-partner-image" src="{{user.deck.commander[1].image}}" loading="lazy">
+                  </div>
                 </div>
-              </div>
-            </mat-card>
+              </mat-card>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div style="position: fixed; left: 50%;
+    <div style="position: fixed; left: 50%;
   -ms-transform: translateX(-50%);
   transform: translateX(-50%); z-index: 2;"
-  [style.bottom.px]="game_data && activePlayers() > 4? 630: 450">
-    <ng-scrollbar visibility="hover" pointerEventsMethod="scrollbar" track="vertical" style="margin-top: 20px; height: 455px; width: 100vw">
-      <div fxLayout="row" fxLayoutAlign="center" style="height: 455px; width: 100vw; margin-top: 10px;">
+         [style.bottom.px]="game_data && activePlayers() > 4? 630: 450">
+      <ng-scrollbar visibility="hover" pointerEventsMethod="scrollbar" track="vertical" style="margin-top: 20px; height: 455px; width: 100vw">
+        <div fxLayout="row" fxLayoutAlign="center" style="height: 455px; width: 100vw; margin-top: 10px;">
           <div fxLayout="row wrap" fxLayoutAlign="center" fxFlexFill *ngIf="game_data" style="height: 455px; width: 100vw;">
             <div *ngFor="let player of game_data.players">
               <mat-card *ngIf="isOpponent(player) && !player.scooped" class="playmat-opponent" fxLayout="row wrap" fxLayoutAlign="center center">
@@ -517,255 +569,122 @@
               </mat-card>
             </div>
           </div>
-      </div>
-    </ng-scrollbar>
-  </div>
+        </div>
+      </ng-scrollbar>
+    </div>
 
-  <div style="position: fixed; bottom: 215px; left: 50%;
+    <div style="position: fixed; bottom: 215px; left: 50%;
   -ms-transform: translateX(-50%);
   transform: translateX(-50%); z-index: 2;">
-    <div class="playmat-user-holder" *ngIf="user != null">
-      <div class="playmat-user-devotions" >
-        <div fxFlexFill fxLayout="column" fxLayoutAlign="space-evenly start">
-          <div class="devotion-holder">
-            <button mat-fab class="devotion-white">{{devotionCount(user, 'W')}}</button>
-          </div>
-          <div class="devotion-holder">
-            <button mat-fab class="devotion-blue">{{devotionCount(user, 'U')}}</button>
-          </div>
-          <div class="devotion-holder">
-            <button mat-fab class="devotion-black">{{devotionCount(user, 'B')}}</button>
-          </div>
-          <div class="devotion-holder">
-            <button mat-fab class="devotion-red">{{devotionCount(user, 'R')}}</button>
-          </div>
-          <div class="devotion-holder">
-            <button mat-fab class="devotion-green">{{devotionCount(user, 'G')}}</button>
-          </div>
-        </div>
-      </div>
-      <mat-card class="playmat-user" fxLayout="row wrap" fxLayoutAlign="start start">
-        <div *ngFor="let spot of user.playmat"
-             class="mtg-card-holder-user"
-             cdkDropList
-             [cdkDropListData]="spot"
-             (cdkDropListDropped)="moveCardToZone($event, 'play')"
-             (dblclick)="sendSelectedToSpot(spot, 'play')"
-             (contextmenu)="onRightClick($event, {type: 'user_playmat', spot: spot, from: spot})">
-          <div *ngFor="let card of spot; let i = index" (dblclick)="$event.stopPropagation()">
-            <div [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2, 'mtg-card-invert': card.inverted}"
-                 (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
-                 (cdkDragStarted)="hovered_card=null; selectCard(card, spot);"
-                 class="mtg-card-user-container" [@userTappedState]="card.tapped"
-                 [@shakeCard]="card.shaken"
-                 cdkDrag>
-              <div *ngIf="card.locked" class="mtg-lock"><mat-icon>lock</mat-icon></div>
-              <img [ngClass]="{'mtg-card-user-selected': isSelected(card), 'mtg-card-clone': card.is_token && !card.types.includes('Token') && !card.types.includes('Emblem') }"
-                   class="mtg-card-user"
-                   [src]="card.visible.includes(user.id) ? card.image: user.deck.sleeves"
-                   [alt]="card.visible.includes(user.id) ? card.name: ''"
-                   (contextmenu)="onRightClick($event,{type: 'user_play', card: card, spot: spot, from: spot}); selectCard(card, spot);"
-                   (click)="toggleCardSelect(card, spot)" (dblclick)="tapCard(card)" loading="lazy">
-              <button *ngIf="card.counter_1" class="mtg-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true" (click)="card.counter_1_value = card.counter_1_value + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'counter_1', card: card})"><p>{{card.counter_1_value}}</p></button>
-              <button *ngIf="card.counter_2" class="mtg-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true" (click)="card.counter_2_value = card.counter_2_value + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'counter_2', card: card})"><p>{{card.counter_2_value}}</p></button>
-              <button *ngIf="card.counter_3" class="mtg-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true" (click)="card.counter_3_value = card.counter_3_value + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'counter_3', card: card})"><p>{{card.counter_3_value}}</p></button>
-              <button *ngIf="card.multiplier" class="mtg-multiplier-counter" mat-fab color="accent" [class.mat-elevation-z8]="true" (click)="card.multiplier_value = card.multiplier_value + 1" (contextmenu)="onRightClick($event, {type: 'multiplier', card: card})"><p>{{card.multiplier_value}}</p></button>
-              <h4 *ngIf="card.power && card.toughness && card.visible.includes(user.id)" class="mtg-card-power-tough">
-                <a [ngClass]="{'mat-card-power-tough-text-up': card.power_mod > 0, 'mat-card-power-tough-text-down': card.power_mod < 0}" class="mat-card-power-tough-text" (click)="card.power_mod = card.power_mod + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'power', card: card})">{{card.power + card.power_mod}}</a>/
-                <a [ngClass]="{'mat-card-power-tough-text-up': card.toughness_mod > 0, 'mat-card-power-tough-text-down': card.toughness_mod < 0}" class="mat-card-power-tough-text" (click)="card.toughness_mod = card.toughness_mod + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'toughness', card: card})">{{card.toughness + card.toughness_mod}}</a></h4>
-              <h4 *ngIf="card.loyalty && card.visible.includes(user.id)" class="mtg-card-loyalty"><a class="mat-card-power-tough-text" [ngClass]="{'mat-card-power-tough-text-up': card.loyalty_mod > 0, 'mat-card-power-tough-text-down': card.loyalty_mod < 0}" (click)="card.loyalty_mod = card.loyalty_mod + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'loyalty', card: card})">{{card.loyalty + card.loyalty_mod}}</a></h4>
+      <div class="playmat-user-holder" *ngIf="user != null">
+        <div class="playmat-user-devotions" >
+          <div fxFlexFill fxLayout="column" fxLayoutAlign="space-evenly start">
+            <div class="devotion-holder">
+              <button mat-fab class="devotion-white">{{devotionCount(user, 'W')}}</button>
+            </div>
+            <div class="devotion-holder">
+              <button mat-fab class="devotion-blue">{{devotionCount(user, 'U')}}</button>
+            </div>
+            <div class="devotion-holder">
+              <button mat-fab class="devotion-black">{{devotionCount(user, 'B')}}</button>
+            </div>
+            <div class="devotion-holder">
+              <button mat-fab class="devotion-red">{{devotionCount(user, 'R')}}</button>
+            </div>
+            <div class="devotion-holder">
+              <button mat-fab class="devotion-green">{{devotionCount(user, 'G')}}</button>
             </div>
           </div>
         </div>
-      </mat-card>
+        <mat-card class="playmat-user" fxLayout="row wrap" fxLayoutAlign="start start">
+          <div *ngFor="let spot of user.playmat"
+               class="mtg-card-holder-user"
+               cdkDropList
+               [cdkDropListData]="spot"
+               (cdkDropListDropped)="moveCardToZone($event, 'play')"
+               (dblclick)="sendSelectedToSpot(spot, 'play')"
+               (contextmenu)="onRightClick($event, {type: 'user_playmat', spot: spot, from: spot})">
+            <div *ngFor="let card of spot; let i = index" (dblclick)="$event.stopPropagation()">
+              <div [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2, 'mtg-card-invert': card.inverted}"
+                   (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
+                   (cdkDragStarted)="hovered_card=null; selectCard(card, spot);"
+                   class="mtg-card-user-container" [@userTappedState]="card.tapped"
+                   [@shakeCard]="card.shaken"
+                   cdkDrag>
+                <div *ngIf="card.locked" class="mtg-lock"><mat-icon>lock</mat-icon></div>
+                <img [ngClass]="{'mtg-card-user-selected': isSelected(card), 'mtg-card-clone': card.is_token && !card.types.includes('Token') && !card.types.includes('Emblem') }"
+                     class="mtg-card-user"
+                     [src]="card.visible.includes(user.id) ? card.image: user.deck.sleeves"
+                     [alt]="card.visible.includes(user.id) ? card.name: ''"
+                     (contextmenu)="onRightClick($event,{type: 'user_play', card: card, spot: spot, from: spot}); selectCard(card, spot);"
+                     (click)="toggleCardSelect(card, spot)" (dblclick)="tapCard(card)" loading="lazy">
+                <button *ngIf="card.counter_1" class="mtg-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true" (click)="card.counter_1_value = card.counter_1_value + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'counter_1', card: card})"><p>{{card.counter_1_value}}</p></button>
+                <button *ngIf="card.counter_2" class="mtg-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true" (click)="card.counter_2_value = card.counter_2_value + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'counter_2', card: card})"><p>{{card.counter_2_value}}</p></button>
+                <button *ngIf="card.counter_3" class="mtg-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true" (click)="card.counter_3_value = card.counter_3_value + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'counter_3', card: card})"><p>{{card.counter_3_value}}</p></button>
+                <button *ngIf="card.multiplier" class="mtg-multiplier-counter" mat-fab color="accent" [class.mat-elevation-z8]="true" (click)="card.multiplier_value = card.multiplier_value + 1" (contextmenu)="onRightClick($event, {type: 'multiplier', card: card})"><p>{{card.multiplier_value}}</p></button>
+                <h4 *ngIf="card.power && card.toughness && card.visible.includes(user.id)" class="mtg-card-power-tough">
+                  <a [ngClass]="{'mat-card-power-tough-text-up': card.power_mod > 0, 'mat-card-power-tough-text-down': card.power_mod < 0}" class="mat-card-power-tough-text" (click)="card.power_mod = card.power_mod + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'power', card: card})">{{card.power + card.power_mod}}</a>/
+                  <a [ngClass]="{'mat-card-power-tough-text-up': card.toughness_mod > 0, 'mat-card-power-tough-text-down': card.toughness_mod < 0}" class="mat-card-power-tough-text" (click)="card.toughness_mod = card.toughness_mod + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'toughness', card: card})">{{card.toughness + card.toughness_mod}}</a></h4>
+                <h4 *ngIf="card.loyalty && card.visible.includes(user.id)" class="mtg-card-loyalty"><a class="mat-card-power-tough-text" [ngClass]="{'mat-card-power-tough-text-up': card.loyalty_mod > 0, 'mat-card-power-tough-text-down': card.loyalty_mod < 0}" (click)="card.loyalty_mod = card.loyalty_mod + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'loyalty', card: card})">{{card.loyalty + card.loyalty_mod}}</a></h4>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
     </div>
-  </div>
-  <div style="position: fixed;
+    <div style="position: fixed;
   bottom: 140px;
   left: 50%;
   -ms-transform: translateX(-50%);
   transform: translateX(-50%); z-index: 3;">
-    <div *ngIf="selected_player != null" class="opponent-hand invisible_scroll" fxLayout="column" fxLayoutAlign="center">
-      <div scrollViewport class="opponent-hand-list" [class.mat-elevation-z8]="true"
-           fxFlexFill fxLayout="row" fxLayoutAlign="start">
-        <h1 class="hand-count">{{selected_player.hand.length}}</h1>
-        <img *ngFor="let card of selected_player.hand"
-             class="mtg-card-opponent"
-             [src]="card.visible.includes(user.id) ? card.image: selected_player.deck.sleeves"
-             [alt]="card.visible.includes(user.id) ? card.name: ''"
-             (contextmenu)="onRightClick($event, {type: 'opponent_hand', card: card, userid: selected_player.id})"
-             (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null" loading="lazy" [@shakeCard]="card.shaken">
+      <div *ngIf="selected_player != null" class="opponent-hand invisible_scroll" fxLayout="column" fxLayoutAlign="center">
+        <div scrollViewport class="opponent-hand-list" [class.mat-elevation-z8]="true"
+             fxFlexFill fxLayout="row" fxLayoutAlign="start">
+          <h1 class="hand-count">{{selected_player.hand.length}}</h1>
+          <img *ngFor="let card of selected_player.hand"
+               class="mtg-card-opponent"
+               [src]="card.visible.includes(user.id) ? card.image: selected_player.deck.sleeves"
+               [alt]="card.visible.includes(user.id) ? card.name: ''"
+               (contextmenu)="onRightClick($event, {type: 'opponent_hand', card: card, userid: selected_player.id})"
+               (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null" loading="lazy" [@shakeCard]="card.shaken">
+        </div>
       </div>
     </div>
-  </div>
 
-  <div style="position: fixed;
+    <div style="position: fixed;
   bottom: 20px;
   left: 50%;
   -ms-transform: translateX(-50%);
   transform: translateX(-50%); z-index: 2;">
-    <div *ngIf="user != null" class="user-hand" fxFlex fxLayout="column" fxLayoutAlign="center" [class.mat-elevation-z8]="true">
-      <ng-scrollbar track="horizontal" visibility="hover"
-                    pointerEventsMethod="scrollbar"
-                    [style.width.px]="user.hand.length * 75"
-                    style="margin-top: 0; width: 100%; max-width: 1144px;">
-        <div scrollViewport cdkDropList class="user-hand-list"
-             cdkDropListOrientation="horizontal"
-             [cdkDropListData]="user.hand"
-             (cdkDropListDropped)="moveCardToZone($event, 'hand')" fxFlexFill fxLayout="row" fxLayoutAlign="start">
-          <h1 class="hand-count">{{user.hand.length}}</h1>
-          <mat-icon [mat-menu-trigger-for]="hand_menu" class="hand-menu">more_vert</mat-icon>
-          <mat-card *ngFor="let card of user.hand" class="mtg-card-user-container"
-                    fxFlex fxLayout="column"
-                    (contextmenu)="onRightClick($event, {type: 'user_hand', card: card, from: user.hand}); selectCard(card, user.hand);"
-                    (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
-                    (click)="toggleCardSelect(card, user.hand)"
-                    (cdkDragStarted)="hovered_card=null; selectCard(card, user.hand);" [@shakeCard]="card.shaken"
-                    cdkDrag>
-            <img [ngClass]="{ 'mtg-card-user-selected': isSelected(card) }"
-                 class="mtg-card-user"
-                 [src]="card.visible.includes(user.id) ? card.image: user.deck.sleeves"
-                 [alt]="card.visible.includes(user.id) ? card.name: ''"
-                 loading="lazy">
-          </mat-card>
-        </div>
-      </ng-scrollbar>
-    </div>
-  </div>
-
-
-
-  <mat-sidenav-container fxFlexFill hasBackdrop="false" *ngIf="user != null" style="overflow: hidden">
-    <mat-sidenav #fddp_sidenav disableClose *ngIf="game_data != null" style="overflow: hidden">
-      <mat-toolbar color="primary">
-        <div fxFlex="100" fxLayout="row" fxLayoutAlign="space-between center">
-          <h2 fxFlex *ngIf="sidenav_type==='grave'">Graveyards</h2>
-          <h2 fxFlex *ngIf="sidenav_type==='exile'">Exile</h2>
-          <h2 fxFlex *ngIf="sidenav_type==='temp_zone'">Temp Zones</h2>
-          <h2 fxFlex *ngIf="sidenav_type==='deck'">Searching Deck</h2>
-          <button mat-icon-button (click)="closeSideNav()">
-            <mat-icon>close</mat-icon>
-          </button>
-        </div>
-      </mat-toolbar>
-      <div>
-        <div fxLayout="column">
-          <div fxLayout="row" style="height: 64px">
-            <mat-form-field appearance="outline" fxFlex style="margin: 5px;" *ngIf="sidenav_type !== 'deck'">
-              <mat-label>Player</mat-label>
-              <mat-select [(ngModel)]="sidenav_selected_player" name="player_select_sidenav" (ngModelChange)="getSidenavSort()">
-                <div *ngFor="let player of game_data.players">
-                  <mat-option *ngIf="!player.scooped || sidenav_type === 'temp_zone'" [value]="player">{{player.name}}</mat-option>
-                </div>
-              </mat-select>
-            </mat-form-field>
+      <div *ngIf="user != null" class="user-hand" fxFlex fxLayout="column" fxLayoutAlign="center" [class.mat-elevation-z8]="true">
+        <ng-scrollbar track="horizontal" visibility="hover"
+                      pointerEventsMethod="scrollbar"
+                      [style.width.px]="user.hand.length * 75"
+                      style="margin-top: 0; width: 100%; max-width: 1144px;">
+          <div scrollViewport cdkDropList class="user-hand-list"
+               cdkDropListOrientation="horizontal"
+               [cdkDropListData]="user.hand"
+               (cdkDropListDropped)="moveCardToZone($event, 'hand')" fxFlexFill fxLayout="row" fxLayoutAlign="start">
+            <h1 class="hand-count">{{user.hand.length}}</h1>
+            <mat-icon [mat-menu-trigger-for]="hand_menu" class="hand-menu">more_vert</mat-icon>
+            <mat-card *ngFor="let card of user.hand" class="mtg-card-user-container"
+                      fxFlex fxLayout="column"
+                      (contextmenu)="onRightClick($event, {type: 'user_hand', card: card, from: user.hand}); selectCard(card, user.hand);"
+                      (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
+                      (click)="toggleCardSelect(card, user.hand)"
+                      (cdkDragStarted)="hovered_card=null; selectCard(card, user.hand);" [@shakeCard]="card.shaken"
+                      cdkDrag>
+              <img [ngClass]="{ 'mtg-card-user-selected': isSelected(card) }"
+                   class="mtg-card-user"
+                   [src]="card.visible.includes(user.id) ? card.image: user.deck.sleeves"
+                   [alt]="card.visible.includes(user.id) ? card.name: ''"
+                   loading="lazy">
+            </mat-card>
           </div>
-          <div fxLayout="row" style="height: 64px">
-            <mat-form-field fxFlex style="margin: 5px;" appearance="outline">
-              <mat-label>Search</mat-label>
-              <input type="text" placeholder="Card Name"
-                     matInput [matAutocomplete]="card_name"
-                     [(ngModel)]="sidenav_sort" (ngModelChange)="getSidenavSort()">
-              <mat-autocomplete #card_name>
-                <mat-option *ngFor="let card of getSidenavList()" [value]="card.name">
-                  {{card.name}}
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
-          </div>
-          <div fxLayout="row" style="height: 64px">
-            <mat-form-field fxFlex appearance="outline" style="margin: 5px;">
-              <mat-label>Type</mat-label>
-              <input type="text"
-                     placeholder="Card Type"
-                     matInput [(ngModel)]="sidenav_sort_type"
-                     (ngModelChange)="getSidenavSort()">
-            </mat-form-field>
-          </div>
-          <ng-scrollbar visibility="hover"
-                        track="vertical"
-                        pointerEventsMethod="scrollbar"
-                        style="height: calc(100vh - 261px); width: 500px; margin-top: 5px;">
-            <div class="sidenav-list" cdkDropList
-                 (cdkDropListDropped)="moveCardToZone($event, sidenav_type, true)"
-                 [cdkDropListData]="getSidenavList()">
-              <div *ngFor="let card of getSidenavList()">
-                <div *ngIf="card.sidenav_visible && (card.visible.includes(user.id) || sidenav_type === 'deck')" class="sidenav-list-item"
-                     [ngClass]="{'sidenav-list-item-selected': isSelected(card)}"
-                     (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
-                     (cdkDragStarted)="hovered_card=null; selectCard(card, getSidenavList());"
-                     (click)="toggleCardSelect(card, getSidenavList(), card.sidenav_visible)"
-                     (contextmenu)="onRightClick($event, {type: 'zone_card', card: card, from: getSidenavList()})"
-                     cdkDrag>
-                  {{card.name}}
-                  <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="mtg-card-user" loading="lazy">
-                  <img *cdkDragPlaceholder class="mtg-card-user" [src]="card.image" [alt]="card.name" loading="lazy">
-                </div>
-                <div *ngIf="card.sidenav_visible && !card.visible.includes(user.id) && sidenav_type !== 'deck'" class="sidenav-list-item"
-                     [ngClass]="{'sidenav-list-item-selected': isSelected(card)}"
-                     (pointerenter)="hovered_card=null" (pointerleave)="hovered_card=null"
-                     [cdkDragDisabled]="true" (contextmenu)="onRightClick($event, {type: 'zone_card', card: card, from: getSidenavList()})"
-                     cdkDrag>
-                  -------- Hidden --------
-                </div>
-              </div>
-            </div>
-          </ng-scrollbar>
-        </div>
+        </ng-scrollbar>
       </div>
-    </mat-sidenav>
-    <mat-sidenav-content>
-      <ng-scrollbar style="height: 100%; width: 100%" track="all">
-        <div *ngIf="user != null" class="counter-creator" fxLayout="column">
-          <div class="counter-container">
-            <!---->
-            <div *ngFor="let counter of counts">
-              <mat-card *ngIf="counter.type === 'type'" class="commander-dashboard-custom-counter"
-                        (contextmenu)="onRightClick($event, {type: 'type_counter', counter: counter})"
-                        style="padding: 0" cdkDrag (keydown.escape)="deleteCounter(counter)">
-                <mat-form-field appearance="fill" class="commander-dashboard-input">
-                  <mat-label>Enter a Type</mat-label>
-                  <input #custom_search matInput>
-                </mat-form-field>
-                <div fxFlex="100" fxLayout="row" fxLayoutGap="10" class="commander-dashboard-select-holder" fxLayoutAlign="space-between">
-                  <mat-form-field appearance="outline" class="commander-dashboard-select">
-                    <mat-label>Player</mat-label>
-                    <mat-select #search_player>
-                      <div *ngFor="let player of game_data.players">
-                        <mat-option *ngIf="!player.scooped" [value]="player">{{player.name}}</mat-option>
-                      </div>
-                      <mat-option [value]="'All'">All</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                  <mat-form-field appearance="outline" class="commander-dashboard-select">
-                    <mat-label>Zone</mat-label>
-                    <mat-select #search_zone>
-                      <mat-option [value]="'play'">Play</mat-option>
-                      <mat-option [value]="'grave'">Graveyard</mat-option>
-                      <mat-option [value]="'exile'">Exile</mat-option>
-                    </mat-select>
-                  </mat-form-field>
-                </div>
-                <h1 class="commander-dashboard-text" style="text-align: end">Count: {{typeCount(search_player.value, search_zone.value,  custom_search.value)}}</h1>
-              </mat-card>
-              <button *ngIf="counter.type === 'play'" cdkDrag mat-fab (click)="counter.value = counter.value + 1; this.updateCounter();"
-                      (contextmenu)="onRightClick($event, {type: 'custom_counter', counter: counter})"
-                      (keydown.escape)="deleteCounter(counter)"
-                      [style.background]="counter.color"
-                      style="pointer-events: all;">{{counter.value}}</button>
-            </div>
-          </div>
-        </div>
-        <div fxFlexFill (contextmenu)="onRightClick($event, {type: 'none'})" *ngIf="user != null">
-          <div class="container" fxLayout="row" fxLayoutAlign="center end" fxFlexFill>
-            <div fxLayout="column" fxLayoutAlign="start center" fxFlexFill style="margin: 10px;">
-              <!-- &&Opponents -->
-            </div>
-          </div>
-        </div>
-      </ng-scrollbar>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
-</div>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
 
 

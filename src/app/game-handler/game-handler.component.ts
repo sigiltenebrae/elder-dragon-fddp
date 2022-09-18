@@ -74,6 +74,7 @@ export class GameHandlerComponent implements OnInit {
   sidenav_sort_type: string = '';
   selected_cards: any[] = [];
   sidenav_sort = '';
+  sidenav_scry_count = 0;
 
   hidden = false;
   loading = false;
@@ -1222,7 +1223,8 @@ export class GameHandlerComponent implements OnInit {
             card_select.card.facedown = false;
             this.clearCard(card_select.card); //wipe all counters
             if (card_select.from === this.getPlayer(card_select.card.owner).deck.cards) { //If it is already in the deck
-              moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex)
+              card_select.card.sidenav_visible = false;
+              moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), this.getPlayer(card_select.card.owner).deck.cards.length)
             }
             else {
               transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), this.getPlayer(card_select.card.owner).deck.cards.length);
@@ -1423,6 +1425,11 @@ export class GameHandlerComponent implements OnInit {
                   this.zone_transfers.push({ zone: 'temp_zone', new_zone: this.selected_player.temp_zone, to_id: this.selected_player.id});
                 }
               }
+            }
+            break;
+          case 'scry':
+            if (card_select.from === this.getPlayer(card_select.card.owner).deck.cards) { //If it is already in the deck
+              moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex);
             }
             break;
         }
@@ -1701,26 +1708,11 @@ export class GameHandlerComponent implements OnInit {
 
   scryX(count: any) {
     this.clearSelection(null);
-    let scry_num = Number(count);
-    for (let i = 0; i < scry_num; i++) {
-      this.user.temp_scry_zone.push(this.user.deck.cards[0]);
-      this.user.deck.cards.splice(0, 1);
-    }
-    this.scrying = true;
-    this.sendPlayerUpdate();
+    this.sidenav_scry_count = Number(count);
+    this.openSideNav('scry');
   }
 
-  endScry() {
-    if (this.user.temp_scry_zone.length > 0) {
-      for (let card of this.reversePlaymat(this.user.temp_scry_zone)) {
-        this.selectCard(card, this.user.temp_scry_zone);
-      }
-      this.scrySendTo(this.user.temp_scry_zone[0], 'top');
-    }
-    this.user.temp_scry_zone = [];
-    this.scrying = false;
-    this.sendPlayerUpdate();
-  }
+
 
   scrySendTo(card: any, type: string) {
     this.selectCard(card, this.user.temp_scry_zone);
@@ -1780,9 +1772,22 @@ export class GameHandlerComponent implements OnInit {
   openSideNav(type: string) {
     this.sidenav_selected_player = this.user;
     this.sidenav_type = type;
-    this.sidenav_sort = '';
-    this.sidenav_sort_type = '';
-    this.getSidenavSort();
+    if (type !== 'scry') {
+      this.sidenav_sort = '';
+      this.sidenav_sort_type = '';
+      this.getSidenavSort();
+    }
+    else {
+      let items = this.getSidenavList();
+      for (let i = 0; i < items.length; i++) {
+        if (i > this.sidenav_scry_count - 1) {
+          items[i].sidenav_visible = false;
+        }
+        else {
+          items[i].sidenav_visible = true;
+        }
+      }
+    }
     this.fddp_sidenav.open();
   }
 
@@ -1853,6 +1858,8 @@ export class GameHandlerComponent implements OnInit {
       case 'deck':
         items = this.sidenav_selected_player.deck.cards;
         break;
+      case 'scry':
+        items = this.sidenav_selected_player.deck.cards;
     }
     return items;
   }
@@ -2061,5 +2068,4 @@ export class DeckSelectDialog {
   onNoClick(): void {
     this.dialogRef.close();
   }
-
 }
