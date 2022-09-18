@@ -17,7 +17,6 @@ export class FddpWebsocketService {
     this.messages = <Subject<any>>this.connect(environment.fddp_websocket_url).pipe(
       map(
         (response: MessageEvent): any => {
-          console.log(response.data);
           return JSON.parse(response.data);
         }
       )
