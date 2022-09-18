@@ -1349,6 +1349,7 @@ export class GameHandlerComponent implements OnInit {
   }
 
   drawX(count: any) {
+    this.clearSelection();
     let num_count = Number(count);
     for (let i = 0; i < num_count; i++) {
       if (this.user.deck.cards.length == 0) {

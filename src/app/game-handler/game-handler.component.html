@@ -603,7 +603,7 @@
                [src]="user.deck.cards.length > 0 && user.deck.cards[0].visible.includes(user.id) ? user.deck.cards[0].image: user.deck.sleeves"
                [alt]="user.deck.cards.length > 0 && user.deck.cards[0].visible.includes(user.id) ? user.deck.cards[0].name: ''"
                (pointerleave)="hovered_card=null"
-               (cdkDragStarted)="hovered_card=null; selectCard(user.deck.cards[0], user.deck.cards);"
+               (cdkDragStarted)="hovered_card=null; clearSelection(); selectCard(user.deck.cards[0], user.deck.cards);"
                cdkDrag loading="lazy">
         </mat-card>
       </div>
