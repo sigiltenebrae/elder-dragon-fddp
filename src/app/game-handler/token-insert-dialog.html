@@ -9,7 +9,7 @@
     <div fxLayout="row">
       <mat-form-field appearance="fill">
         <mat-label>Search Card</mat-label>
-        <input type="text" placeholder="Enter Scryfall Query" matInput #token_str>
+        <input (keydown.enter)="searchToken(token_str.value)" type="text" placeholder="Enter Scryfall Query" matInput #token_str>
         <button mat-icon-button matSuffix type="button" (click)="searchToken(token_str.value)"><mat-icon>search</mat-icon></button>
       </mat-form-field>
     </div>

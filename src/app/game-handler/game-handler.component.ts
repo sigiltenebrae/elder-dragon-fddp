@@ -595,6 +595,12 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  @HostListener('document:keydown.enter', ['$event']) onEnterDown(event: any) {
+    if (this.matMenuTrigger.menuOpen) {
+      this.matMenuTrigger.closeMenu();
+    }
+  }
+
   togglePreview() {
     this.preview = !this.preview;
   }
