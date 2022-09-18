@@ -130,6 +130,12 @@
         <button *ngIf="selected_card.back_image" mat-raised-button color="primary" (click)="changing_back_image=true; getCardImage(selected_card)">Change Back Image</button>
         <button mat-raised-button color="warn" (click)="resetCard(selected_card)"><mat-icon>refresh</mat-icon></button>
       </div>
+      <div fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field appearance="fill">
+          <mat-label>Input Manually</mat-label>
+          <input type="text" matInput [(ngModel)]="selected_card.image">
+        </mat-form-field>
+      </div>
       <div fxLayout="row">
         <button mat-raised-button color="accent" (click)="deck.image=selected_card.image">Set As Deck Image</button>
       </div>
