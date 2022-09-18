@@ -480,6 +480,18 @@ export class GameHandlerComponent implements OnInit {
    *      Board-Interaction Helper Functions        *
    ------------------------------------------------**/
 
+  isSelected(card: any) {
+    if (card.selected) {
+      return true;
+    }
+    for (let cur_card of this.selected_cards) {
+      if (cur_card.card == card) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   isOpponent(player: any) {
     return player.id !== this.current_user.id
   }
@@ -821,9 +833,10 @@ export class GameHandlerComponent implements OnInit {
   }
 
   createToken(token: any) {
-    let out_token: any = null;
+    let out_tokens: any[] = [];
     for (let tok of this.user.deck.tokens) {
       if (tok.name === token.name) {
+        let out_token: any = null;
         out_token = JSON.parse(JSON.stringify(tok));
         out_token.is_token = true;
         out_token.selected = false;
@@ -833,16 +846,19 @@ export class GameHandlerComponent implements OnInit {
         for(let player of this.game_data.players) {
           out_token.visible.push(player.id);
         }
-        this.user.temp_zone.push(out_token);
-        this.clearSelection();
-        this.sendPlayerUpdate();
-        return;
+        out_tokens.push(out_token);
+
       }
+    }
+    if (out_tokens.length == 1) {
+      this.user.temp_zone.push(out_tokens[0]);
+      this.clearSelection();
+      this.sendPlayerUpdate();
     }
     this.fddp_data.getCardInfo(token.name).then((token_data: any) => {
       this.getCardImages(token.name).then((image_data: any) => {
         let images = image_data;
-        out_token = token_data;
+        let out_token = token_data;
         out_token.is_token = true;
         out_token.selected = false;
         out_token.image = images.length > 0 ? images[0]: null;

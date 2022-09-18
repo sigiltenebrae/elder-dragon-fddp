@@ -283,7 +283,7 @@
       <div fxLayout="row wrap" fxLayoutAlign="center start">
         <div *ngFor="let card of user.temp_scry_zone; let i = index" class="scrydata-card-container">
           <img class="scrydata-card" src="{{card.image}}"
-               [ngClass]="{'mtg-card-user-selected': card.selected}"
+               [ngClass]="{'mtg-card-user-selected': isSelected(card)}"
                (click)="toggleCardSelect(card, user.temp_scry_zone);"
                (contextmenu)="onRightClick($event,{type: 'scry_card', card: card});">
           <h1 class="scrydata-card-count">{{i + 1}}</h1>
@@ -342,7 +342,7 @@
              [cdkDropListData]="getSidenavList()">
           <div *ngFor="let card of getSidenavList()">
             <div *ngIf="card.sidenav_visible && (card.visible.includes(user.id) || sidenav_type === 'deck')" class="sidenav-list-item"
-                 [ngClass]="{'sidenav-list-item-selected': card.selected}"
+                 [ngClass]="{'sidenav-list-item-selected': isSelected(card)}"
                  (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
                  (cdkDragStarted)="hovered_card=null; selectCard(card, getSidenavList());"
                  (click)="toggleCardSelect(card, getSidenavList(), card.sidenav_visible)"
@@ -353,7 +353,7 @@
               <img *cdkDragPlaceholder class="mtg-card-user" [src]="card.image" [alt]="card.name" loading="lazy">
             </div>
             <div *ngIf="card.sidenav_visible && !card.visible.includes(user.id) && sidenav_type !== 'deck'" class="sidenav-list-item"
-                 [ngClass]="{'sidenav-list-item-selected': card.selected}"
+                 [ngClass]="{'sidenav-list-item-selected': isSelected(card)}"
                  (pointerenter)="hovered_card=null" (pointerleave)="hovered_card=null"
                  [cdkDragDisabled]="true" (contextmenu)="onRightClick($event, {type: 'zone_card', card: card, from: getSidenavList()})"
                  cdkDrag>
@@ -529,7 +529,7 @@
                          [@shakeCard]="card.shaken"
                          cdkDrag>
                       <div *ngIf="card.locked" class="mtg-lock"><mat-icon>lock</mat-icon></div>
-                      <img [ngClass]="{'mtg-card-user-selected': card.selected, 'mtg-card-clone': card.is_token && !card.types.includes('Token') && !card.types.includes('Emblem') }"
+                      <img [ngClass]="{'mtg-card-user-selected': isSelected(card), 'mtg-card-clone': card.is_token && !card.types.includes('Token') && !card.types.includes('Emblem') }"
                            class="mtg-card-user"
                            [src]="card.visible.includes(user.id) ? card.image: user.deck.sleeves"
                            [alt]="card.visible.includes(user.id) ? card.name: ''"
@@ -580,7 +580,7 @@
                      (click)="toggleCardSelect(card, user.hand)"
                      (cdkDragStarted)="hovered_card=null; selectCard(card, user.hand);" [@shakeCard]="card.shaken"
                      cdkDrag>
-                  <img [ngClass]="{ 'mtg-card-user-selected': card.selected }"
+                  <img [ngClass]="{ 'mtg-card-user-selected': isSelected(card) }"
                        class="mtg-card-user"
                        [src]="card.visible.includes(user.id) ? card.image: user.deck.sleeves"
                        [alt]="card.visible.includes(user.id) ? card.name: ''"
