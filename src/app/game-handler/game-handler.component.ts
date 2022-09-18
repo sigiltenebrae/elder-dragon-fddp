@@ -1638,15 +1638,22 @@ export class GameHandlerComponent implements OnInit {
         this.selectCard(cur_card, this.user.deck.cards);
         this.sendCardToZone(cur_card, this.user.deck.cards, 'temp_zone', true);
         if (cur_card.types) {
-          let f = false;
-          for (let cur_type of cur_card.types) {
-            if (cur_type.toLowerCase() === type.toLowerCase()) {
-              f = true;
+          if (type.toLowerCase() === 'permanent') {
+            if (this.isPermanent(cur_card)) {
               break;
             }
           }
-          if (f) {
-            break;
+          else {
+            let f = false;
+            for (let cur_type of cur_card.types) {
+              if (cur_type.toLowerCase() === type.toLowerCase()) {
+                f = true;
+                break;
+              }
+            }
+            if (f) {
+              break;
+            }
           }
         }
         else {
