@@ -1583,9 +1583,16 @@ export class GameHandlerComponent implements OnInit {
       if (this.user.deck.cards.length > 0) {
         let cur_card = this.user.deck.cards[0];
         this.selectCard(cur_card, this.user.deck.cards);
-        this.sendCardToZone(cur_card, this.user.deck.cards, 'temp_zone');
+        this.sendCardToZone(cur_card, this.user.deck.cards, 'temp_zone', true);
         if (cur_card.types) {
-          if (cur_card.types.includes(type)) {
+          let f = false;
+          for (let cur_type of cur_card.types) {
+            if (cur_type.toLowerCase() === type.toLowerCase()) {
+              f = true;
+              break;
+            }
+          }
+          if (f) {
             break;
           }
         }
