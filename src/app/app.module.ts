@@ -31,7 +31,8 @@ import {DragDropModule} from "@angular/cdk/drag-drop";
 import {
   DeckSelectDialog,
   GameHandlerComponent,
-  TokenInsertDialog
+  TokenInsertDialog,
+  TokenSelectDialog
 } from './game-handler/game-handler.component';
 import {MatMenuModule} from "@angular/material/menu";
 import {FormsModule} from "@angular/forms";
@@ -56,6 +57,7 @@ import { GameManagerComponent } from './game-manager/game-manager.component';
     CustomImageManagerComponent,
     DeckManagerComponent,
     TokenInsertDialog,
+    TokenSelectDialog,
     DeckSelectDialog,
     TestWsComponent,
     GameManagerComponent

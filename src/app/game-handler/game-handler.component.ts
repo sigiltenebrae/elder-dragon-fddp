@@ -884,7 +884,6 @@ export class GameHandlerComponent implements OnInit {
           out_token.visible.push(player.id);
         }
         out_tokens.push(out_token);
-
       }
     }
     if (out_tokens.length == 1) {
@@ -892,19 +891,32 @@ export class GameHandlerComponent implements OnInit {
       this.clearSelection();
       this.sendPlayerUpdate();
     }
-    this.fddp_data.getCardInfo(token.name).then((token_data: any) => {
-      this.getCardImages(token.name).then((image_data: any) => {
-        let images = image_data;
-        let out_token = token_data;
-        out_token.is_token = true;
-        out_token.selected = false;
-        out_token.image = images.length > 0 ? images[0]: null;
-        this.clearCard(out_token);
-        this.user.temp_zone.push(out_token);
-        this.sendPlayerUpdate();
-        return;
+    else if (out_tokens.length > 1) {
+      const tokDialogRef = this.dialog.open(TokenSelectDialog, {
+        width: '800px',
+        data: {tokens: out_tokens},
       });
-    })
+      tokDialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.createTokenFromImage(result);
+        }
+      });
+    }
+    else {
+      this.fddp_data.getCardInfo(token.name).then((token_data: any) => {
+        this.getCardImages(token.name).then((image_data: any) => {
+          let images = image_data;
+          let out_token = token_data;
+          out_token.is_token = true;
+          out_token.selected = false;
+          out_token.image = images.length > 0 ? images[0]: null;
+          this.clearCard(out_token);
+          this.user.temp_zone.push(out_token);
+          this.sendPlayerUpdate();
+          return;
+        });
+      })
+    }
   }
 
   createTokenFromImage(result: any) {
@@ -1850,6 +1862,25 @@ export class TokenInsertDialog {
   createToken(res: any) {
     let out_token = {name: this.name, image: res}
     this.dialogRef.close(out_token);
+  }
+}
+
+@Component({
+  selector: 'token-select-dialog',
+  templateUrl: 'token-select-dialog.html',
+})
+export class TokenSelectDialog {
+  constructor(
+    public dialogRef: MatDialogRef<TokenSelectDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
+
+  onNoClick(): void {
+    this.dialogRef.close(null);
+  }
+
+  createToken(res: any) {
+    this.dialogRef.close(res);
   }
 }
 
