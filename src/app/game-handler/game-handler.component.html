@@ -49,6 +49,7 @@
         <div *ngIf="rightclicked_item.type === 'commander'">
           <button mat-menu-item (click)="openDeckSelectDialog()">Change Deck</button>
           <button mat-menu-item (click)="scoopDeck()">Scoop Deck</button>
+          <button mat-menu-item>End Game</button>
         </div>
 
         <div *ngIf="rightclicked_item.type === 'user_hand'">
@@ -85,10 +86,10 @@
         </div>
 
         <div *ngIf="rightclicked_item.type === 'deck'">
-          <button mat-menu-item (click)="flipTop()">Flip Top</button>
           <button mat-menu-item *ngIf="game_data && game_data.current_turn == 0" (click)="startGame()">Start Game</button>
           <button mat-menu-item (click)="openSideNav('deck')">Search</button>
           <button mat-menu-item (click)="shuffleDeck(user.deck.cards, true)">Shuffle</button>
+          <button mat-menu-item (click)="flipTop()">Flip Top</button>
           <div>
             <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
               <mat-label>Scry</mat-label>
@@ -271,6 +272,12 @@
     <div *ngIf="preview" class="fddp-hover-minimize">
       <mat-icon (click)="togglePreview()">minimize</mat-icon>
     </div>
+    <div *ngIf="hovered_card && hovered_card.iscommander" class="fddp-hover-counter-commander">
+      <button mat-fab>{{getPlayer(hovered_card.owner).command_tax_1}}</button>
+    </div>
+    <div *ngIf="hovered_card && hovered_card.iscommander && getPlayer(hovered_card.owner).deck.commander_saved.length == 2" class="fddp-hover-counter-commander-2">
+      <button mat-fab color="primary">{{getPlayer(hovered_card.owner).command_tax_2}}</button>
+    </div>
   </mat-card>
 </div>
 
@@ -421,6 +428,21 @@
              (pointerleave)="hovered_card=null" (pointerenter)="hovered_card=user.deck.cards[0]"
              (cdkDragStarted)="hovered_card=null; clearSelection(); selectCard(user.deck.cards[0], user.deck.cards);"
              cdkDrag loading="lazy">
+      </mat-card>
+    </div>
+    <div class="selected-deck" *ngIf="selected_player != null">
+      <mat-card class="zone-data">
+        <h1 class="zone-count">{{selected_player.deck.cards.length}}</h1>
+        <img *ngIf="!selected_player.top_flipped" class="mtg-card-user"
+             [src]="selected_player.deck.sleeves"
+             [alt]="selected_player.name"
+             (pointerleave)="hovered_card=null"
+             loading="lazy">
+        <img *ngIf="selected_player.top_flipped" class="mtg-card-user"
+             [src]="selected_player.deck.cards[0].image"
+             [alt]="selected_player.deck.cards[0].name"
+             (pointerleave)="hovered_card=null" (pointerenter)="hovered_card=selected_player.deck.cards[0]"
+             loading="lazy">
       </mat-card>
     </div>
     <div class="zone-hider-outer" *ngIf="user != null">
