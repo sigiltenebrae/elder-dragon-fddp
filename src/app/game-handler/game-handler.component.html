@@ -301,8 +301,8 @@
   </div>
 </div>
 
-<mat-sidenav-container fxFlexFill cdkDropListGroup hasBackdrop="false" *ngIf="user != null">
-  <mat-sidenav #fddp_sidenav disableClose *ngIf="game_data != null">
+<mat-sidenav-container fxFlexFill cdkDropListGroup hasBackdrop="false" *ngIf="user != null" style="overflow: hidden">
+  <mat-sidenav #fddp_sidenav disableClose *ngIf="game_data != null" style="overflow: hidden">
     <mat-toolbar color="primary">
       <div fxFlex="100" fxLayout="row" fxLayoutAlign="space-between center">
         <h2 fxFlex *ngIf="sidenav_type==='grave'">Graveyards</h2>
@@ -315,7 +315,8 @@
       </div>
     </mat-toolbar>
     <div>
-      <div fxLayout="column">
+    <div fxLayout="column">
+      <div fxLayout="row" style="height: 64px">
         <mat-form-field appearance="outline" fxFlex style="margin: 5px;" *ngIf="sidenav_type !== 'deck'">
           <mat-label>Player</mat-label>
           <mat-select [(ngModel)]="sidenav_selected_player" name="player_select_sidenav" (ngModelChange)="getSidenavSort()">
@@ -324,6 +325,8 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+      </div>
+      <div fxLayout="row" style="height: 64px">
         <mat-form-field fxFlex style="margin: 5px;" appearance="outline">
           <mat-label>Search</mat-label>
           <input type="text" placeholder="Card Name"
@@ -335,13 +338,20 @@
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
-        <mat-form-field appearance="outline" style="margin: 5px;">
+      </div>
+      <div fxLayout="row" style="height: 64px">
+        <mat-form-field fxFlex appearance="outline" style="margin: 5px;">
           <mat-label>Type</mat-label>
           <input type="text"
                  placeholder="Card Type"
                  matInput [(ngModel)]="sidenav_sort_type"
                  (ngModelChange)="getSidenavSort()">
         </mat-form-field>
+      </div>
+      <ng-scrollbar #scrollable
+                    track="vertical"
+                    pointerEventsMethod="scrollbar"
+                    style="height: calc(100vh - 261px); width: 500px; margin-top: 5px;">
         <div class="sidenav-list" cdkDropList
              (cdkDropListDropped)="moveCardToZone($event, sidenav_type, true)"
              [cdkDropListData]="getSidenavList()">
@@ -366,8 +376,9 @@
             </div>
           </div>
         </div>
-      </div>
+      </ng-scrollbar>
     </div>
+  </div>
   </mat-sidenav>
   <mat-sidenav-content>
     <div *ngIf="user != null" class="counter-creator" fxLayout="column">

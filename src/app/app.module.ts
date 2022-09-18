@@ -6,6 +6,8 @@ import { HttpClientModule } from "@angular/common/http";
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { NgScrollbarModule } from "ngx-scrollbar";
+
 import { MatSidenavModule } from "@angular/material/sidenav";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatListModule } from "@angular/material/list";
@@ -90,6 +92,7 @@ import { GameManagerComponent } from './game-manager/game-manager.component';
     MatSnackBarModule,
     MatDialogModule,
     HttpClientModule,
+    NgScrollbarModule,
     RouterModule.forRoot([
       {path: '', component: DeckManagerComponent},
       {path: 'game', component: GameManagerComponent},
