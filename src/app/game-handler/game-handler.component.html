@@ -256,6 +256,8 @@
               {{hovered_card.power}}/{{hovered_card.toughness}}
             </h3>
             <h3 *ngIf="hovered_card.loyalty && hovered_card.loyalty !== null">{{hovered_card.loyalty}}</h3>
+            <h3 *ngIf="hovered_card.notes && hovered_card.notes !== ''">Notes: </h3>
+            <h3 *ngIf="hovered_card.notes && hovered_card.notes !== ''">{{hovered_card.notes}}</h3>
           </div>
         </div>
       </div>
@@ -273,6 +275,8 @@
               {{hovered_card.back_power}}/{{hovered_card.back_toughness}}
             </h3>
             <h3 *ngIf="hovered_card.back_loyalty && hovered_card.back_loyalty !== null">{{hovered_card.back_loyalty}}</h3>
+            <h3 *ngIf="hovered_card.notes && hovered_card.notes !== ''">Notes: </h3>
+            <h3 *ngIf="hovered_card.notes && hovered_card.notes !== ''">{{hovered_card.notes}}</h3>
           </div>
         </div>
       </div>
@@ -586,7 +590,7 @@
                         <div [ngClass]="{'stack-1': i == 0,'stack-2': i == 1,'stack-3': i == 2, 'mtg-card-invert': card.inverted, 'mtg-card-clone': card.is_token && !card.types.includes('Token') && !card.types.includes('Emblem')}" class="mtg-card-opponent-container"
                              (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null" [@opponentTappedState]="card.tapped"
                              [@shakeCard]="card.shaken">
-                          <img class="mtg-card-opponent"
+                          <img class="mtg-card-opponent" [matTooltip]="card.notes" [matTooltipDisabled]="card.notes === ''"
                                [src]="card.visible.includes(user.id) ? card.image: player.deck.sleeves"
                                [alt]="card.visible.includes(user.id) ? card.name: ''"
                                loading="lazy" (contextmenu)="onRightClick($event,{type: 'opponent_play', card: card, spot: spot, userid: player.id})">
@@ -652,7 +656,7 @@
                    cdkDrag>
                 <div *ngIf="card.locked" class="mtg-lock"><mat-icon>lock</mat-icon></div>
                 <img [ngClass]="{'mtg-card-user-selected': isSelected(card), 'mtg-card-clone': card.is_token && !card.types.includes('Token') && !card.types.includes('Emblem') }"
-                     class="mtg-card-user"
+                     class="mtg-card-user" [matTooltip]="card.notes"
                      [src]="card.visible.includes(user.id) ? card.image: user.deck.sleeves"
                      [alt]="card.visible.includes(user.id) ? card.name: ''"
                      (contextmenu)="onRightClick($event,{type: 'user_play', card: card, spot: spot, from: spot}); selectCard(card, spot);"

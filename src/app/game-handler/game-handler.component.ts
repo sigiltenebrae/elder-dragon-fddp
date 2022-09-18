@@ -334,6 +334,7 @@ export class GameHandlerComponent implements OnInit {
             card.facedown = false;
             card.shaken = false;
             card.inverted = false;
+            card.notes = 'Test Note';
             if (card.iscommander) {
               out_player.deck.commander.push(card);
             }
@@ -815,6 +816,7 @@ export class GameHandlerComponent implements OnInit {
     card.facedown = false;
     card.shaken = false;
     card.inverted = false;
+    card.notes = '';
     if (card.alt) {
       this.altFaceCard(card);
     }
