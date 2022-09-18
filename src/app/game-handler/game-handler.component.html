@@ -705,7 +705,7 @@
         <ng-scrollbar track="horizontal" visibility="hover"
                       pointerEventsMethod="scrollbar"
                       [style.width.px]="user.hand.length * 75"
-                      style="margin-top: 0; width: 100%; max-width: 1144px;">
+                      style="margin-top: 0; min-width: 75px; width: 100%; max-width: 1144px;">
           <div scrollViewport cdkDropList class="user-hand-list"
                cdkDropListOrientation="horizontal"
                [cdkDropListData]="user.hand"
