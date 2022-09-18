@@ -55,6 +55,15 @@ $mtg-green: #087f23;
   scrollbar-width: none;  /* Firefox */
 }
 
+.shadow-text {
+  color: white;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  background: rgba(0, 0, 0, 0.40);
+  padding: 0 5px 0 5px;
+  border-radius: 40%;
+  text-align: center;
+}
+
 html, body { height: 100%; padding: 0; }
 body { margin: 0; font-family: Beleren, "Helvetica Neue", sans-serif; }
 
@@ -204,7 +213,6 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   left: 12px;
   z-index: 2;
   margin: 0;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
 .scrydata-card-close {
@@ -284,7 +292,6 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   right: 5px;
   font-family: Beleren, "Helvetica Neue", sans-serif !important;
   margin: 0;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
 .mat-card-power-tough-text {
@@ -306,9 +313,8 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   left: 50%;
   -ms-transform: translateX(-50%);
   transform: translateX(-50%);
-  font-family: Beleren, "Helvetica Neue", sans-serif !important;
   margin: 0;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  font-family: Beleren, "Helvetica Neue", sans-serif !important;
 }
 
 .mtg-card-user-container .mtg-counter-1 {
@@ -518,10 +524,10 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 .mtg-card-opponent-container .mtg-card-power-tough {
   position: absolute;
   bottom: 0;
-  right: 5px;
+  right: 1px;
   font-family: Beleren, "Helvetica Neue", sans-serif !important;
   margin: 0;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  pointer-events: none;
 }
 
 .mtg-card-opponent-container .mtg-card-loyalty {
@@ -530,9 +536,9 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   left: 50%;
   -ms-transform: translateX(-50%);
   transform: translateX(-50%);
-  font-family: Beleren, "Helvetica Neue", sans-serif !important;
   margin: 0;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  pointer-events: none;
+  font-family: Beleren, "Helvetica Neue", sans-serif !important;
 }
 
 .mtg-card-opponent-container .mtg-counter-1 {
@@ -622,20 +628,20 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   bottom: 0;
   right: 6px;
   margin: 0;
-  color: white;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-  text-align: center;
   z-index: 20;
+  font-family: Beleren, "Helvetica Neue", sans-serif !important;
 }
 
 .user-hand .hand-menu {
   position: absolute;
-  top: 4px;
-  right: 0;
+  top: 5px;
+  right: 5px;
   z-index: 2;
   margin-bottom: 0;
   cursor: pointer;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .mtg-card-holder-opponent {
@@ -833,11 +839,10 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 
 .zone-data .zone-count {
   position: absolute;
-  bottom: 0;
-  right: 5px;
+  bottom: 2px;
+  right: 2px;
   z-index: 2;
   margin-bottom: 0;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
   pointer-events: none;
 }
 

@@ -415,7 +415,7 @@
                 cdkDropList [cdkDropListData]="user.deck.cards"
                 cdkDropListOrientation="horizontal"
                 (cdkDropListDropped)="moveCardToZone($event, 'deck')">
-        <h1 class="zone-count">{{user.deck.cards.length}}</h1>
+        <h1 class="zone-count shadow-text">{{user.deck.cards.length}}</h1>
         <img *ngIf="!user.top_flipped" class="mtg-card-user"
              [src]="user.deck.cards.length > 0 && user.deck.cards[0].visible.includes(user.id) ? user.deck.cards[0].image: user.deck.sleeves"
              [alt]="user.deck.cards.length > 0 && user.deck.cards[0].visible.includes(user.id) ? user.deck.cards[0].name: ''"
@@ -432,7 +432,7 @@
     </div>
     <div class="selected-deck" *ngIf="selected_player != null">
       <mat-card class="zone-data">
-        <h1 class="zone-count">{{selected_player.deck.cards.length}}</h1>
+        <h1 class="zone-count shadow-text">{{selected_player.deck.cards.length}}</h1>
         <img *ngIf="!selected_player.top_flipped" class="mtg-card-user"
              [src]="selected_player.deck.sleeves"
              [alt]="selected_player.name"
@@ -459,7 +459,7 @@
                         cdkDropListOrientation="horizontal"
                         (cdkDropListDropped)="moveCardToZone($event, 'grave')">
                 <div class="zone-title"><h5>Graveyard</h5></div>
-                <h1 class="zone-count">{{user.grave.length}}</h1>
+                <h1 class="zone-count shadow-text">{{user.grave.length}}</h1>
                 <div *ngIf="user.grave.length == 0" class="mtg-card-user"></div>
                 <img *ngIf="user.grave.length > 0" class="mtg-card-user"
                      [src]="user.grave[0].visible.includes(user.id) ? user.grave[0].image: user.deck.sleeves"
@@ -476,7 +476,7 @@
                         cdkDropListOrientation="horizontal"
                         (cdkDropListDropped)="moveCardToZone($event, 'exile')">
                 <div class="zone-title"><h5>Exile</h5></div>
-                <h1 class="zone-count">{{user.exile.length}}</h1>
+                <h1 class="zone-count shadow-text">{{user.exile.length}}</h1>
                 <div *ngIf="user.exile.length == 0" class="mtg-card-user"></div>
                 <img *ngIf="user.exile.length > 0" class="mtg-card-user"
                      [src]="user.exile[0].visible.includes(user.id) ? user.exile[0].image: user.deck.sleeves"
@@ -494,7 +494,7 @@
                         cdkDropListOrientation="horizontal"
                         (cdkDropListDropped)="moveCardToZone($event, 'temp_zone')">
                 <div class="zone-title"><h5>Temp</h5></div>
-                <h1 class="zone-count">{{user.temp_zone.length}}</h1>
+                <h1 class="zone-count shadow-text">{{user.temp_zone.length}}</h1>
                 <div *ngIf="user.temp_zone.length == 0" class="mtg-card-user"></div>
                 <img *ngIf="user.temp_zone.length > 0" class="mtg-card-user"
                      [src]="user.temp_zone[0].visible.includes(user.id) ? user.temp_zone[0].image: user.deck.sleeves"
@@ -565,7 +565,7 @@
               <mat-card *ngIf="isOpponent(player) && !player.scooped" class="playmat-opponent" fxLayout="row wrap" fxLayoutAlign="center center">
                 <div class="playmat-opponent-data" (contextmenu)="onRightClick($event, {type: 'opponent_playmat'})">
                   <div class="opponent-information" fxFlexFill fxLayout="row" fxLayoutAlign="space-between" *ngIf="player.hand && player.deck.cards && player.grave && player.exile">
-                    <h3>{{player.name}}</h3>
+                    <h3 >{{player.name}}</h3>
                     <h3 style="pointer-events: none">Hand: {{player.hand.length}}, Deck: {{player.deck.cards.length}}, Graveyard: {{player.grave.length}}, Exile: {{player.exile.length}}</h3>
                   </div>
                   <div class="playmat-opponent-selector" [ngClass]="{'playmat-opponent-turn': player.turn == game_data.current_turn, 'playmat-opponent-selected': player.selected}"></div>
@@ -585,10 +585,10 @@
                           <button *ngIf="card.counter_3" class="mtg-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true"><p>{{card.counter_3_value}}</p></button>
                           <button *ngIf="card.multiplier" class="mtg-multiplier-counter" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>{{card.multiplier_value}}</p></button>
 
-                          <h5 *ngIf="card.power && card.toughness && card.power != null && card.toughness != null && card.visible.includes(user.id)" class="mtg-card-power-tough">
+                          <h5 *ngIf="card.power && card.toughness && card.power != null && card.toughness != null && card.visible.includes(user.id)" class="mtg-card-power-tough shadow-text">
                             <a [ngClass]="{'mat-card-power-tough-text-up': card.power_mod > 0, 'mat-card-power-tough-text-down': card.power_mod < 0}" class="mat-card-power-tough-text">{{card.power + card.power_mod}}</a>/
                             <a [ngClass]="{'mat-card-power-tough-text-up': card.toughness_mod > 0, 'mat-card-power-tough-text-down': card.toughness_mod < 0}" class="mat-card-power-tough-text">{{card.toughness + card.toughness_mod}}</a></h5>
-                          <h5 *ngIf="card.loyalty && card.loyalty != null && card.visible.includes(user.id)" class="mtg-card-loyalty"><a class="mat-card-power-tough-text" [ngClass]="{'mat-card-power-tough-text-up': card.loyalty_mod > 0, 'mat-card-power-tough-text-down': card.loyalty_mod < 0}">{{card.loyalty + card.loyalty_mod}}</a></h5>
+                          <h5 *ngIf="card.loyalty && card.loyalty != null && card.visible.includes(user.id)" class="mtg-card-loyalty shadow-text"><a class="mat-card-power-tough-text" [ngClass]="{'mat-card-power-tough-text-up': card.loyalty_mod > 0, 'mat-card-power-tough-text-down': card.loyalty_mod < 0}">{{card.loyalty + card.loyalty_mod}}</a></h5>
                         </div>
                       </div>
                     </div>
@@ -650,10 +650,10 @@
                 <button *ngIf="card.counter_2" class="mtg-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true" (click)="card.counter_2_value = card.counter_2_value + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'counter_2', card: card})"><p>{{card.counter_2_value}}</p></button>
                 <button *ngIf="card.counter_3" class="mtg-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true" (click)="card.counter_3_value = card.counter_3_value + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'counter_3', card: card})"><p>{{card.counter_3_value}}</p></button>
                 <button *ngIf="card.multiplier" class="mtg-multiplier-counter" mat-fab color="accent" [class.mat-elevation-z8]="true" (click)="card.multiplier_value = card.multiplier_value + 1" (contextmenu)="onRightClick($event, {type: 'multiplier', card: card})"><p>{{card.multiplier_value}}</p></button>
-                <h4 *ngIf="card.power && card.toughness && card.visible.includes(user.id)" class="mtg-card-power-tough">
+                <h4 *ngIf="card.power && card.toughness && card.visible.includes(user.id)" class="mtg-card-power-tough shadow-text">
                   <a [ngClass]="{'mat-card-power-tough-text-up': card.power_mod > 0, 'mat-card-power-tough-text-down': card.power_mod < 0}" class="mat-card-power-tough-text" (click)="card.power_mod = card.power_mod + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'power', card: card})">{{card.power + card.power_mod}}</a>/
                   <a [ngClass]="{'mat-card-power-tough-text-up': card.toughness_mod > 0, 'mat-card-power-tough-text-down': card.toughness_mod < 0}" class="mat-card-power-tough-text" (click)="card.toughness_mod = card.toughness_mod + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'toughness', card: card})">{{card.toughness + card.toughness_mod}}</a></h4>
-                <h4 *ngIf="card.loyalty && card.visible.includes(user.id)" class="mtg-card-loyalty"><a class="mat-card-power-tough-text" [ngClass]="{'mat-card-power-tough-text-up': card.loyalty_mod > 0, 'mat-card-power-tough-text-down': card.loyalty_mod < 0}" (click)="card.loyalty_mod = card.loyalty_mod + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'loyalty', card: card})">{{card.loyalty + card.loyalty_mod}}</a></h4>
+                <h4 *ngIf="card.loyalty && card.visible.includes(user.id)" class="mtg-card-loyalty shadow-text"><a class="mat-card-power-tough-text" [ngClass]="{'mat-card-power-tough-text-up': card.loyalty_mod > 0, 'mat-card-power-tough-text-down': card.loyalty_mod < 0}" (click)="card.loyalty_mod = card.loyalty_mod + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'loyalty', card: card})">{{card.loyalty + card.loyalty_mod}}</a></h4>
               </div>
             </div>
           </div>
@@ -666,7 +666,7 @@
   -ms-transform: translateX(-50%);
   transform: translateX(-50%); z-index: 3;">
       <div *ngIf="selected_player != null" class="opponent-hand invisible_scroll" fxLayout="column" fxLayoutAlign="center">
-        <h1 class="hand-count">{{selected_player.hand.length}}</h1>
+        <h1 class="hand-count shadow-text">{{selected_player.hand.length}}</h1>
         <div class="opponent-hand-list" [class.mat-elevation-z8]="true"
              fxFlexFill fxLayout="row" fxLayoutAlign="start">
           <img *ngFor="let card of selected_player.hand"
@@ -685,8 +685,8 @@
   -ms-transform: translateX(-50%);
   transform: translateX(-50%); z-index: 2;">
       <div *ngIf="user != null" class="user-hand" fxFlex fxLayout="column" fxLayoutAlign="center" [class.mat-elevation-z8]="true">
-        <h1 class="hand-count">{{user.hand.length}}</h1>
-        <mat-icon [mat-menu-trigger-for]="hand_menu" (click)="rightclicked_item={zone: 'hand'}" class="hand-menu">more_vert</mat-icon>
+        <h1 class="hand-count shadow-text">{{user.hand.length}}</h1>
+        <mat-icon [mat-menu-trigger-for]="hand_menu" (click)="rightclicked_item={zone: 'hand'}" class="hand-menu shadow-text">more_vert</mat-icon>
         <ng-scrollbar track="horizontal" visibility="hover"
                       pointerEventsMethod="scrollbar"
                       [style.width.px]="user.hand.length * 75"
