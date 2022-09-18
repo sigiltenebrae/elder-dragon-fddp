@@ -301,6 +301,7 @@ export class GameHandlerComponent implements OnInit {
           out_player.command_tax_1 = 0;
           out_player.command_tax_2 = 0;
           out_player.scooped = false;
+          out_player.top_flipped = false;
           for (let i = 0; i < 36; i++) {
             out_player.playmat.push([])
           }
@@ -637,6 +638,11 @@ export class GameHandlerComponent implements OnInit {
   flipCard(card:any) {
     card.facedown = !card.facedown;
     card.visible = [];
+    this.sendPlayerUpdate();
+  }
+
+  flipTop() {
+    this.user.top_flipped = !this.user.top_flipped;
     this.sendPlayerUpdate();
   }
 

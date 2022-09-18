@@ -85,7 +85,7 @@
         </div>
 
         <div *ngIf="rightclicked_item.type === 'deck'">
-          <button mat-menu-item>Flip Top</button>
+          <button mat-menu-item (click)="flipTop()">Flip Top</button>
           <button mat-menu-item *ngIf="game_data && game_data.current_turn == 0" (click)="startGame()">Start Game</button>
           <button mat-menu-item (click)="openSideNav('deck')">Search</button>
           <button mat-menu-item (click)="shuffleDeck(user.deck.cards, true)">Shuffle</button>
@@ -409,10 +409,16 @@
                 cdkDropListOrientation="horizontal"
                 (cdkDropListDropped)="moveCardToZone($event, 'deck')">
         <h1 class="zone-count">{{user.deck.cards.length}}</h1>
-        <img class="mtg-card-user"
+        <img *ngIf="!user.top_flipped" class="mtg-card-user"
              [src]="user.deck.cards.length > 0 && user.deck.cards[0].visible.includes(user.id) ? user.deck.cards[0].image: user.deck.sleeves"
              [alt]="user.deck.cards.length > 0 && user.deck.cards[0].visible.includes(user.id) ? user.deck.cards[0].name: ''"
              (pointerleave)="hovered_card=null"
+             (cdkDragStarted)="hovered_card=null; clearSelection(); selectCard(user.deck.cards[0], user.deck.cards);"
+             cdkDrag loading="lazy">
+        <img *ngIf="user.top_flipped" class="mtg-card-user"
+             [src]="user.deck.cards[0].image"
+             [alt]="user.deck.cards[0].name"
+             (pointerleave)="hovered_card=null" (pointerenter)="hovered_card=user.deck.cards[0]"
              (cdkDragStarted)="hovered_card=null; clearSelection(); selectCard(user.deck.cards[0], user.deck.cards);"
              cdkDrag loading="lazy">
       </mat-card>
