@@ -458,43 +458,43 @@
         <div fxLayout="column" fxLayoutAlign="start center" fxFlexFill style="margin: 10px;">
           <!-- &&Opponents -->
           <div class="opponent-holder" fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
-            <div class="opponent-playmat-holder" fxLayout="row wrap" fxLayout.lt-md="column" fxLayoutAlign="center" *ngIf="game_data">
-              <div *ngFor="let player of game_data.players">
-                <mat-card *ngIf="isOpponent(player)" class="playmat-opponent" fxLayout="row wrap" fxLayoutAlign="center center">
-                  <div class="playmat-opponent-data" (contextmenu)="onRightClick($event, {type: 'opponent_playmat'})">
-                    <div class="opponent-information" fxFlexFill fxLayout="row" fxLayoutAlign="space-between" *ngIf="player.hand && player.deck.cards && player.grave && player.exile">
-                      <h3>{{player.name}}</h3>
-                      <h3 style="pointer-events: none">Hand: {{player.hand.length}}, Deck: {{player.deck.cards.length}}, Graveyard: {{player.grave.length}}, Exile: {{player.exile.length}}</h3>
-                    </div>
-                    <div class="playmat-opponent-selector" [ngClass]="{'playmat-opponent-turn': player.turn == game_data.current_turn, 'playmat-opponent-selected': player.selected}"></div>
-                    <div class="playmat-opponent-card-data">
-                      <div *ngFor="let spot of reversePlaymat(player.playmat)" class="mtg-card-holder-opponent">
-                        <div *ngFor="let card of spot; let i = index">
-                          <div [ngClass]="{'stack-1': i == 0,'stack-2': i == 1,'stack-3': i == 2, 'mtg-card-invert': card.inverted, 'mtg-card-clone': card.is_token && !card.types.includes('Token') && !card.types.includes('Emblem')}" class="mtg-card-opponent-container"
-                               (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null" [@opponentTappedState]="card.tapped"
-                               [@shakeCard]="card.shaken">
-                            <img class="mtg-card-opponent"
-                                 [src]="card.visible.includes(user.id) ? card.image: player.deck.sleeves"
-                                 [alt]="card.visible.includes(user.id) ? card.name: ''"
-                                 loading="lazy" (contextmenu)="onRightClick($event,{type: 'opponent_play', card: card, spot: spot, userid: player.id})">
+              <div class="opponent-playmat-holder" fxLayout="row wrap" fxLayout.lt-md="column" fxLayoutAlign="center" *ngIf="game_data">
+                <div *ngFor="let player of game_data.players">
+                  <mat-card *ngIf="isOpponent(player)" class="playmat-opponent" fxLayout="row wrap" fxLayoutAlign="center center">
+                    <div class="playmat-opponent-data" (contextmenu)="onRightClick($event, {type: 'opponent_playmat'})">
+                      <div class="opponent-information" fxFlexFill fxLayout="row" fxLayoutAlign="space-between" *ngIf="player.hand && player.deck.cards && player.grave && player.exile">
+                        <h3>{{player.name}}</h3>
+                        <h3 style="pointer-events: none">Hand: {{player.hand.length}}, Deck: {{player.deck.cards.length}}, Graveyard: {{player.grave.length}}, Exile: {{player.exile.length}}</h3>
+                      </div>
+                      <div class="playmat-opponent-selector" [ngClass]="{'playmat-opponent-turn': player.turn == game_data.current_turn, 'playmat-opponent-selected': player.selected}"></div>
+                      <div class="playmat-opponent-card-data">
+                        <div *ngFor="let spot of reversePlaymat(player.playmat)" class="mtg-card-holder-opponent">
+                          <div *ngFor="let card of spot; let i = index">
+                            <div [ngClass]="{'stack-1': i == 0,'stack-2': i == 1,'stack-3': i == 2, 'mtg-card-invert': card.inverted, 'mtg-card-clone': card.is_token && !card.types.includes('Token') && !card.types.includes('Emblem')}" class="mtg-card-opponent-container"
+                                 (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null" [@opponentTappedState]="card.tapped"
+                                 [@shakeCard]="card.shaken">
+                              <img class="mtg-card-opponent"
+                                   [src]="card.visible.includes(user.id) ? card.image: player.deck.sleeves"
+                                   [alt]="card.visible.includes(user.id) ? card.name: ''"
+                                   loading="lazy" (contextmenu)="onRightClick($event,{type: 'opponent_play', card: card, spot: spot, userid: player.id})">
 
-                            <button *ngIf="card.counter_1" class="mtg-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true"><p>{{card.counter_1_value}}</p></button>
-                            <button *ngIf="card.counter_2" class="mtg-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>{{card.counter_2_value}}</p></button>
-                            <button *ngIf="card.counter_3" class="mtg-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true"><p>{{card.counter_3_value}}</p></button>
-                            <button *ngIf="card.multiplier" class="mtg-multiplier-counter" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>{{card.multiplier_value}}</p></button>
+                              <button *ngIf="card.counter_1" class="mtg-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true"><p>{{card.counter_1_value}}</p></button>
+                              <button *ngIf="card.counter_2" class="mtg-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>{{card.counter_2_value}}</p></button>
+                              <button *ngIf="card.counter_3" class="mtg-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true"><p>{{card.counter_3_value}}</p></button>
+                              <button *ngIf="card.multiplier" class="mtg-multiplier-counter" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>{{card.multiplier_value}}</p></button>
 
-                            <h5 *ngIf="card.power && card.toughness && card.power != null && card.toughness != null && card.visible.includes(user.id)" class="mtg-card-power-tough">
-                              <a [ngClass]="{'mat-card-power-tough-text-up': card.power_mod > 0, 'mat-card-power-tough-text-down': card.power_mod < 0}" class="mat-card-power-tough-text">{{card.power + card.power_mod}}</a>/
-                              <a [ngClass]="{'mat-card-power-tough-text-up': card.toughness_mod > 0, 'mat-card-power-tough-text-down': card.toughness_mod < 0}" class="mat-card-power-tough-text">{{card.toughness + card.toughness_mod}}</a></h5>
-                            <h5 *ngIf="card.loyalty && card.loyalty != null && card.visible.includes(user.id)" class="mtg-card-loyalty"><a class="mat-card-power-tough-text" [ngClass]="{'mat-card-power-tough-text-up': card.loyalty_mod > 0, 'mat-card-power-tough-text-down': card.loyalty_mod < 0}">{{card.loyalty + card.loyalty_mod}}</a></h5>
+                              <h5 *ngIf="card.power && card.toughness && card.power != null && card.toughness != null && card.visible.includes(user.id)" class="mtg-card-power-tough">
+                                <a [ngClass]="{'mat-card-power-tough-text-up': card.power_mod > 0, 'mat-card-power-tough-text-down': card.power_mod < 0}" class="mat-card-power-tough-text">{{card.power + card.power_mod}}</a>/
+                                <a [ngClass]="{'mat-card-power-tough-text-up': card.toughness_mod > 0, 'mat-card-power-tough-text-down': card.toughness_mod < 0}" class="mat-card-power-tough-text">{{card.toughness + card.toughness_mod}}</a></h5>
+                              <h5 *ngIf="card.loyalty && card.loyalty != null && card.visible.includes(user.id)" class="mtg-card-loyalty"><a class="mat-card-power-tough-text" [ngClass]="{'mat-card-power-tough-text-up': card.loyalty_mod > 0, 'mat-card-power-tough-text-down': card.loyalty_mod < 0}">{{card.loyalty + card.loyalty_mod}}</a></h5>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </mat-card>
+                  </mat-card>
+                </div>
               </div>
-            </div>
           </div>
           <!-- &&Playmat User -->
           <div fxLayout="row" fxFlex fxLayoutAlign="center">

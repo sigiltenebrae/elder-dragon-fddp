@@ -48,6 +48,7 @@ import { TestWsComponent } from './test-ws/test-ws.component';
 import { GameManagerComponent } from './game-manager/game-manager.component';
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -65,7 +66,6 @@ import { GameManagerComponent } from './game-manager/game-manager.component';
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-
     MatSidenavModule,
     MatToolbarModule,
     MatListModule,

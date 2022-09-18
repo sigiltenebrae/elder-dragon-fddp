@@ -144,7 +144,7 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 .scrydata-card-holder {
   min-height: 750px;
   max-height: 750px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .scrydata-card-container {
@@ -688,7 +688,7 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 
 .opponent-playmat-holder {
   max-height: 475px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .mtg-card-holder-opponent .stack-1 {
@@ -1202,7 +1202,7 @@ commander-dashboard-select-zone {
   min-width: 500px;
   max-width: 100%;
   display: block;
-  overflow-y: scroll;
+  overflow-y: auto;
   min-height: 60px;
 }
 
