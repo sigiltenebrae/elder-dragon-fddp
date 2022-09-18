@@ -80,6 +80,8 @@ export class GameHandlerComponent implements OnInit {
 
   counts: any[] = [];
 
+  zone_transfers: any[] = [];
+
   /**------------------------------------------------
    *              Game Setup Functions              *
    ------------------------------------------------**/
@@ -159,7 +161,26 @@ export class GameHandlerComponent implements OnInit {
             this.game_data.players[i] = json_data.player_temp_data;
           }
           if (this.game_data.players[i].id === json_data.temp_id) {
-            this.game_data.players[i].temp_zone = json_data.temp_zone;
+            switch (json_data.temp_zone_name) {
+              case 'grave':
+                this.game_data.players[i].grave = json_data.temp_zone;
+                break;
+              case 'exile':
+                this.game_data.players[i].exile = json_data.temp_zone;
+                break;
+              case 'temp_zone':
+                this.game_data.players[i].temp_zone = json_data.temp_zone;
+                break;
+              case 'hand':
+                this.game_data.players[i].hand = json_data.temp_zone;
+                break;
+              case 'deck':
+                this.game_data.players[i].deck.cards = json_data.temp_zone;
+                break;
+              case 'commander':
+                this.game_data.players[i].deck.commander = json_data.temp_zone;
+                break;
+            }
           }
         }
       }
@@ -340,7 +361,7 @@ export class GameHandlerComponent implements OnInit {
     });
   }
 
-  sendPlayerAndZoneUpdate(zone: string) {
+  sendPlayerAndZoneUpdate(zone: string, new_zone: any, to_id: number) {
     console.log('p&t')
     this.sendMsg({
       request: 'player_and_temp_change',
@@ -350,10 +371,17 @@ export class GameHandlerComponent implements OnInit {
             id: this.current_user.id,
             player: this.user
           },
-        temp_id: this.selected_player.id,
+        temp_id: to_id,
         temp_zone_name: zone,
-        temp_zone: this.selected_player.temp_zone
+        temp_zone: new_zone
     });
+  }
+
+  sendPlayerAndZoneUpdateBulk() {
+    for (let zone of this.zone_transfers) {
+      this.sendPlayerAndZoneUpdate(zone.zone, zone.new_zone, zone.to_id);
+    }
+    this.zone_transfers = [];
   }
 
   /**------------------------------------------------
@@ -835,7 +863,7 @@ export class GameHandlerComponent implements OnInit {
   createToken(token: any) {
     let out_tokens: any[] = [];
     for (let tok of this.user.deck.tokens) {
-      if (tok.name === token.name) {
+      if (tok.name.toLowerCase() === token.name.toLowerCase()) {
         let out_token: any = null;
         out_token = JSON.parse(JSON.stringify(tok));
         out_token.is_token = true;
@@ -1010,6 +1038,19 @@ export class GameHandlerComponent implements OnInit {
               card_select.card.visible = [card_select.card.owner];
               card_select.facedown = false;
               transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).hand, card_select.from.indexOf(card_select.card), event.currentIndex);
+              if (card_select.card.owner != this.user.id) { //it went to someone else's
+                let found = false;
+                for (let i = 0; i < this.zone_transfers.length; i++) {
+                  if (this.zone_transfers[i].zone === 'hand' && this.zone_transfers[i].to_id == card_select.card.owner) { //zone already has an update queued
+                    this.zone_transfers[i] = { zone: 'hand', new_zone: this.getPlayer(card_select.card.owner).hand, to_id: card_select.card.owner}
+                    found = true;
+                    break;
+                  }
+                }
+                if (!found) {
+                  this.zone_transfers.push({ zone: 'hand', new_zone: this.getPlayer(card_select.card.owner).hand, to_id: card_select.card.owner});
+                }
+              }
             }
             break;
           case 'deck':
@@ -1022,17 +1063,43 @@ export class GameHandlerComponent implements OnInit {
             this.clearCard(card_select.card); //wipe all counters
             if (card_select.from === this.getPlayer(card_select.card.owner).deck.cards) { //If it is already in the deck
               if (!(sidebar && this.sidenav_sort !== '')) { //if it is trying to move in a sorted sidebar, prevent
-                moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex)
+                moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex);
               }
             }
             else {
               if (sidebar) {
                 if (!(sidebar && this.sidenav_sort !== '')) {
                   transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), event.currentIndex);
+                  if (card_select.card.owner != this.user.id) { //it went to someone else's
+                    let found = false;
+                    for (let i = 0; i < this.zone_transfers.length; i++) {
+                      if (this.zone_transfers[i].zone === 'deck' && this.zone_transfers[i].to_id == card_select.card.owner) { //zone already has an update queued
+                        this.zone_transfers[i] = { zone: 'deck', new_zone: this.getPlayer(card_select.card.owner).deck.cards, to_id: card_select.card.owner}
+                        found = true;
+                        break;
+                      }
+                    }
+                    if (!found) {
+                      this.zone_transfers.push({ zone: 'deck', new_zone: this.getPlayer(card_select.card.owner).deck.cards, to_id: card_select.card.owner});
+                    }
+                  }
                 }
               }
               else {
                 transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), 0);
+                if (card_select.card.owner != this.user.id) { //it went to someone else's
+                  let found = false;
+                  for (let i = 0; i < this.zone_transfers.length; i++) {
+                    if (this.zone_transfers[i].zone === 'deck' && this.zone_transfers[i].to_id == card_select.card.owner) { //zone already has an update queued
+                      this.zone_transfers[i] = { zone: 'deck', new_zone: this.getPlayer(card_select.card.owner).deck.cards, to_id: card_select.card.owner}
+                      found = true;
+                      break;
+                    }
+                  }
+                  if (!found) {
+                    this.zone_transfers.push({ zone: 'deck', new_zone: this.getPlayer(card_select.card.owner).deck.cards, to_id: card_select.card.owner});
+                  }
+                }
               }
             }
             break;
@@ -1049,6 +1116,20 @@ export class GameHandlerComponent implements OnInit {
             }
             else {
               transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), this.getPlayer(card_select.card.owner).deck.cards.length);
+              if (card_select.card.owner != this.user.id) { //it went to someone else's
+                let found = false;
+                for (let i = 0; i < this.zone_transfers.length; i++) {
+                  if (this.zone_transfers[i].zone === 'deck' && this.zone_transfers[i].to_id == card_select.card.owner) { //zone already has an update queued
+                    this.zone_transfers[i] = { zone: 'deck', new_zone: this.getPlayer(card_select.card.owner).deck.cards, to_id: card_select.card.owner}
+                    found = true;
+                    break;
+                  }
+
+                }
+                if (!found) {
+                  this.zone_transfers.push({ zone: 'deck', new_zone: this.getPlayer(card_select.card.owner).deck.cards, to_id: card_select.card.owner});
+                }
+              }
             }
             break;
           case 'grave':
@@ -1070,10 +1151,36 @@ export class GameHandlerComponent implements OnInit {
               if (sidebar) {
                 if(this.sidenav_sort === '' && this.sidenav_sort_type === '') {
                   transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).grave, card_select.from.indexOf(card_select.card), event.currentIndex);
+                  if (card_select.card.owner != this.user.id) { //it went to someone else's
+                    let found = false;
+                    for (let i = 0; i < this.zone_transfers.length; i++) {
+                      if (this.zone_transfers[i].zone === 'grave' && this.zone_transfers[i].to_id == card_select.card.owner) { //zone already has an update queued
+                        this.zone_transfers[i] = { zone: 'grave', new_zone: this.getPlayer(card_select.card.owner).grave, to_id: card_select.card.owner}
+                        found = true;
+                        break;
+                      }
+                    }
+                    if (!found) {
+                      this.zone_transfers.push({ zone: 'grave', new_zone: this.getPlayer(card_select.card.owner).grave, to_id: card_select.card.owner});
+                    }
+                  }
                 }
               }
               else {
                 transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).grave, card_select.from.indexOf(card_select.card), 0);
+                if (card_select.card.owner != this.user.id) { //it went to someone else's
+                  let found = false;
+                  for (let i = 0; i < this.zone_transfers.length; i++) {
+                    if (this.zone_transfers[i].zone === 'grave' && this.zone_transfers[i].to_id == card_select.card.owner) { //zone already has an update queued
+                      this.zone_transfers[i] = { zone: 'grave', new_zone: this.getPlayer(card_select.card.owner).grave, to_id: card_select.card.owner}
+                      found = true;
+                      break;
+                    }
+                  }
+                  if (!found) {
+                    this.zone_transfers.push({ zone: 'grave', new_zone: this.getPlayer(card_select.card.owner).grave, to_id: card_select.card.owner});
+                  }
+                }
               }
             }
             break;
@@ -1102,10 +1209,36 @@ export class GameHandlerComponent implements OnInit {
               if (sidebar) {
                 if (!(sidebar && this.sidenav_sort !== '')) {
                   transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).exile, card_select.from.indexOf(card_select.card), event.currentIndex);
+                  if (card_select.card.owner != this.user.id) { //it went to someone else's
+                    let found = false;
+                    for (let i = 0; i < this.zone_transfers.length; i++) {
+                      if (this.zone_transfers[i].zone === 'exile' && this.zone_transfers[i].to_id == card_select.card.owner) { //zone already has an update queued
+                        this.zone_transfers[i] = { zone: 'exile', new_zone: this.getPlayer(card_select.card.owner).exile, to_id: card_select.card.owner}
+                        found = true;
+                        break;
+                      }
+                    }
+                    if (!found) {
+                      this.zone_transfers.push({ zone: 'exile', new_zone: this.getPlayer(card_select.card.owner).exile, to_id: card_select.card.owner});
+                    }
+                  }
                 }
               }
               else {
                 transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).exile, card_select.from.indexOf(card_select.card), 0);
+                if (card_select.card.owner != this.user.id) { //it went to someone else's
+                  let found = false;
+                  for (let i = 0; i < this.zone_transfers.length; i++) {
+                    if (this.zone_transfers[i].zone === 'exile' && this.zone_transfers[i].to_id == card_select.card.owner) { //zone already has an update queued
+                      this.zone_transfers[i] = { zone: 'exile', new_zone: this.getPlayer(card_select.card.owner).exile, to_id: card_select.card.owner}
+                      found = true;
+                      break;
+                    }
+                  }
+                  if (!found) {
+                    this.zone_transfers.push({ zone: 'exile', new_zone: this.getPlayer(card_select.card.owner).exile, to_id: card_select.card.owner});
+                  }
+                }
               }
             }
             break;
@@ -1167,11 +1300,17 @@ export class GameHandlerComponent implements OnInit {
               if (card_select.from !== this.selected_player.temp_zone) { //If it is already in their zone
                 transferArrayItem(card_select.from, this.selected_player.temp_zone, card_select.from.indexOf(card_select.card), 0);
                 card_select.card.selected = false;
-                if (noupdate) {
-
+                this.sendPlayerAndZoneUpdate('temp_zone', this.selected_player.temp_zone, this.selected_player.id);
+                let found = false;
+                for (let i = 0; i < this.zone_transfers.length; i++) {
+                  if (this.zone_transfers[i].zone === 'temp_zone' && this.zone_transfers[i].to_id == card_select.card.owner) { //zone already has an update queued
+                    this.zone_transfers[i] = { zone: 'temp_zone', new_zone: this.selected_player.temp_zone, to_id: this.selected_player.id}
+                    found = true;
+                    break;
+                  }
                 }
-                else {
-                  this.sendPlayerAndZoneUpdate('temp_zone');
+                if (!found) {
+                  this.zone_transfers.push({ zone: 'temp_zone', new_zone: this.selected_player.temp_zone, to_id: this.selected_player.id});
                 }
               }
             }
@@ -1220,7 +1359,12 @@ export class GameHandlerComponent implements OnInit {
 
     }
     else {
-      this.sendPlayerUpdate();
+      if (this.zone_transfers.length > 0) {
+        this.sendPlayerAndZoneUpdateBulk();
+      }
+      else {
+        this.sendPlayerUpdate();
+      }
     }
   }
 
@@ -1295,7 +1439,12 @@ export class GameHandlerComponent implements OnInit {
       }
       this.sendCardToZone(from[0], from, dest, true);
     }
-    this.sendPlayerUpdate();
+    if (this.zone_transfers.length > 0) {
+      this.sendPlayerAndZoneUpdateBulk();
+    }
+    else {
+      this.sendPlayerUpdate();
+    }
   }
 
   revealCard(card: any, whomst: any, besides?: any, noupdate?: boolean) {
