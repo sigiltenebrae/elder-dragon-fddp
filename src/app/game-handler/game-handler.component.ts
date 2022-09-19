@@ -80,8 +80,6 @@ export class GameHandlerComponent implements OnInit {
   hidden = false;
   loading = false;
 
-  counts: any[] = [];
-
   zone_transfers: any[] = [];
   counter_buffer = false;
 
@@ -304,6 +302,7 @@ export class GameHandlerComponent implements OnInit {
           out_player.scooped = false;
           out_player.top_flipped = false;
           out_player.card_preview = { position : {x: 0, y: 0}}
+          out_player.play_counters = [];
           for (let i = 0; i < 36; i++) {
             out_player.playmat.push([])
           }
@@ -371,6 +370,14 @@ export class GameHandlerComponent implements OnInit {
   setPreviewPosition(event: any) {
     if (this.user != null) {
       this.user.card_preview.position = { ...(<any>event.source._dragRef)._passiveTransform };
+      this.sendPlayerUpdate();
+    }
+  }
+
+  setCounterPosition(event: any, counter: any) {
+    if (this.user != null) {
+      counter.position = { ...(<any>event.source._dragRef)._passiveTransform };
+      console.log(counter);
       this.sendPlayerUpdate();
     }
   }
@@ -964,16 +971,26 @@ export class GameHandlerComponent implements OnInit {
   }
 
   createCounter(type: string) {
-    this.counts.push({
+    this.user.play_counters.push({
       color: '#' + Math.floor(Math.random()*16777215).toString(16),
       value: 0,
       search_type: '',
-      type: type
-    })
+      search_player: this.user.id,
+      search_zone: 'play',
+      type: type,
+      position: {x: 20, y: 20}
+    });
+    this.sendPlayerUpdate();
   }
 
   deleteCounter(counter: any) {
-    this.counts.splice(this.counts.indexOf(counter), 1);
+    this.user.play_counters.splice(this.user.play_counters.indexOf(counter), 1);
+    this.sendPlayerUpdate();
+  }
+
+  deleteAllCounters() {
+    this.user.play_counters = [];
+    this.sendPlayerUpdate();
   }
 
   cloneCard(card: any) {
