@@ -370,9 +370,7 @@ export class GameHandlerComponent implements OnInit {
 
   setPreviewPosition(event: any) {
     if (this.user != null) {
-      //this.user.card_preview.position = event.dropPoint;
       this.user.card_preview.position = { ...(<any>event.source._dragRef)._passiveTransform };
-      console.log(this.user.card_preview.position);
       this.sendPlayerUpdate();
     }
   }
