@@ -1754,7 +1754,7 @@ export class GameHandlerComponent implements OnInit {
     if (noupdate) {
       this.moveCardToZone(event, location, undefined, undefined, noupdate);
     }
-    if (index) {
+    if (index && Number(index)) {
       console.log(index);
       this.moveCardToZone(event, location, undefined, undefined, undefined, Number(index));
     }
