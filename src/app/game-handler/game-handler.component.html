@@ -608,6 +608,38 @@
                 </div>
               </mat-card>
             </div>
+            <div *ngIf="user.scooped && selected_player != null" class="commander-viewer">
+              <mat-card class="commander-viewer-mat-card">
+                <div class="commander-counter-holder">
+                  <div class="commander-counter-container">
+                    <button mat-fab class="commander-counter commander-counter-1">
+                      {{selected_player.command_tax_1}}
+                    </button>
+                    <button *ngIf="selected_player.deck.commander_saved.length == 2" mat-fab color="primary" class="commander-counter commander-counter-2">
+                      {{selected_player.command_tax_2}}
+                    </button>
+                  </div>
+                </div>
+                <div *ngIf="selected_player.deck.commander.length == 1">
+                  <img class="commander-viewer-single"
+                       src="{{selected_player.deck.commander[0].image}}"
+                       loading="lazy"
+                       (pointerenter)="hovered_card=selected_player.deck.commander[0]" (pointerleave)="hovered_card=null">
+                </div>
+                <div *ngIf="selected_player.deck.commander.length == 2" class="commander-viewer-partner-holder">
+                  <div class="commander-viewer-partner-1"
+                       (pointerenter)="hovered_card=selected_player.deck.commander[0]"
+                       (pointerleave)="hovered_card=null">
+                    <img class="commander-viewer-partner-image" src="{{selected_player.deck.commander[0].image}}" loading="lazy">
+                  </div>
+                  <div class="commander-viewer-partner-2"
+                       (pointerenter)="hovered_card=selected_player.deck.commander[1]"
+                       (pointerleave)="hovered_card=null">
+                    <img class="commander-viewer-partner-image" src="{{selected_player.deck.commander[1].image}}" loading="lazy">
+                  </div>
+                </div>
+              </mat-card>
+            </div>
           </div>
         </div>
       </div>
