@@ -152,31 +152,33 @@ export class GameHandlerComponent implements OnInit {
         console.log('player data received');
         if (json_data.player_data != {}) {
           let found = false;
-          for (let i = 0; i < this.game_data.players.length; i++) {
-            if (this.game_data.players[i].id == json_data.player_data.id) {
-              console.log('player ' + json_data.player_data.id + ' found. Updating data.');
-              found = true;
-              this.game_data.players[i] = json_data.player_data;
-              if (this.game_data.players[i].id == this.current_user.id) { //was the updated player you
-                this.user = this.game_data.players[i];
+          if (this.game_data) {
+            for (let i = 0; i < this.game_data.players.length; i++) {
+              if (this.game_data.players[i].id == json_data.player_data.id) {
+                console.log('player ' + json_data.player_data.id + ' found. Updating data.');
+                found = true;
+                this.game_data.players[i] = json_data.player_data;
+                if (this.game_data.players[i].id == this.current_user.id) { //was the updated player you
+                  this.user = this.game_data.players[i];
+                }
+                if (this.selected_player != null && this.game_data.players[i].id == this.selected_player.id ) { //was the updated player your selected
+                  this.selected_player = this.game_data.players[i];
+                  console.log('updated player was selected.');
+                }
+                break;
               }
-              if (this.selected_player != null && this.game_data.players[i].id == this.selected_player.id ) { //was the updated player your selected
-                this.selected_player = this.game_data.players[i];
-                console.log('updated player was selected.');
-              }
-              break;
             }
-          }
-          console.log('user found in game?: ' + found);
-          if (!found) {
-            console.log('adding player to game');
-            this.game_data.players.push(json_data.player_data);
-            if (json_data.player_data.id == this.current_user.id) {
-              console.log('setting player as user');
-              for (let player of this.game_data.players) {
-                if (player.id == this.current_user.id) {
-                  this.user = player;
-                  break;
+            console.log('user found in game?: ' + found);
+            if (!found) {
+              console.log('adding player to game');
+              this.game_data.players.push(json_data.player_data);
+              if (json_data.player_data.id == this.current_user.id) {
+                console.log('setting player as user');
+                for (let player of this.game_data.players) {
+                  if (player.id == this.current_user.id) {
+                    this.user = player;
+                    break;
+                  }
                 }
               }
             }
