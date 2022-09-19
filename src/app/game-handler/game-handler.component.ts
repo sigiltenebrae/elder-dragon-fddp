@@ -1300,7 +1300,7 @@ export class GameHandlerComponent implements OnInit {
    * @param location string value of where to move the card.
    * Accepts: 'hand', 'deck', 'grave', 'exile', 'temp_zone', 'command_zone' or 'play'
    */
-  moveCardToZone(event: any, location: string, sidebar?: boolean, facedown?: boolean, noupdate?: boolean) {
+  moveCardToZone(event: any, location: string, sidebar?: boolean, facedown?: boolean, noupdate?: boolean, index?: number) {
     //Hand, Command Zone, Deck, Grave, Exile, Temp Zone, Play
     if (location !== 'play') {
       for (let card_select of this.selected_cards) {
@@ -1334,6 +1334,7 @@ export class GameHandlerComponent implements OnInit {
             }
             break;
           case 'deck':
+            console.log('deck');
             if (card_select.card.is_token) {
               card_select.from.splice(card_select.from.indexOf(card_select.card), 1);
               break;
@@ -1343,13 +1344,37 @@ export class GameHandlerComponent implements OnInit {
             this.clearCard(card_select.card); //wipe all counters
             if (card_select.from === this.getPlayer(card_select.card.owner).deck.cards) { //If it is already in the deck
               if (!(sidebar && this.sidenav_sort !== '')) { //if it is trying to move in a sorted sidebar, prevent
-                moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex);
+                if (index) {
+                  if (index < 0) {
+                    index ++;
+                    index = card_select.from.length - index;
+                  }
+                  if (index > 0) {
+                    index --;
+                  }
+                  moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), index);
+                }
+                else {
+                  moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex);
+                }
               }
             }
             else {
               if (sidebar) {
                 if (!(sidebar && this.sidenav_sort !== '')) {
-                  transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), event.currentIndex);
+                  if (index) {
+                    if (index < 0) {
+                      index ++;
+                      index = this.getPlayer(card_select.card.owner).deck.cards.length - index;
+                    }
+                    if (index > 0) {
+                      index --;
+                    }
+                    transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), index);
+                  }
+                  else {
+                    transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), event.currentIndex);
+                  }
                   if (card_select.card.owner != this.user.id) { //it went to someone else's
                     let found = false;
                     for (let i = 0; i < this.zone_transfers.length; i++) {
@@ -1366,7 +1391,20 @@ export class GameHandlerComponent implements OnInit {
                 }
               }
               else {
-                transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), 0);
+                if (index) {
+                  if (index < 0) {
+                    index ++;
+                    index = this.getPlayer(card_select.card.owner).deck.cards.length + index;
+                  }
+                  else if (index > 0) {
+                    index --;
+                  }
+                  // @ts-ignore
+                  transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), index);
+                }
+                else {
+                  transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), 0);
+                }
                 if (card_select.card.owner != this.user.id) { //it went to someone else's
                   let found = false;
                   for (let i = 0; i < this.zone_transfers.length; i++) {
@@ -1661,7 +1699,7 @@ export class GameHandlerComponent implements OnInit {
    * @param location string value of where to move the card.
    * Accepts: 'hand', 'deck_top', 'deck_bottom', 'grave', 'exile', 'temp_zone', 'selected', 'command_zone' or 'play'
    */
-  sendCardToZone(card: any, from: any[], location: string, noupdate?: boolean) {
+  sendCardToZone(card: any, from: any[], location: string, noupdate?: boolean, index?: any) {
     let event:any = {}
     event.previousContainer = {}
     event.container = {}
@@ -1674,6 +1712,10 @@ export class GameHandlerComponent implements OnInit {
         break;
       case 'deck_top':
         location = 'deck'
+        event.container.data = this.user.deck.cards;
+        event.currentIndex = 0;
+        break;
+      case 'deck':
         event.container.data = this.user.deck.cards;
         event.currentIndex = 0;
         break;
@@ -1711,6 +1753,10 @@ export class GameHandlerComponent implements OnInit {
     }
     if (noupdate) {
       this.moveCardToZone(event, location, undefined, undefined, noupdate);
+    }
+    if (index) {
+      console.log(index);
+      this.moveCardToZone(event, location, undefined, undefined, undefined, Number(index));
     }
     else {
       this.moveCardToZone(event, location);

@@ -186,8 +186,8 @@
   <div>
     <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
       <mat-label>Sent to Position</mat-label>
-      <input #deckpos type="text" matInput (click)="$event.stopPropagation()" value="0">
-      <button matSuffix mat-icon-button aria-label="send to pos"><mat-icon>play_arrow</mat-icon></button>
+      <input (keydown.enter)="sendCardToZone(rightclicked_item.card, rightclicked_item.from, 'deck', undefined, deckpos.value)" #deckpos type="text" matInput (click)="$event.stopPropagation()" value="0">
+      <button (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.from, 'deck', undefined, deckpos.value)" matSuffix mat-icon-button aria-label="send to pos"><mat-icon>play_arrow</mat-icon></button>
     </mat-form-field>
   </div>
 </mat-menu>
