@@ -1804,6 +1804,16 @@ export class GameHandlerComponent implements OnInit {
               break;
             }
           }
+          if (type.toLowerCase() === 'unnatural') {
+            if (this.isUnnatural(cur_card)) {
+              break;
+            }
+          }
+          if (type.toLowerCase() === 'historic') {
+            if (this.isHistoric(cur_card)) {
+              break;
+            }
+          }
           else {
             let f = false;
             for (let cur_type of cur_card.types) {
