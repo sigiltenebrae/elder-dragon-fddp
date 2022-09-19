@@ -362,7 +362,7 @@
                    (cdkDragStarted)="hovered_card=null; selectCard(card, getSidenavList());"
                    (click)="toggleCardSelect(card, getSidenavList(), card.sidenav_visible)"
                    (contextmenu)="onRightClick($event, {type: 'zone_card', card: card, from: getSidenavList()})"
-                   cdkDrag>
+                   cdkDrag [cdkDragDisabled]="user.scooped">
                 {{card.name}}
                 <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="mtg-card-user" loading="lazy">
                 <img *cdkDragPlaceholder class="mtg-card-user" [src]="card.image" [alt]="card.name" loading="lazy">
@@ -461,7 +461,7 @@
                 </div>
               </div>
             </mat-list-item>
-            <mat-divider *ngIf="j != activePlayers() - 1"></mat-divider>
+            <mat-divider *ngIf="j != activePlayers(true) - 1"></mat-divider>
           </div>
         </mat-list>
       </mat-card>
@@ -529,7 +529,7 @@
               </mat-card>
             </div>
             <div class="user-exile">
-              <mat-card class="zone-data" (dblclick)="sendSelectedToSpot(user.exile, 'exile')"
+              <mat-card *ngIf="!user.scooped" class="zone-data" (dblclick)="sendSelectedToSpot(user.exile, 'exile')"
                         (contextmenu)="onRightClick($event, {type: 'zone', zone: 'exile'})"
                         cdkDropList [cdkDropListData]="user.exile"
                         cdkDropListOrientation="horizontal"
@@ -544,6 +544,17 @@
                      (pointerleave)="hovered_card=null"
                      (cdkDragStarted)="hovered_card=null; selectCard(user.exile[0], user.exile);"
                      cdkDrag loading="eager">
+              </mat-card>
+              <mat-card *ngIf="user.scooped && selected_player != null" class="zone-data"
+                        (contextmenu)="onRightClick($event, {type: 'zone', zone: 'exile'})">
+                <div class="zone-title"><h5>Exile</h5></div>
+                <h1 class="zone-count shadow-text">{{selected_player.exile.length}}</h1>
+                <div *ngIf="selected_player.exile.length == 0" class="mtg-card-user"></div>
+                <img *ngIf="selected_player.exile.length > 0" class="mtg-card-user"
+                     [src]="selected_player.exile[0].visible.includes(user.id) ? selected_player.exile[0].image: selected_player.deck.sleeves"
+                     [alt]="selected_player.exile[0].visible.includes(user.id) ? selected_player.exile[0].name: ''"
+                     src="{{selected_player.exile[0].image}}"
+                     (pointerleave)="hovered_card=null" loading="eager">
               </mat-card>
             </div>
             <div class="user-temp-zone">
@@ -653,7 +664,7 @@
         <div fxLayout="row" fxLayoutAlign="center" style="height: 455px; width: 100vw; margin-top: 10px;">
           <div fxLayout="row wrap" fxLayoutAlign="center" fxFlexFill *ngIf="game_data" style="height: 455px; width: 100vw;">
             <div *ngFor="let player of game_data.players">
-              <mat-card *ngIf="isOpponent(player) && !player.scooped" class="playmat-opponent" fxLayout="row wrap" fxLayoutAlign="center center">
+              <mat-card *ngIf="(isOpponent(player) && !player.scooped) && !(user.scooped && selected_player != null && player.id == selected_player.id)" class="playmat-opponent" fxLayout="row wrap" fxLayoutAlign="center center">
                 <div class="playmat-opponent-data" (contextmenu)="onRightClick($event, {type: 'opponent_playmat'})">
                   <div class="opponent-information" fxFlexFill fxLayout="row" fxLayoutAlign="space-between" *ngIf="player.hand && player.deck.cards && player.grave && player.exile">
                     <h3 >{{player.name}}</h3>

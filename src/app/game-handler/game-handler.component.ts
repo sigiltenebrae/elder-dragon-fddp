@@ -558,14 +558,34 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
-  activePlayers() {
-    let count = 0;
-    for (let player of this.game_data.players) {
-      if (!player.scooped) {
-        count++;
+  // @ts-ignore
+  activePlayers(ignore_scoop?: boolean) {
+    if (!this.user.scooped || ignore_scoop) {
+      let count = 0;
+      for (let player of this.game_data.players) {
+        if (!player.scooped) {
+          count++;
+        }
       }
+      return count;
     }
-    return count;
+    else if (this.user.scooped) {
+      let count = 0;
+      for (let player of this.game_data.players) {
+        if (!player.scooped) {
+          if(this.selected_player != null && player.id == this.selected_player.id) {
+
+          }
+          else {
+            count++;
+          }
+        }
+      }
+      return count;
+    }
+    else {
+      return 0;
+    }
   }
 
   printData(obj: any) {
