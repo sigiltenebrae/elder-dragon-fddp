@@ -871,6 +871,21 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  isUnnatural(card: any) {
+    if (card.types) {
+      return card.types.includes("Artifact") ||
+        card.types.includes("Enchantment");
+    }
+  }
+
+  isHistoric(card: any) {
+    if (card.types) {
+      return card.types.includes("Legendary") ||
+        card.types.includes("Artifact") ||
+        card.types.includes("Saga");
+    }
+  }
+
   devotionCount(player: any, color: string) {
     let count = 0;
     if (player) {
@@ -906,6 +921,16 @@ export class GameHandlerComponent implements OnInit {
                 count++;
               }
             }
+            else if (type.toLowerCase() === 'unnatural') {
+              if (this.isUnnatural(card)) {
+                count++;
+              }
+            }
+            else if (type.toLowerCase() === 'historic') {
+              if (this.isHistoric(card)) {
+                count++;
+              }
+            }
             else {
               if (card.types) {
                 for (let card_type of card.types) {
@@ -921,6 +946,16 @@ export class GameHandlerComponent implements OnInit {
           for (let card of play.exile) {
             if (type.toLowerCase() === 'permanent') {
               if (this.isPermanent(card)) {
+                count++;
+              }
+            }
+            else if (type.toLowerCase() === 'unnatural') {
+              if (this.isUnnatural(card)) {
+                count++;
+              }
+            }
+            else if (type.toLowerCase() === 'historic') {
+              if (this.isHistoric(card)) {
                 count++;
               }
             }
@@ -940,6 +975,26 @@ export class GameHandlerComponent implements OnInit {
             for (let card of spot) {
               if (type.toLowerCase() === 'permanent') {
                 if (this.isPermanent(card)) {
+                  if (card.multiplier) {
+                    count += card.multiplier_value;
+                  }
+                  else {
+                    count++;
+                  }
+                }
+              }
+              else if (type.toLowerCase() === 'unnatural') {
+                if (this.isUnnatural(card)) {
+                  if (card.multiplier) {
+                    count += card.multiplier_value;
+                  }
+                  else {
+                    count++;
+                  }
+                }
+              }
+              else if (type.toLowerCase() === 'historic') {
+                if (this.isHistoric(card)) {
                   if (card.multiplier) {
                     count += card.multiplier_value;
                   }
