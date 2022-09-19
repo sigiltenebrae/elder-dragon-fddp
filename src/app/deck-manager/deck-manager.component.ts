@@ -58,20 +58,13 @@ export class DeckManagerComponent implements OnInit {
   getDeckColors(deck: any) {
     let colors: any = null;
     for (let commander of deck.commander) {
-      if (commander.mana_cost) {
+      if (commander.color_identity) {
         if (colors == null) {
           colors = [];
         }
-        for (let mana of commander.mana_cost) {
+        for (let mana of commander.color_identity) {
           if (mana === 'W' || mana === 'U' || mana === 'B' || mana === 'R' || mana === 'G'){
             colors.push(mana);
-          }
-        }
-        if (commander.back_mana_cost) {
-          for (let mana of commander.back_mana_cost) {
-            if (mana === 'W' || mana === 'U' || mana === 'B' || mana === 'R' || mana === 'G'){
-              colors.push(mana);
-            }
           }
         }
       }
