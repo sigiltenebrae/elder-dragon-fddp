@@ -14,6 +14,7 @@
           <button mat-menu-item (click)="rightclicked_item.card.locked=!rightclicked_item.card.locked">(Un)Lock Tap</button>
           <button mat-menu-item (click)="shakeCard(rightclicked_item.card, user.id, 'play')">Shake</button>
           <button mat-menu-item (click)="cloneCard(rightclicked_item.card)">Clone</button>
+          <button mat-menu-item (click)="editNotes(rightclicked_item.card)">Edit Notes</button>
           <button mat-menu-item [matMenuTriggerFor]="counters">Counters</button>
           <button mat-menu-item [matMenuTriggerFor]="token_menu" *ngIf="rightclicked_item && rightclicked_item.card && rightclicked_item.card.tokens && rightclicked_item.card.tokens.length> 0">Tokens</button>
           <button mat-menu-item [matMenuTriggerFor]="orient">Orient</button>

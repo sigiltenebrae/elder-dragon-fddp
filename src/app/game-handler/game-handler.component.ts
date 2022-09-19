@@ -531,19 +531,19 @@ export class GameHandlerComponent implements OnInit {
    ------------------------------------------------**/
 
   @HostListener('document:keydown.shift', ['$event']) onShiftDown(event: any) {
-    if (event.target.nodeName !== "INPUT") {
+    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA') {
       this.hoverdata.shift_pressed = !this.hoverdata.shift_pressed;
     }
   }
 
   @HostListener('document:keydown.control', ['$event']) onCtrlDown(event: any) {
-    if (event.target.nodeName !== "INPUT") {
+    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA') {
       this.hoverdata.control_pressed = true;
     }
   }
 
   @HostListener('document:keyup.control', ['$event']) onCtrlUp(event: any) {
-    if (event.target.nodeName !== "INPUT") {
+    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA') {
       this.hoverdata.control_pressed = false;
     }
   }
@@ -555,43 +555,44 @@ export class GameHandlerComponent implements OnInit {
   }
 
   @HostListener('document:keydown.d', ['$event']) ondDown(event: any) {
-    if (event.target.nodeName !== "INPUT") {
+    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA') {
       this.drawX(1);
     }
   }
 
   @HostListener('document:keydown.p', ['$event']) onpDown(event: any) {
-    if (event.target.nodeName !== "INPUT") {
+    console.log(event);
+    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA') {
       this.togglePreview()
     }
   }
 
   @HostListener('document:keydown.m', ['$event']) onmDown(event: any) {
-    if (event.target.nodeName !== "INPUT") {
+    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA') {
       this.mulliganHand(7);
     }
   }
 
   @HostListener('document:keydown.e', ['$event']) oneDown(event: any) {
-    if (event.target.nodeName !== "INPUT") {
+    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA') {
       this.endTurn();
     }
   }
 
   @HostListener('document:keydown.s', ['$event']) onsDown(event: any) {
-    if (event.target.nodeName !== "INPUT") {
+    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA') {
       this.shuffleDeck(this.user.deck.cards, true);
     }
   }
 
   @HostListener('document:keydown.x', ['$event']) onxDown(event: any) {
-    if (event.target.nodeName !== "INPUT") {
+    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA') {
       this.untapAll();
     }
   }
 
   @HostListener('document:keydown.f', ['$event']) onfDown(event: any) {
-    if (event.target.nodeName !== "INPUT") {
+    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA') {
       this.openSideNav('deck');
     }
   }
@@ -1056,6 +1057,20 @@ export class GameHandlerComponent implements OnInit {
         this.createTokenFromImage(result);
       }
     });
+  }
+
+  editNotes(card: any) {
+    const noteDialogRef = this.dialog.open(NoteDialog, {
+      width: '500px',
+      data: {card: card}
+    });
+    noteDialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        card.notes = result;
+        this.sendPlayerUpdate();
+      }
+    })
+
   }
 
   selectDeck(deck: any) {
@@ -2082,5 +2097,26 @@ export class DeckSelectDialog {
 
   onNoClick(): void {
     this.dialogRef.close();
+  }
+}
+
+@Component({
+  selector: 'note-dialog',
+  templateUrl: 'notes-dialog.html',
+})
+export class NoteDialog {
+  constructor(
+    public dialogRef: MatDialogRef<NoteDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
+
+  note = this.data.card.notes;
+
+  onNoClick(): void {
+    this.dialogRef.close(null);
+  }
+
+  saveNote() {
+    this.dialogRef.close(this.note);
   }
 }

@@ -1,0 +1,17 @@
+<div fxFlexFill fxLayout="row" fxLayoutAlign="center center" style="position: relative">
+  <div style="position: absolute; top: 5px; right: 5px; cursor: pointer; width: 24px; height: 24px; z-index: 20">
+    <mat-icon (click)="onNoClick()">close</mat-icon>
+  </div>
+  <div fxLayout="column" fxFlex="100" fxLayoutAlign="start center" style="height: 300px;">
+    <div fxLayout="row">
+      <h1>Add Note</h1>
+    </div>
+    <div fxLayout="row">
+      <mat-form-field appearance="fill">
+        <mat-label>Note</mat-label>
+        <textarea matInput [(ngModel)]="note"></textarea>
+      </mat-form-field>
+    </div>
+    <button mat-raised-button color="primary" (click)="saveNote()">Submit</button>
+  </div>
+</div>
