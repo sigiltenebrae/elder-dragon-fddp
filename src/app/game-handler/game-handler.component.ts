@@ -141,8 +141,10 @@ export class GameHandlerComponent implements OnInit {
             console.log('deck selected');
           }
           else {
-            console.log('game in progress. spectating not supported, kicking player');
-            this.router.navigate(['/']);
+            console.log('game in progress, attempting to spectate');
+            //console.log('game in progress. spectating not supported, kicking player');
+            //this.router.navigate(['/']);
+            this.createSpectator(this.current_user.name, this.current_user.id);
           }
         }
       }
@@ -344,8 +346,6 @@ export class GameHandlerComponent implements OnInit {
             out_player.deck.commander_saved.push(card);
             out_player.deck.cards.splice(deck.cards.indexOf(card), 1);
           })
-
-          out_player.selected = false;
           this.shuffleDeck(out_player.deck.cards);
 
           this.sendMsg({
@@ -365,6 +365,37 @@ export class GameHandlerComponent implements OnInit {
         }
       });
     });
+  }
+
+  createSpectator(name: string, id: number) {
+    console.log(this.current_user.id)
+    let out_player: any = {};
+    out_player.scooped = true;
+    out_player.deck = null;
+    out_player.name = name;
+    out_player.id = id;
+    out_player.playmat = []
+    out_player.turn = -1;
+    out_player.card_preview = { position : {x: 0, y: 0}}
+    out_player.play_counters = [];
+    for (let i = 0; i < 36; i++) {
+      out_player.playmat.push([])
+    }
+    out_player.hand = [];
+    out_player.grave = [];
+    out_player.exile = [];
+    out_player.temp_zone = [];
+    this.sendMsg({
+      request: 'player_change',
+      game_id: this.game_id,
+      player_data:
+        {
+          id: id,
+          player: out_player,
+          new_deck: true
+        }
+    });
+    console.log(out_player);
   }
 
   setPreviewPosition(event: any) {
@@ -459,10 +490,6 @@ export class GameHandlerComponent implements OnInit {
   }
 
   selectPlayer(selector: any) {
-    for (let player of this.game_data.players) {
-      player.selected = false;
-    }
-    selector.selected = true;
     if (this.isOpponent(selector)) {
       this.selected_player = selector;
     }

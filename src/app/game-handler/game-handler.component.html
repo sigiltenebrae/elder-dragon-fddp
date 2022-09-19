@@ -28,9 +28,9 @@
         </div>
 
         <div *ngIf="rightclicked_item.type === 'user_playmat'">
-          <button mat-menu-item (click)="untapAll()">Untap All</button>
-          <button mat-menu-item (click)="openTokenDialog()">Insert Token</button>
-          <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
+          <button *ngIf="!user.scooped" mat-menu-item (click)="untapAll()">Untap All</button>
+          <button *ngIf="!user.scooped" mat-menu-item (click)="openTokenDialog()">Insert Token</button>
+          <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px" *ngIf="!user.scooped">
             <mat-label>Quick Insert Token</mat-label>
             <input (keydown.enter)="createToken({name: quick_token.value})" #quick_token type="text" matInput (click)="$event.stopPropagation()">
             <button matSuffix mat-icon-button aria-label="Draw" (click)="createToken({name: quick_token.value})"><mat-icon>add</mat-icon></button>
@@ -424,7 +424,7 @@
         <mat-list>
           <mat-divider></mat-divider>
           <div *ngFor="let player of game_data.players; let j = index">
-            <mat-list-item *ngIf="!player.scooped" [ngClass]="{'player-button-selected': player.selected,
+            <mat-list-item *ngIf="!player.scooped" [ngClass]="{'player-button-selected': selected_player != null && selected_player.id == player.id,
                                 'player-button-turn': player.turn == game_data.current_turn}">
               <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
                 <div fxLayout="column" fxFlex="100">
@@ -625,7 +625,7 @@
                     <h3 >{{player.name}}</h3>
                     <h3 style="pointer-events: none">Hand: {{player.hand.length}}, Deck: {{player.deck.cards.length}}, Graveyard: {{player.grave.length}}, Exile: {{player.exile.length}}</h3>
                   </div>
-                  <div class="playmat-opponent-selector" [ngClass]="{'playmat-opponent-turn': player.turn == game_data.current_turn, 'playmat-opponent-selected': player.selected}"></div>
+                  <div class="playmat-opponent-selector" [ngClass]="{'playmat-opponent-turn': player.turn == game_data.current_turn, 'playmat-opponent-selected': selected_player != null && selected_player.id == player.id}"></div>
                   <div class="playmat-opponent-card-data">
                     <div *ngFor="let spot of reversePlaymat(player.playmat)" class="mtg-card-holder-opponent">
                       <div *ngFor="let card of spot; let i = index">
