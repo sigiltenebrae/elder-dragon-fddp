@@ -142,7 +142,7 @@
 <mat-menu #hand_menu="matMenu">
   <button mat-menu-item (click)="selectRandom(user.hand)" >Select Random</button>
   <button mat-menu-item [matMenuTriggerFor]="sendAll">Send All To</button>
-  <button mat-menu-item [matMenuTriggerFor]="revealAll">Reveal All To</button>
+  <button mat-menu-item [matMenuTriggerFor]="revealAllHand">Reveal All To</button>
   <div>
     <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
       <mat-label>Mulligan</mat-label>
@@ -216,9 +216,24 @@
   </div>
 </mat-menu>
 
+<mat-menu #revealAllHand="matMenu">
+  <div *ngIf="game_data != null && user != null && !user.scooped">
+    <button mat-menu-item *ngFor="let player of game_data.players"
+            (click)="revealAllTo(getZone(rightclicked_item.zone), player.id); revealAllHandToggle(player.id)">
+      <div>
+        <mat-icon *ngIf="user.hand_preview.includes(player.id)">visibility</mat-icon>
+        <mat-icon *ngIf="!user.hand_preview.includes(player.id)">visibility_off</mat-icon>
+        <span>{{player.name}}</span>
+      </div>
+    </button>
+    <button mat-menu-item (click)="revealAllTo(getZone(rightclicked_item.zone), 'All'); revealAllHandToggle('All')" >All</button>
+    <button mat-menu-item (click)="revealAllTo(getZone(rightclicked_item.zone), 'None'); revealAllHandToggle('None')">None</button>
+  </div>
+</mat-menu>
+
 <mat-menu #revealAll="matMenu">
   <div *ngIf="game_data != null">
-    <button mat-menu-item *ngFor="let player of game_data.players" (click)="revealAllTo(getZone(rightclicked_item.zone), player.id)">{{player.name}}</button>
+    <button mat-menu-item *ngFor="let player of game_data.players" (click)="revealAllTo(getZone(rightclicked_item.zone), player.id);">{{player.name}}</button>
     <button mat-menu-item (click)="revealAllTo(getZone(rightclicked_item.zone), 'All')">All</button>
     <button mat-menu-item (click)="revealAllTo(getZone(rightclicked_item.zone), 'None')">None</button>
   </div>

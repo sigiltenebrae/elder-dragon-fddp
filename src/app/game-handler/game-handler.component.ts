@@ -315,6 +315,7 @@ export class GameHandlerComponent implements OnInit {
             out_player.playmat.push([])
           }
           out_player.hand = [];
+          out_player.hand_preview = [out_player.id];
           out_player.grave = [];
           out_player.exile = [];
           out_player.temp_zone = [];
@@ -1300,6 +1301,11 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  getHandVisible(id: number) {
+    return this.getPlayer(id).hand_preview;
+  }
+
+
 
   /**------------------------------------------------
    *          Card Transfer Helper Functions        *
@@ -1347,7 +1353,7 @@ export class GameHandlerComponent implements OnInit {
               moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), event.currentIndex);
             }
             else {
-              card_select.card.visible = [card_select.card.owner];
+              card_select.card.visible = this.getHandVisible(card_select.card.owner);
               card_select.facedown = false;
               transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).hand, card_select.from.indexOf(card_select.card), event.currentIndex);
               if (card_select.card.owner != this.user.id) { //it went to someone else's
@@ -1850,6 +1856,28 @@ export class GameHandlerComponent implements OnInit {
     this.sendPlayerUpdate();
   }
 
+  revealAllHandToggle(id: any) {
+    if (id === 'All') {
+      let temp: any[] = [];
+      for (let player of this.game_data.players) {
+        temp.push(player.id);
+      }
+      this.user.hand_preview = temp;
+    }
+    else if (id === 'None') {
+      this.user.hand_preview = [this.user.id];
+    }
+    else {
+      if (!this.user.hand_preview.includes(id)) {
+        this.user.hand_preview.push(id);
+      }
+      else {
+        this.user.hand_preview.splice(this.user.hand_preview.indexOf(id), 1);
+      }
+    }
+    this.sendPlayerUpdate();
+  }
+
   sendSelectedToSpot(destination: any, location: string) {
     let event:any = {}
     event.container = {}
@@ -1884,9 +1912,7 @@ export class GameHandlerComponent implements OnInit {
       if (this.user.deck.cards.length == 0) {
         break;
       }
-      if (!this.user.deck.cards[0].visible.includes(this.user.id)) {
-        this.user.deck.cards[0].visible.push(this.user.id);
-      }
+      this.user.deck.cards[0].visible = this.user.hand_preview;
       this.user.hand.push(this.user.deck.cards[0]);
       this.user.deck.cards.splice(0, 1);
     }
