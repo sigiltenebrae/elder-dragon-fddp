@@ -62,7 +62,7 @@ export class GameHandlerComponent implements OnInit {
   sidenav_selected_player: any = null;
 
   hovered_card: any = null;
-  hoverdata: any = {shift_pressed: false, control_pressed: false, position : {x: 0, y: 0}}
+  card_preview_data: any = {shift_pressed: false, control_pressed: false}
   preview = false;
 
   scrying = false;
@@ -303,6 +303,7 @@ export class GameHandlerComponent implements OnInit {
           out_player.command_tax_2 = 0;
           out_player.scooped = false;
           out_player.top_flipped = false;
+          out_player.card_preview = { position : {x: 0, y: 0}}
           for (let i = 0; i < 36; i++) {
             out_player.playmat.push([])
           }
@@ -365,6 +366,15 @@ export class GameHandlerComponent implements OnInit {
         }
       });
     });
+  }
+
+  setPreviewPosition(event: any) {
+    if (this.user != null) {
+      //this.user.card_preview.position = event.dropPoint;
+      this.user.card_preview.position = { ...(<any>event.source._dragRef)._passiveTransform };
+      console.log(this.user.card_preview.position);
+      this.sendPlayerUpdate();
+    }
   }
 
   startGame() {
@@ -526,25 +536,29 @@ export class GameHandlerComponent implements OnInit {
     return count;
   }
 
+  printData(obj: any) {
+    console.log(obj);
+  }
+
   /**------------------------------------------------
    *      Keybind Functions        *
    ------------------------------------------------**/
 
   @HostListener('document:keydown.shift', ['$event']) onShiftDown(event: any) {
     if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA') {
-      this.hoverdata.shift_pressed = !this.hoverdata.shift_pressed;
+      this.card_preview_data.shift_pressed = !this.card_preview_data.shift_pressed;
     }
   }
 
   @HostListener('document:keydown.control', ['$event']) onCtrlDown(event: any) {
     if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA') {
-      this.hoverdata.control_pressed = true;
+      this.card_preview_data.control_pressed = true;
     }
   }
 
   @HostListener('document:keyup.control', ['$event']) onCtrlUp(event: any) {
     if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA') {
-      this.hoverdata.control_pressed = false;
+      this.card_preview_data.control_pressed = false;
     }
   }
 
@@ -564,6 +578,14 @@ export class GameHandlerComponent implements OnInit {
     console.log(event);
     if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA') {
       this.togglePreview()
+    }
+  }
+
+  @HostListener('document:keydown.o', ['$event']) onODown(event: any) {
+    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA') {
+      if(this.user != null) {
+        this.user.card_preview.position = {x: 0, y: 0};
+      }
     }
   }
 

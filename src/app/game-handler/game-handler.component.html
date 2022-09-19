@@ -236,12 +236,12 @@
 
 
 
-<div class="fddp-hover-holder" [style.display]="hovered_card || preview ? 'block': 'none'" [style.pointer-events]="preview ? 'all': 'none'">
-  <mat-card class="fddp-hover-box" cdkDrag [cdkDragFreeDragPosition]="hoverdata.position">
+<div *ngIf="user != null" class="fddp-hover-holder" [style.display]="hovered_card || preview ? 'block': 'none'" [style.pointer-events]="preview ? 'all': 'none'">
+  <mat-card class="fddp-hover-box" cdkDrag cdkDragBoundary=".fddp-hover-holder" [cdkDragFreeDragPosition]="user.card_preview.position" (cdkDragEnded)="printData($event); setPreviewPosition($event)">
     <div *ngIf="hovered_card">
-      <img *ngIf="!hoverdata.shift_pressed && (!hoverdata.control_pressed || !hovered_card.back_face)" src="{{hovered_card.image}}" class="fddp-hover-image">
-      <img *ngIf="!hoverdata.shift_pressed && hoverdata.control_pressed && hovered_card.back_face" src="{{hovered_card.back_image}}" class="fddp-hover-image">
-      <div *ngIf="hoverdata.shift_pressed && (!hoverdata.control_pressed || !hovered_card.back_face)" fxFlexFill fxLayout="row" fxLayoutAlign="center center">
+      <img *ngIf="!card_preview_data.shift_pressed && (!card_preview_data.control_pressed || !hovered_card.back_face)" src="{{hovered_card.image}}" class="fddp-hover-image">
+      <img *ngIf="!card_preview_data.shift_pressed && card_preview_data.control_pressed && hovered_card.back_face" src="{{hovered_card.back_image}}" class="fddp-hover-image">
+      <div *ngIf="card_preview_data.shift_pressed && (!card_preview_data.control_pressed || !hovered_card.back_face)" fxFlexFill fxLayout="row" fxLayoutAlign="center center">
         <div fxLayout="column" fxLayoutAlign="center center" fxFlex>
           <div style="text-align: center">
             <h3 *ngIf="hovered_card.name" style="margin: 2px">{{hovered_card.name}}</h3>
@@ -263,7 +263,7 @@
         </div>
       </div>
 
-      <div *ngIf="hoverdata.shift_pressed && hoverdata.control_pressed && hovered_card.back_face" fxFlexFill fxLayout="row" fxLayoutAlign="center center">
+      <div *ngIf="card_preview_data.shift_pressed && card_preview_data.control_pressed && hovered_card.back_face" fxFlexFill fxLayout="row" fxLayoutAlign="center center">
         <div fxLayout="column" fxLayoutAlign="center center">
           <div style="text-align: center">
             <h3 style="margin: 2px">{{hovered_card.name}}</h3>
