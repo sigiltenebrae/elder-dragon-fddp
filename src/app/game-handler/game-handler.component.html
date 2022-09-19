@@ -489,7 +489,7 @@
              cdkDrag loading="lazy">
       </mat-card>
     </div>
-    <div class="selected-deck" *ngIf="selected_player != null">
+    <div class="selected-deck" *ngIf="selected_player != null" [style.right.px]="!user.scooped? 100: 10">
       <mat-card class="zone-data">
         <h1 class="zone-count shadow-text">{{selected_player.deck.cards.length}}</h1>
         <img *ngIf="!selected_player.top_flipped" class="mtg-card-user"
@@ -512,7 +512,7 @@
             (click)="hidden=!hidden"><mat-icon
               [ngClass]="{'zones-arrow-on': !hidden, 'zones-arrow-off': hidden}">keyboard_arrow_right</mat-icon></button>-->
             <div class="user-grave">
-              <mat-card class="zone-data" (dblclick)="sendSelectedToSpot(user.grave, 'grave')"
+              <mat-card *ngIf="!user.scooped" class="zone-data" (dblclick)="sendSelectedToSpot(user.grave, 'grave')"
                         (contextmenu)="onRightClick($event, {type: 'zone', zone: 'grave'})"
                         cdkDropList [cdkDropListData]="user.grave"
                         cdkDropListOrientation="horizontal"
@@ -526,6 +526,16 @@
                      (pointerleave)="hovered_card=null"
                      (cdkDragStarted)="hovered_card=null; selectCard(user.grave[0], user.grave);"
                      cdkDrag loading="eager">
+              </mat-card>
+              <mat-card *ngIf="user.scooped && selected_player != null" class="zone-data"
+                        (contextmenu)="onRightClick($event, {type: 'zone', zone: 'grave'})">
+                <div class="zone-title"><h5>Graveyard</h5></div>
+                <h1 class="zone-count shadow-text">{{selected_player.grave.length}}</h1>
+                <div *ngIf="selected_player.grave.length == 0" class="mtg-card-user"></div>
+                <img *ngIf="selected_player.grave.length > 0" class="mtg-card-user"
+                     [src]="selected_player.grave[0].visible.includes(user.id) ? selected_player.grave[0].image: selected_player.deck.sleeves"
+                     [alt]="selected_player.grave[0].visible.includes(user.id) ? selected_player.grave[0].name: ''"
+                     (pointerleave)="hovered_card=null" loading="eager">
               </mat-card>
             </div>
             <div class="user-exile">
@@ -557,8 +567,9 @@
                      (pointerleave)="hovered_card=null" loading="eager">
               </mat-card>
             </div>
-            <div class="user-temp-zone">
-              <mat-card class="zone-data" (dblclick)="sendSelectedToSpot(user.temp_zone, 'temp_zone')"
+            <div class="user-temp-zone" [style.right.px]="!user.scooped? 90: user.scooped && selected_player == null? 0: 90"
+                                            [style.bottom.px]="!user.scooped? 120: user.scooped && selected_player == null? 0: 120">
+              <mat-card *ngIf="!user.scooped || (user.scooped && user.temp_zone.length > 0 && selected_player == null)" class="zone-data" (dblclick)="sendSelectedToSpot(user.temp_zone, 'temp_zone')"
                         (contextmenu)="onRightClick($event, {type: 'zone', zone: 'temp_zone'})"
                         cdkDropList [cdkDropListData]="user.temp_zone"
                         cdkDropListOrientation="horizontal"
@@ -572,6 +583,17 @@
                      (pointerleave)="hovered_card=null"
                      (cdkDragStarted)="hovered_card=null; selectCard(user.temp_zone[0], user.temp_zone);"
                      cdkDrag loading="eager">
+              </mat-card>
+              <mat-card *ngIf="user.scooped && selected_player != null" class="zone-data"
+                        (contextmenu)="onRightClick($event, {type: 'zone', zone: 'temp_zone'})">
+                <div class="zone-title"><h5>Temp</h5></div>
+                <h1 class="zone-count shadow-text">{{selected_player.temp_zone.length}}</h1>
+                <div *ngIf="selected_player.temp_zone.length == 0" class="mtg-card-user"></div>
+                <img *ngIf="selected_player.temp_zone.length > 0" class="mtg-card-user"
+                     [src]="selected_player.temp_zone[0].visible.includes(user.id) ? selected_player.temp_zone[0].image: selected_player.deck.sleeves"
+                     [alt]="selected_player.temp_zone[0].visible.includes(user.id) ? selected_player.temp_zone[0].name: ''"
+                     (pointerleave)="hovered_card=null"
+                     loading="eager">
               </mat-card>
             </div>
             <div *ngIf="!user.scooped" class="commander-viewer" cdkDropList
