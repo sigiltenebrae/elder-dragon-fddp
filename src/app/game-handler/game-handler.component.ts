@@ -125,8 +125,10 @@ export class GameHandlerComponent implements OnInit {
         }
         console.log('got game')
         this.game_data = json_data.game_data;
+        console.log(this.game_data);
         if (this.game_data.players){
           for (let player of this.game_data.players) {
+            console.log(player.name);
             if (player.id == this.current_user.id) {
               this.user = player;
               console.log('user loaded: ' + this.user.name);
@@ -172,6 +174,8 @@ export class GameHandlerComponent implements OnInit {
             if (!found) {
               console.log('adding player to game');
               this.game_data.players.push(json_data.player_data);
+              let p_id = json_data.player_data.id;
+              this.fixVisibility(p_id);
               if (json_data.player_data.id == this.current_user.id) {
                 console.log('setting player as user');
                 for (let player of this.game_data.players) {
@@ -481,6 +485,32 @@ export class GameHandlerComponent implements OnInit {
 
     }
     this.zone_transfers = [];
+  }
+
+  fixVisibility(p_id: number) {
+    if (this.user && !this.user.scooped) {
+      for (let spot of this.user.playmat) {
+        for (let card of spot) {
+          if (!card.facedown) {
+            card.visible.push(p_id);
+          }
+        }
+      }
+      for (let card of this.user.grave) {
+        card.visible.push(p_id);
+      }
+      for (let card of this.user.exile) {
+        if (!card.facedown) {
+          card.visible.push(p_id);
+        }
+      }
+      for (let card of this.user.temp_zone) {
+        if (!card.facedown) {
+          card.visible.push(p_id);
+        }
+      }
+      this.sendPlayerUpdate();
+    }
   }
 
   /**------------------------------------------------
