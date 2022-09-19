@@ -379,9 +379,9 @@
     </div>
   </mat-sidenav>
   <mat-sidenav-content *ngIf="user != null">
-    <div *ngIf="user != null" class="counter-creator" fxLayout="column">
+    <div *ngIf="user != null">
         <!---->
-        <div *ngFor="let counter of user.play_counters">
+        <div *ngFor="let counter of user.play_counters" class="counter-creator">
           <mat-card *ngIf="counter.type === 'type'" class="commander-dashboard-custom-counter"
                     (contextmenu)="onRightClick($event, {type: 'type_counter', counter: counter})"
                     style="padding: 0" cdkDrag cdkDragBoundary=".counter-creator" [cdkDragFreeDragPosition]="counter.position"
