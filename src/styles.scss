@@ -942,6 +942,15 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   margin: 10px;
 }
 
+.player-list-two-headed {
+  max-width: 400px;
+  min-width: 300px;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
+}
+
 .player-list {
   max-width: 300px;
   min-width: 300px;
@@ -1499,4 +1508,35 @@ commander-dashboard-select-zone {
   float: left;
   left: 0;
   top: 0;
+}
+
+.two-headed-container {
+  width: 400px;
+  max-width: 100%;
+  margin: 0 25px 25px 0;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.two-headed-box {
+  padding: 20px 10px;
+  border-bottom: solid 1px #ccc;
+  color: rgba(0, 0, 0, 0.87);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  cursor: move;
+  background: white;
+  font-size: 14px;
+}
+
+.two-headed-list {
+  border: solid 1px #ccc;
+  min-height: 60px;
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
+  display: block;
 }
