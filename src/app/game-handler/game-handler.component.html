@@ -437,7 +437,7 @@
         </div>
     </div>
 
-    <div class="player-list" *ngIf="game_data != null && !sidenav_selected_player">
+    <div class="player-list" *ngIf="game_data != null && game_data.type != 2">
       <mat-card style="padding:5px 10px 0 0">
         <mat-list>
           <mat-divider></mat-divider>
@@ -471,6 +471,65 @@
                       <button *ngIf="!isOpponent(player)" class="player-button" mat-button
                               (click)="player.infect = player.infect + 1; this.updateCounter();" (contextmenu)="onRightClick($event, {type: 'infect', player: player})">
                         {{player.infect}}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </mat-list-item>
+            <mat-divider *ngIf="j != activePlayers(true) - 1"></mat-divider>
+          </div>
+        </mat-list>
+      </mat-card>
+    </div>
+    <div class="player-list-two-headed" *ngIf="game_data != null && game_data.type == 2 && game_data.team_data">
+      <mat-card style="padding:5px 10px 0 0">
+        <mat-list>
+          <mat-divider></mat-divider>
+          <div *ngFor="let team of game_data.team_data; let j = index">
+            <mat-list-item *ngIf="!team.scooped" [ngClass]="{'player-button-selected': selected_player != null && (selected_player.id == team.players[0] || selected_player.id == team.players[1]),
+                                'player-button-turn': team.turn == game_data.current_turn}">
+              <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
+                <div fxLayout="column" fxFlex="100">
+                  <button (pointerenter)="hovered_card=isOpponent(getPlayer(team.players[0])) ? getPlayer(team.players[0]).deck.commander_saved[0]: null" (pointerleave)="hovered_card=null"
+                          class="player-button"
+                          mat-button
+                          (click)="selectPlayer(getPlayer(team.players[0]))">
+                    {{getPlayer(team.players[0]).name}}
+                  </button>
+                </div>
+                <button *ngIf="isOpponent(getPlayer(team.players[0]))" (pointerenter)="hovered_card=getPlayer(team.players[1]).deck.commander_saved.length>1 ? getPlayer(team.players[1]).deck.commander_saved[1] : null" (pointerleave)="hovered_card=null" class="player-button" mat-button disabled style="color: white">
+                  &
+                </button>
+                <button *ngIf="!isOpponent(getPlayer(team.players[0]))" class="player-button" mat-button disabled style="color: white">
+                  &
+                </button>
+                <div fxLayout="column" fxFlex="100">
+                  <button (pointerenter)="hovered_card=isOpponent(getPlayer(team.players[1])) ? getPlayer(team.players[1]).deck.commander_saved[0]: null" (pointerleave)="hovered_card=null"
+                          class="player-button"
+                          mat-button
+                          (click)="selectPlayer(getPlayer(team.players[1]))">
+                    {{getPlayer(team.players[1]).name}}
+                  </button>
+                </div>
+                <div fxLayout="column" fxFlex="100">
+                  <div fxLayout="row" fxFlex>
+                    <div class="column" fxFlex>
+                      <button *ngIf="isOpponent(getPlayer(team.players[0]))" (pointerenter)="hovered_card=getPlayer(team.players[1]).deck.commander_saved.length>1 ? getPlayer(team.players[1]).deck.commander_saved[1] : null" (pointerleave)="hovered_card=null" class="player-button" mat-button disabled style="color: white">
+                        {{team.life}}
+                      </button>
+                      <button *ngIf="!isOpponent(getPlayer(team.players[0]))" class="player-button" mat-button
+                              (click)="team.life = team.life + 1; this.updateCounter(true);" (contextmenu)="onRightClick($event, {type: 'team_life', team: team})">
+                        {{team.life}}
+                      </button>
+                    </div>
+                    <div class="column" fxFlex>
+                      <button *ngIf="isOpponent(getPlayer(team.players[0]))" class="player-button" mat-button disabled style="color: white">
+                        {{team.infect}}
+                      </button>
+                      <button *ngIf="!isOpponent(getPlayer(team.players[0]))" class="player-button" mat-button
+                              (click)="team.infect = team.infect + 1; this.updateCounter(true);" (contextmenu)="onRightClick($event, {type: 'team_infect', team: team})">
+                        {{team.infect}}
                       </button>
                     </div>
                   </div>

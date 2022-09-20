@@ -149,6 +149,15 @@ export class GameHandlerComponent implements OnInit {
             this.createSpectator(this.current_user.name, this.current_user.id);
           }
         }
+        if (this.game_data.type == 2) {
+          console.log('two-headed data: ');
+          if (this.game_data.team_data) {
+            console.log(this.game_data.team_data);
+            if (this.user && this.user.teammate_id) {
+              console.log('teammate: ' + this.user.teammate_id);
+            }
+          }
+        }
       }
       else if (json_data.player_data) { //is it a player data request (deck change, etc)
         console.log('player data received');
@@ -298,6 +307,7 @@ export class GameHandlerComponent implements OnInit {
 
           let out_player: any = {};
           out_player.star_color = null;
+          out_player.teammate_id = null;
           out_player.deck = deck;
           out_player.deck.commander = [];
           out_player.name = name;
@@ -422,8 +432,13 @@ export class GameHandlerComponent implements OnInit {
   }
 
   startGame() {
-    this.sendMsg({start: true, game_id: this.game_id});
-    this.game_data.turn_count = 1;
+    if (this.game_data.type == 1 || this.game_data.type == 3) {
+      this.sendMsg({start: true, game_id: this.game_id});
+      this.game_data.turn_count = 1;
+    }
+    else if (this.game_data.type == 2) {
+      this.selectTeams();
+    }
   }
 
   endGame(winner: any, winner_two: any) {
@@ -737,7 +752,18 @@ export class GameHandlerComponent implements OnInit {
   }
 
   isOpponent(player: any) {
-    return player.id !== this.current_user.id
+    if (this.game_data.type == 2) {
+      if (player.id == this.current_user.id) {
+        return false;
+      }
+      else if (player.id == this.current_user.teammate_id) {
+        return false;
+      }
+      return true;
+    }
+    else {
+      return player.id !== this.current_user.id
+    }
   }
 
   tapSpot(spot: any) {
@@ -1237,6 +1263,37 @@ export class GameHandlerComponent implements OnInit {
     });
   }
 
+  selectTeams(): void {
+    let p: any[] = [];
+    for (let player of this.game_data.players) {
+      if (!player.scooped) {
+        p.push(player);
+      }
+    }
+    if (p.length % 2 == 0) {
+      let team_array: any[] = []
+      for (let i = 0; i < p.length / 2; i++){
+        team_array.push([]);
+        console.log(team_array);
+      }
+      const teamDialogRef = this.dialog.open(TwoHeadedTeamsDialog, {
+          data: {
+            players: p,
+            team_array: team_array
+          }
+      });
+      teamDialogRef.afterClosed().subscribe((result) => {
+        if (result) {
+          this.sendMsg({start: true, game_id: this.game_id, teams: result});
+        }
+      });
+    }
+    else {
+      this.snackbar.open('Cannot make teams with an odd number of active players.',
+        'dismiss', {duration: 3000});
+    }
+  }
+
   editNotes(card: any) {
     const noteDialogRef = this.dialog.open(NoteDialog, {
       width: '500px',
@@ -1300,7 +1357,7 @@ export class GameHandlerComponent implements OnInit {
     this.sendScoopUpdate();
   }
 
-  updateCounter() {
+  updateCounter(team?: boolean) {
     if (!this.counter_buffer) {
       this.counter_buffer = true;
       setTimeout(() => {this.counter_buffer = false; this.sendPlayerUpdate()}, 3000);
@@ -2212,6 +2269,14 @@ export class GameHandlerComponent implements OnInit {
           item.counter.value--;
           this.updateCounter();
           break;
+        case 'team_life':
+          item.team.life --;
+          this.updateCounter(true);
+          break;
+        case 'team_infect':
+          item.team.infect --;
+          this.updateCounter(true);
+          break;
         default:
           this.rightclicked_item = item;
           this.menuTopLeftPosition.x = event.clientX + 'px';
@@ -2370,5 +2435,73 @@ export class NoteDialog {
 
   saveNote() {
     this.dialogRef.close(this.note);
+  }
+}
+
+
+@Component({
+  selector: 'two-headed-teams-dialog',
+  templateUrl: 'two-headed-teams.html',
+})
+export class TwoHeadedTeamsDialog {
+  constructor(
+    public dialogRef: MatDialogRef<TwoHeadedTeamsDialog>,
+    private snackbar: MatSnackBar,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
+  players: any[] = this.data.players;
+  team_slots: any[] = this.data.team_array;
+
+  onNoClick(): void {
+    this.dialogRef.close(null);
+  }
+
+  checkValidTeams() {
+    if (this.players.length == 0) {
+      let bad = false;
+      for (let team of this.team_slots) {
+        if (team.length != 2){
+          bad = true;
+          break;
+        }
+      }
+      if (bad) {
+        this.snackbar.open('Not all teams have 2 players',
+          'dismiss', {duration: 3000});
+      }
+      else {
+        this.setTeams(this.team_slots);
+      }
+    }
+    else {
+      this.snackbar.open('Not all players assigned to a team',
+        'dismiss', {duration: 3000});
+    }
+  }
+  setTeams(res: any[]) {
+    let team_ids: any[] = []
+    for (let team of res) {
+      let team_id = [];
+      for (let player of team) {
+        team_id.push(player.id);
+      }
+      team_ids.push(team_id);
+    }
+    this.dialogRef.close(team_ids);
+  }
+
+  drop(event: CdkDragDrop<string[]>) {
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      if (event.container.data.length < 2) {
+        transferArrayItem(
+          event.previousContainer.data,
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex,
+        );
+      }
+    }
   }
 }

@@ -1,0 +1,33 @@
+<div fxFlexFill fxLayout="row" fxLayoutAlign="center center" style="position: relative">
+  <div style="position: absolute; top: 5px; right: 5px; cursor: pointer; width: 24px; height: 24px; z-index: 20">
+    <mat-icon (click)="onNoClick()">close</mat-icon>
+  </div>
+  <div fxLayout="column" fxFlex="100" fxLayoutAlign="start center" style="height: 500px;">
+    <div fxLayout="row">
+      <h1>Select Teams</h1>
+    </div>
+    <div fxLayout="row" cdkDropListGroup>
+      <div fxLayout="column" class="two-headed-container">
+        <h2>Players</h2>
+        <div cdkDropList
+          [cdkDropListData]="players"
+          class="two-headed-list"
+          (cdkDropListDropped)="drop($event)">
+          <div class="two-headed-box" *ngFor="let player of players" cdkDrag>{{player.name}}</div>
+        </div>
+      </div>
+      <div fxLayout="column" *ngFor="let team of team_slots; let i = index" class="two-headed-container">
+        <h2>Team {{i + 1}}</h2>
+        <div cdkDropList
+             [cdkDropListData]="team"
+             class="two-headed-list"
+             (cdkDropListDropped)="drop($event)">
+          <div class="two-headed-box" *ngFor="let player of team" cdkDrag>{{player.name}}</div>
+        </div>
+      </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="end">
+      <button mat-raised-button color="accent" (click)="checkValidTeams()">Submit</button>
+    </div>
+  </div>
+</div>
