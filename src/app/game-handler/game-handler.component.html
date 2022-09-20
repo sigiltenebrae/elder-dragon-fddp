@@ -835,7 +835,7 @@
     <div style="position: fixed; bottom: 215px; left: 50%;
   -ms-transform: translateX(-50%);
   transform: translateX(-50%); z-index: 2;">
-      <div class="playmat-user-holder" *ngIf="user != null && !user.scooped">
+      <div class="playmat-user-holder" *ngIf="user != null && !user.scooped && !teammate_view">
         <div class="playmat-user-devotions">
           <div fxFlexFill fxLayout="column" fxLayoutAlign="space-evenly start">
             <div class="devotion-holder">
@@ -855,7 +855,14 @@
             </div>
           </div>
         </div>
-        <div class="playmat-user-teammate-actions" style="background: rgba(0, 127, 0, 0.1)"></div>
+        <div *ngIf="user != null && game_data.type == 2 && user.teammate_id != null" class="playmat-user-teammate-actions">
+          <div fxFlexFill fxLayout="column" fxLayoutAlign="center end">
+            <div class="teammate-toggle">
+              <button *ngIf="!teammate_view" mat-fab color="primary" (click)="teammate_view=!teammate_view"><mat-icon>keyboard_arrow_right</mat-icon></button>
+              <button *ngIf="teammate_view" mat-fab color="primary" (click)="teammate_view=!teammate_view"><mat-icon>keyboard_arrow_left</mat-icon></button>
+            </div>
+          </div>
+        </div>
         <mat-card class="playmat-user" fxLayout="row wrap" fxLayoutAlign="start start">
           <div *ngFor="let spot of user.playmat"
                class="mtg-card-holder-user"
@@ -939,6 +946,61 @@
           </div>
         </mat-card>
       </div>
+      <div class="playmat-user-holder" *ngIf="user != null && !user.scooped && user.teammate_id != null && teammate_view">
+        <div class="playmat-user-devotions">
+          <div fxFlexFill fxLayout="column" fxLayoutAlign="space-evenly start">
+            <div class="devotion-holder">
+              <button mat-fab class="devotion-white">{{devotionCount(getPlayer(user.teammate_id), 'W')}}</button>
+            </div>
+            <div class="devotion-holder">
+              <button mat-fab class="devotion-blue">{{devotionCount(getPlayer(user.teammate_id), 'U')}}</button>
+            </div>
+            <div class="devotion-holder">
+              <button mat-fab class="devotion-black">{{devotionCount(getPlayer(user.teammate_id), 'B')}}</button>
+            </div>
+            <div class="devotion-holder">
+              <button mat-fab class="devotion-red">{{devotionCount(getPlayer(user.teammate_id), 'R')}}</button>
+            </div>
+            <div class="devotion-holder">
+              <button mat-fab class="devotion-green">{{devotionCount(getPlayer(user.teammate_id), 'G')}}</button>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="user != null && game_data.type == 2 && user.teammate_id != null" class="playmat-user-teammate-actions">
+          <div fxFlexFill fxLayout="column" fxLayoutAlign="center end">
+            <div class="teammate-toggle">
+              <button *ngIf="!teammate_view" mat-fab color="primary" (click)="teammate_view=!teammate_view"><mat-icon>keyboard_arrow_right</mat-icon></button>
+              <button *ngIf="teammate_view" mat-fab color="primary" (click)="teammate_view=!teammate_view"><mat-icon>keyboard_arrow_left</mat-icon></button>
+            </div>
+          </div>
+        </div>
+        <mat-card class="playmat-user" fxLayout="row wrap" fxLayoutAlign="start start">
+          <div *ngFor="let spot of getPlayer(user.teammate_id).playmat"
+               class="mtg-card-holder-user">
+            <div *ngFor="let card of spot; let i = index" (dblclick)="$event.stopPropagation()">
+              <div [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2, 'mtg-card-invert': card.inverted}"
+                   (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
+                   class="mtg-card-user-container" [@userTappedState]="card.tapped"
+                   [@shakeCard]="card.shaken">
+                <div *ngIf="card.locked" class="mtg-lock"><mat-icon>lock</mat-icon></div>
+                <img [ngClass]="{'mtg-card-clone': card.is_token && !card.types.includes('Token') && !card.types.includes('Emblem') }"
+                     class="mtg-card-user" [matTooltip]="card.notes"
+                     [src]="card.visible.includes(user.id) ? card.image: getPlayer(user.teammate_id).deck.sleeves"
+                     [alt]="card.visible.includes(user.id) ? card.name: ''"
+                     (contextmenu)="onRightClick($event,{type: 'teammate_play', card: card, spot: spot, from: spot});">
+                <button *ngIf="card.counter_1" class="mtg-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true"><p>{{card.counter_1_value}}</p></button>
+                <button *ngIf="card.counter_2" class="mtg-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>{{card.counter_2_value}}</p></button>
+                <button *ngIf="card.counter_3" class="mtg-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true"><p>{{card.counter_3_value}}</p></button>
+                <button *ngIf="card.multiplier" class="mtg-multiplier-counter" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>{{card.multiplier_value}}</p></button>
+                <h4 *ngIf="card.power && card.toughness && card.visible.includes(user.id)" class="mtg-card-power-tough shadow-text">
+                  <a [ngClass]="{'mat-card-power-tough-text-up': card.power_mod > 0, 'mat-card-power-tough-text-down': card.power_mod < 0}" class="mat-card-power-tough-text">{{card.power + card.power_mod}}</a>/
+                  <a [ngClass]="{'mat-card-power-tough-text-up': card.toughness_mod > 0, 'mat-card-power-tough-text-down': card.toughness_mod < 0}" class="mat-card-power-tough-text">{{card.toughness + card.toughness_mod}}</a></h4>
+                <h4 *ngIf="card.loyalty && card.visible.includes(user.id)" class="mtg-card-loyalty shadow-text"><a class="mat-card-power-tough-text" [ngClass]="{'mat-card-power-tough-text-up': card.loyalty_mod > 0, 'mat-card-power-tough-text-down': card.loyalty_mod < 0}">{{card.loyalty + card.loyalty_mod}}</a></h4>
+              </div>
+            </div>
+          </div>
+        </mat-card>
+      </div>
     </div>
     <div style="position: fixed;
   bottom: 140px;
@@ -964,7 +1026,7 @@
   left: 50%;
   -ms-transform: translateX(-50%);
   transform: translateX(-50%); z-index: 2;">
-      <div *ngIf="user != null && !user.scooped" class="user-hand" fxFlex fxLayout="column" fxLayoutAlign="center" [class.mat-elevation-z8]="true">
+      <div *ngIf="user != null && !user.scooped && !teammate_view" class="user-hand" fxFlex fxLayout="column" fxLayoutAlign="center" [class.mat-elevation-z8]="true">
         <h1 class="hand-count shadow-text">{{user.hand.length}}</h1>
         <mat-icon [mat-menu-trigger-for]="hand_menu" (click)="rightclicked_item={zone: 'hand'}" class="hand-menu shadow-text">more_vert</mat-icon>
         <ng-scrollbar track="horizontal" visibility="hover"
@@ -1006,6 +1068,26 @@
                       [@shakeCard]="card.shaken">
               <img class="mtg-card-user"
                    [src]="card.visible.includes(user.id) ? card.image: selected_player.deck.sleeves"
+                   [alt]="card.visible.includes(user.id) ? card.name: ''"
+                   loading="lazy">
+            </mat-card>
+          </div>
+        </ng-scrollbar>
+      </div>
+      <div *ngIf="user != null && !user.scooped && game_data.type == 2 && user.teammate_id != null && teammate_view" class="user-hand" fxFlex fxLayout="column" fxLayoutAlign="center" [class.mat-elevation-z8]="true">
+        <h1 class="hand-count shadow-text">{{getPlayer(user.teammate_id).hand.length}}</h1>
+        <ng-scrollbar track="horizontal" visibility="hover"
+                      pointerEventsMethod="scrollbar"
+                      [style.width.px]="getPlayer(user.teammate_id).hand.length * 75"
+                      style="margin-top: 0; min-width: 75px; width: 100%; max-width: 1144px;">
+          <div scrollViewport class="user-hand-list" fxFlexFill fxLayout="row" fxLayoutAlign="start">
+            <mat-card *ngFor="let card of getPlayer(user.teammate_id).hand" class="mtg-card-user-container"
+                      fxFlex fxLayout="column"
+                      (contextmenu)="onRightClick($event, {type: 'teammate_hand', card: card, from: getPlayer(user.teammate_id).hand});"
+                      (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
+                      [@shakeCard]="card.shaken">
+              <img class="mtg-card-user"
+                   [src]="card.visible.includes(user.id) ? card.image: getPlayer(user.teammate_id).deck.sleeves"
                    [alt]="card.visible.includes(user.id) ? card.name: ''"
                    loading="lazy">
             </mat-card>

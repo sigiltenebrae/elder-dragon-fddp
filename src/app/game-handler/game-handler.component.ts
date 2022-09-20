@@ -64,6 +64,7 @@ export class GameHandlerComponent implements OnInit {
   hovered_card: any = null;
   card_preview_data: any = {shift_pressed: false, control_pressed: false}
   preview = false;
+  teammate_view = false;
 
   scrying = false;
 
