@@ -122,7 +122,7 @@ export class GameHandlerComponent implements OnInit {
       console.log('got a message');
       if (json_data.game_data) { //is the entire board request
         if (!json_data.game_data.id) {
-          console.log('game does not exist')
+          console.log('game does not exist');
           this.router.navigate(['/']);
         }
         console.log('got game')
@@ -237,11 +237,17 @@ export class GameHandlerComponent implements OnInit {
         }
       }
       else if (json_data.team_data) {
+        console.log('team data received')
         if (json_data.team_data != {}) {
           for (let i = 0; i < this.game_data.team_data.length; i++) {
             if (this.game_data.team_data[i].id == json_data.team_data.id) {
               this.game_data.team_data[i] = json_data.team_data;
-              console.log(this.user.teammate_id);
+              if (this.game_data.team_data[i].players.includes(this.user.id)) {
+                if (this.game_data.team_data[i].scooped) {
+                  console.log('team data caused scooping deck')
+                  this.scoopDeck(true);
+                }
+              }
               break;
             }
           }
@@ -467,7 +473,7 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
-  sendScoopUpdate() {
+  sendScoopUpdate(noUpdateTeam?: boolean) {
     if (this.user.scooped) {
       this.sendMsg({
         request: 'player_change',
@@ -478,6 +484,12 @@ export class GameHandlerComponent implements OnInit {
             player: this.user
           }
       });
+      if (this.game_data.type == 2 && (noUpdateTeam == undefined || !noUpdateTeam)) {
+        console.log('scooping deck')
+        this.getTeam(this.user.id).scooped = true;
+        console.log(this.getTeam(this.user.id));
+        this.sendTeamScoopUpdate();
+      }
     }
   }
 
@@ -491,6 +503,16 @@ export class GameHandlerComponent implements OnInit {
             id: this.current_user.id,
             player: this.user
           }
+      });
+    }
+  }
+
+  sendTeamScoopUpdate() {
+    if (this.getTeam(this.user.id).scooped) {
+      this.sendMsg({
+        request: 'team_change',
+        game_id: this.game_id,
+        team_data: this.getTeam(this.user.id)
       });
     }
   }
@@ -1369,7 +1391,7 @@ export class GameHandlerComponent implements OnInit {
     })
   }
 
-  scoopDeck(): void {
+  scoopDeck(noUpdateTeam?: boolean): void {
     this.clearSelection();
     for (let player of this.game_data.players) {
       for (let spot of player.playmat) {
@@ -1397,7 +1419,7 @@ export class GameHandlerComponent implements OnInit {
     }
     this.user.deck = null;
     this.user.scooped = true;
-    this.sendScoopUpdate();
+    this.sendScoopUpdate(noUpdateTeam);
   }
 
   updateCounter(team?: boolean) {

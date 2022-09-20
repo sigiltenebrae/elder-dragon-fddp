@@ -742,25 +742,25 @@
                 </div>
               </mat-card>
             </div>
-            <div *ngIf="game_data.type == 2 && user.teammate_id != null" class="commander-viewer-two-headed">
+            <div *ngIf="game_data.type == 2 && user.teammate_id != null && !user.scooped" class="commander-viewer-two-headed">
               <mat-card class="commander-viewer-mat-card">
                 <div class="commander-counter-holder">
                   <div class="commander-counter-container">
                     <button mat-fab class="commander-counter commander-counter-1">
                       {{getPlayer(user.teammate_id).command_tax_1}}
                     </button>
-                    <button *ngIf="getPlayer(user.teammate_id).deck.commander_saved.length == 2" mat-fab color="primary" class="commander-counter commander-counter-2">
+                    <button *ngIf="!getPlayer(user.teammate_id).scooped && getPlayer(user.teammate_id).deck.commander_saved.length == 2" mat-fab color="primary" class="commander-counter commander-counter-2">
                       {{getPlayer(user.teammate_id).command_tax_2}}
                     </button>
                   </div>
                 </div>
-                <div *ngIf="getPlayer(user.teammate_id).deck.commander_saved.length == 1">
+                <div *ngIf="!getPlayer(user.teammate_id).scooped && getPlayer(user.teammate_id).deck.commander_saved.length == 1">
                   <img class="commander-viewer-single"
                        src="{{getPlayer(user.teammate_id).deck.commander_saved[0].image}}"
                        loading="lazy"
                        (pointerenter)="hovered_card=getPlayer(user.teammate_id).deck.commander_saved[0]" (pointerleave)="hovered_card=null">
                 </div>
-                <div *ngIf="getPlayer(user.teammate_id).deck.commander_saved.length == 2" class="commander-viewer-partner-holder">
+                <div *ngIf="!getPlayer(user.teammate_id).scooped && getPlayer(user.teammate_id).deck.commander_saved.length == 2" class="commander-viewer-partner-holder">
                   <div class="commander-viewer-partner-1"
                        (pointerenter)="hovered_card=getPlayer(user.teammate_id).deck.commander_saved[0]"
                        (pointerleave)="hovered_card=null">
@@ -770,6 +770,38 @@
                        (pointerenter)="hovered_card=getPlayer(user.teammate_id).deck.commander_saved[1]"
                        (pointerleave)="hovered_card=null">
                     <img class="commander-viewer-partner-image" src="{{getPlayer(user.teammate_id).deck.commander_saved[1].image}}" loading="lazy">
+                  </div>
+                </div>
+              </mat-card>
+            </div>
+            <div *ngIf="game_data.type == 2 && user.scooped && selected_player != null" class="commander-viewer-two-headed">
+              <mat-card class="commander-viewer-mat-card">
+                <div class="commander-counter-holder">
+                  <div class="commander-counter-container">
+                    <button mat-fab class="commander-counter commander-counter-1">
+                      {{getPlayer(selected_player.teammate_id).command_tax_1}}
+                    </button>
+                    <button *ngIf="!getPlayer(selected_player.teammate_id).scooped && getPlayer(selected_player.teammate_id).deck.commander_saved.length == 2" mat-fab color="primary" class="commander-counter commander-counter-2">
+                      {{getPlayer(selected_player.teammate_id).command_tax_2}}
+                    </button>
+                  </div>
+                </div>
+                <div *ngIf="!getPlayer(selected_player.teammate_id).scooped && getPlayer(selected_player.teammate_id).deck.commander_saved.length == 1">
+                  <img class="commander-viewer-single"
+                       src="{{getPlayer(selected_player.teammate_id).deck.commander_saved[0].image}}"
+                       loading="lazy"
+                       (pointerenter)="hovered_card=getPlayer(selected_player.teammate_id).deck.commander_saved[0]" (pointerleave)="hovered_card=null">
+                </div>
+                <div *ngIf="!getPlayer(selected_player.teammate_id).scooped && getPlayer(selected_player.teammate_id).deck.commander_saved.length == 2" class="commander-viewer-partner-holder">
+                  <div class="commander-viewer-partner-1"
+                       (pointerenter)="hovered_card=getPlayer(selected_player.teammate_id).deck.commander_saved[0]"
+                       (pointerleave)="hovered_card=null">
+                    <img class="commander-viewer-partner-image" src="{{getPlayer(selected_player.teammate_id).deck.commander_saved[0].image}}" loading="lazy">
+                  </div>
+                  <div class="commander-viewer-partner-2"
+                       (pointerenter)="hovered_card=getPlayer(selected_player.teammate_id).deck.commander_saved[1]"
+                       (pointerleave)="hovered_card=null">
+                    <img class="commander-viewer-partner-image" src="{{getPlayer(selected_player.teammate_id).deck.commander_saved[1].image}}" loading="lazy">
                   </div>
                 </div>
               </mat-card>
