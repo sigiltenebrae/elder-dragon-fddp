@@ -240,7 +240,6 @@ export class GameHandlerComponent implements OnInit {
         if (json_data.team_data != {}) {
           for (let i = 0; i < this.game_data.team_data.length; i++) {
             if (this.game_data.team_data[i].id == json_data.team_data.id) {
-              console.log('updating team');
               this.game_data.team_data[i] = json_data.team_data;
               console.log(this.user.teammate_id);
               break;

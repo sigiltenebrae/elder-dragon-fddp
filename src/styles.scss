@@ -648,7 +648,7 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 
 .opponent-hand .hand-count, .user-hand .hand-count{
   position: absolute;
-  bottom: 0;
+  bottom: 6px;
   right: 6px;
   margin: 0;
   z-index: 20;
@@ -972,9 +972,28 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   z-index: 2;
 }
 
+.player-button-holder {
+
+}
+
 .player-button {
   max-height: 48px;
   min-height: 48px;
+  min-width: 88px !important;
+  width: 88px !important;
+  max-width: 88px !important;
+  overflow: hidden !important;
+  font-size: 20px;
+  font-family: Beleren, "Helvetica Neue", sans-serif !important;
+}
+
+.player-button-number {
+  max-height: 48px;
+  min-height: 48px;
+  min-width: 48px !important;
+  width: 48px !important;
+  max-width: 48px !important;
+  overflow: hidden !important;
   font-size: 20px;
   font-family: Beleren, "Helvetica Neue", sans-serif !important;
 }
