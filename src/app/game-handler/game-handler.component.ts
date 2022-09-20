@@ -438,7 +438,7 @@ export class GameHandlerComponent implements OnInit {
   setPreviewPosition(event: any) {
     if (this.user != null) {
       this.user.card_preview.position = { ...(<any>event.source._dragRef)._passiveTransform };
-      this.sendPlayerUpdate();
+      this.sendPlayerUpdate(null);
     }
   }
 
@@ -446,13 +446,13 @@ export class GameHandlerComponent implements OnInit {
     if (this.user != null) {
       counter.position = { ...(<any>event.source._dragRef)._passiveTransform };
       console.log(counter);
-      this.sendPlayerUpdate();
+      this.sendPlayerUpdate(null);
     }
   }
 
   startGame() {
     if (this.game_data.type == 1 || this.game_data.type == 3) {
-      this.sendMsg({start: true, game_id: this.game_id});
+      this.sendMsg({start: true, game_id: this.game_id, message: 'starting the game!'});
       this.game_data.turn_count = 1;
     }
     else if (this.game_data.type == 2) {
@@ -461,15 +461,28 @@ export class GameHandlerComponent implements OnInit {
   }
 
   endGame(winner: any, winner_two: any) {
-    this.sendMsg({end: true, game_id: this.game_id, winner: winner, winner_two: winner_two});
+    this.sendMsg({end: true, game_id: this.game_id, winner: winner, winner_two: winner_two, message: 'ending the game!'});
   }
 
   endTurn() {
-    if (this.game_data.current_turn == this.user.turn) {
-      this.sendMsg({
-        request: 'end_turn',
-        game_id: this.game_id,
-      });
+    if (this.game_data.type == 1 || this.game_data.type == 3) {
+      console.log('trying to end turn');
+      if (this.game_data.current_turn == this.user.turn) {
+        this.sendMsg({
+          request: 'end_turn',
+          game_id: this.game_id,
+        });
+      }
+    }
+    else if (this.game_data.type == 2) {
+      console.log('ending turn');
+      if (this.game_data.current_turn == this.getTeam(this.user.id).turn) {
+        console.log('sending turn end message');
+        this.sendMsg({
+          request: 'end_turn',
+          game_id: this.game_id,
+        });
+      }
     }
   }
 
@@ -482,7 +495,8 @@ export class GameHandlerComponent implements OnInit {
           {
             id: this.current_user.id,
             player: this.user
-          }
+          },
+        message: '*' + this.user.name + '* has scooped their deck and left the game'
       });
       if (this.game_data.type == 2 && (noUpdateTeam == undefined || !noUpdateTeam)) {
         console.log('scooping deck')
@@ -493,7 +507,7 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
-  sendPlayerUpdate() {
+  sendPlayerUpdate(message: any) {
     if (!this.user.scooped) {
       this.sendMsg({
         request: 'player_change',
@@ -502,7 +516,8 @@ export class GameHandlerComponent implements OnInit {
           {
             id: this.current_user.id,
             player: this.user
-          }
+          },
+        message: message
       });
     }
   }
@@ -512,22 +527,23 @@ export class GameHandlerComponent implements OnInit {
       this.sendMsg({
         request: 'team_change',
         game_id: this.game_id,
-        team_data: this.getTeam(this.user.id)
+        team_data: this.getTeam(this.user.id),
       });
     }
   }
 
-  sendTeamUpdate() {
+  sendTeamUpdate(message: any) {
     if (!this.getTeam(this.user.id).scooped) {
       this.sendMsg({
         request: 'team_change',
         game_id: this.game_id,
-        team_data: this.getTeam(this.user.id)
+        team_data: this.getTeam(this.user.id),
+        message: message
       });
     }
   }
 
-  sendPlayerAndZoneUpdate(zone: string, new_zone: any, to_id: number) {
+  sendPlayerAndZoneUpdate(zone: string, new_zone: any, to_id: number, message: any) {
     if (!this.user.scooped) {
       this.sendMsg({
         request: 'player_and_temp_change',
@@ -539,17 +555,17 @@ export class GameHandlerComponent implements OnInit {
           },
         temp_id: to_id,
         temp_zone_name: zone,
-        temp_zone: new_zone
+        temp_zone: new_zone,
+        message: message
       });
     }
   }
 
-  sendPlayerAndZoneUpdateBulk() {
+  sendPlayerAndZoneUpdateBulk(message: any) {
     if (!this.user.scooped) {
       for (let zone of this.zone_transfers) {
-        this.sendPlayerAndZoneUpdate(zone.zone, zone.new_zone, zone.to_id);
+        this.sendPlayerAndZoneUpdate(zone.zone, zone.new_zone, zone.to_id, message);
       }
-
     }
     this.zone_transfers = [];
   }
@@ -576,7 +592,7 @@ export class GameHandlerComponent implements OnInit {
           card.visible.push(p_id);
         }
       }
-      this.sendPlayerUpdate();
+      this.sendPlayerUpdate(null);
     }
   }
 
@@ -832,31 +848,67 @@ export class GameHandlerComponent implements OnInit {
   }
 
   tapSpot(spot: any) {
+    let log = '';
     for (let card of spot) {
-      card.tapped = card.tapped === 'tapped'? 'untapped': 'tapped';
+      if (card.tapped === 'tapped') {
+        card.tapped ='untapped'
+        log += ' {untap} ' + card.name
+      }
+      else {
+        card.tapped = 'tapped';
+        log += ' {tap} ' + card.name
+      }
     }
-    this.sendPlayerUpdate();
+    if (log !== '') {
+      log = '*' + this.user.name + '*' + log;
+      this.sendPlayerUpdate(log);
+    }
+    else {
+      this.sendPlayerUpdate(null);
+    }
   }
 
   tapCard(card: any) {
-    card.tapped = card.tapped === 'tapped'? 'untapped': 'tapped';
-    this.sendPlayerUpdate();
+    let log = '';
+    if (card.tapped === 'tapped') {
+      card.tapped ='untapped'
+      log += ' {untap} ' + card.name
+    }
+    else {
+      card.tapped = 'tapped';
+      log += ' {tap} ' + card.name
+    }
+    if (log !== '') {
+      log = '*' + this.user.name + '*' + log;
+      this.sendPlayerUpdate(log);
+    }
+    else {
+      this.sendPlayerUpdate(null);
+    }
   }
 
   invertCard(card:any) {
     card.inverted = !card.inverted;
-    this.sendPlayerUpdate();
+    this.sendPlayerUpdate('*' + this.user.name + '*' + ' {invert} ' + card.name);
   }
 
   flipCard(card:any) {
-    card.facedown = !card.facedown;
-    card.visible = [];
-    this.sendPlayerUpdate();
+    if (card.facedown) {
+      card.facedown = false;
+      for(let player of this.game_data.players) {
+        card.visible.push(player.id);
+      }
+    }
+    else {
+      card.facedown = true;
+      card.visible = [];
+    }
+    this.sendPlayerUpdate('*' + this.user.name + '*' + ' {flip} ' + card.name);
   }
 
   flipTop() {
     this.user.top_flipped = !this.user.top_flipped;
-    this.sendPlayerUpdate();
+    this.sendPlayerUpdate('*' + this.user.name + '*' + '{flip_top}');
   }
 
   tapSelected() {
@@ -864,18 +916,20 @@ export class GameHandlerComponent implements OnInit {
       this.tapCard(card_select.card);
     }
     this.clearSelection();
-    this.sendPlayerUpdate();
+    this.sendPlayerUpdate(null);
   }
 
   untapAll() {
+    let log = '*' + this.user.name + '*' + ' {untap}';
     for (let spot of this.user.playmat) {
       for (let card of spot) {
         if (!card.locked) {
           card.tapped = 'untapped';
+          log += ' ' + card.name
         }
       }
     }
-    this.sendPlayerUpdate();
+    this.sendPlayerUpdate(log);
   }
 
   /**
@@ -998,7 +1052,7 @@ export class GameHandlerComponent implements OnInit {
 
       card.alt = !card.alt;
     }
-    this.sendPlayerUpdate();
+    this.sendPlayerUpdate('*' + this.user.name + '* {alt} ' + card.name);
   }
 
   clearCard(card: any) {
@@ -1035,7 +1089,7 @@ export class GameHandlerComponent implements OnInit {
       cards[i] = temp;
     }
     if (update) {
-      this.sendPlayerUpdate();
+      this.sendPlayerUpdate('*' + this.user.name + '* {shuffle}');
     }
   }
 
@@ -1212,17 +1266,17 @@ export class GameHandlerComponent implements OnInit {
       type: type,
       position: {x: 20, y: 20}
     });
-    this.sendPlayerUpdate();
+    this.sendPlayerUpdate(null);
   }
 
   deleteCounter(counter: any) {
     this.user.play_counters.splice(this.user.play_counters.indexOf(counter), 1);
-    this.sendPlayerUpdate();
+    this.sendPlayerUpdate(null);
   }
 
   deleteAllCounters() {
     this.user.play_counters = [];
-    this.sendPlayerUpdate();
+    this.sendPlayerUpdate(null);
   }
 
   cloneCard(card: any) {
@@ -1235,7 +1289,7 @@ export class GameHandlerComponent implements OnInit {
       card_clone.visible.push(player.id);
     }
     this.user.temp_zone.push(card_clone);
-    this.sendPlayerUpdate();
+    this.sendPlayerUpdate('*' + this.user.name + '* {clone} ' + card.name);
   }
 
   createToken(token: any) {
@@ -1258,7 +1312,7 @@ export class GameHandlerComponent implements OnInit {
     if (out_tokens.length == 1) {
       this.user.temp_zone.push(out_tokens[0]);
       this.clearSelection();
-      this.sendPlayerUpdate();
+      this.sendPlayerUpdate('*' + this.user.name + '* {create_token} ' + token.name);
     }
     else if (out_tokens.length > 1) {
       const tokDialogRef = this.dialog.open(TokenSelectDialog, {
@@ -1281,7 +1335,7 @@ export class GameHandlerComponent implements OnInit {
           out_token.image = images.length > 0 ? images[0]: null;
           this.clearCard(out_token);
           this.user.temp_zone.push(out_token);
-          this.sendPlayerUpdate();
+          this.sendPlayerUpdate('*' + this.user.name + '* {create_token} ' + token.name);
           return;
         });
       })
@@ -1301,7 +1355,7 @@ export class GameHandlerComponent implements OnInit {
         out_token.visible.push(player.id);
       }
       this.user.temp_zone.push(out_token);
-      this.sendPlayerUpdate();
+      this.sendPlayerUpdate('*' + this.user.name + '* {create_token} ' + result.name);
       return;
     });
 
@@ -1367,7 +1421,7 @@ export class GameHandlerComponent implements OnInit {
     noteDialogRef.afterClosed().subscribe(result => {
       if (result) {
         card.notes = result;
-        this.sendPlayerUpdate();
+        this.sendPlayerUpdate('*' + this.user.name + '* {edit_note} on ' + card.name);
       }
     })
 
@@ -1402,10 +1456,10 @@ export class GameHandlerComponent implements OnInit {
         }
       }
     }
-    this.sendAllTo(this.user.hand, 'deck');
-    this.sendAllTo(this.user.grave, 'deck');
-    this.sendAllTo(this.user.exile, 'deck');
-    this.sendAllTo(this.user.temp_zone, 'deck');
+    this.sendAllTo(this.user.hand, 'hand', 'deck');
+    this.sendAllTo(this.user.grave, 'grave', 'deck');
+    this.sendAllTo(this.user.exile, 'exile', 'deck');
+    this.sendAllTo(this.user.temp_zone, 'temp_zone', 'deck');
     for (let spot of this.user.playmat) {
       for(let card of spot) {
         this.selectCard(card, spot);
@@ -1422,17 +1476,26 @@ export class GameHandlerComponent implements OnInit {
     this.sendScoopUpdate(noUpdateTeam);
   }
 
-  updateCounter(team?: boolean) {
+  updateCounter(name: string, after: any, team?: boolean) {
     if (team) {
       if (!this.team_counter_buffer) {
         this.team_counter_buffer = true;
-        setTimeout(() => {this.team_counter_buffer = false; this.sendTeamUpdate()}, 3000);
+        setTimeout(() => {this.team_counter_buffer = false;
+          this.sendTeamUpdate('*' + this.user.name + '* {counter_change} ' + name + ' to ' + after)}, 3000);
       }
     }
     else {
       if (!this.counter_buffer) {
         this.counter_buffer = true;
-        setTimeout(() => {this.counter_buffer = false; this.sendPlayerUpdate()}, 3000);
+        setTimeout(() => {this.counter_buffer = false;
+          if (name !== '' && after != null) {
+            this.sendPlayerUpdate('*' + this.user.name + '* {counter_change} ' + name + ' to ' + after)
+          }
+          else {
+            this.sendPlayerUpdate(null);
+          }
+        }, 3000);
+
       }
     }
   }
@@ -1476,11 +1539,13 @@ export class GameHandlerComponent implements OnInit {
    */
   moveCardToZone(event: any, location: string, sidebar?: boolean, facedown?: boolean, noupdate?: boolean, index?: number) {
     //Hand, Command Zone, Deck, Grave, Exile, Temp Zone, Play
+    let card_list = '';
     if (location !== 'play') {
       for (let card_select of this.selected_cards) {
         switch(location) {
           case 'hand':
             if (card_select.card.is_token) {
+              card_list += card_select.card.name + ' ';
               card_select.from.splice(card_select.from.indexOf(card_select.card), 1);
               break;
             }
@@ -1491,6 +1556,7 @@ export class GameHandlerComponent implements OnInit {
             else {
               card_select.card.visible = this.getHandVisible(card_select.card.owner);
               card_select.facedown = false;
+              card_list += card_select.card.name + ' ';
               transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).hand, card_select.from.indexOf(card_select.card), event.currentIndex);
               if (card_select.card.owner != this.user.id) { //it went to someone else's
                 let found = false;
@@ -1510,6 +1576,7 @@ export class GameHandlerComponent implements OnInit {
           case 'deck':
             console.log('deck');
             if (card_select.card.is_token) {
+              card_list += card_select.card.name + ' ';
               card_select.from.splice(card_select.from.indexOf(card_select.card), 1);
               break;
             }
@@ -1544,9 +1611,11 @@ export class GameHandlerComponent implements OnInit {
                     if (index > 0) {
                       index --;
                     }
+                    card_list += card_select.card.name + ' ';
                     transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), index);
                   }
                   else {
+                    card_list += card_select.card.name + ' ';
                     transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), event.currentIndex);
                   }
                   if (card_select.card.owner != this.user.id) { //it went to someone else's
@@ -1573,10 +1642,12 @@ export class GameHandlerComponent implements OnInit {
                   else if (index > 0) {
                     index --;
                   }
+                  card_list += card_select.card.name + ' ';
                   // @ts-ignore
                   transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), index);
                 }
                 else {
+                  card_list += card_select.card.name + ' ';
                   transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), 0);
                 }
                 if (card_select.card.owner != this.user.id) { //it went to someone else's
@@ -1597,6 +1668,7 @@ export class GameHandlerComponent implements OnInit {
             break;
           case 'deck_bottom': //this should never happen from a drag event, only from a 'send'
             if (card_select.card.is_token) {
+              card_list += card_select.card.name + ' ';
               card_select.from.splice(card_select.from.indexOf(card_select.card), 1);
               break;
             }
@@ -1608,6 +1680,7 @@ export class GameHandlerComponent implements OnInit {
               moveItemInArray(card_select.from, card_select.from.indexOf(card_select.card), this.getPlayer(card_select.card.owner).deck.cards.length)
             }
             else {
+              card_list += card_select.card.name + ' ';
               transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.cards, card_select.from.indexOf(card_select.card), this.getPlayer(card_select.card.owner).deck.cards.length);
               if (card_select.card.owner != this.user.id) { //it went to someone else's
                 let found = false;
@@ -1627,6 +1700,7 @@ export class GameHandlerComponent implements OnInit {
             break;
           case 'grave':
             if (card_select.card.is_token) {
+              card_list += card_select.card.name + ' ';
               card_select.from.splice(card_select.from.indexOf(card_select.card), 1);
               break;
             }
@@ -1643,6 +1717,7 @@ export class GameHandlerComponent implements OnInit {
             else {
               if (sidebar) {
                 if(this.sidenav_sort === '' && this.sidenav_sort_type === '') {
+                  card_list += card_select.card.name + ' ';
                   transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).grave, card_select.from.indexOf(card_select.card), event.currentIndex);
                   if (card_select.card.owner != this.user.id) { //it went to someone else's
                     let found = false;
@@ -1660,6 +1735,7 @@ export class GameHandlerComponent implements OnInit {
                 }
               }
               else {
+                card_list += card_select.card.name + ' ';
                 transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).grave, card_select.from.indexOf(card_select.card), 0);
                 if (card_select.card.owner != this.user.id) { //it went to someone else's
                   let found = false;
@@ -1679,6 +1755,7 @@ export class GameHandlerComponent implements OnInit {
             break;
           case 'exile':
             if (card_select.card.is_token) {
+              card_list += card_select.card.name + ' ';
               card_select.from.splice(card_select.from.indexOf(card_select.card), 1);
               break;
             }
@@ -1701,6 +1778,7 @@ export class GameHandlerComponent implements OnInit {
             else {
               if (sidebar) {
                 if (!(sidebar && this.sidenav_sort !== '')) {
+                  card_list += card_select.card.name + ' ';
                   transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).exile, card_select.from.indexOf(card_select.card), event.currentIndex);
                   if (card_select.card.owner != this.user.id) { //it went to someone else's
                     let found = false;
@@ -1718,6 +1796,7 @@ export class GameHandlerComponent implements OnInit {
                 }
               }
               else {
+                card_list += card_select.card.name + ' ';
                 transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).exile, card_select.from.indexOf(card_select.card), 0);
                 if (card_select.card.owner != this.user.id) { //it went to someone else's
                   let found = false;
@@ -1757,10 +1836,12 @@ export class GameHandlerComponent implements OnInit {
               }
               if (sidebar) {
                 if (!(sidebar && this.sidenav_sort !== '')) {
+                  card_list += card_select.card.name + ' ';
                   transferArrayItem(card_select.from, event.container.data, card_select.from.indexOf(card_select.card), event.currentIndex);
                 }
               }
               else {
+                card_list += card_select.card.name + ' ';
                 transferArrayItem(card_select.from, event.container.data, card_select.from.indexOf(card_select.card), 0);
               }
             }
@@ -1773,6 +1854,7 @@ export class GameHandlerComponent implements OnInit {
                 card_select.card.visible.push(player.id);
               }
               if (card_select.from !== this.getPlayer(card_select.card.owner).deck.commander) { //Do not allow moving commanders via drag
+                card_list += card_select.card.name + ' ';
                 transferArrayItem(card_select.from, this.getPlayer(card_select.card.owner).deck.commander, card_select.from.indexOf(card_select.card), 0);
               }
               break;
@@ -1793,7 +1875,7 @@ export class GameHandlerComponent implements OnInit {
               if (card_select.from !== this.selected_player.temp_zone) { //If it is already in their zone
                 transferArrayItem(card_select.from, this.selected_player.temp_zone, card_select.from.indexOf(card_select.card), 0);
                 card_select.card.selected = false;
-                this.sendPlayerAndZoneUpdate('temp_zone', this.selected_player.temp_zone, this.selected_player.id);
+                this.sendPlayerAndZoneUpdate('temp_zone', this.selected_player.temp_zone, this.selected_player.id, '*' + this.user.name + '* moved ' + card_list + ' to ' + location);
                 let found = false;
                 for (let i = 0; i < this.zone_transfers.length; i++) {
                   if (this.zone_transfers[i].zone === 'temp_zone' && this.zone_transfers[i].to_id == card_select.card.owner) { //zone already has an update queued
@@ -1841,6 +1923,7 @@ export class GameHandlerComponent implements OnInit {
                   card_select.card.visible.push(player.id);
                 }
               }
+              card_list += card_select.card.name + ' ';
               this.user.playmat[current_index].push(card_select.card);
               card_select.from.splice(card_select.from.indexOf(card_select.card), 1);
               break;
@@ -1857,11 +1940,14 @@ export class GameHandlerComponent implements OnInit {
 
     }
     else {
+      if (index) {
+        location += ' position ' + index;
+      }
       if (this.zone_transfers.length > 0) {
-        this.sendPlayerAndZoneUpdateBulk();
+        this.sendPlayerAndZoneUpdateBulk('*' + this.user.name + '* moved ' + card_list + ' to ' + location);
       }
       else {
-        this.sendPlayerUpdate();
+        this.sendPlayerUpdate('*' + this.user.name + '* moved ' + card_list + ' to ' + location);
       }
     }
   }
@@ -1937,7 +2023,7 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
-  sendAllTo(from: any[], dest: string) {
+  sendAllTo(from: any[], from_str: string, dest: string) {
     if (from.length > 0) {
       this.clearSelection();
       for (let card of from) {
@@ -1946,10 +2032,10 @@ export class GameHandlerComponent implements OnInit {
       this.sendCardToZone(from[0], from, dest, true);
     }
     if (this.zone_transfers.length > 0) {
-      this.sendPlayerAndZoneUpdateBulk();
+      this.sendPlayerAndZoneUpdateBulk('*' + this.user.name + '* sent all from ' + from_str + ' to ' + dest);
     }
     else {
-      this.sendPlayerUpdate();
+      this.sendPlayerUpdate('*' + this.user.name + '* sent all from ' + from_str + ' to ' + dest);
     }
   }
 
@@ -1978,7 +2064,7 @@ export class GameHandlerComponent implements OnInit {
 
     }
     else {
-      this.sendPlayerUpdate();
+      this.sendPlayerUpdate(null);
     }
   }
 
@@ -1989,7 +2075,7 @@ export class GameHandlerComponent implements OnInit {
         this.revealCard(card, whomst);
       }
     }
-    this.sendPlayerUpdate();
+    this.sendPlayerUpdate(null);
   }
 
   revealAllHandToggle(id: any) {
@@ -2011,7 +2097,7 @@ export class GameHandlerComponent implements OnInit {
         this.user.hand_preview.splice(this.user.hand_preview.indexOf(id), 1);
       }
     }
-    this.sendPlayerUpdate();
+    this.sendPlayerUpdate(null);
   }
 
   sendSelectedToSpot(destination: any, location: string) {
@@ -2038,7 +2124,7 @@ export class GameHandlerComponent implements OnInit {
       this.user.deck.commander_saved[0] = this.user.deck.commander_saved[1];
       this.user.deck.commander_saved[1] = temp;
     }
-    this.sendPlayerUpdate();
+    this.sendPlayerUpdate(null);
   }
 
   drawX(count: any) {
@@ -2052,7 +2138,7 @@ export class GameHandlerComponent implements OnInit {
       this.user.hand.push(this.user.deck.cards[0]);
       this.user.deck.cards.splice(0, 1);
     }
-    this.sendPlayerUpdate();
+    this.sendPlayerUpdate('*' + this.user.name + '* {draw} ' + count + ' cards.');
   }
 
   drawToX(zone: string) {
@@ -2065,12 +2151,12 @@ export class GameHandlerComponent implements OnInit {
       this.selectCard(this.user.deck.cards[0], this.user.deck.cards);
       this.sendCardToZone(this.user.deck.cards[0], this.user.deck.cards, zone, true);
     }
-    this.sendPlayerUpdate();
+    this.sendPlayerUpdate('*' + this.user.name + '* {draw} ' + this.draw_to_count + ' cards to ' + zone);
   }
 
   mulliganHand(count: any) {
     let num_count = Number(count);
-    this.sendAllTo(this.user.hand, 'deck_bottom');
+    this.sendAllTo(this.user.hand, 'hand', 'deck_bottom');
     this.shuffleDeck(this.user.deck.cards);
     this.drawX(num_count);
   }
@@ -2080,7 +2166,9 @@ export class GameHandlerComponent implements OnInit {
    * @param type
    */
   drawUntil(type: string) {
+    let count = 0;
     while(true) {
+      count++;
       if (this.user.deck.cards.length > 0) {
         let cur_card = this.user.deck.cards[0];
         this.selectCard(cur_card, this.user.deck.cards);
@@ -2122,13 +2210,14 @@ export class GameHandlerComponent implements OnInit {
         break;
       }
     }
-    this.sendPlayerUpdate();
+    this.sendPlayerUpdate('*' + this.user.name + '* revealed ' + count + 'cards until they reached a(n) ' + type);
   }
 
   scryX(count: any) {
     this.clearSelection(null);
     this.sidenav_scry_count = Number(count);
     this.openSideNav('scry');
+    this.sendPlayerUpdate('*' + this.user.name + '* {scry} ' + count);
   }
 
 
@@ -2146,7 +2235,7 @@ export class GameHandlerComponent implements OnInit {
         this.sendCardToZone(card, this.user.temp_scry_zone, 'temp_zone');
         break;
     }
-    this.sendPlayerUpdate();
+    this.sendPlayerUpdate(null);
   }
 
   /**
@@ -2155,7 +2244,9 @@ export class GameHandlerComponent implements OnInit {
    */
   cascade(cmc: any) {
     cmc = Number(cmc);
+    let count = 0;
     while(true) {
+      count ++;
       if (this.user.deck.cards.length > 0) {
         let cur_card = this.user.deck.cards[0];
         this.selectCard(cur_card, this.user.deck.cards);
@@ -2180,7 +2271,7 @@ export class GameHandlerComponent implements OnInit {
         break;
       }
     }
-    this.sendPlayerUpdate();
+    this.sendPlayerUpdate('*' + this.user.name + '* revealed ' + count + 'cards until they reached cmc ' + cmc);
   }
 
   /**------------------------------------------------
@@ -2296,59 +2387,59 @@ export class GameHandlerComponent implements OnInit {
       switch (item.type) {
         case 'life':
           item.player.life --;
-          this.updateCounter();
+          this.updateCounter('life', item.player.life);
           break;
         case 'infect':
           item.player.infect --;
-          this.updateCounter();
+          this.updateCounter('infect', item.player.infect);
           break;
         case 'counter_1':
           item.card.counter_1_value --;
-          this.updateCounter();
+          this.updateCounter('counter on ' + item.card.name, item.card.counter_1_value);
           break;
         case 'counter_2':
           item.card.counter_2_value --;
-          this.updateCounter();
+          this.updateCounter('counter on ' + item.card.name, item.card.counter_2_value);
           break;
         case 'counter_3':
           item.card.counter_3_value --;
-          this.updateCounter();
+          this.updateCounter('counter on ' + item.card.name, item.card.counter_3_value);
           break;
         case 'multiplier':
           item.card.multiplier_value --;
-          this.updateCounter();
+          this.updateCounter('multiplier on ' + item.card.name, item.card.counter_multiplier_value);
           break;
         case 'power':
           item.card.power_mod --;
-          this.updateCounter();
+          this.updateCounter('power on ' + item.card.name, item.card.power_mod + item.card.power);
           break;
         case 'toughness':
           item.card.toughness_mod --;
-          this.updateCounter();
+          this.updateCounter('toughness on ' + item.card.name, item.card.toughness_mod + item.card.toughness);
           break;
         case 'loyalty':
           item.card.loyalty_mod --;
-          this.updateCounter();
+          this.updateCounter('loyalty on ' + item.card.name, item.card.loyalty_mod + item.card.loyalty);
           break;
         case 'command_tax_1':
           this.user.command_tax_1 --;
-          this.updateCounter();
+          this.updateCounter('command tax', this.user.command_tax_1);
           break;
         case 'command_tax_2':
           this.user.command_tax_2 --;
-          this.updateCounter();
+          this.updateCounter('command tax 2', this.user.command_tax_2);
           break;
         case 'custom_counter':
           item.counter.value--;
-          this.updateCounter();
+          this.updateCounter('', null);
           break;
         case 'team_life':
           item.team.life --;
-          this.updateCounter(true);
+          this.updateCounter('life', item.team.life, true);
           break;
         case 'team_infect':
           item.team.infect --;
-          this.updateCounter(true);
+          this.updateCounter('infect', item.team.infect, true);
           break;
         default:
           this.rightclicked_item = item;
