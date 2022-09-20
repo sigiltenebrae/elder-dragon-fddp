@@ -422,6 +422,11 @@ export class GameHandlerComponent implements OnInit {
 
   startGame() {
     this.sendMsg({start: true, game_id: this.game_id});
+    this.game_data.turn_count = 1;
+  }
+
+  endGame(winner: any, winner_two: any) {
+    this.sendMsg({end: true, game_id: this.game_id, winner: winner, winner_two: winner_two});
   }
 
   endTurn() {

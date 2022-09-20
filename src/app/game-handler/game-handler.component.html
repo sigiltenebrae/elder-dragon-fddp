@@ -89,7 +89,8 @@
         </div>
 
         <div *ngIf="rightclicked_item.type === 'deck'">
-          <button mat-menu-item *ngIf="game_data && game_data.current_turn == 0" (click)="startGame()">Start Game</button>
+          <button mat-menu-item *ngIf="game_data && game_data.turn_count == 0" (click)="startGame()">Start Game</button>
+          <button mat-menu-item *ngIf="game_data && game_data.turn_count < 0" (click)="endGame(null, null)">End Game</button>
           <button mat-menu-item (click)="openSideNav('deck')">Search</button>
           <button mat-menu-item (click)="shuffleDeck(user.deck.cards, true)">Shuffle</button>
           <button mat-menu-item (click)="flipTop()">Flip Top</button>
