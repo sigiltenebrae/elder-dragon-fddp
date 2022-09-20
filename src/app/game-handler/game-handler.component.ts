@@ -567,7 +567,7 @@ export class GameHandlerComponent implements OnInit {
   }
 
   selectPlayer(selector: any) {
-    if (this.isOpponent(selector)) {
+    if (this.isOpponent(selector) || this.isTeammate(selector)) {
       this.selected_player = selector;
     }
     else {

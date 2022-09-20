@@ -581,7 +581,7 @@
     </div>
     <div class="zone-hider-outer" *ngIf="user != null">
       <div class="zone-hider-inner">
-        <div [ngClass]="{'zone-container': !hidden, 'zone-container-hidden': hidden}">
+        <div class='zone-container'>
           <div class="zone-holder">
             <!--<button [style.display]="'none'" mat-mini-fab class="zone-toggle-button"
             (click)="hidden=!hidden"><mat-icon
@@ -748,6 +748,38 @@
                 </div>
               </mat-card>
             </div>
+            <div *ngIf="game_data.type == 2 && user.teammate_id != null" class="commander-viewer-two-headed">
+              <mat-card class="commander-viewer-mat-card">
+                <div class="commander-counter-holder">
+                  <div class="commander-counter-container">
+                    <button mat-fab class="commander-counter commander-counter-1">
+                      {{getPlayer(user.teammate_id).command_tax_1}}
+                    </button>
+                    <button *ngIf="getPlayer(user.teammate_id).deck.commander_saved.length == 2" mat-fab color="primary" class="commander-counter commander-counter-2">
+                      {{getPlayer(user.teammate_id).command_tax_2}}
+                    </button>
+                  </div>
+                </div>
+                <div *ngIf="getPlayer(user.teammate_id).deck.commander_saved.length == 1">
+                  <img class="commander-viewer-single"
+                       src="{{getPlayer(user.teammate_id).deck.commander_saved[0].image}}"
+                       loading="lazy"
+                       (pointerenter)="hovered_card=getPlayer(user.teammate_id).deck.commander_saved[0]" (pointerleave)="hovered_card=null">
+                </div>
+                <div *ngIf="getPlayer(user.teammate_id).deck.commander_saved.length == 2" class="commander-viewer-partner-holder">
+                  <div class="commander-viewer-partner-1"
+                       (pointerenter)="hovered_card=getPlayer(user.teammate_id).deck.commander_saved[0]"
+                       (pointerleave)="hovered_card=null">
+                    <img class="commander-viewer-partner-image" src="{{getPlayer(user.teammate_id).deck.commander_saved[0].image}}" loading="lazy">
+                  </div>
+                  <div class="commander-viewer-partner-2"
+                       (pointerenter)="hovered_card=getPlayer(user.teammate_id).deck.commander_saved[1]"
+                       (pointerleave)="hovered_card=null">
+                    <img class="commander-viewer-partner-image" src="{{getPlayer(user.teammate_id).deck.commander_saved[1].image}}" loading="lazy">
+                  </div>
+                </div>
+              </mat-card>
+            </div>
           </div>
         </div>
       </div>
@@ -804,7 +836,7 @@
   -ms-transform: translateX(-50%);
   transform: translateX(-50%); z-index: 2;">
       <div class="playmat-user-holder" *ngIf="user != null && !user.scooped">
-        <div class="playmat-user-devotions" >
+        <div class="playmat-user-devotions">
           <div fxFlexFill fxLayout="column" fxLayoutAlign="space-evenly start">
             <div class="devotion-holder">
               <button mat-fab class="devotion-white">{{devotionCount(user, 'W')}}</button>
@@ -823,6 +855,7 @@
             </div>
           </div>
         </div>
+        <div class="playmat-user-teammate-actions" style="background: rgba(0, 127, 0, 0.1)"></div>
         <mat-card class="playmat-user" fxLayout="row wrap" fxLayoutAlign="start start">
           <div *ngFor="let spot of user.playmat"
                class="mtg-card-holder-user"

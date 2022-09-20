@@ -432,6 +432,19 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   overflow: visible;
 }
 
+.playmat-user-teammate-actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 60px;
+  max-width: 60px;
+  width: 60px !important;
+  min-height: 409px;
+  max-height: 409px;
+  height: 409px !important;
+  overflow: visible;
+}
+
 .playmat-user-devotions .devotion-holder {
   min-width: 48px;
   max-width: 48px;
@@ -816,18 +829,18 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   right: 0;
   z-index: 2;
   max-height: 400px;
-  max-width: 250px;
+  max-width: 305px;
   min-height: 400px;
-  min-width: 250px;
+  min-width: 305px;
 }
 
 .zone-hider-inner {
   position: relative;
   overflow: hidden;
   max-height: 400px;
-  max-width: 250px;
+  max-width: 305px;
   min-height: 400px;
-  min-width: 250px;
+  min-width: 305px;
 }
 
 .zone-data {
@@ -873,9 +886,9 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   position: relative;
   overflow:hidden;
   max-height: 235px;
-  max-width: 220px;
+  max-width: 305px;
   min-height: 235px;
-  min-width: 220px;
+  min-width: 305px;
 }
 
 .zone-container {
@@ -883,9 +896,9 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   bottom: 125px;
   right: 10px;
   max-height: 235px;
-  max-width: 220px;
+  max-width: 305px;
   min-height: 235px;
-  min-width: 220px;
+  min-width: 305px;
 }
 
 /*.zone-container {
@@ -893,16 +906,6 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   animation-duration: 1s;
   animation-fill-mode: forwards;
 }*/
-
-.zone-container-hidden {
-  position: absolute;
-  bottom: 125px;
-  right: -110px;
-  max-height: 235px;
-  max-width: 165px;
-  min-height: 235px;
-  min-width: 165px;
-}
 
 .zone-container-hidden {
   animation-name: zones-out;
@@ -986,7 +989,16 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   border-radius: 5px;
 }
 
-
+.commander-viewer-two-headed {
+  position: absolute;
+  bottom: 0;
+  right: 180px;
+  min-width: 75px;
+  min-height: 105px;
+  max-width: 75px;
+  max-height: 105px;
+  border-radius: 5px;
+}
 
 .commander-viewer-mat-card {
   position: relative;
