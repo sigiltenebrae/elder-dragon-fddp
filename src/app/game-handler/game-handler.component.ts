@@ -57,6 +57,7 @@ export class GameHandlerComponent implements OnInit {
   received: any[] = [];
   game_data: any = null;
 
+  users_list: any[] = [];
   user: any = null;
   selected_player: any = null;
   sidenav_selected_player: any = null;
@@ -111,6 +112,10 @@ export class GameHandlerComponent implements OnInit {
   ngOnInit(): void {
 
     this.rightClickHandler.overrideRightClick();
+
+    this.fddp_data.getUsers().then((users: any) => {
+      this.users_list = users;
+    });
 
     const routeParams = this.route.snapshot.paramMap;
     this.game_id = Number(routeParams.get('gameid'));
@@ -295,6 +300,14 @@ export class GameHandlerComponent implements OnInit {
     this.WebsocketService.messages.next(message);
   }
 
+  getUserData(id: number) {
+    for (let user_data of this.users_list) {
+      if (user_data.id == id) {
+        return user_data;
+      }
+    }
+    return null;
+  }
 
   /**
    * Sends a message to the web socket to add / update the deck for a player

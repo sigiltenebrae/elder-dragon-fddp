@@ -17,6 +17,7 @@ export class AppComponent {
   constructor(private tokenStorage: TokenStorageService, private fddp_data: FddpApiService) {
     this.fddp_data.getUsers().then((users: any) => {
       this.users = users;
+      console.log(users);
     });
     this.loggedIn = !(this.tokenStorage.getUser() == null || this.tokenStorage.getUser() == {} ||
       this.tokenStorage.getUser().id == null || this.tokenStorage.getUser().id < 0);

@@ -497,6 +497,20 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   margin: 0;
 }
 
+.playmat-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  min-width: 1144px;
+  max-width: 1144px;
+  width: 1144px !important;
+  min-height: 409px;
+  max-height: 409px;
+  height: 409px !important;
+  opacity: 0.7;
+}
+
 .mtg-card-holder-user .stack-1 {
   position: absolute;
   top: 0;
@@ -719,6 +733,20 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
 
 .playmat-opponent:hover .opponent-information {
   opacity: 0.2;
+}
+
+.playmat-opponent .playmat-opponent-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 604px !important;
+  height: 214px !important;
+  min-width: 604px;
+  max-width: 604px;
+  min-height: 214px;
+  max-height: 214px;
+  opacity: 0.7;
 }
 
 .playmat-opponent-selector {

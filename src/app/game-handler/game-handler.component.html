@@ -822,6 +822,7 @@
             <div *ngFor="let player of game_data.players">
               <mat-card *ngIf="(isOpponent(player) && !player.scooped) && !(user.scooped && selected_player != null && player.id == selected_player.id)" class="playmat-opponent" fxLayout="row wrap" fxLayoutAlign="center center">
                 <div class="playmat-opponent-data" (contextmenu)="onRightClick($event, {type: 'opponent_playmat'})">
+                  <img *ngIf="getUserData(player.id) != null && getUserData(player.id).playmat != null && getUserData(player.id).playmat !== ''" src="{{getUserData(player.id).playmat}}" class="playmat-opponent-image">
                   <div class="opponent-information" fxFlexFill fxLayout="row" fxLayoutAlign="space-between" *ngIf="player.hand && player.deck.cards && player.grave && player.exile">
                     <h3 >{{player.name}}</h3>
                     <h3 style="pointer-events: none">Hand: {{player.hand.length}}, Deck: {{player.deck.cards.length}}, Graveyard: {{player.grave.length}}, Exile: {{player.exile.length}}</h3>
@@ -891,6 +892,7 @@
           </div>
         </div>
         <mat-card class="playmat-user" fxLayout="row wrap" fxLayoutAlign="start start">
+          <img *ngIf="current_user != null && current_user.playmat != null && current_user.playmat !== ''" src="{{current_user.playmat}}" class="playmat-image">
           <div *ngFor="let spot of user.playmat"
                class="mtg-card-holder-user"
                cdkDropList
@@ -946,6 +948,7 @@
           </div>
         </div>
         <mat-card class="playmat-user" fxLayout="row wrap" fxLayoutAlign="start start">
+          <img *ngIf="getUserData(selected_player.id) != null && getUserData(selected_player.id).playmat != null && getUserData(selected_player.id).playmat !== ''" src="{{getUserData(selected_player.id).playmat}}" class="playmat-image">
           <div *ngFor="let spot of selected_player.playmat"
                class="mtg-card-holder-user"
                (contextmenu)="onRightClick($event, {type: 'user_playmat', spot: spot, from: spot})">
@@ -1002,6 +1005,7 @@
           </div>
         </div>
         <mat-card class="playmat-user" fxLayout="row wrap" fxLayoutAlign="start start">
+          <img *ngIf="getUserData(user.teammate_id) != null && getUserData(user.teammate_id).playmat != null && getUserData(user.teammate_id).playmat !== ''" src="{{getUserData(user.teammate_id).playmat}}" class="playmat-image">
           <div *ngFor="let spot of getPlayer(user.teammate_id).playmat"
                class="mtg-card-holder-user">
             <div *ngFor="let card of spot; let i = index" (dblclick)="$event.stopPropagation()">
