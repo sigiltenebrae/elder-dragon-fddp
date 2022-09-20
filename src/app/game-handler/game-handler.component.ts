@@ -82,6 +82,7 @@ export class GameHandlerComponent implements OnInit {
 
   zone_transfers: any[] = [];
   counter_buffer = false;
+  team_counter_buffer = false;
 
   /**------------------------------------------------
    *           General Helper Functions             *
@@ -230,6 +231,18 @@ export class GameHandlerComponent implements OnInit {
               case 'commander':
                 this.game_data.players[i].deck.commander = json_data.temp_zone;
                 break;
+            }
+          }
+        }
+      }
+      else if (json_data.team_data) {
+        if (json_data.team_data != {}) {
+          for (let i = 0; i < this.game_data.team_data.length; i++) {
+            if (this.game_data.team_data[i].id == json_data.team_data.id) {
+              console.log('updating team');
+              this.game_data.team_data[i] = json_data.team_data;
+              console.log(this.user.teammate_id);
+              break;
             }
           }
         }
@@ -482,6 +495,16 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  sendTeamUpdate() {
+    if (!this.getTeam(this.user.id).scooped) {
+      this.sendMsg({
+        request: 'team_change',
+        game_id: this.game_id,
+        team_data: this.getTeam(this.user.id)
+      });
+    }
+  }
+
   sendPlayerAndZoneUpdate(zone: string, new_zone: any, to_id: number) {
     if (!this.user.scooped) {
       this.sendMsg({
@@ -556,6 +579,17 @@ export class GameHandlerComponent implements OnInit {
     for(let cur_player of this.game_data.players) {
       if (cur_player.id === player) {
         return cur_player;
+      }
+    }
+    return null;
+  }
+
+  getTeam(player: number) {
+    for (let team of this.game_data.team_data) {
+      for (let team_player of team.players) {
+        if (player == team_player) {
+          return team;
+        }
       }
     }
     return null;
@@ -756,13 +790,22 @@ export class GameHandlerComponent implements OnInit {
       if (player.id == this.current_user.id) {
         return false;
       }
-      else if (player.id == this.current_user.teammate_id) {
+      else if (this.user != null && player.id == this.user.teammate_id) {
         return false;
       }
       return true;
     }
     else {
       return player.id !== this.current_user.id
+    }
+  }
+
+  isTeammate(player: any) {
+    if (this.user != null && player.id == this.user.teammate_id) {
+      return true;
+    }
+    else {
+      return false;
     }
   }
 
@@ -1358,9 +1401,17 @@ export class GameHandlerComponent implements OnInit {
   }
 
   updateCounter(team?: boolean) {
-    if (!this.counter_buffer) {
-      this.counter_buffer = true;
-      setTimeout(() => {this.counter_buffer = false; this.sendPlayerUpdate()}, 3000);
+    if (team) {
+      if (!this.team_counter_buffer) {
+        this.team_counter_buffer = true;
+        setTimeout(() => {this.team_counter_buffer = false; this.sendTeamUpdate()}, 3000);
+      }
+    }
+    else {
+      if (!this.counter_buffer) {
+        this.counter_buffer = true;
+        setTimeout(() => {this.counter_buffer = false; this.sendPlayerUpdate()}, 3000);
+      }
     }
   }
 
