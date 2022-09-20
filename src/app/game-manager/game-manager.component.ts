@@ -30,7 +30,7 @@ export class GameManagerComponent implements OnInit {
         create: {
           name: name,
           max_players: Number(max_players),
-          type: type ? type: 'commander'
+          type: type ? Number(type): 1
         }
       }
 

@@ -297,6 +297,7 @@ export class GameHandlerComponent implements OnInit {
           });
 
           let out_player: any = {};
+          out_player.star_color = null;
           out_player.deck = deck;
           out_player.deck.commander = [];
           out_player.name = name;
