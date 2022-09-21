@@ -356,7 +356,7 @@ export class GameHandlerComponent implements OnInit {
           out_player.command_tax_2 = 0;
           out_player.scooped = false;
           out_player.top_flipped = false;
-          out_player.card_preview = { position : {x: 0, y: 0}}
+          out_player.card_preview = { position : {x: 1502, y: 430}}
           out_player.play_counters = [];
           for (let i = 0; i < 36; i++) {
             out_player.playmat.push([])
@@ -455,6 +455,7 @@ export class GameHandlerComponent implements OnInit {
   setPreviewPosition(event: any) {
     if (this.user != null) {
       this.user.card_preview.position = { ...(<any>event.source._dragRef)._passiveTransform };
+      console.log(this.user.card_preview.position);
       this.sendPlayerUpdate(null);
     }
   }
