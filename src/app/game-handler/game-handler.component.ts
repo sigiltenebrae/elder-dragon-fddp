@@ -503,6 +503,19 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  sendRandomUpdate(zone: any, card: any) {
+    if (!this.user.scooped) {
+      this.sendMsg({
+        game_id: this.game_data.id,
+        user: this.user.name,
+        request: 'select_random',
+        zone: zone,
+        card: card,
+        message: '*' + this.user.name + '* has selected [[' + card.name + ']] at random from ' + zone
+      })
+    }
+  }
+
   sendScoopUpdate(noUpdateTeam?: boolean) {
     if (this.user.scooped) {
       this.sendMsg({
@@ -662,7 +675,8 @@ export class GameHandlerComponent implements OnInit {
         id: card.id,
         user: id,
         location: location
-      }
+      },
+      message: '*' + this.user.name + '* has {shake} [[' + card.name + ']] in ' + this.getPlayer(id).name + " 's " + location
     });
   }
 
@@ -1066,15 +1080,19 @@ export class GameHandlerComponent implements OnInit {
     this.selected_cards = saving? [saving]: [];
   }
 
-  selectRandom(zone: any[]) {
+  selectRandom(zone: any[], location: string) {
+    let rand_card: any = {};
     if (zone.length == 1) {
+      rand_card = zone[0];
       this.snackbar.open('Selected ' + zone[0].name + ' at random.',
         'dismiss', {duration: 3000});
     }
     else if (zone.length > 1) {
-      this.snackbar.open('Selected ' + '"' + zone[Math.floor(Math.random() * zone.length)].name + '"' + ' at random.',
+      rand_card = zone[Math.floor(Math.random() * zone.length)]
+      this.snackbar.open('Selected ' + '"' + rand_card.name + '"' + ' at random.',
         'dismiss', {duration: 3000});
     }
+    this.sendRandomUpdate(location, rand_card);
   }
 
   getZone(zone: string) {
