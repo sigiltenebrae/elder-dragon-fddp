@@ -740,7 +740,10 @@ export class GameHandlerComponent implements OnInit {
    ------------------------------------------------**/
 
   keyAllowed(event: any): boolean {
-    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA' && !this.matMenuTrigger.menuOpen) {
+    if (event.target.nodeName !== "INPUT" &&
+      event.target.nodeName !== 'TEXTAREA' &&
+      !this.matMenuTrigger.menuOpen &&
+      this.dialog.openDialogs.length == 0) {
       return true;
     }
     return false;
