@@ -739,45 +739,52 @@ export class GameHandlerComponent implements OnInit {
    *      Keybind Functions        *
    ------------------------------------------------**/
 
-  @HostListener('document:keydown.shift', ['$event']) onShiftDown(event: any) {
+  keyAllowed(event: any): boolean {
     if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA' && !this.matMenuTrigger.menuOpen) {
+      return true;
+    }
+    return false;
+  }
+
+
+  @HostListener('document:keydown.shift', ['$event']) onShiftDown(event: any) {
+    if (this.keyAllowed(event)) {
       this.card_preview_data.shift_pressed = !this.card_preview_data.shift_pressed;
     }
   }
 
   @HostListener('document:keydown.control', ['$event']) onCtrlDown(event: any) {
-    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA' && !this.matMenuTrigger.menuOpen) {
+    if (this.keyAllowed(event)) {
       this.card_preview_data.control_pressed = true;
     }
   }
 
   @HostListener('document:keyup.control', ['$event']) onCtrlUp(event: any) {
-    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA' && !this.matMenuTrigger.menuOpen) {
+    if (this.keyAllowed(event)) {
       this.card_preview_data.control_pressed = false;
     }
   }
 
   @HostListener('document:keydown.escape', ['$event']) onEscape(event: any) {
-    if (event.target.nodeName !== "INPUT") {
+    if (this.keyAllowed(event)) {
       this.clearSelection();
     }
   }
 
   @HostListener('document:keydown.d', ['$event']) ondDown(event: any) {
-    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA' && !this.matMenuTrigger.menuOpen) {
+    if (this.keyAllowed(event)) {
       this.drawX(1);
     }
   }
 
   @HostListener('document:keydown.p', ['$event']) onpDown(event: any) {
-    console.log(event);
-    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA' && !this.matMenuTrigger.menuOpen) {
+    if (this.keyAllowed(event)) {
       this.togglePreview()
     }
   }
 
   @HostListener('document:keydown.o', ['$event']) onODown(event: any) {
-    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA' && !this.matMenuTrigger.menuOpen) {
+    if (this.keyAllowed(event)) {
       if(this.user != null) {
         this.user.card_preview.position = {x: 0, y: 0};
       }
@@ -785,31 +792,31 @@ export class GameHandlerComponent implements OnInit {
   }
 
   @HostListener('document:keydown.m', ['$event']) onmDown(event: any) {
-    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA' && !this.matMenuTrigger.menuOpen) {
+    if (this.keyAllowed(event)) {
       this.mulliganHand(7);
     }
   }
 
   @HostListener('document:keydown.e', ['$event']) oneDown(event: any) {
-    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA' && !this.matMenuTrigger.menuOpen) {
+    if (this.keyAllowed(event)) {
       this.endTurn();
     }
   }
 
   @HostListener('document:keydown.s', ['$event']) onsDown(event: any) {
-    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA' && !this.matMenuTrigger.menuOpen) {
+    if (this.keyAllowed(event)) {
       this.shuffleDeck(this.user.deck.cards, true);
     }
   }
 
   @HostListener('document:keydown.x', ['$event']) onxDown(event: any) {
-    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA' && !this.matMenuTrigger.menuOpen) {
+    if (this.keyAllowed(event)) {
       this.untapAll();
     }
   }
 
   @HostListener('document:keydown.f', ['$event']) onfDown(event: any) {
-    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA' && !this.matMenuTrigger.menuOpen) {
+    if (this.keyAllowed(event)) {
       this.openSideNav('deck');
     }
   }
@@ -822,6 +829,69 @@ export class GameHandlerComponent implements OnInit {
 
   togglePreview() {
     this.preview = !this.preview;
+  }
+
+  counterClick(event: any, counter: any) {
+    if (event.ctrlKey) {
+      const counterDialogRef = this.dialog.open(CounterSetDialog, {
+        width: '500px',
+        data: {
+          value: counter.value
+        }
+      });
+      counterDialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          counter.value = result;
+          this.updateCounter('', null);
+        }
+      });
+    }
+    else {
+      counter.value = counter.value + 1;
+      this.updateCounter('', null);
+    }
+  }
+
+  lifeClick(event: any, player: any, team?: boolean) {
+    if (event.ctrlKey) {
+      const counterDialogRef = this.dialog.open(CounterSetDialog, {
+        width: '500px',
+        data: {
+          value: player.life
+        }
+      });
+      counterDialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          player.life = result;
+          this.updateCounter('life', player.life, team);
+        }
+      });
+    }
+    else {
+      player.life = player.life + 1;
+      this.updateCounter('life', player.life, team);
+    }
+  }
+
+  infectClick(event: any, player: any, team?: boolean) {
+    if (event.ctrlKey) {
+      const counterDialogRef = this.dialog.open(CounterSetDialog, {
+        width: '500px',
+        data: {
+          value: player.infect
+        }
+      });
+      counterDialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          player.infect = result;
+          this.updateCounter('infect', player.infect, team);
+        }
+      });
+    }
+    else {
+      player.infect = player.infect + 1;
+      this.updateCounter('infect', player.infect, team);
+    }
   }
 
   /**------------------------------------------------
@@ -2623,6 +2693,26 @@ export class NoteDialog {
   }
 }
 
+@Component({
+  selector: 'counter-set-dialog',
+  templateUrl: 'counter-set-dialog.html',
+})
+export class CounterSetDialog {
+  constructor(
+    public dialogRef: MatDialogRef<CounterSetDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
+
+  new_value = this.data.value;
+
+  onNoClick(): void {
+    this.dialogRef.close(null);
+  }
+
+  saveValue() {
+    this.dialogRef.close(this.new_value);
+  }
+}
 
 @Component({
   selector: 'two-headed-teams-dialog',

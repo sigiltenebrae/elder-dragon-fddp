@@ -447,7 +447,7 @@
             </div>
             <h1 class="commander-dashboard-text" style="text-align: end">Count: {{typeCount(counter.search_player, counter.search_zone, counter.search_type)}}</h1>
           </mat-card>
-          <button *ngIf="counter.type === 'play'" cdkDrag mat-fab (click)="counter.value = counter.value + 1; updateCounter('', null);"
+          <button *ngIf="counter.type === 'play'" cdkDrag mat-fab (click)="counterClick($event, counter)"
                   (contextmenu)="onRightClick($event, {type: 'custom_counter', counter: counter})"
                   (keydown.escape)="deleteCounter(counter)"
                   [style.background]="counter.color"
@@ -480,7 +480,7 @@
                         {{player.life}}
                       </button>
                       <button *ngIf="!isOpponent(player)" class="player-button-number" mat-button
-                              (click)="player.life = player.life + 1; updateCounter('life', player.life);" (contextmenu)="onRightClick($event, {type: 'life', player: player})">
+                              (click)="lifeClick($event, player);" (contextmenu)="onRightClick($event, {type: 'life', player: player})">
                         {{player.life}}
                       </button>
                     </div>
@@ -489,7 +489,7 @@
                         {{player.infect}}
                       </button>
                       <button *ngIf="!isOpponent(player)" class="player-button-number" mat-button
-                              (click)="player.infect = player.infect + 1; updateCounter('infect', player.infect);" (contextmenu)="onRightClick($event, {type: 'infect', player: player})">
+                              (click)="infectClick($event, player)" (contextmenu)="onRightClick($event, {type: 'infect', player: player})">
                         {{player.infect}}
                       </button>
                     </div>
@@ -534,7 +534,7 @@
                       {{team.life}}
                     </button>
                     <button *ngIf="!isOpponent(getPlayer(team.players[0]))" class="player-button-number" mat-button
-                            (click)="team.life = team.life + 1; updateCounter('life', team.life, true);" (contextmenu)="onRightClick($event, {type: 'team_life', team: team})">
+                            (click)="lifeClick($event, team, true)" (contextmenu)="onRightClick($event, {type: 'team_life', team: team})">
                       {{team.life}}
                     </button>
                   </div>
@@ -543,7 +543,7 @@
                       {{team.infect}}
                     </button>
                     <button *ngIf="!isOpponent(getPlayer(team.players[0]))" class="player-button-number" mat-button
-                            (click)="team.infect = team.infect + 1; updateCounter('infect', team.infect,true);" (contextmenu)="onRightClick($event, {type: 'team_infect', team: team})">
+                            (click)="infectClick($event, team, true)" (contextmenu)="onRightClick($event, {type: 'team_infect', team: team})">
                       {{team.infect}}
                     </button>
                   </div>

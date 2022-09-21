@@ -36,6 +36,7 @@ import {
   TokenInsertDialog,
   TokenSelectDialog,
   NoteDialog,
+  CounterSetDialog,
   TwoHeadedTeamsDialog,
 } from './game-handler/game-handler.component';
 import {MatMenuModule} from "@angular/material/menu";
@@ -65,6 +66,7 @@ import { GameManagerComponent } from './game-manager/game-manager.component';
     TokenSelectDialog,
     NoteDialog,
     DeckSelectDialog,
+    CounterSetDialog,
     TwoHeadedTeamsDialog,
     TestWsComponent,
     GameManagerComponent,
