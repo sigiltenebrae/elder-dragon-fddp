@@ -740,19 +740,19 @@ export class GameHandlerComponent implements OnInit {
    ------------------------------------------------**/
 
   @HostListener('document:keydown.shift', ['$event']) onShiftDown(event: any) {
-    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA') {
+    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA' && !this.matMenuTrigger.menuOpen) {
       this.card_preview_data.shift_pressed = !this.card_preview_data.shift_pressed;
     }
   }
 
   @HostListener('document:keydown.control', ['$event']) onCtrlDown(event: any) {
-    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA') {
+    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA' && !this.matMenuTrigger.menuOpen) {
       this.card_preview_data.control_pressed = true;
     }
   }
 
   @HostListener('document:keyup.control', ['$event']) onCtrlUp(event: any) {
-    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA') {
+    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA' && !this.matMenuTrigger.menuOpen) {
       this.card_preview_data.control_pressed = false;
     }
   }
@@ -764,20 +764,20 @@ export class GameHandlerComponent implements OnInit {
   }
 
   @HostListener('document:keydown.d', ['$event']) ondDown(event: any) {
-    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA') {
+    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA' && !this.matMenuTrigger.menuOpen) {
       this.drawX(1);
     }
   }
 
   @HostListener('document:keydown.p', ['$event']) onpDown(event: any) {
     console.log(event);
-    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA') {
+    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA' && !this.matMenuTrigger.menuOpen) {
       this.togglePreview()
     }
   }
 
   @HostListener('document:keydown.o', ['$event']) onODown(event: any) {
-    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA') {
+    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA' && !this.matMenuTrigger.menuOpen) {
       if(this.user != null) {
         this.user.card_preview.position = {x: 0, y: 0};
       }
@@ -785,31 +785,31 @@ export class GameHandlerComponent implements OnInit {
   }
 
   @HostListener('document:keydown.m', ['$event']) onmDown(event: any) {
-    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA') {
+    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA' && !this.matMenuTrigger.menuOpen) {
       this.mulliganHand(7);
     }
   }
 
   @HostListener('document:keydown.e', ['$event']) oneDown(event: any) {
-    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA') {
+    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA' && !this.matMenuTrigger.menuOpen) {
       this.endTurn();
     }
   }
 
   @HostListener('document:keydown.s', ['$event']) onsDown(event: any) {
-    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA') {
+    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA' && !this.matMenuTrigger.menuOpen) {
       this.shuffleDeck(this.user.deck.cards, true);
     }
   }
 
   @HostListener('document:keydown.x', ['$event']) onxDown(event: any) {
-    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA') {
+    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA' && !this.matMenuTrigger.menuOpen) {
       this.untapAll();
     }
   }
 
   @HostListener('document:keydown.f', ['$event']) onfDown(event: any) {
-    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA') {
+    if (event.target.nodeName !== "INPUT" && event.target.nodeName !== 'TEXTAREA' && !this.matMenuTrigger.menuOpen) {
       this.openSideNav('deck');
     }
   }
