@@ -77,7 +77,7 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   right: 10px;
   position: fixed;
   z-index: 2;
-  opacity: 0.1;
+  opacity: 0.7;
 }
 
 .fdpp-nav-button:hover {
@@ -509,6 +509,7 @@ a, h1, h2, h3, h4, h5, h6 .nav-button{
   max-height: 409px;
   height: 409px !important;
   opacity: 0.7;
+  pointer-events: none;
 }
 
 .mtg-card-holder-user .stack-1 {

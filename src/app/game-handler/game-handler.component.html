@@ -259,9 +259,24 @@
 <div *ngIf="user != null" class="fddp-hover-holder" [style.display]="hovered_card || preview ? 'block': 'none'" [style.pointer-events]="preview ? 'all': 'none'">
   <mat-card class="fddp-hover-box" cdkDrag cdkDragBoundary=".fddp-hover-holder" [cdkDragFreeDragPosition]="user.card_preview.position" (cdkDragEnded)="setPreviewPosition($event)">
     <div *ngIf="hovered_card">
-      <img *ngIf="!card_preview_data.shift_pressed && (!card_preview_data.control_pressed || !hovered_card.back_face)" src="{{hovered_card.image}}" class="fddp-hover-image">
-      <img *ngIf="!card_preview_data.shift_pressed && card_preview_data.control_pressed && hovered_card.back_face" src="{{hovered_card.back_image}}" class="fddp-hover-image">
-      <div *ngIf="card_preview_data.shift_pressed && (!card_preview_data.control_pressed || !hovered_card.back_face)" fxFlexFill fxLayout="row" fxLayoutAlign="center center">
+      <img *ngIf="!card_preview_data.shift_pressed &&
+      (!card_preview_data.control_pressed || !hovered_card.back_face)"
+           [src]="(hovered_card.visible.includes(user.id) || hovered_card.iscommander) ||
+           (hovered_card == getPlayer(hovered_card.owner).deck.cards[0] && getPlayer(hovered_card.owner).top_flipped) ? hovered_card.image: getPlayer(hovered_card.owner).deck.sleeves"
+           [alt]="(hovered_card.visible.includes(user.id) || hovered_card.iscommander) ||
+           (hovered_card == getPlayer(hovered_card.owner).deck.cards[0] && getPlayer(hovered_card.owner).top_flipped) ? hovered_card.name: ''" class="fddp-hover-image">
+
+
+      <img *ngIf="!card_preview_data.shift_pressed &&
+      card_preview_data.control_pressed && hovered_card.back_face"
+           [src]="(hovered_card.visible.includes(user.id) || hovered_card.iscommander) ||
+           (hovered_card == getPlayer(hovered_card.owner).deck.cards[0] && getPlayer(hovered_card.owner).top_flipped) ? hovered_card.back_image: selected_player.deck.sleeves" class="fddp-hover-image">
+
+      <div *ngIf="card_preview_data.shift_pressed &&
+      (!card_preview_data.control_pressed || !hovered_card.back_face) &&
+      (hovered_card.visible.includes(user.id) || hovered_card.iscommander ||
+      (hovered_card == getPlayer(hovered_card.owner).deck.cards[0] && getPlayer(hovered_card.owner).top_flipped))"
+           fxFlexFill fxLayout="row" fxLayoutAlign="center center">
         <div fxLayout="column" fxLayoutAlign="center center" fxFlex>
           <div style="text-align: center">
             <h3 *ngIf="hovered_card.name" style="margin: 2px">{{hovered_card.name}}</h3>
@@ -283,7 +298,11 @@
         </div>
       </div>
 
-      <div *ngIf="card_preview_data.shift_pressed && card_preview_data.control_pressed && hovered_card.back_face" fxFlexFill fxLayout="row" fxLayoutAlign="center center">
+      <div *ngIf="card_preview_data.shift_pressed &&
+      card_preview_data.control_pressed && hovered_card.back_face &&
+      (hovered_card.visible.includes(user.id) || hovered_card.iscommander ||
+      (hovered_card == getPlayer(hovered_card.owner).deck.cards[0] && getPlayer(hovered_card.owner).top_flipped))"
+           fxFlexFill fxLayout="row" fxLayoutAlign="center center">
         <div fxLayout="column" fxLayoutAlign="center center">
           <div style="text-align: center">
             <h3 style="margin: 2px">{{hovered_card.name}}</h3>
@@ -426,7 +445,7 @@
                 </mat-select>
               </mat-form-field>
             </div>
-            <h1 class="commander-dashboard-text" style="text-align: end">Count: {{typeCount(getPlayer(counter.search_player), counter.search_zone,  counter.search_type)}}</h1>
+            <h1 class="commander-dashboard-text" style="text-align: end">Count: {{typeCount(counter.search_player, counter.search_zone, counter.search_type)}}</h1>
           </mat-card>
           <button *ngIf="counter.type === 'play'" cdkDrag mat-fab (click)="counter.value = counter.value + 1; updateCounter('', null);"
                   (contextmenu)="onRightClick($event, {type: 'custom_counter', counter: counter})"
@@ -648,8 +667,8 @@
                 <h1 class="zone-count shadow-text">{{user.temp_zone.length}}</h1>
                 <div *ngIf="user.temp_zone.length == 0" class="mtg-card-user"></div>
                 <img *ngIf="user.temp_zone.length > 0" class="mtg-card-user"
-                     [src]="user.temp_zone[0].visible.includes(user.id) ? user.temp_zone[0].image: user.deck.sleeves"
-                     [alt]="user.temp_zone[0].visible.includes(user.id) ? user.temp_zone[0].name: ''"
+                     [src]="user.temp_zone[0].visible && user.temp_zone[0].visible.includes(user.id) ? user.temp_zone[0].image: user.deck.sleeves"
+                     [alt]="user.temp_zone[0].visible && user.temp_zone[0].visible.includes(user.id) ? user.temp_zone[0].name: ''"
                      (pointerleave)="hovered_card=null"
                      (cdkDragStarted)="hovered_card=null; selectCard(user.temp_zone[0], user.temp_zone);"
                      cdkDrag loading="eager">
@@ -689,7 +708,7 @@
                                   selectCard(user.deck.commander[0], user.deck.commander, true);"
                        (pointerenter)="hovered_card=user.deck.commander[0]" (pointerleave)="hovered_card=null"
                        cdkDrag
-                       (cdkDragStarted)="hovered_card=null; selectCard(user.deck.commander[0], user.deck.commander);">
+                       (cdkDragStarted)="hovered_card=null; selectCard(user.deck.commander[0], user.deck.commander, true);">
                 </div>
                 <div *ngIf="user.deck.commander.length == 2" class="commander-viewer-partner-holder">
                   <div class="commander-viewer-partner-1"

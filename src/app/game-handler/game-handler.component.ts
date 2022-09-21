@@ -274,6 +274,10 @@ export class GameHandlerComponent implements OnInit {
         console.log('turn update received');
         this.game_data.turn_count = json_data.turn_data.turn_count;
         this.game_data.current_turn = json_data.turn_data.current_turn;
+        if (this.game_data.current_turn == this.user.turn) {
+          this.snackbar.open("It's your turn dumbass",
+            'dismiss', {duration: 3000});
+        }
       }
       else if (json_data.shake_data) {
         console.log('shake received');
@@ -969,10 +973,12 @@ export class GameHandlerComponent implements OnInit {
   }
 
   selectCard(card: any, from: any, commander?: boolean) {
+    console.log(card);
     if (commander) { //if it is the commander being cast
       if (from.indexOf(card) != -1) {
         if (!card.selected) {
           card.selected = true;
+          console.log('adding card');
           this.selected_cards.push({
             card: card,
             from: from
@@ -1155,7 +1161,9 @@ export class GameHandlerComponent implements OnInit {
         players = this.game_data.players;
       }
       else {
-        players = [player];
+        if (this.getPlayer(player)) {
+          players = [this.getPlayer(player)];
+        }
       }
       for (let play of players) {
         if (zone === 'grave') {
