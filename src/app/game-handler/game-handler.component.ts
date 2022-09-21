@@ -746,84 +746,60 @@ export class GameHandlerComponent implements OnInit {
     return false;
   }
 
-
-  @HostListener('document:keydown.shift', ['$event']) onShiftDown(event: any) {
+  @HostListener('document:keydown', ['$event']) onKeyDown(event: any) {
     if (this.keyAllowed(event)) {
-      this.card_preview_data.shift_pressed = !this.card_preview_data.shift_pressed;
+      switch (event.key) {
+        case "Escape":
+          this.clearSelection();
+          break;
+        case "Shift":
+          this.card_preview_data.shift_pressed = !this.card_preview_data.shift_pressed;
+          break;
+        case "Control":
+          this.card_preview_data.control_pressed = true;
+          break;
+        case "e":
+          this.endTurn();
+          break;
+        case "o":
+          if(this.user != null) {
+            this.user.card_preview.position = {x: 0, y: 0};
+          }
+          break;
+        case "p":
+          this.togglePreview()
+          break;
+        case "s":
+          this.shuffleDeck(this.user.deck.cards, true);
+          break;
+        case "d":
+          this.drawX(1);
+          break;
+        case "f":
+          this.openSideNav('deck');
+          break;
+        case "x":
+          this.untapAll();
+          break;
+        case "m":
+          this.mulliganHand(7);
+          break;
+      }
     }
-  }
-
-  @HostListener('document:keydown.control', ['$event']) onCtrlDown(event: any) {
-    if (this.keyAllowed(event)) {
-      this.card_preview_data.control_pressed = true;
-    }
-  }
-
-  @HostListener('document:keyup.control', ['$event']) onCtrlUp(event: any) {
-    if (this.keyAllowed(event)) {
-      this.card_preview_data.control_pressed = false;
-    }
-  }
-
-  @HostListener('document:keydown.escape', ['$event']) onEscape(event: any) {
-    if (this.keyAllowed(event)) {
-      this.clearSelection();
-    }
-  }
-
-  @HostListener('document:keydown.d', ['$event']) ondDown(event: any) {
-    if (this.keyAllowed(event)) {
-      this.drawX(1);
-    }
-  }
-
-  @HostListener('document:keydown.p', ['$event']) onpDown(event: any) {
-    if (this.keyAllowed(event)) {
-      this.togglePreview()
-    }
-  }
-
-  @HostListener('document:keydown.o', ['$event']) onODown(event: any) {
-    if (this.keyAllowed(event)) {
-      if(this.user != null) {
-        this.user.card_preview.position = {x: 0, y: 0};
+    else if (event.key === "Enter") {
+      if (this.matMenuTrigger.menuOpen) {
+        this.matMenuTrigger.closeMenu();
       }
     }
   }
 
-  @HostListener('document:keydown.m', ['$event']) onmDown(event: any) {
+  @HostListener('document:keyup', ['$event']) onKeyUp(event: any) {
     if (this.keyAllowed(event)) {
-      this.mulliganHand(7);
-    }
-  }
-
-  @HostListener('document:keydown.e', ['$event']) oneDown(event: any) {
-    if (this.keyAllowed(event)) {
-      this.endTurn();
-    }
-  }
-
-  @HostListener('document:keydown.s', ['$event']) onsDown(event: any) {
-    if (this.keyAllowed(event)) {
-      this.shuffleDeck(this.user.deck.cards, true);
-    }
-  }
-
-  @HostListener('document:keydown.x', ['$event']) onxDown(event: any) {
-    if (this.keyAllowed(event)) {
-      this.untapAll();
-    }
-  }
-
-  @HostListener('document:keydown.f', ['$event']) onfDown(event: any) {
-    if (this.keyAllowed(event)) {
-      this.openSideNav('deck');
-    }
-  }
-
-  @HostListener('document:keydown.enter', ['$event']) onEnterDown(event: any) {
-    if (this.matMenuTrigger.menuOpen) {
-      this.matMenuTrigger.closeMenu();
+      switch (event.key) {
+        case "Control":
+          this.card_preview_data.control_pressed = false;
+          break;
+      }
     }
   }
 
