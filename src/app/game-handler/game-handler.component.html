@@ -66,6 +66,7 @@
   </ng-scrollbar>
 </div>
 
+<!-- User Deck -->
 <div [ngClass.gt-md]="'deck-user-container'" [ngClass.lt-lg]="'deck-user-container-mini'">
   <div class="deck-user-wrapper">
     <h1 class="deck-quantity-text shadow-text">{{currentPlayer().deck.cards.length}}</h1>
@@ -74,3 +75,17 @@
   </div>
 </div>
 
+<!-- User Hand -->
+<div [ngClass.gt-md]="'hand-user-container'" [ngClass.lt-lg]="'hand-user-container-mini'">
+  <div [ngClass.gt-md]="'hand-user-wrapper'" [ngClass.lt-lg]="'hand-user-wrapper-mini'">
+    <mat-icon fxHide.lt-lg class="hand-menu shadow-text">more_vert</mat-icon>
+    <h1 class="hand-quantity-text shadow-text">{{currentPlayer().hand.length}}</h1>
+    <ng-scrollbar track="horizontal" visibility="hover" pointerEventsMethod="scrollbar" style="width: 100%;">
+      <div [ngClass.gt-md]="'hand-user-droplist-wrapper'" [ngClass.lt-lg]="'hand-user-droplist-wrapper-mini'" fxLayout="row" fxLayoutAlign="center">
+        <div *ngFor="let card of currentPlayer().hand" [ngClass.gt-md]="'playmat-user-card-container'" [ngClass.lt-lg]="'playmat-user-card-container-mini'">
+          <img [ngClass.gt-md]="'playmat-user-card'" [ngClass.lt-lg]="'playmat-user-card-mini'" src="{{user.deck.sleeves}}">
+        </div>
+      </div>
+    </ng-scrollbar>
+  </div>
+</div>
