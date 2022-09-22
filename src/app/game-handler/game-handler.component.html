@@ -10,7 +10,6 @@
   <button mat-menu-item>Button</button>
 </mat-menu>
 
-
 <div [ngClass.gt-md]="'playmat-user-container'" [ngClass.lt-lg]="'playmat-user-container-mini'">
   <div [ngClass.gt-md]="'playmat-user-wrapper'" [ngClass.lt-lg]="'playmat-user-wrapper-mini'" *ngIf="user != null && !user.scooped && !teammate_view">
     <div [ngClass.gt-md]="'playmat-user-devotion-container'" [ngClass.lt-lg]="'playmat-user-devotion-container-mini'">
