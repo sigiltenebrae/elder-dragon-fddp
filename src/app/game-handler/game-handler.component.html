@@ -52,6 +52,7 @@
         <div *ngIf="rightclicked_item.type === 'commander' && user != null && !user.scooped">
           <button mat-menu-item (click)="openDeckSelectDialog()">Change Deck</button>
           <button mat-menu-item (click)="scoopDeck()">Scoop Deck</button>
+          <button mat-menu-item (click)="getDataPrint()">Print Data</button>
           <button mat-menu-item>End Game</button>
         </div>
 
@@ -455,6 +456,17 @@
                   (cdkDragEnded)="setCounterPosition($event, counter)"
                   style="pointer-events: all;">{{counter.value}}</button>
         </div>
+    </div>
+
+    <div class="action-log" *ngIf="game_data != null">
+      <mat-card style="padding: 0;" fxFlex>
+        <ng-scrollbar #action_scroll visibility="hover" pointerEventsMethod="scrollbar" track="all" style="height: 409px;">
+          <mat-list style="margin: 5px" *ngIf="game_data.action_log  && game_data.action_log.length > 0">
+            <mat-list-item *ngFor="let line of game_data.action_log">{{line}}</mat-list-item>
+            <mat-list-item> </mat-list-item>
+          </mat-list>
+        </ng-scrollbar>
+      </mat-card>
     </div>
 
     <div class="player-list" *ngIf="game_data != null && game_data.type != 2">
