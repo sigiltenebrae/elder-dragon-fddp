@@ -147,7 +147,26 @@ p, h1, h2, h3, h4, h5, h6 {
 .game-data-player-list-item {
   border-bottom: solid 2px #666;
   height: 50px;
-  width: 100%
+  width: 100%;
+}
+
+.game-data-player-list-name {
+  width: 132px;
+  overflow-x: hidden !important;
+  margin: 0 2px 0 2px !important;
+}
+
+.game-data-player-list-name-two-headed {
+  width: 66px;
+  overflow-x: hidden !important;
+  margin: 0 2px 0 2px !important;
+}
+
+.game-data-player-list-counter {
+  width: 22px;
+  max-width: 22px !important;
+  margin: 0 2px 0 2px !important;
+  padding: 0;
 }
 
 .game-data-wrapper .game-data-log-container {

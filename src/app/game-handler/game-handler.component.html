@@ -64,7 +64,13 @@
     <div class="game-data-player-list-container" [style.height.px]="players.length > 3? 200: players.length * 50">
       <ng-scrollbar track="vertical" visibility="hover" pointerEventsMethod="scrollbar" [style.height.px]="200">
         <mat-list>
-            <mat-list-item *ngFor="let player of players; let i = index" class="game-data-player-list-item">Player {{i + 1}}</mat-list-item>
+          <div *ngFor="let player of players">
+            <mat-list-item *ngIf="!player.scooped" class="game-data-player-list-item" fxLayout="row">
+              <button mat-button class="game-data-player-list-name">Reallllllllllllly Long Name</button>
+              <button mat-button class="game-data-player-list-counter">22</button>
+              <button mat-button class="game-data-player-list-counter">22</button>
+            </mat-list-item>
+          </div>
         </mat-list>
       </ng-scrollbar>
     </div>
