@@ -70,7 +70,6 @@
   <div class="deck-user-wrapper">
     <h1 class="deck-quantity-text shadow-text">{{currentPlayer().deck.cards.length}}</h1>
     <h2 fxHide.lt-lg class="deck-owner-text shadow-text">{{currentPlayer().name}}</h2>
-
     <img [ngClass.gt-md]="'zone-card-image'" [ngClass.lt-lg]="'zone-card-image-mini'" [src]="!currentPlayer().top_flipped ? currentPlayer().deck.sleeves: currentPlayer().deck.cards[0]">
   </div>
 </div>
