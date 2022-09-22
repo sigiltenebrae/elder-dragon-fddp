@@ -27,6 +27,7 @@ import {TokenStorageService} from "../../services/token-storage.service";
 import {FddpWebsocketService} from "../../services/fddp-websocket.service";
 import {Scrollbar} from "ngx-scrollbar/lib/scrollbar/scrollbar";
 import {NgScrollbar, NgScrollbarModule} from "ngx-scrollbar";
+import {TokenInsertDialog} from "./game-handler-addons.component";
 
 @Component({
   selector: 'app-game-handler',
@@ -50,6 +51,8 @@ import {NgScrollbar, NgScrollbarModule} from "ngx-scrollbar";
   ]
 })
 export class GameHandlerComponent implements OnInit {
+
+  game_data: any;
 
   //Debugger Variables
   current_user: any = {
@@ -91,6 +94,67 @@ export class GameHandlerComponent implements OnInit {
     "cmc": 2,
     "tokens": [],
     "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=470711",
+    "counter_1": false,
+    "counter_2": false,
+    "counter_3": false,
+    "multiplier": false,
+    "counter_1_value": 0,
+    "counter_2_value": 0,
+    "counter_3_value": 0,
+    "multiplier_value": 0,
+    "owner": 1,
+    "power_mod": 0,
+    "toughness_mod": 0,
+    "loyalty_mod": 0,
+    "locked": false,
+    "primed": false,
+    "triggered": false,
+    "is_token": false,
+    "tapped": "untapped",
+    "sidenav_visible": true,
+    "visible": [
+      1
+    ],
+    "alt": false,
+    "facedown": false,
+    "shaken": false,
+    "inverted": false,
+    "notes": "",
+    "selected": false
+  }
+
+  test_card: any = {
+    "id": 95,
+    "deckid": 9,
+    "name": "Chaos Warp",
+    "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/4/042431bc-0b21-4920-802f-6dd02e4c8721.png?1592713490",
+    "count": 1,
+    "iscommander": false,
+    "back_image": null,
+    "back_face": false,
+    "mana_cost": [
+      "2",
+      "R"
+    ],
+    "color_identity": [
+      "R"
+    ],
+    "back_mana_cost": [],
+    "types": [
+      "Instant"
+    ],
+    "back_types": [],
+    "oracle_text": "The owner of target permanent shuffles it into their library, then reveals the top card of their library. If it's a permanent card, they put it onto the battlefield.",
+    "back_oracle_text": "",
+    "power": null,
+    "back_power": null,
+    "toughness": null,
+    "back_toughness": null,
+    "loyalty": 0,
+    "back_loyalty": null,
+    "cmc": 3,
+    "tokens": [],
+    "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=236466",
     "counter_1": false,
     "counter_2": false,
     "counter_3": false,
@@ -2805,141 +2869,141 @@ export class GameHandlerComponent implements OnInit {
           "toughness": 1
         }
       ],
-      "commander": [
+      "commander":
         {
-          "id": 108,
-          "deckid": 9,
-          "name": "Gishath, Sun's Avatar",
-          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/6/6/6674c7f7-8022-4457-9a8a-6b87ff3348b0.png?1658282667",
-          "count": 1,
-          "iscommander": true,
-          "back_image": null,
-          "back_face": false,
-          "mana_cost": [
-            "5",
-            "R",
-            "G",
-            "W"
-          ],
-          "color_identity": [
-            "G",
-            "R",
-            "W"
-          ],
-          "back_mana_cost": [],
-          "types": [
-            "Legendary",
-            "Creature",
-            "Dinosaur",
-            "Avatar"
-          ],
-          "back_types": [],
-          "oracle_text": "Vigilance, trample, haste\nWhenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
-          "back_oracle_text": "",
-          "power": 7,
-          "back_power": null,
-          "toughness": 6,
-          "back_toughness": null,
-          "loyalty": 0,
-          "back_loyalty": null,
-          "cmc": 8,
-          "tokens": [],
-          "gatherer": null,
-          "counter_1": false,
-          "counter_2": false,
-          "counter_3": false,
-          "multiplier": false,
-          "counter_1_value": 0,
-          "counter_2_value": 0,
-          "counter_3_value": 0,
-          "multiplier_value": 0,
-          "owner": 1,
-          "power_mod": 0,
-          "toughness_mod": 0,
-          "loyalty_mod": 0,
-          "locked": false,
-          "primed": false,
-          "triggered": false,
-          "is_token": false,
-          "tapped": "untapped",
-          "sidenav_visible": true,
-          "visible": [
-            1
-          ],
-          "alt": false,
-          "facedown": false,
-          "shaken": false,
-          "inverted": false,
-          "notes": "",
-          "selected": false
+          name: "commander",
+          cards:[{
+              "id": 108,
+              "deckid": 9,
+              "name": "Gishath, Sun's Avatar",
+              "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/6/6/6674c7f7-8022-4457-9a8a-6b87ff3348b0.png?1658282667",
+              "count": 1,
+              "iscommander": true,
+              "back_image": null,
+              "back_face": false,
+              "mana_cost": [
+                "5",
+                "R",
+                "G",
+                "W"
+              ],
+              "color_identity": [
+                "G",
+                "R",
+                "W"
+              ],
+              "back_mana_cost": [],
+              "types": [
+                "Legendary",
+                "Creature",
+                "Dinosaur",
+                "Avatar"
+              ],
+              "back_types": [],
+              "oracle_text": "Vigilance, trample, haste\nWhenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
+              "back_oracle_text": "",
+              "power": 7,
+              "back_power": null,
+              "toughness": 6,
+              "back_toughness": null,
+              "loyalty": 0,
+              "back_loyalty": null,
+              "cmc": 8,
+              "tokens": [],
+              "gatherer": null,
+              "counter_1": false,
+              "counter_2": false,
+              "counter_3": false,
+              "multiplier": false,
+              "counter_1_value": 0,
+              "counter_2_value": 0,
+              "counter_3_value": 0,
+              "multiplier_value": 0,
+              "owner": 1,
+              "power_mod": 0,
+              "toughness_mod": 0,
+              "loyalty_mod": 0,
+              "locked": false,
+              "primed": false,
+              "triggered": false,
+              "is_token": false,
+              "tapped": "untapped",
+              "sidenav_visible": true,
+              "visible": [
+                1
+              ],
+              "alt": false,
+              "facedown": false,
+              "shaken": false,
+              "inverted": false,
+              "notes": "",
+              "selected": false
+            }],
+          saved:[{
+              "id": 108,
+              "deckid": 9,
+              "name": "Gishath, Sun's Avatar",
+              "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/6/6/6674c7f7-8022-4457-9a8a-6b87ff3348b0.png?1658282667",
+              "count": 1,
+              "iscommander": true,
+              "back_image": null,
+              "back_face": false,
+              "mana_cost": [
+                "5",
+                "R",
+                "G",
+                "W"
+              ],
+              "color_identity": [
+                "G",
+                "R",
+                "W"
+              ],
+              "back_mana_cost": [],
+              "types": [
+                "Legendary",
+                "Creature",
+                "Dinosaur",
+                "Avatar"
+              ],
+              "back_types": [],
+              "oracle_text": "Vigilance, trample, haste\nWhenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
+              "back_oracle_text": "",
+              "power": 7,
+              "back_power": null,
+              "toughness": 6,
+              "back_toughness": null,
+              "loyalty": null,
+              "back_loyalty": null,
+              "cmc": 8,
+              "tokens": [],
+              "gatherer": null,
+              "counter_1": false,
+              "counter_2": false,
+              "counter_3": false,
+              "multiplier": false,
+              "counter_1_value": 0,
+              "counter_2_value": 0,
+              "counter_3_value": 0,
+              "multiplier_value": 0,
+              "owner": 1,
+              "power_mod": 0,
+              "toughness_mod": 0,
+              "loyalty_mod": 0,
+              "locked": false,
+              "primed": false,
+              "triggered": false,
+              "is_token": false,
+              "tapped": "untapped",
+              "sidenav_visible": true,
+              "visible": [],
+              "alt": false,
+              "facedown": false,
+              "shaken": false,
+              "inverted": false,
+              "notes": ""
+            }]
         }
-      ],
-      "commander_saved": [
-        {
-          "id": 108,
-          "deckid": 9,
-          "name": "Gishath, Sun's Avatar",
-          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/6/6/6674c7f7-8022-4457-9a8a-6b87ff3348b0.png?1658282667",
-          "count": 1,
-          "iscommander": true,
-          "back_image": null,
-          "back_face": false,
-          "mana_cost": [
-            "5",
-            "R",
-            "G",
-            "W"
-          ],
-          "color_identity": [
-            "G",
-            "R",
-            "W"
-          ],
-          "back_mana_cost": [],
-          "types": [
-            "Legendary",
-            "Creature",
-            "Dinosaur",
-            "Avatar"
-          ],
-          "back_types": [],
-          "oracle_text": "Vigilance, trample, haste\nWhenever Gishath, Sun's Avatar deals combat damage to a player, reveal that many cards from the top of your library. Put any number of Dinosaur creature cards from among them onto the battlefield and the rest on the bottom of your library in a random order.",
-          "back_oracle_text": "",
-          "power": 7,
-          "back_power": null,
-          "toughness": 6,
-          "back_toughness": null,
-          "loyalty": null,
-          "back_loyalty": null,
-          "cmc": 8,
-          "tokens": [],
-          "gatherer": null,
-          "counter_1": false,
-          "counter_2": false,
-          "counter_3": false,
-          "multiplier": false,
-          "counter_1_value": 0,
-          "counter_2_value": 0,
-          "counter_3_value": 0,
-          "multiplier_value": 0,
-          "owner": 1,
-          "power_mod": 0,
-          "toughness_mod": 0,
-          "loyalty_mod": 0,
-          "locked": false,
-          "primed": false,
-          "triggered": false,
-          "is_token": false,
-          "tapped": "untapped",
-          "sidenav_visible": true,
-          "visible": [],
-          "alt": false,
-          "facedown": false,
-          "shaken": false,
-          "inverted": false,
-          "notes": ""
-        }
-      ]
     },
     "name": "Chris",
     "playmat_image": "https://i.ibb.co/Df3dC43/bolasplaymatfinal.png",
@@ -2959,9 +3023,16 @@ export class GameHandlerComponent implements OnInit {
       }
     },
     "play_counters": [],
-    "hand": [],
+    "hand": {
+      owner: 1,
+      name: 'hand',
+      cards: []
+    },
     "hand_preview": [1],
-    "grave": [
+    "grave": {
+      owner: 1,
+      name: 'grave',
+      cards: [
       {
         "id": 100,
         "deckid": 9,
@@ -3677,2634 +3748,2607 @@ export class GameHandlerComponent implements OnInit {
         "notes": "",
         "selected": false
       }
-    ],
-    "exile": [
-      {
-        "id": 154,
-        "deckid": 9,
-        "name": "Siegehorn Ceratops",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/a/0a9c4c63-402e-489e-ab0d-1c98309b010a.png?1555040949",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [
-          "G",
-          "W"
-        ],
-        "color_identity": [
-          "G",
-          "W"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Creature",
-          "Dinosaur"
-        ],
-        "back_types": [],
-        "oracle_text": "Enrage — Whenever Siegehorn Ceratops is dealt damage, put two +1/+1 counters on it. (It must survive the damage to get the counters.)",
-        "back_oracle_text": "",
-        "power": 2,
-        "back_power": null,
-        "toughness": 2,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": 2,
-        "tokens": [],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=439832",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 126,
-        "deckid": 9,
-        "name": "Mother of Runes",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/b/0b1a46ab-95cb-4c24-924f-fc2afd4fcac7.png?1562862312",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [
-          "W"
-        ],
-        "color_identity": [
-          "W"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Creature",
-          "Human",
-          "Cleric"
-        ],
-        "back_types": [],
-        "oracle_text": "{T}: Target creature you control gains protection from the color of your choice until end of turn.",
-        "back_oracle_text": "",
-        "power": 1,
-        "back_power": null,
-        "toughness": 1,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": 1,
-        "tokens": [],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=5704",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 93,
-        "deckid": 9,
-        "name": "Etali, Primal Storm",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/1/d/1d3d8bb4-0430-45bb-930d-5d6db6521945.png?1587309687",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [
-          "4",
-          "R",
-          "R"
-        ],
-        "color_identity": [
-          "R"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Legendary",
-          "Creature",
-          "Elder",
-          "Dinosaur"
-        ],
-        "back_types": [],
-        "oracle_text": "Whenever Etali, Primal Storm attacks, exile the top card of each player's library, then you may cast any number of spells from among those cards without paying their mana costs.",
-        "back_oracle_text": "",
-        "power": 6,
-        "back_power": null,
-        "toughness": 6,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": 6,
-        "tokens": [],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=439757",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 157,
-        "deckid": 9,
-        "name": "Sunhome, Fortress of the Legion",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/1/2/12fc2aff-35e0-44e9-a976-70810d43634c.png?1562841221",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [],
-        "color_identity": [
-          "R",
-          "W"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Land"
-        ],
-        "back_types": [],
-        "oracle_text": "{T}: Add {C}.\n{2}{R}{W}, {T}: Target creature gains double strike until end of turn.",
-        "back_oracle_text": "",
-        "power": null,
-        "back_power": null,
-        "toughness": null,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": null,
-        "tokens": [],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=205363",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 146,
-        "deckid": 9,
-        "name": "Regisaur Alpha",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/e/0e27be78-a209-4a64-a75a-bea677cca1b5.png?1562897741",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [
-          "3",
-          "R",
-          "G"
-        ],
-        "color_identity": [
-          "G",
-          "R"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Creature",
-          "Dinosaur"
-        ],
-        "back_types": [],
-        "oracle_text": "Other Dinosaurs you control have haste.\nWhen Regisaur Alpha enters the battlefield, create a 3/3 green Dinosaur creature token with trample.",
-        "back_oracle_text": "",
-        "power": 4,
-        "back_power": null,
-        "toughness": 4,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": 5,
-        "tokens": [
-          {
-            "name": "Dinosaur",
-            "types": [
-              "Token",
-              "Creature",
-              "Dinosaur"
-            ]
-          }
-        ],
-        "gatherer": null,
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 142,
-        "deckid": 9,
-        "name": "Rhythm of the Wild",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/7/0/70d13ff4-e6ba-4bfe-9668-d11f7facb8d3.png?1651656195",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [
-          "1",
-          "R",
-          "G"
-        ],
-        "color_identity": [
-          "G",
-          "R"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Enchantment"
-        ],
-        "back_types": [],
-        "oracle_text": "Creature spells you control can't be countered.\nNontoken creatures you control have riot. (They enter the battlefield with your choice of a +1/+1 counter or haste.)",
-        "back_oracle_text": "",
-        "power": null,
-        "back_power": null,
-        "toughness": null,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": 3,
-        "tokens": [],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=554224",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 86,
-        "deckid": 9,
-        "name": "Darksteel Plate",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/3/f/3f99fb1e-99a6-4c83-98eb-7bff23996a7f.png?1655823991",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [
-          "3"
-        ],
-        "color_identity": [],
-        "back_mana_cost": [],
-        "types": [
-          "Artifact",
-          "Equipment"
-        ],
-        "back_types": [],
-        "oracle_text": "Indestructible\nEquipped creature has indestructible.\nEquip {2}",
-        "back_oracle_text": "",
-        "power": null,
-        "back_power": null,
-        "toughness": null,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": 3,
-        "tokens": [],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=571637",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 148,
-        "deckid": 9,
-        "name": "Rogue's Passage",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/3/8/38f6e656-7272-4232-8366-6f26fcbe2e21.png?1650425575",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [],
-        "color_identity": [],
-        "back_mana_cost": [],
-        "types": [
-          "Land"
-        ],
-        "back_types": [],
-        "oracle_text": "{T}: Add {C}.\n{4}, {T}: Target creature can't be blocked this turn.",
-        "back_oracle_text": "",
-        "power": null,
-        "back_power": null,
-        "toughness": null,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": null,
-        "tokens": [],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=559994",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 155,
-        "deckid": 9,
-        "name": "Snapping Sailback",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/a/0af1eadf-f7ea-40be-a0cc-b79e4161db34.png?1562550413",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [
-          "4",
-          "G"
-        ],
-        "color_identity": [
-          "G"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Creature",
-          "Dinosaur"
-        ],
-        "back_types": [],
-        "oracle_text": "Flash\nEnrage — Whenever Snapping Sailback is dealt damage, put a +1/+1 counter on it. (It must survive the damage to get the counter.)",
-        "back_oracle_text": "",
-        "power": 4,
-        "back_power": null,
-        "toughness": 4,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": 5,
-        "tokens": [],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=435364",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 87,
-        "deckid": 9,
-        "name": "Desert",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/2/0/201155ea-f474-4e13-acda-cb071a6ca977.png?1562900934",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [],
-        "color_identity": [],
-        "back_mana_cost": [],
-        "types": [
-          "Land",
-          "Desert"
-        ],
-        "back_types": [],
-        "oracle_text": "{T}: Add {C}.\n{T}: Desert deals 1 damage to target attacking creature. Activate only during the end of combat step.",
-        "back_oracle_text": "",
-        "power": null,
-        "back_power": null,
-        "toughness": null,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": null,
-        "tokens": [],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=986",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 98,
-        "deckid": 9,
-        "name": "Exotic Orchard",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/d/0de15320-485c-4191-8f15-12f9d1b340ba.png?1654119348",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [],
-        "color_identity": [],
-        "back_mana_cost": [],
-        "types": [
-          "Land"
-        ],
-        "back_types": [],
-        "oracle_text": "{T}: Add one mana of any color that a land an opponent controls could produce.",
-        "back_oracle_text": "",
-        "power": null,
-        "back_power": null,
-        "toughness": null,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": null,
-        "tokens": [],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=567710",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 147,
-        "deckid": 9,
-        "name": "Rites of Flourishing",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/e/0e3d43ce-8297-47f6-a877-d723b9b43fdb.png?1562632419",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [
-          "2",
-          "G"
-        ],
-        "color_identity": [
-          "G"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Enchantment"
-        ],
-        "back_types": [],
-        "oracle_text": "At the beginning of each player's draw step, that player draws an additional card.\nEach player may play an additional land on each of their turns.",
-        "back_oracle_text": "",
-        "power": null,
-        "back_power": null,
-        "toughness": null,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": 3,
-        "tokens": [],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=235188",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 125,
-        "deckid": 9,
-        "name": "Monster Manual // Zoological Study",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/2/7/27223ee4-970a-438a-beff-a1b13b14aff4.png?1660728031",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": true,
-        "mana_cost": [
-          "3",
-          "G"
-        ],
-        "color_identity": [
-          "G"
-        ],
-        "back_mana_cost": [
-          "2",
-          "G"
-        ],
-        "types": [
-          "Artifact"
-        ],
-        "back_types": [
-          "Sorcery",
-          "Adventure"
-        ],
-        "oracle_text": "{1}{G}, {T}: You may put a creature card from your hand onto the battlefield.",
-        "back_oracle_text": "Mill five cards, then return a creature card milled this way to your hand. (Then exile this card. You may cast the artifact later from exile.)",
-        "power": null,
-        "back_power": null,
-        "toughness": null,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": 4,
-        "tokens": [],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=563125",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 144,
-        "deckid": 9,
-        "name": "Reliquary Tower",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/1/2/1241912a-92d6-4942-b97b-f795e702c4ca.png?1654119503",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [],
-        "color_identity": [],
-        "back_mana_cost": [],
-        "types": [
-          "Land"
-        ],
-        "back_types": [],
-        "oracle_text": "You have no maximum hand size.\n{T}: Add {C}.",
-        "back_oracle_text": "",
-        "power": null,
-        "back_power": null,
-        "toughness": null,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": null,
-        "tokens": [],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=567728",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 67.51548213065605,
-        "deckid": 9,
-        "name": "Forest",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/0/0031d026-9e9a-46f6-8204-1acfee8b8809.png?1561894880",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [],
-        "color_identity": [
-          "G"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Basic",
-          "Land",
-          "Forest"
-        ],
-        "back_types": [],
-        "oracle_text": "({T}: Add {G}.)",
-        "back_oracle_text": "",
-        "power": null,
-        "back_power": null,
-        "toughness": null,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": null,
-        "tokens": [],
-        "gatherer": null,
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 79.13271298866356,
-        "deckid": 9,
-        "name": "Mountain",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/0/005a993c-5111-4364-9fba-75b3d94a8296.png?1559591904",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [],
-        "color_identity": [
-          "R"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Basic",
-          "Land",
-          "Mountain"
-        ],
-        "back_types": [],
-        "oracle_text": "({T}: Add {R}.)",
-        "back_oracle_text": "",
-        "power": null,
-        "back_power": null,
-        "toughness": null,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": null,
-        "tokens": [],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=891",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 172,
-        "deckid": 9,
-        "name": "Zacama, Primal Calamity",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/3/5/3581f83f-f757-468d-bb4d-17793ac666b3.png?1566582434",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [
-          "6",
-          "R",
-          "G",
-          "W"
-        ],
-        "color_identity": [
-          "G",
-          "R",
-          "W"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Legendary",
-          "Creature",
-          "Elder",
-          "Dinosaur"
-        ],
-        "back_types": [],
-        "oracle_text": "Vigilance, reach, trample\nWhen Zacama, Primal Calamity enters the battlefield, if you cast it, untap all lands you control.\n{2}{R}: Zacama deals 3 damage to target creature.\n{2}{G}: Destroy target artifact or enchantment.\n{2}{W}: You gain 3 life.",
-        "back_oracle_text": "",
-        "power": 9,
-        "back_power": null,
-        "toughness": 9,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": 9,
-        "tokens": [],
-        "gatherer": null,
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 132,
-        "deckid": 9,
-        "name": "Plains",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/0/00293ce4-3475-4064-8510-9e8c02faf3bf.png?1592674050",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [],
-        "color_identity": [
-          "W"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Basic",
-          "Land",
-          "Plains"
-        ],
-        "back_types": [],
-        "oracle_text": "({T}: Add {W}.)",
-        "back_oracle_text": "",
-        "power": null,
-        "back_power": null,
-        "toughness": null,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": null,
-        "tokens": [],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=430511",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 166,
-        "deckid": 9,
-        "name": "Trapjaw Tyrant",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/7/c/7cb5fc7e-5ac4-4245-9f88-3921ab5704b9.png?1562920143",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [
-          "3",
-          "W",
-          "W"
-        ],
-        "color_identity": [
-          "W"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Creature",
-          "Dinosaur"
-        ],
-        "back_types": [],
-        "oracle_text": "Enrage — Whenever Trapjaw Tyrant is dealt damage, exile target creature an opponent controls until Trapjaw Tyrant leaves the battlefield.",
-        "back_oracle_text": "",
-        "power": 5,
-        "back_power": null,
-        "toughness": 5,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": 5,
-        "tokens": [],
-        "gatherer": null,
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 163,
-        "deckid": 9,
-        "name": "Thrashing Brontodon",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/d/0d9264ff-9f7c-46f3-862a-fee7ad213250.png?1555040755",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [
-          "1",
-          "G",
-          "G"
-        ],
-        "color_identity": [
-          "G"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Creature",
-          "Dinosaur"
-        ],
-        "back_types": [],
-        "oracle_text": "{1}, Sacrifice Thrashing Brontodon: Destroy target artifact or enchantment.",
-        "back_oracle_text": "",
-        "power": 3,
-        "back_power": null,
-        "toughness": 4,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": 3,
-        "tokens": [],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=439805",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 120,
-        "deckid": 9,
-        "name": "Kessig Wolf Run",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/2/3/23809d14-5f52-43c5-ab7a-0db9f9ab7b3c.png?1650425389",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [],
-        "color_identity": [
-          "G",
-          "R"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Land"
-        ],
-        "back_types": [],
-        "oracle_text": "{T}: Add {C}.\n{X}{R}{G}, {T}: Target creature gets +X/+0 and gains trample until end of turn.",
-        "back_oracle_text": "",
-        "power": null,
-        "back_power": null,
-        "toughness": null,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": null,
-        "tokens": [],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=559983",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 168,
-        "deckid": 9,
-        "name": "Vrondiss, Rage of Ancients",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/6/4/64d9699b-d90f-482f-89eb-f3d06af94997.png?1651355247",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [
-          "3",
-          "R",
-          "G"
-        ],
-        "color_identity": [
-          "G",
-          "R"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Legendary",
-          "Creature",
-          "Dragon",
-          "Barbarian"
-        ],
-        "back_types": [],
-        "oracle_text": "Enrage — Whenever Vrondiss, Rage of Ancients is dealt damage, you may create a 5/4 red and green Dragon Spirit creature token with \"When this creature deals damage, sacrifice it.\"\nWhenever you roll one or more dice, you may have Vrondiss deal 1 damage to itself.",
-        "back_oracle_text": "",
-        "power": 5,
-        "back_power": null,
-        "toughness": 4,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": 5,
-        "tokens": [
-          {
-            "name": "Dragon Spirit",
-            "types": [
-              "Token",
-              "Creature",
-              "Dragon",
-              "Spirit"
-            ]
-          }
-        ],
-        "gatherer": null,
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 111,
-        "deckid": 9,
-        "name": "Harbinger of the Hunt",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/7/07b311ec-fa6b-462c-a969-780726fb3d23.png?1562875759",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [
-          "3",
-          "R",
-          "G"
-        ],
-        "color_identity": [
-          "G",
-          "R"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Creature",
-          "Dragon"
-        ],
-        "back_types": [],
-        "oracle_text": "Flying\n{2}{R}: Harbinger of the Hunt deals 1 damage to each creature without flying.\n{2}{G}: Harbinger of the Hunt deals 1 damage to each other creature with flying.",
-        "back_oracle_text": "",
-        "power": 5,
-        "back_power": null,
-        "toughness": 3,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": 5,
-        "tokens": [],
-        "gatherer": null,
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 124,
-        "deckid": 9,
-        "name": "Mirari's Wake",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/2/02747420-c635-4f0f-9888-81cf4f7dfc91.png?1590118136",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [
-          "3",
-          "G",
-          "W"
-        ],
-        "color_identity": [
-          "G",
-          "W"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Enchantment"
-        ],
-        "back_types": [],
-        "oracle_text": "Creatures you control get +1/+1.\nWhenever you tap a land for mana, add one mana of any type that land produced.",
-        "back_oracle_text": "",
-        "power": null,
-        "back_power": null,
-        "toughness": null,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": 5,
-        "tokens": [],
-        "gatherer": null,
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 52.65077525382667,
-        "deckid": 9,
-        "name": "Mountain",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/0/005a993c-5111-4364-9fba-75b3d94a8296.png?1559591904",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [],
-        "color_identity": [
-          "R"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Basic",
-          "Land",
-          "Mountain"
-        ],
-        "back_types": [],
-        "oracle_text": "({T}: Add {R}.)",
-        "back_oracle_text": "",
-        "power": null,
-        "back_power": null,
-        "toughness": null,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": null,
-        "tokens": [],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=891",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 84,
-        "deckid": 9,
-        "name": "Command Tower",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/9/09e008b9-c27c-40ad-9242-d7da52a2a0a8.png?1562896932",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [],
-        "color_identity": [],
-        "back_mana_cost": [],
-        "types": [
-          "Land"
-        ],
-        "back_types": [],
-        "oracle_text": "{T}: Add one mana of any color in your commander's color identity.",
-        "back_oracle_text": "",
-        "power": null,
-        "back_power": null,
-        "toughness": null,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": null,
-        "tokens": [],
-        "gatherer": null,
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 158,
-        "deckid": 9,
-        "name": "Taiga",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/1/01006833-6007-4c16-9ebb-20d31c60a57a.png?1559592223",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [],
-        "color_identity": [
-          "G",
-          "R"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Land",
-          "Mountain",
-          "Forest"
-        ],
-        "back_types": [],
-        "oracle_text": "({T}: Add {R} or {G}.)",
-        "back_oracle_text": "",
-        "power": null,
-        "back_power": null,
-        "toughness": null,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": null,
-        "tokens": [],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=883",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 102,
-        "deckid": 9,
-        "name": "Flumph",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/2/6/263501c5-dec0-4c01-8129-61f9fdd22b54.png?1632361015",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [
-          "1",
-          "W"
-        ],
-        "color_identity": [
-          "W"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Creature",
-          "Jellyfish"
-        ],
-        "back_types": [],
-        "oracle_text": "Defender, flying\nWhenever Flumph is dealt damage, you and target opponent each draw a card.",
-        "back_oracle_text": "",
-        "power": null,
-        "back_power": null,
-        "toughness": 4,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": 2,
-        "tokens": [],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=530482",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 123,
-        "deckid": 9,
-        "name": "Marauding Raptor",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/d/0da7e676-202c-441e-9515-0f33849f8968.png?1599764935",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [
-          "1",
-          "R"
-        ],
-        "color_identity": [
-          "R"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Creature",
-          "Dinosaur"
-        ],
-        "back_types": [],
-        "oracle_text": "Creature spells you cast cost {1} less to cast.\nWhenever another creature enters the battlefield under your control, Marauding Raptor deals 2 damage to it. If a Dinosaur is dealt damage this way, Marauding Raptor gets +2/+0 until end of turn.",
-        "back_oracle_text": "",
-        "power": 2,
-        "back_power": null,
-        "toughness": 3,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": 2,
-        "tokens": [],
-        "gatherer": null,
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 104,
-        "deckid": 9,
-        "name": "Forest",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/0/0031d026-9e9a-46f6-8204-1acfee8b8809.png?1561894880",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [],
-        "color_identity": [
-          "G"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Basic",
-          "Land",
-          "Forest"
-        ],
-        "back_types": [],
-        "oracle_text": "({T}: Add {G}.)",
-        "back_oracle_text": "",
-        "power": null,
-        "back_power": null,
-        "toughness": null,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": null,
-        "tokens": [],
-        "gatherer": null,
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 110,
-        "deckid": 9,
-        "name": "Guardian Project",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/6/9/6980aff2-b91c-49c8-adc6-dbe652c853eb.png?1551250087",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [
-          "3",
-          "G"
-        ],
-        "color_identity": [
-          "G"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Enchantment"
-        ],
-        "back_types": [],
-        "oracle_text": "Whenever a nontoken creature enters the battlefield under your control, if it doesn't have the same name as another creature you control or a creature card in your graveyard, draw a card.",
-        "back_oracle_text": "",
-        "power": null,
-        "back_power": null,
-        "toughness": null,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": 4,
-        "tokens": [],
-        "gatherer": null,
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 106,
-        "deckid": 9,
-        "name": "Frilled Deathspitter",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/d/2/d20a38fa-bf26-403e-98bb-4e078084b154.png?1573511709",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [
-          "2",
-          "R"
-        ],
-        "color_identity": [
-          "R"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Creature",
-          "Dinosaur"
-        ],
-        "back_types": [],
-        "oracle_text": "Enrage — Whenever Frilled Deathspitter is dealt damage, it deals 2 damage to target opponent or planeswalker.",
-        "back_oracle_text": "",
-        "power": 3,
-        "back_power": null,
-        "toughness": 2,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": 3,
-        "tokens": [],
-        "gatherer": null,
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 136,
-        "deckid": 9,
-        "name": "Pyrohemia",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/b/0b778d44-60a9-4230-8090-73c38e7c9697.png?1562565718",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [
-          "2",
-          "R",
-          "R"
-        ],
-        "color_identity": [
-          "R"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Enchantment"
-        ],
-        "back_types": [],
-        "oracle_text": "At the beginning of the end step, if no creatures are on the battlefield, sacrifice Pyrohemia.\n{R}: Pyrohemia deals 1 damage to each creature and each player.",
-        "back_oracle_text": "",
-        "power": null,
-        "back_power": null,
-        "toughness": null,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": 4,
-        "tokens": [],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=122436",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 103,
-        "deckid": 9,
-        "name": "Fiendlash",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/5/0/50f13e7b-6d20-434d-82d1-103c9a63aa9a.png?1632017593",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [
-          "1",
-          "R"
-        ],
-        "color_identity": [
-          "R"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Artifact",
-          "Equipment"
-        ],
-        "back_types": [],
-        "oracle_text": "Equipped creature gets +2/+0 and has reach.\nWhenever equipped creature is dealt damage, it deals damage equal to its power to target player or planeswalker.\nEquip {2}{R}",
-        "back_oracle_text": "",
-        "power": null,
-        "back_power": null,
-        "toughness": null,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": 2,
-        "tokens": [],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=531520",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 116,
-        "deckid": 9,
-        "name": "Hour of Devastation",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/3/4/340b2e60-320d-4d64-9940-6aac9ed1b8c3.png?1597250398",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [
-          "3",
-          "R",
-          "R"
-        ],
-        "color_identity": [
-          "R"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Sorcery"
-        ],
-        "back_types": [],
-        "oracle_text": "All creatures lose indestructible until end of turn. Hour of Devastation deals 5 damage to each creature and each non-Bolas planeswalker.",
-        "back_oracle_text": "",
-        "power": null,
-        "back_power": null,
-        "toughness": null,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": 5,
-        "tokens": [],
-        "gatherer": null,
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 121,
-        "deckid": 9,
-        "name": "Kinjalli's Sunwing",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/2/b/2b9e0b0f-651a-44e6-8fb0-e46bfda0ada9.png?1562552626",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [
-          "2",
-          "W"
-        ],
-        "color_identity": [
-          "W"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Creature",
-          "Dinosaur"
-        ],
-        "back_types": [],
-        "oracle_text": "Flying\nCreatures your opponents control enter the battlefield tapped.",
-        "back_oracle_text": "",
-        "power": 2,
-        "back_power": null,
-        "toughness": 3,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": 3,
-        "tokens": [],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=435170",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 165,
-        "deckid": 9,
-        "name": "Unclaimed Territory",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/5/053ce80a-1f32-4982-8d23-d1e313e925a4.png?1637632712",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [],
-        "color_identity": [],
-        "back_mana_cost": [],
-        "types": [
-          "Land"
-        ],
-        "back_types": [],
-        "oracle_text": "As Unclaimed Territory enters the battlefield, choose a creature type.\n{T}: Add {C}.\n{T}: Add one mana of any color. Spend this mana only to cast a creature spell of the chosen type.",
-        "back_oracle_text": "",
-        "power": null,
-        "back_power": null,
-        "toughness": null,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": null,
-        "tokens": [],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=539448",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 107,
-        "deckid": 9,
-        "name": "Garruk's Uprising",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/7/1/71a4860a-8bb6-45c0-b00a-b4a42da33ab9.png?1594737017",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [
-          "2",
-          "G"
-        ],
-        "color_identity": [
-          "G"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Enchantment"
-        ],
-        "back_types": [],
-        "oracle_text": "When Garruk's Uprising enters the battlefield, if you control a creature with power 4 or greater, draw a card.\nCreatures you control have trample. (They can deal excess combat damage to the player or planeswalker they're attacking.)\nWhenever a creature with power 4 or greater enters the battlefield under your control, draw a card.",
-        "back_oracle_text": "",
-        "power": null,
-        "back_power": null,
-        "toughness": null,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": 3,
-        "tokens": [],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=485509",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 140,
-        "deckid": 9,
-        "name": "Raptor Hatchling",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/8/0/8093e88d-fd3c-43d3-a025-9ebb9f02a84f.png?1562558980",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [
-          "1",
-          "R"
-        ],
-        "color_identity": [
-          "R"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Creature",
-          "Dinosaur"
-        ],
-        "back_types": [],
-        "oracle_text": "Enrage — Whenever Raptor Hatchling is dealt damage, create a 3/3 green Dinosaur creature token with trample.",
-        "back_oracle_text": "",
-        "power": 1,
-        "back_power": null,
-        "toughness": 1,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": 2,
-        "tokens": [
-          {
-            "name": "Dinosaur",
-            "types": [
-              "Token",
-              "Creature",
-              "Dinosaur"
-            ]
-          }
-        ],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=435309",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 135,
-        "deckid": 9,
-        "name": "Polyraptor",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/5/3/53cfded0-ff53-49f6-85be-f8e9225a91fa.png?1562912034",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [
-          "6",
-          "G",
-          "G"
-        ],
-        "color_identity": [
-          "G"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Creature",
-          "Dinosaur"
-        ],
-        "back_types": [],
-        "oracle_text": "Enrage — Whenever Polyraptor is dealt damage, create a token that's a copy of Polyraptor.",
-        "back_oracle_text": "",
-        "power": 5,
-        "back_power": null,
-        "toughness": 5,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": 8,
-        "tokens": [
-          {
-            "name": "Copy",
-            "types": [
-              "Token"
-            ]
-          }
-        ],
-        "gatherer": null,
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      },
-      {
-        "id": 114,
-        "deckid": 9,
-        "name": "Hornet Nest",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/4/7/4784dbd3-8ae0-45a0-8cde-908fba6af9d2.png?1562786341",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [
-          "2",
-          "G"
-        ],
-        "color_identity": [
-          "G"
-        ],
-        "back_mana_cost": [],
-        "types": [
-          "Creature",
-          "Insect"
-        ],
-        "back_types": [],
-        "oracle_text": "Defender (This creature can't attack.)\nWhenever Hornet Nest is dealt damage, create that many 1/1 green Insect creature tokens with flying and deathtouch. (Any amount of damage a creature with deathtouch deals to a creature is enough to destroy it.)",
-        "back_oracle_text": "",
-        "power": null,
-        "back_power": null,
-        "toughness": 2,
-        "back_toughness": null,
-        "loyalty": 0,
-        "back_loyalty": null,
-        "cmc": 3,
-        "tokens": [
-          {
-            "name": "Insect",
-            "types": [
-              "Token",
-              "Creature",
-              "Insect"
-            ]
-          }
-        ],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=383267",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      }
-    ],
-    "temp_zone": [
-      {
-        "id": 97,
-        "deckid": 9,
-        "name": "Cavern of Souls",
-        "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/4/2/4222863c-c851-4ef7-b29f-7111b05bb843.png?1655400377",
-        "count": 1,
-        "iscommander": false,
-        "back_image": null,
-        "back_face": false,
-        "mana_cost": [],
-        "color_identity": [],
-        "back_mana_cost": [],
-        "types": [
-          "Land"
-        ],
-        "back_types": [],
-        "oracle_text": "As Cavern of Souls enters the battlefield, choose a creature type.\n{T}: Add {C}.\n{T}: Add one mana of any color. Spend this mana only to cast a creature spell of the chosen type, and that spell can't be countered.",
-        "back_oracle_text": "",
-        "power": null,
-        "back_power": null,
-        "toughness": null,
-        "back_toughness": null,
-        "loyalty": null,
-        "back_loyalty": null,
-        "cmc": null,
-        "tokens": [],
-        "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=426057",
-        "counter_1": false,
-        "counter_2": false,
-        "counter_3": false,
-        "multiplier": false,
-        "counter_1_value": 0,
-        "counter_2_value": 0,
-        "counter_3_value": 0,
-        "multiplier_value": 0,
-        "owner": 1,
-        "power_mod": 0,
-        "toughness_mod": 0,
-        "loyalty_mod": 0,
-        "locked": false,
-        "primed": false,
-        "triggered": false,
-        "is_token": false,
-        "tapped": "untapped",
-        "sidenav_visible": true,
-        "visible": [
-          1
-        ],
-        "alt": false,
-        "facedown": false,
-        "shaken": false,
-        "inverted": false,
-        "notes": "",
-        "selected": false
-      }
     ]
+    },
+    "exile": {
+      owner: 1,
+      name: 'exile',
+      cards: [
+        {
+          "id": 154,
+          "deckid": 9,
+          "name": "Siegehorn Ceratops",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/a/0a9c4c63-402e-489e-ab0d-1c98309b010a.png?1555040949",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [
+            "G",
+            "W"
+          ],
+          "color_identity": [
+            "G",
+            "W"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Creature",
+            "Dinosaur"
+          ],
+          "back_types": [],
+          "oracle_text": "Enrage — Whenever Siegehorn Ceratops is dealt damage, put two +1/+1 counters on it. (It must survive the damage to get the counters.)",
+          "back_oracle_text": "",
+          "power": 2,
+          "back_power": null,
+          "toughness": 2,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": 2,
+          "tokens": [],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=439832",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 126,
+          "deckid": 9,
+          "name": "Mother of Runes",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/b/0b1a46ab-95cb-4c24-924f-fc2afd4fcac7.png?1562862312",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [
+            "W"
+          ],
+          "color_identity": [
+            "W"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Creature",
+            "Human",
+            "Cleric"
+          ],
+          "back_types": [],
+          "oracle_text": "{T}: Target creature you control gains protection from the color of your choice until end of turn.",
+          "back_oracle_text": "",
+          "power": 1,
+          "back_power": null,
+          "toughness": 1,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": 1,
+          "tokens": [],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=5704",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 93,
+          "deckid": 9,
+          "name": "Etali, Primal Storm",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/1/d/1d3d8bb4-0430-45bb-930d-5d6db6521945.png?1587309687",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [
+            "4",
+            "R",
+            "R"
+          ],
+          "color_identity": [
+            "R"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Legendary",
+            "Creature",
+            "Elder",
+            "Dinosaur"
+          ],
+          "back_types": [],
+          "oracle_text": "Whenever Etali, Primal Storm attacks, exile the top card of each player's library, then you may cast any number of spells from among those cards without paying their mana costs.",
+          "back_oracle_text": "",
+          "power": 6,
+          "back_power": null,
+          "toughness": 6,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": 6,
+          "tokens": [],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=439757",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 157,
+          "deckid": 9,
+          "name": "Sunhome, Fortress of the Legion",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/1/2/12fc2aff-35e0-44e9-a976-70810d43634c.png?1562841221",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [],
+          "color_identity": [
+            "R",
+            "W"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Land"
+          ],
+          "back_types": [],
+          "oracle_text": "{T}: Add {C}.\n{2}{R}{W}, {T}: Target creature gains double strike until end of turn.",
+          "back_oracle_text": "",
+          "power": null,
+          "back_power": null,
+          "toughness": null,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": null,
+          "tokens": [],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=205363",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 146,
+          "deckid": 9,
+          "name": "Regisaur Alpha",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/e/0e27be78-a209-4a64-a75a-bea677cca1b5.png?1562897741",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [
+            "3",
+            "R",
+            "G"
+          ],
+          "color_identity": [
+            "G",
+            "R"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Creature",
+            "Dinosaur"
+          ],
+          "back_types": [],
+          "oracle_text": "Other Dinosaurs you control have haste.\nWhen Regisaur Alpha enters the battlefield, create a 3/3 green Dinosaur creature token with trample.",
+          "back_oracle_text": "",
+          "power": 4,
+          "back_power": null,
+          "toughness": 4,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": 5,
+          "tokens": [
+            {
+              "name": "Dinosaur",
+              "types": [
+                "Token",
+                "Creature",
+                "Dinosaur"
+              ]
+            }
+          ],
+          "gatherer": null,
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 142,
+          "deckid": 9,
+          "name": "Rhythm of the Wild",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/7/0/70d13ff4-e6ba-4bfe-9668-d11f7facb8d3.png?1651656195",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [
+            "1",
+            "R",
+            "G"
+          ],
+          "color_identity": [
+            "G",
+            "R"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Enchantment"
+          ],
+          "back_types": [],
+          "oracle_text": "Creature spells you control can't be countered.\nNontoken creatures you control have riot. (They enter the battlefield with your choice of a +1/+1 counter or haste.)",
+          "back_oracle_text": "",
+          "power": null,
+          "back_power": null,
+          "toughness": null,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": 3,
+          "tokens": [],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=554224",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 86,
+          "deckid": 9,
+          "name": "Darksteel Plate",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/3/f/3f99fb1e-99a6-4c83-98eb-7bff23996a7f.png?1655823991",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [
+            "3"
+          ],
+          "color_identity": [],
+          "back_mana_cost": [],
+          "types": [
+            "Artifact",
+            "Equipment"
+          ],
+          "back_types": [],
+          "oracle_text": "Indestructible\nEquipped creature has indestructible.\nEquip {2}",
+          "back_oracle_text": "",
+          "power": null,
+          "back_power": null,
+          "toughness": null,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": 3,
+          "tokens": [],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=571637",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 148,
+          "deckid": 9,
+          "name": "Rogue's Passage",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/3/8/38f6e656-7272-4232-8366-6f26fcbe2e21.png?1650425575",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [],
+          "color_identity": [],
+          "back_mana_cost": [],
+          "types": [
+            "Land"
+          ],
+          "back_types": [],
+          "oracle_text": "{T}: Add {C}.\n{4}, {T}: Target creature can't be blocked this turn.",
+          "back_oracle_text": "",
+          "power": null,
+          "back_power": null,
+          "toughness": null,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": null,
+          "tokens": [],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=559994",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 155,
+          "deckid": 9,
+          "name": "Snapping Sailback",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/a/0af1eadf-f7ea-40be-a0cc-b79e4161db34.png?1562550413",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [
+            "4",
+            "G"
+          ],
+          "color_identity": [
+            "G"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Creature",
+            "Dinosaur"
+          ],
+          "back_types": [],
+          "oracle_text": "Flash\nEnrage — Whenever Snapping Sailback is dealt damage, put a +1/+1 counter on it. (It must survive the damage to get the counter.)",
+          "back_oracle_text": "",
+          "power": 4,
+          "back_power": null,
+          "toughness": 4,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": 5,
+          "tokens": [],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=435364",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 87,
+          "deckid": 9,
+          "name": "Desert",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/2/0/201155ea-f474-4e13-acda-cb071a6ca977.png?1562900934",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [],
+          "color_identity": [],
+          "back_mana_cost": [],
+          "types": [
+            "Land",
+            "Desert"
+          ],
+          "back_types": [],
+          "oracle_text": "{T}: Add {C}.\n{T}: Desert deals 1 damage to target attacking creature. Activate only during the end of combat step.",
+          "back_oracle_text": "",
+          "power": null,
+          "back_power": null,
+          "toughness": null,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": null,
+          "tokens": [],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=986",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 98,
+          "deckid": 9,
+          "name": "Exotic Orchard",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/d/0de15320-485c-4191-8f15-12f9d1b340ba.png?1654119348",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [],
+          "color_identity": [],
+          "back_mana_cost": [],
+          "types": [
+            "Land"
+          ],
+          "back_types": [],
+          "oracle_text": "{T}: Add one mana of any color that a land an opponent controls could produce.",
+          "back_oracle_text": "",
+          "power": null,
+          "back_power": null,
+          "toughness": null,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": null,
+          "tokens": [],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=567710",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 147,
+          "deckid": 9,
+          "name": "Rites of Flourishing",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/e/0e3d43ce-8297-47f6-a877-d723b9b43fdb.png?1562632419",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [
+            "2",
+            "G"
+          ],
+          "color_identity": [
+            "G"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Enchantment"
+          ],
+          "back_types": [],
+          "oracle_text": "At the beginning of each player's draw step, that player draws an additional card.\nEach player may play an additional land on each of their turns.",
+          "back_oracle_text": "",
+          "power": null,
+          "back_power": null,
+          "toughness": null,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": 3,
+          "tokens": [],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=235188",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 125,
+          "deckid": 9,
+          "name": "Monster Manual // Zoological Study",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/2/7/27223ee4-970a-438a-beff-a1b13b14aff4.png?1660728031",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": true,
+          "mana_cost": [
+            "3",
+            "G"
+          ],
+          "color_identity": [
+            "G"
+          ],
+          "back_mana_cost": [
+            "2",
+            "G"
+          ],
+          "types": [
+            "Artifact"
+          ],
+          "back_types": [
+            "Sorcery",
+            "Adventure"
+          ],
+          "oracle_text": "{1}{G}, {T}: You may put a creature card from your hand onto the battlefield.",
+          "back_oracle_text": "Mill five cards, then return a creature card milled this way to your hand. (Then exile this card. You may cast the artifact later from exile.)",
+          "power": null,
+          "back_power": null,
+          "toughness": null,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": 4,
+          "tokens": [],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=563125",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 144,
+          "deckid": 9,
+          "name": "Reliquary Tower",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/1/2/1241912a-92d6-4942-b97b-f795e702c4ca.png?1654119503",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [],
+          "color_identity": [],
+          "back_mana_cost": [],
+          "types": [
+            "Land"
+          ],
+          "back_types": [],
+          "oracle_text": "You have no maximum hand size.\n{T}: Add {C}.",
+          "back_oracle_text": "",
+          "power": null,
+          "back_power": null,
+          "toughness": null,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": null,
+          "tokens": [],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=567728",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 67.51548213065605,
+          "deckid": 9,
+          "name": "Forest",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/0/0031d026-9e9a-46f6-8204-1acfee8b8809.png?1561894880",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [],
+          "color_identity": [
+            "G"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Basic",
+            "Land",
+            "Forest"
+          ],
+          "back_types": [],
+          "oracle_text": "({T}: Add {G}.)",
+          "back_oracle_text": "",
+          "power": null,
+          "back_power": null,
+          "toughness": null,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": null,
+          "tokens": [],
+          "gatherer": null,
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 79.13271298866356,
+          "deckid": 9,
+          "name": "Mountain",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/0/005a993c-5111-4364-9fba-75b3d94a8296.png?1559591904",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [],
+          "color_identity": [
+            "R"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Basic",
+            "Land",
+            "Mountain"
+          ],
+          "back_types": [],
+          "oracle_text": "({T}: Add {R}.)",
+          "back_oracle_text": "",
+          "power": null,
+          "back_power": null,
+          "toughness": null,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": null,
+          "tokens": [],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=891",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 172,
+          "deckid": 9,
+          "name": "Zacama, Primal Calamity",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/3/5/3581f83f-f757-468d-bb4d-17793ac666b3.png?1566582434",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [
+            "6",
+            "R",
+            "G",
+            "W"
+          ],
+          "color_identity": [
+            "G",
+            "R",
+            "W"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Legendary",
+            "Creature",
+            "Elder",
+            "Dinosaur"
+          ],
+          "back_types": [],
+          "oracle_text": "Vigilance, reach, trample\nWhen Zacama, Primal Calamity enters the battlefield, if you cast it, untap all lands you control.\n{2}{R}: Zacama deals 3 damage to target creature.\n{2}{G}: Destroy target artifact or enchantment.\n{2}{W}: You gain 3 life.",
+          "back_oracle_text": "",
+          "power": 9,
+          "back_power": null,
+          "toughness": 9,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": 9,
+          "tokens": [],
+          "gatherer": null,
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 132,
+          "deckid": 9,
+          "name": "Plains",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/0/00293ce4-3475-4064-8510-9e8c02faf3bf.png?1592674050",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [],
+          "color_identity": [
+            "W"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Basic",
+            "Land",
+            "Plains"
+          ],
+          "back_types": [],
+          "oracle_text": "({T}: Add {W}.)",
+          "back_oracle_text": "",
+          "power": null,
+          "back_power": null,
+          "toughness": null,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": null,
+          "tokens": [],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=430511",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 166,
+          "deckid": 9,
+          "name": "Trapjaw Tyrant",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/7/c/7cb5fc7e-5ac4-4245-9f88-3921ab5704b9.png?1562920143",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [
+            "3",
+            "W",
+            "W"
+          ],
+          "color_identity": [
+            "W"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Creature",
+            "Dinosaur"
+          ],
+          "back_types": [],
+          "oracle_text": "Enrage — Whenever Trapjaw Tyrant is dealt damage, exile target creature an opponent controls until Trapjaw Tyrant leaves the battlefield.",
+          "back_oracle_text": "",
+          "power": 5,
+          "back_power": null,
+          "toughness": 5,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": 5,
+          "tokens": [],
+          "gatherer": null,
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 163,
+          "deckid": 9,
+          "name": "Thrashing Brontodon",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/d/0d9264ff-9f7c-46f3-862a-fee7ad213250.png?1555040755",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [
+            "1",
+            "G",
+            "G"
+          ],
+          "color_identity": [
+            "G"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Creature",
+            "Dinosaur"
+          ],
+          "back_types": [],
+          "oracle_text": "{1}, Sacrifice Thrashing Brontodon: Destroy target artifact or enchantment.",
+          "back_oracle_text": "",
+          "power": 3,
+          "back_power": null,
+          "toughness": 4,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": 3,
+          "tokens": [],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=439805",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 120,
+          "deckid": 9,
+          "name": "Kessig Wolf Run",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/2/3/23809d14-5f52-43c5-ab7a-0db9f9ab7b3c.png?1650425389",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [],
+          "color_identity": [
+            "G",
+            "R"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Land"
+          ],
+          "back_types": [],
+          "oracle_text": "{T}: Add {C}.\n{X}{R}{G}, {T}: Target creature gets +X/+0 and gains trample until end of turn.",
+          "back_oracle_text": "",
+          "power": null,
+          "back_power": null,
+          "toughness": null,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": null,
+          "tokens": [],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=559983",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 168,
+          "deckid": 9,
+          "name": "Vrondiss, Rage of Ancients",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/6/4/64d9699b-d90f-482f-89eb-f3d06af94997.png?1651355247",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [
+            "3",
+            "R",
+            "G"
+          ],
+          "color_identity": [
+            "G",
+            "R"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Legendary",
+            "Creature",
+            "Dragon",
+            "Barbarian"
+          ],
+          "back_types": [],
+          "oracle_text": "Enrage — Whenever Vrondiss, Rage of Ancients is dealt damage, you may create a 5/4 red and green Dragon Spirit creature token with \"When this creature deals damage, sacrifice it.\"\nWhenever you roll one or more dice, you may have Vrondiss deal 1 damage to itself.",
+          "back_oracle_text": "",
+          "power": 5,
+          "back_power": null,
+          "toughness": 4,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": 5,
+          "tokens": [
+            {
+              "name": "Dragon Spirit",
+              "types": [
+                "Token",
+                "Creature",
+                "Dragon",
+                "Spirit"
+              ]
+            }
+          ],
+          "gatherer": null,
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 111,
+          "deckid": 9,
+          "name": "Harbinger of the Hunt",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/7/07b311ec-fa6b-462c-a969-780726fb3d23.png?1562875759",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [
+            "3",
+            "R",
+            "G"
+          ],
+          "color_identity": [
+            "G",
+            "R"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Creature",
+            "Dragon"
+          ],
+          "back_types": [],
+          "oracle_text": "Flying\n{2}{R}: Harbinger of the Hunt deals 1 damage to each creature without flying.\n{2}{G}: Harbinger of the Hunt deals 1 damage to each other creature with flying.",
+          "back_oracle_text": "",
+          "power": 5,
+          "back_power": null,
+          "toughness": 3,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": 5,
+          "tokens": [],
+          "gatherer": null,
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 124,
+          "deckid": 9,
+          "name": "Mirari's Wake",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/2/02747420-c635-4f0f-9888-81cf4f7dfc91.png?1590118136",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [
+            "3",
+            "G",
+            "W"
+          ],
+          "color_identity": [
+            "G",
+            "W"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Enchantment"
+          ],
+          "back_types": [],
+          "oracle_text": "Creatures you control get +1/+1.\nWhenever you tap a land for mana, add one mana of any type that land produced.",
+          "back_oracle_text": "",
+          "power": null,
+          "back_power": null,
+          "toughness": null,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": 5,
+          "tokens": [],
+          "gatherer": null,
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 52.65077525382667,
+          "deckid": 9,
+          "name": "Mountain",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/0/005a993c-5111-4364-9fba-75b3d94a8296.png?1559591904",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [],
+          "color_identity": [
+            "R"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Basic",
+            "Land",
+            "Mountain"
+          ],
+          "back_types": [],
+          "oracle_text": "({T}: Add {R}.)",
+          "back_oracle_text": "",
+          "power": null,
+          "back_power": null,
+          "toughness": null,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": null,
+          "tokens": [],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=891",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 84,
+          "deckid": 9,
+          "name": "Command Tower",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/9/09e008b9-c27c-40ad-9242-d7da52a2a0a8.png?1562896932",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [],
+          "color_identity": [],
+          "back_mana_cost": [],
+          "types": [
+            "Land"
+          ],
+          "back_types": [],
+          "oracle_text": "{T}: Add one mana of any color in your commander's color identity.",
+          "back_oracle_text": "",
+          "power": null,
+          "back_power": null,
+          "toughness": null,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": null,
+          "tokens": [],
+          "gatherer": null,
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 158,
+          "deckid": 9,
+          "name": "Taiga",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/1/01006833-6007-4c16-9ebb-20d31c60a57a.png?1559592223",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [],
+          "color_identity": [
+            "G",
+            "R"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Land",
+            "Mountain",
+            "Forest"
+          ],
+          "back_types": [],
+          "oracle_text": "({T}: Add {R} or {G}.)",
+          "back_oracle_text": "",
+          "power": null,
+          "back_power": null,
+          "toughness": null,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": null,
+          "tokens": [],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=883",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 102,
+          "deckid": 9,
+          "name": "Flumph",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/2/6/263501c5-dec0-4c01-8129-61f9fdd22b54.png?1632361015",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [
+            "1",
+            "W"
+          ],
+          "color_identity": [
+            "W"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Creature",
+            "Jellyfish"
+          ],
+          "back_types": [],
+          "oracle_text": "Defender, flying\nWhenever Flumph is dealt damage, you and target opponent each draw a card.",
+          "back_oracle_text": "",
+          "power": null,
+          "back_power": null,
+          "toughness": 4,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": 2,
+          "tokens": [],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=530482",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 123,
+          "deckid": 9,
+          "name": "Marauding Raptor",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/d/0da7e676-202c-441e-9515-0f33849f8968.png?1599764935",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [
+            "1",
+            "R"
+          ],
+          "color_identity": [
+            "R"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Creature",
+            "Dinosaur"
+          ],
+          "back_types": [],
+          "oracle_text": "Creature spells you cast cost {1} less to cast.\nWhenever another creature enters the battlefield under your control, Marauding Raptor deals 2 damage to it. If a Dinosaur is dealt damage this way, Marauding Raptor gets +2/+0 until end of turn.",
+          "back_oracle_text": "",
+          "power": 2,
+          "back_power": null,
+          "toughness": 3,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": 2,
+          "tokens": [],
+          "gatherer": null,
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 104,
+          "deckid": 9,
+          "name": "Forest",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/0/0031d026-9e9a-46f6-8204-1acfee8b8809.png?1561894880",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [],
+          "color_identity": [
+            "G"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Basic",
+            "Land",
+            "Forest"
+          ],
+          "back_types": [],
+          "oracle_text": "({T}: Add {G}.)",
+          "back_oracle_text": "",
+          "power": null,
+          "back_power": null,
+          "toughness": null,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": null,
+          "tokens": [],
+          "gatherer": null,
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 110,
+          "deckid": 9,
+          "name": "Guardian Project",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/6/9/6980aff2-b91c-49c8-adc6-dbe652c853eb.png?1551250087",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [
+            "3",
+            "G"
+          ],
+          "color_identity": [
+            "G"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Enchantment"
+          ],
+          "back_types": [],
+          "oracle_text": "Whenever a nontoken creature enters the battlefield under your control, if it doesn't have the same name as another creature you control or a creature card in your graveyard, draw a card.",
+          "back_oracle_text": "",
+          "power": null,
+          "back_power": null,
+          "toughness": null,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": 4,
+          "tokens": [],
+          "gatherer": null,
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 106,
+          "deckid": 9,
+          "name": "Frilled Deathspitter",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/d/2/d20a38fa-bf26-403e-98bb-4e078084b154.png?1573511709",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [
+            "2",
+            "R"
+          ],
+          "color_identity": [
+            "R"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Creature",
+            "Dinosaur"
+          ],
+          "back_types": [],
+          "oracle_text": "Enrage — Whenever Frilled Deathspitter is dealt damage, it deals 2 damage to target opponent or planeswalker.",
+          "back_oracle_text": "",
+          "power": 3,
+          "back_power": null,
+          "toughness": 2,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": 3,
+          "tokens": [],
+          "gatherer": null,
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 136,
+          "deckid": 9,
+          "name": "Pyrohemia",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/b/0b778d44-60a9-4230-8090-73c38e7c9697.png?1562565718",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [
+            "2",
+            "R",
+            "R"
+          ],
+          "color_identity": [
+            "R"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Enchantment"
+          ],
+          "back_types": [],
+          "oracle_text": "At the beginning of the end step, if no creatures are on the battlefield, sacrifice Pyrohemia.\n{R}: Pyrohemia deals 1 damage to each creature and each player.",
+          "back_oracle_text": "",
+          "power": null,
+          "back_power": null,
+          "toughness": null,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": 4,
+          "tokens": [],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=122436",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 103,
+          "deckid": 9,
+          "name": "Fiendlash",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/5/0/50f13e7b-6d20-434d-82d1-103c9a63aa9a.png?1632017593",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [
+            "1",
+            "R"
+          ],
+          "color_identity": [
+            "R"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Artifact",
+            "Equipment"
+          ],
+          "back_types": [],
+          "oracle_text": "Equipped creature gets +2/+0 and has reach.\nWhenever equipped creature is dealt damage, it deals damage equal to its power to target player or planeswalker.\nEquip {2}{R}",
+          "back_oracle_text": "",
+          "power": null,
+          "back_power": null,
+          "toughness": null,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": 2,
+          "tokens": [],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=531520",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 116,
+          "deckid": 9,
+          "name": "Hour of Devastation",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/3/4/340b2e60-320d-4d64-9940-6aac9ed1b8c3.png?1597250398",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [
+            "3",
+            "R",
+            "R"
+          ],
+          "color_identity": [
+            "R"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Sorcery"
+          ],
+          "back_types": [],
+          "oracle_text": "All creatures lose indestructible until end of turn. Hour of Devastation deals 5 damage to each creature and each non-Bolas planeswalker.",
+          "back_oracle_text": "",
+          "power": null,
+          "back_power": null,
+          "toughness": null,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": 5,
+          "tokens": [],
+          "gatherer": null,
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 121,
+          "deckid": 9,
+          "name": "Kinjalli's Sunwing",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/2/b/2b9e0b0f-651a-44e6-8fb0-e46bfda0ada9.png?1562552626",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [
+            "2",
+            "W"
+          ],
+          "color_identity": [
+            "W"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Creature",
+            "Dinosaur"
+          ],
+          "back_types": [],
+          "oracle_text": "Flying\nCreatures your opponents control enter the battlefield tapped.",
+          "back_oracle_text": "",
+          "power": 2,
+          "back_power": null,
+          "toughness": 3,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": 3,
+          "tokens": [],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=435170",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 165,
+          "deckid": 9,
+          "name": "Unclaimed Territory",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/5/053ce80a-1f32-4982-8d23-d1e313e925a4.png?1637632712",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [],
+          "color_identity": [],
+          "back_mana_cost": [],
+          "types": [
+            "Land"
+          ],
+          "back_types": [],
+          "oracle_text": "As Unclaimed Territory enters the battlefield, choose a creature type.\n{T}: Add {C}.\n{T}: Add one mana of any color. Spend this mana only to cast a creature spell of the chosen type.",
+          "back_oracle_text": "",
+          "power": null,
+          "back_power": null,
+          "toughness": null,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": null,
+          "tokens": [],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=539448",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 107,
+          "deckid": 9,
+          "name": "Garruk's Uprising",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/7/1/71a4860a-8bb6-45c0-b00a-b4a42da33ab9.png?1594737017",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [
+            "2",
+            "G"
+          ],
+          "color_identity": [
+            "G"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Enchantment"
+          ],
+          "back_types": [],
+          "oracle_text": "When Garruk's Uprising enters the battlefield, if you control a creature with power 4 or greater, draw a card.\nCreatures you control have trample. (They can deal excess combat damage to the player or planeswalker they're attacking.)\nWhenever a creature with power 4 or greater enters the battlefield under your control, draw a card.",
+          "back_oracle_text": "",
+          "power": null,
+          "back_power": null,
+          "toughness": null,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": 3,
+          "tokens": [],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=485509",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 140,
+          "deckid": 9,
+          "name": "Raptor Hatchling",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/8/0/8093e88d-fd3c-43d3-a025-9ebb9f02a84f.png?1562558980",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [
+            "1",
+            "R"
+          ],
+          "color_identity": [
+            "R"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Creature",
+            "Dinosaur"
+          ],
+          "back_types": [],
+          "oracle_text": "Enrage — Whenever Raptor Hatchling is dealt damage, create a 3/3 green Dinosaur creature token with trample.",
+          "back_oracle_text": "",
+          "power": 1,
+          "back_power": null,
+          "toughness": 1,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": 2,
+          "tokens": [
+            {
+              "name": "Dinosaur",
+              "types": [
+                "Token",
+                "Creature",
+                "Dinosaur"
+              ]
+            }
+          ],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=435309",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 135,
+          "deckid": 9,
+          "name": "Polyraptor",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/5/3/53cfded0-ff53-49f6-85be-f8e9225a91fa.png?1562912034",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [
+            "6",
+            "G",
+            "G"
+          ],
+          "color_identity": [
+            "G"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Creature",
+            "Dinosaur"
+          ],
+          "back_types": [],
+          "oracle_text": "Enrage — Whenever Polyraptor is dealt damage, create a token that's a copy of Polyraptor.",
+          "back_oracle_text": "",
+          "power": 5,
+          "back_power": null,
+          "toughness": 5,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": 8,
+          "tokens": [
+            {
+              "name": "Copy",
+              "types": [
+                "Token"
+              ]
+            }
+          ],
+          "gatherer": null,
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        },
+        {
+          "id": 114,
+          "deckid": 9,
+          "name": "Hornet Nest",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/4/7/4784dbd3-8ae0-45a0-8cde-908fba6af9d2.png?1562786341",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [
+            "2",
+            "G"
+          ],
+          "color_identity": [
+            "G"
+          ],
+          "back_mana_cost": [],
+          "types": [
+            "Creature",
+            "Insect"
+          ],
+          "back_types": [],
+          "oracle_text": "Defender (This creature can't attack.)\nWhenever Hornet Nest is dealt damage, create that many 1/1 green Insect creature tokens with flying and deathtouch. (Any amount of damage a creature with deathtouch deals to a creature is enough to destroy it.)",
+          "back_oracle_text": "",
+          "power": null,
+          "back_power": null,
+          "toughness": 2,
+          "back_toughness": null,
+          "loyalty": 0,
+          "back_loyalty": null,
+          "cmc": 3,
+          "tokens": [
+            {
+              "name": "Insect",
+              "types": [
+                "Token",
+                "Creature",
+                "Insect"
+              ]
+            }
+          ],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=383267",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        }
+      ]
+    },
+    "temp_zone": {
+      owner: 1,
+      name: 'temp_zone',
+      cards: [
+        {
+          "id": 97,
+          "deckid": 9,
+          "name": "Cavern of Souls",
+          "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/4/2/4222863c-c851-4ef7-b29f-7111b05bb843.png?1655400377",
+          "count": 1,
+          "iscommander": false,
+          "back_image": null,
+          "back_face": false,
+          "mana_cost": [],
+          "color_identity": [],
+          "back_mana_cost": [],
+          "types": [
+            "Land"
+          ],
+          "back_types": [],
+          "oracle_text": "As Cavern of Souls enters the battlefield, choose a creature type.\n{T}: Add {C}.\n{T}: Add one mana of any color. Spend this mana only to cast a creature spell of the chosen type, and that spell can't be countered.",
+          "back_oracle_text": "",
+          "power": null,
+          "back_power": null,
+          "toughness": null,
+          "back_toughness": null,
+          "loyalty": null,
+          "back_loyalty": null,
+          "cmc": null,
+          "tokens": [],
+          "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=426057",
+          "counter_1": false,
+          "counter_2": false,
+          "counter_3": false,
+          "multiplier": false,
+          "counter_1_value": 0,
+          "counter_2_value": 0,
+          "counter_3_value": 0,
+          "multiplier_value": 0,
+          "owner": 1,
+          "power_mod": 0,
+          "toughness_mod": 0,
+          "loyalty_mod": 0,
+          "locked": false,
+          "primed": false,
+          "triggered": false,
+          "is_token": false,
+          "tapped": "untapped",
+          "sidenav_visible": true,
+          "visible": [
+            1
+          ],
+          "alt": false,
+          "facedown": false,
+          "shaken": false,
+          "inverted": false,
+          "notes": "",
+          "selected": false
+        }
+      ]
+    }
   }
 
   players: any[] = [1, 2, 3, 4, 5]
 
   action_log: any[] = [
-    "Game created with type: commander.",
-    "*Chris* sent all from hand to deck_bottom",
-    "*Chris* {draw} 7 cards.",
-    "*Chris* moved  to exile",
-    "*Chris* sent all from hand to exile",
-    "*Chris* moved [[Gishath, Sun's Avatar]]  to play",
-    "*Chris* moved [[Arid Mesa]]  to play",
-    "*Chris* moved [[Arid Mesa]] [[Gishath, Sun's Avatar]]  to play",
-    "*Chris* moved [[Gishath, Sun's Avatar]] [[Arid Mesa]]  to grave",
-    "*Chris* moved  to grave",
-    "*Chris* moved  to grave",
-    "*Chris* moved  to grave",
-    "*Chris* moved  to grave",
-    "*Chris* moved  to grave",
-    "*Chris* moved  to grave",
-    "*Chris* {draw} 6 cards to grave",
-    "*Chris* moved [[Cavern of Souls]]  to temp_zone",
-    "*Chris* moved [[Noxious Revival]]  to play",
-    "*Chris* moved [[Farseek]]  to play",
-    "*Chris* moved [[Chaos Warp]]  to play",
-    "*Chris* moved [[Secluded Courtyard]]  to play",
-    "*Chris* moved [[Needletooth Raptor]]  to play",
-    "*Chris* moved [[Needletooth Raptor]] [[Noxious Revival]] [[Chaos Warp]] [[Secluded Courtyard]] [[Farseek]]  to grave",
-    "*Chris* sent all from hand to deck_bottom",
-    "*Chris* {draw} 7 cards.",
-    "*Chris* moved  to exile",
-    "*Chris* sent all from hand to exile",
-    "*Chris* sent all from hand to deck_bottom",
-    "*Chris* {draw} 7 cards.",
-    "*Chris* moved  to exile",
-    "*Chris* sent all from hand to exile",
-    "*Chris* sent all from hand to deck_bottom",
-    "*Chris* {draw} 7 cards.",
-    "*Chris* moved  to exile",
-    "*Chris* sent all from hand to exile",
-    "*Chris* {draw} 1 cards.",
-    "*Chris* {draw} 1 cards.",
-    "*Chris* {draw} 1 cards.",
-    "*Chris* {draw} 1 cards.",
-    "*Chris* {draw} 1 cards.",
-    "*Chris* {draw} 1 cards.",
-    "*Chris* {draw} 1 cards.",
-    "*Chris* moved  to exile",
-    "*Chris* sent all from hand to exile",
-    "*Chris* sent all from hand to deck_bottom",
-    "*Chris* {draw} 7 cards.",
-    "*Chris* moved  to exile",
-    "*Chris* sent all from hand to exile"
+    {
+      message: "Game created with type: commander.",
+      cards: []
+    },
+    {
+      message: "*Chris* moved [[Gishath, Sun's Avatar]]  to play",
+      cards: []
+    },
+    {
+      message: "*Chris* moved [[Needletooth Raptor]] [[Noxious Revival]] [[Chaos Warp]] [[Secluded Courtyard]] [[Farseek]]  to grave",
+      cards: []
+    }
   ]
 
   //Page Interaction
@@ -6320,10 +6364,28 @@ export class GameHandlerComponent implements OnInit {
 
   ngOnInit(): void {
     for (let i = 0; i < 36; i++) {
-      this.user.playmat.push({ id: i, slots: [] })
+      this.user.playmat.push({ name: 'play', id: i, owner: 1, cards: [] })
     }
   }
 
+
+  /**------------------------------------------------
+   *        Game Data Management Functions          *
+   ------------------------------------------------**/
+
+  /**
+   * Returns the player with the given id from the game data, null if player
+   * is not found.
+   * @param id number representing the id of the player
+   */
+  getPlayerFromId(id: number) {
+    for (let player of this.game_data.players) {
+      if (player.id == id) {
+        return player;
+      }
+    }
+    return null;
+  }
 
   /**------------------------------------------------
    *      Playmat Display Utility Functions         *
@@ -6392,7 +6454,7 @@ export class GameHandlerComponent implements OnInit {
     let count = 0;
     if (player) {
       for (let spot of player.playmat) {
-        for (let card of spot.slots) {
+        for (let card of spot.cards) {
           if (this.isPermanent(card) && !card.is_token) {
             if (card.mana_cost) {
               card.mana_cost.forEach((mana: any) => { if(mana === color) { count++ }});
@@ -6443,242 +6505,132 @@ export class GameHandlerComponent implements OnInit {
     this.menuTopLeftPosition.y = event.clientY + 'px';
     this.matMenuTrigger.openMenu();
   }
-}
 
-@Component({
-  selector: 'token-insert-dialog',
-  templateUrl: 'token-insert-dialog.html',
-})
-export class TokenInsertDialog {
-  constructor(
-    public dialogRef: MatDialogRef<TokenInsertDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private fddp_data: FddpApiService
-  ) {}
 
-  results: any[] = [];
-  name = '';
+  /**------------------------------------------------
+   *           Card Relocation Functions            *
+   ------------------------------------------------**/
 
-  async searchToken(token: string) {
-    this.results = [];
-    //const values = await Scry.Cards.search('"' + token + '"', {include_extras: true}).waitForAll();
-    this.fddp_data.getImagesForCard(token).then((values: any) => {
-      for (let val of values.images) {
-        this.results.push(val)
-      }
-      this.name = token;
-    });
-  }
-
-  onNoClick(): void {
-    this.dialogRef.close(null);
-  }
-
-  createToken(res: any) {
-    let out_token = {name: this.name, image: res}
-    this.dialogRef.close(out_token);
-  }
-}
-
-@Component({
-  selector: 'token-select-dialog',
-  templateUrl: 'token-select-dialog.html',
-})
-export class TokenSelectDialog {
-  constructor(
-    public dialogRef: MatDialogRef<TokenSelectDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
-
-  onNoClick(): void {
-    this.dialogRef.close(null);
-  }
-
-  createToken(res: any) {
-    this.dialogRef.close(res);
-  }
-}
-
-@Component({
-  selector: 'deck-select-dialog',
-  templateUrl: 'deck-select-dialog.html',
-})
-export class DeckSelectDialog {
-
-  decks: any[] = [];
-  loading = false;
-
-  constructor(
-    public dialogRef: MatDialogRef<DeckSelectDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private fddp_data: FddpApiService
-  )
-  {
-    this.loading = true;
-    this.fddp_data.getDecksBasic(this.data.user).then((decks: any) => {
-      let temp_decks = decks;
-      let deck_promises: any[] = [];
-      temp_decks.forEach((deck: any) => {
-        deck_promises.push(this.getDeckData(deck.id));
-      });
-      Promise.all(deck_promises).then(() => {
-        for (let deck of this.decks) {
-          deck.hovered = false;
-        }
-        this.loading = false;
-      });
-    });
-  }
-
-  getDeckData(deckid: number): Promise<void> {
-    return new Promise<void>((resolve) => {
-      this.fddp_data.getDeckForPlay(deckid).then((deck) => {
-        deck.commander = [];
-        deck.cards.forEach((card: any) => {
-          if (card.iscommander) {
-            deck.commander.push(card);
-          }
-        });
-        deck.commander.forEach((card: any) => {
-          deck.cards.splice(deck.cards.indexOf(card), 1);
-        });
-        deck.colors = this.getDeckColors(deck);
-        this.decks.push(deck);
-        resolve();
-      })
-    })
-  }
-
-  getDeckColors(deck: any) {
-    let colors: any = null;
-    for (let commander of deck.commander) {
-      if (commander.color_identity) {
-        if (colors == null) {
-          colors = [];
-        }
-        for (let mana of commander.color_identity) {
-          if (mana === 'W' || mana === 'U' || mana === 'B' || mana === 'R' || mana === 'G'){
-            colors.push(mana);
-          }
+  /**
+   * Returns the source container for a drag event array.
+   * @param array array to locate
+   */
+  getContainer(array: any[]) {
+    if (array == this.user.deck.cards) {
+      return this.user.deck;
+    }
+    else if (array == this.user.grave.cards) {
+      return this.user.grave;
+    }
+    else if (array == this.user.exile.cards) {
+      return this.user.exile;
+    }
+    else if (array == this.user.commander.cards) {
+      return this.user.commander;
+    }
+    else if (array == this.user.hand.cards) {
+      return this.user.hand;
+    }
+    else if (array == this.user.temp_zone.cards) {
+      return this.user.temp_zone;
+    }
+    else { //Play
+      for (let spot of this.user.playmat) {
+        if (array == spot.cards) {
+          return spot;
         }
       }
     }
-    return colors;
   }
 
-  selectDeck(deck: any) {
-    this.dialogRef.close(deck);
+  getPlayerZone(id: number, zone: string) {
+    switch (zone) {
+      case 'deck':
+        return this.getPlayerFromId(id).deck;
+      case 'grave':
+        return this.getPlayerFromId(id).grave;
+      case 'exile':
+        return this.getPlayerFromId(id).exile;
+      case 'commander':
+        return this.getPlayerFromId(id).deck.commander;
+      case 'hand':
+        return this.getPlayerFromId(id).hand;
+      case 'temp_zone':
+        return this.getPlayerFromId(id).temp_zone;
+      case 'play':
+        return this.getPlayerFromId(id).playmat;
+    }
   }
 
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
-}
+  /**
+   * Set the visibility for a card as it changes zones
+   * @param card object to modify
+   * @param dest_type string representing the destination
+   */
+  setVisibility(card: any, dest_type: string) {
 
-@Component({
-  selector: 'note-dialog',
-  templateUrl: 'notes-dialog.html',
-})
-export class NoteDialog {
-  constructor(
-    public dialogRef: MatDialogRef<NoteDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
-
-  note = this.data.card.notes;
-
-  onNoClick(): void {
-    this.dialogRef.close(null);
   }
 
-  saveNote() {
-    this.dialogRef.close(this.note);
-  }
-}
+  /**
+   * Drag a card from one array to another.
+   * @param card the object being dragged.
+   * @param dest the destination container, containing the destination array.
+   * @param event the drag event.
+   */
+  dragCard(card: any, dest: any, event: any) {
+    //Need to get the source container (from the array)
 
-@Component({
-  selector: 'counter-set-dialog',
-  templateUrl: 'counter-set-dialog.html',
-})
-export class CounterSetDialog {
-  constructor(
-    public dialogRef: MatDialogRef<CounterSetDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
-
-  new_value = this.data.value;
-
-  onNoClick(): void {
-    this.dialogRef.close(null);
+    this.sendCardToZone(card, this.getContainer(event.previousContainer), dest,
+      event.previousIndex, event.currentIndex);
   }
 
-  saveValue() {
-    this.dialogRef.close(this.new_value);
-  }
-}
-
-@Component({
-  selector: 'two-headed-teams-dialog',
-  templateUrl: 'two-headed-teams.html',
-})
-export class TwoHeadedTeamsDialog {
-  constructor(
-    public dialogRef: MatDialogRef<TwoHeadedTeamsDialog>,
-    private snackbar: MatSnackBar,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
-  players: any[] = this.data.players;
-  team_slots: any[] = this.data.team_array;
-
-  onNoClick(): void {
-    this.dialogRef.close(null);
-  }
-
-  checkValidTeams() {
-    if (this.players.length == 0) {
-      let bad = false;
-      for (let team of this.team_slots) {
-        if (team.length != 2){
-          bad = true;
-          break;
-        }
-      }
-      if (bad) {
-        this.snackbar.open('Not all teams have 2 players',
-          'dismiss', {duration: 3000});
-      }
-      else {
-        this.setTeams(this.team_slots);
-      }
+  /**
+   * Move a card from one container to another.
+   * @param card object to be moved
+   * @param source the source container
+   * @param dest the destination container
+   * @param options supports
+   * 'previousIndex': the index the object is currently at
+   * 'currentIndex': the index the object is being moved to. Can be set manually for deck transfers.
+   */
+  sendCardToZone(card: any, source: any, dest: any, previousIndex: number, currentIndex: number, options?: any){
+    if (source == dest) {
+      moveItemInArray(source.cards, previousIndex, currentIndex);
     }
     else {
-      this.snackbar.open('Not all players assigned to a team',
-        'dismiss', {duration: 3000});
-    }
-  }
-  setTeams(res: any[]) {
-    let team_ids: any[] = []
-    for (let team of res) {
-      let team_id = [];
-      for (let player of team) {
-        team_id.push(player.id);
+      if (dest.name !== 'play' && dest.name !== 'temp_zone') {
+        if (card.is_token) {
+          source.cards.splice(source.cards.indexOf(card), 1);
+        }
+        else {
+          this.setVisibility(card, dest.name);
+          if (card.owner == dest.owner) {
+            if (options.deck && options.deck === 'bottom') {
+              transferArrayItem(source.cards, dest.cards, previousIndex, dest.cards.length);
+            }
+            else {
+              transferArrayItem(source.cards, dest.cards, previousIndex, currentIndex);
+            }
+          }
+          else {
+            if (options.deck && options.deck === 'bottom') {
+              transferArrayItem(source.cards, this.getPlayerZone(card.owner, dest.name).cards, previousIndex, this.getPlayerZone(card.owner, dest.name).cards.length);
+            }
+            else {
+              transferArrayItem(source.cards, this.getPlayerZone(card.owner, dest.name).cards, previousIndex, 0);
+            }
+          }
+        }
       }
-      team_ids.push(team_id);
-    }
-    this.dialogRef.close(team_ids);
-  }
-
-  drop(event: CdkDragDrop<string[]>) {
-    if (event.previousContainer === event.container) {
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      if (event.container.data.length < 2) {
-        transferArrayItem(
-          event.previousContainer.data,
-          event.container.data,
-          event.previousIndex,
-          event.currentIndex,
-        );
+      else { //It should never be possible to send/drag to someone else's playmat
+        if (dest.name === 'play') {
+          if (dest.cards.length > 2) {
+            transferArrayItem(source.cards, dest.cards, previousIndex, currentIndex);
+          }
+        }
+        else { //You can put anything in the temp zone
+          transferArrayItem(source.cards, dest.cards, previousIndex, currentIndex);
+        }
       }
     }
   }

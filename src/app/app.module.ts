@@ -30,15 +30,13 @@ import { MatSelectModule } from "@angular/material/select";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {DragDropModule} from "@angular/cdk/drag-drop";
-import {
-  DeckSelectDialog,
-  GameHandlerComponent,
+import {GameHandlerComponent} from './game-handler/game-handler.component';
+import {DeckSelectDialog,
   TokenInsertDialog,
   TokenSelectDialog,
   NoteDialog,
   CounterSetDialog,
-  TwoHeadedTeamsDialog,
-} from './game-handler/game-handler.component';
+  TwoHeadedTeamsDialog,} from './game-handler/game-handler-addons.component'
 import {MatMenuModule} from "@angular/material/menu";
 import {FormsModule} from "@angular/forms";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";

@@ -22,9 +22,9 @@
                (dblclick)="sendSelectedToSpot(spot, 'play')" -->
           <div *ngFor="let spot of currentPlayer().playmat"
                class="playmat-user-spot-container-mini"
-               cdkDropList [cdkDropListData]="spot.slots"
+               cdkDropList [cdkDropListData]="spot.cards"
                (contextmenu)="onRightClick($event, {type: 'user_playmat', spot: spot, from: spot})">
-            <div *ngFor="let card of spot.slots; let i = index" (dblclick)="$event.stopPropagation()">
+            <div *ngFor="let card of spot.cards; let i = index" (dblclick)="$event.stopPropagation()">
               <div [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2, 'invert': card.inverted}"
                    (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
                    (cdkDragStarted)="hovered_card=null;"
@@ -77,7 +77,9 @@
     <div class="game-data-log-container" [style.height.px]="players.length > 3? 209: 406 - (players.length * 50)">
       <ng-scrollbar track="vertical" visibility="hover" pointerEventsMethod="scrollbar" [style.height.px]="players.length > 3? 207: 404 - (players.length * 50)">
         <mat-list>
-          <mat-list-item *ngFor="let action of action_log; let i = index" class="game-data-log-list-item">{{action}}</mat-list-item>
+          <mat-list-item *ngFor="let action of action_log; let i = index" class="game-data-log-list-item">
+
+          </mat-list-item>
         </mat-list>
       </ng-scrollbar>
     </div>
@@ -104,9 +106,9 @@
         <div *ngFor="let spot of currentPlayer().playmat"
              [ngClass.gt-md]="'playmat-user-spot-container'"
              [ngClass.lt-lg]="'playmat-user-spot-container-mini'"
-             cdkDropList [cdkDropListData]="spot.slots"
+             cdkDropList [cdkDropListData]="spot.cards"
              (contextmenu)="onRightClick($event, {type: 'user_playmat', spot: spot, from: spot})">
-          <div *ngFor="let card of spot.slots; let i = index" (dblclick)="$event.stopPropagation()">
+          <div *ngFor="let card of spot.cards; let i = index" (dblclick)="$event.stopPropagation()">
             <div [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2, 'invert': card.inverted}"
                  (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
                  (cdkDragStarted)="hovered_card=null;"
@@ -158,18 +160,18 @@
 <!-- User Grave -->
 <div fxHide.lt-lg class="grave-user-container">
   <div class="grave-user-wrapper">
-    <h3 class="grave-user-quantity-text shadow-text">{{currentPlayer().grave.length}}</h3>
+    <h3 class="grave-user-quantity-text shadow-text">{{currentPlayer().grave.cards.length}}</h3>
     <h3 class="grave-user-title-text shadow-text">Grave</h3>
-    <img *ngIf="currentPlayer().grave.length > 0" class="zone-card-image" src="{{currentPlayer().grave[0].image}}">
+    <img *ngIf="currentPlayer().grave.cards.length > 0" class="zone-card-image" src="{{currentPlayer().grave.cards[0].image}}">
   </div>
 </div>
 
 <!-- User Exile -->
 <div fxHide.lt-lg class="exile-user-container">
   <div class="exile-user-wrapper">
-    <h3 class="exile-user-quantity-text shadow-text">{{currentPlayer().exile.length}}</h3>
+    <h3 class="exile-user-quantity-text shadow-text">{{currentPlayer().exile.cards.length}}</h3>
     <h3 class="exile-user-title-text shadow-text">Exile</h3>
-    <img *ngIf="currentPlayer().exile.length > 0" class="zone-card-image" src="{{currentPlayer().exile[0].image}}">
+    <img *ngIf="currentPlayer().exile.cards.length > 0" class="zone-card-image" src="{{currentPlayer().exile.cards[0].image}}">
   </div>
 </div>
 
@@ -177,7 +179,7 @@
 <div [ngClass.gt-md]="'commander-user-container'" [ngClass.lt-lg]="'commander-user-container-mini'">
   <div class="commander-user-wrapper">
     <button mat-fab [ngClass.gt-md]="'command-tax-button-1'" [ngClass.lt-lg]="'command-tax-button-1-mini'"><h1>{{currentPlayer().command_tax_1}}</h1></button>
-    <button *ngIf="currentPlayer().deck.commander_saved.length == 2" mat-fab [ngClass.gt-md]="'command-tax-button-2'" [ngClass.lt-lg]="'command-tax-button-2-mini'" color="primary"><h1>{{currentPlayer().command_tax_2}}</h1></button>
+    <button *ngIf="currentPlayer().deck.commander.saved.length == 2" mat-fab [ngClass.gt-md]="'command-tax-button-2'" [ngClass.lt-lg]="'command-tax-button-2-mini'" color="primary"><h1>{{currentPlayer().command_tax_2}}</h1></button>
     <img *ngIf="currentPlayer().deck.commander.length > 0" class="commander-card-image" src="{{currentPlayer().deck.commander[0].image}}">
   </div>
 </div>
@@ -185,9 +187,9 @@
 <!-- User Temp Zone -->
 <div fxHide.lt-lg class="temp-zone-user-container">
   <div class="temp-zone-user-wrapper">
-    <h3 class="temp-zone-user-quantity-text shadow-text">{{currentPlayer().temp_zone.length}}</h3>
+    <h3 class="temp-zone-user-quantity-text shadow-text">{{currentPlayer().temp_zone.cards.length}}</h3>
     <h3 class="temp-zone-user-title-text shadow-text">Temp</h3>
-    <img *ngIf="currentPlayer().temp_zone.length > 0" class="zone-card-image" src="{{currentPlayer().temp_zone[0].image}}">
+    <img *ngIf="currentPlayer().temp_zone.cards.length > 0" class="zone-card-image" src="{{currentPlayer().temp_zone.cards[0].image}}">
   </div>
 </div>
 
@@ -195,10 +197,10 @@
 <div [ngClass.gt-md]="'hand-user-container'" [ngClass.lt-lg]="'hand-user-container-mini'">
   <div [ngClass.gt-md]="'hand-user-wrapper'" [ngClass.lt-lg]="'hand-user-wrapper-mini'">
     <mat-icon fxHide.lt-lg class="hand-menu shadow-text">more_vert</mat-icon>
-    <h3 class="hand-quantity-text shadow-text">{{currentPlayer().hand.length}}</h3>
+    <h3 class="hand-quantity-text shadow-text">{{currentPlayer().hand.cards.length}}</h3>
     <ng-scrollbar track="horizontal" visibility="hover" pointerEventsMethod="scrollbar" style="width: 100%;">
       <div [ngClass.gt-md]="'hand-user-droplist-wrapper'" [ngClass.lt-lg]="'hand-user-droplist-wrapper-mini'" fxLayout="row" fxLayoutAlign="center">
-        <div *ngFor="let card of currentPlayer().hand" [ngClass.gt-md]="'playmat-user-card-container'" [ngClass.lt-lg]="'playmat-user-card-container-mini'">
+        <div *ngFor="let card of currentPlayer().hand.cards" [ngClass.gt-md]="'playmat-user-card-container'" [ngClass.lt-lg]="'playmat-user-card-container-mini'">
           <img [ngClass.gt-md]="'playmat-user-card'" [ngClass.lt-lg]="'playmat-user-card-mini'" src="{{currentPlayer().deck.sleeves}}">
         </div>
       </div>
