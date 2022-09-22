@@ -75,6 +75,28 @@
   </div>
 </div>
 
+<!-- User Grave -->
+<div fxHide.lt-lg class="grave-user-container">
+  <div class="grave-user-wrapper">
+
+  </div>
+</div>
+
+<!-- User Exile -->
+<div fxHide.lt-lg class="exile-user-container">
+  <div class="exile-user-wrapper">
+
+  </div>
+</div>
+
+<!-- User Command Zone -->
+<div [ngClass.gt-md]="'commander-user-container'" [ngClass.lt-lg]="'commander-user-container-mini'">
+  <div class="commander-user-wrapper">
+    <button mat-fab [ngClass.gt-md]="'command-tax-button-1'" [ngClass.lt-lg]="'command-tax-button-1-mini'"><h1>{{currentPlayer().command_tax_1}}</h1></button>
+    <button *ngIf="currentPlayer().deck.commander_saved.length == 2" mat-fab [ngClass.gt-md]="'command-tax-button-2'" [ngClass.lt-lg]="'command-tax-button-2-mini'" color="primary"><h1>{{currentPlayer().command_tax_2}}</h1></button>
+  </div>
+</div>
+
 <!-- User Hand -->
 <div [ngClass.gt-md]="'hand-user-container'" [ngClass.lt-lg]="'hand-user-container-mini'">
   <div [ngClass.gt-md]="'hand-user-wrapper'" [ngClass.lt-lg]="'hand-user-wrapper-mini'">
@@ -83,7 +105,7 @@
     <ng-scrollbar track="horizontal" visibility="hover" pointerEventsMethod="scrollbar" style="width: 100%;">
       <div [ngClass.gt-md]="'hand-user-droplist-wrapper'" [ngClass.lt-lg]="'hand-user-droplist-wrapper-mini'" fxLayout="row" fxLayoutAlign="center">
         <div *ngFor="let card of currentPlayer().hand" [ngClass.gt-md]="'playmat-user-card-container'" [ngClass.lt-lg]="'playmat-user-card-container-mini'">
-          <img [ngClass.gt-md]="'playmat-user-card'" [ngClass.lt-lg]="'playmat-user-card-mini'" src="{{user.deck.sleeves}}">
+          <img [ngClass.gt-md]="'playmat-user-card'" [ngClass.lt-lg]="'playmat-user-card-mini'" src="{{currentPlayer().deck.sleeves}}">
         </div>
       </div>
     </ng-scrollbar>

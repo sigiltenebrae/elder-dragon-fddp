@@ -425,6 +425,99 @@ p, h1, h2, h3, h4, h5, h6 {
   pointer-events: none;
 }
 
+//User Grave
+.grave-user-container {
+  position: fixed;
+  bottom: 10px;
+  right: 95px;
+  height: 105px;
+  width: 75px;
+}
+
+.grave-user-wrapper {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background: rgba(black, 0.2);
+  @include mat.elevation(2);
+}
+
+//User Exile
+.exile-user-container {
+  position: fixed;
+  bottom: 10px;
+  right: 180px;
+  height: 105px;
+  width: 75px;
+}
+
+.exile-user-wrapper {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background: rgba(black, 0.2);
+  @include mat.elevation(2);
+}
+
+//User Command Zone
+.commander-user-container {
+  position: fixed;
+  bottom: 10px;
+  right: 265px;
+  height: 105px;
+  width: 75px;
+}
+
+.commander-user-container-mini {
+  position: fixed;
+  bottom: 5px;
+  left: 5px;
+  height: 56px;
+  width: 40px;
+}
+
+.commander-user-wrapper {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background: rgba(black, 0.2);
+  @include mat.elevation(2);
+}
+
+.commander-user-wrapper .command-tax-button-1 {
+  position: absolute;
+  bottom: -9px;
+  left: -9px;
+  transform: scale(0.6) !important;
+  z-index: 3;
+  pointer-events: all;
+}
+
+.commander-user-wrapper .command-tax-button-1-mini {
+  position: absolute;
+  top: -50px;
+  left: -15px;
+  transform: scale(0.6) !important;
+  z-index: 3;
+  pointer-events: all;
+}
+
+.commander-user-wrapper .command-tax-button-2 {
+  position: absolute;
+  bottom: -9px;
+  right: -9px;
+  transform: scale(0.6) !important;
+  z-index: 3;
+  pointer-events: all;
+}
+.commander-user-wrapper .command-tax-button-2-mini {
+  position: absolute;
+  top: -50px;
+  right: -40px;
+  transform: scale(0.6) !important;
+  z-index: 3;
+  pointer-events: all;
+}
 
 //User Hand
 .hand-user-container {
