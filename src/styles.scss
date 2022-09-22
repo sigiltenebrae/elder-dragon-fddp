@@ -70,6 +70,45 @@ p, h1, h2, h3, h4, h5, h6 {
 ------------ User Playmat ------------
  */
 
+//Opponent Playmat Display
+.playmat-opponent-view-container {
+  width: 100vw;
+  height: calc(100vh - (634px + 10px));
+  position: fixed;
+  bottom: 634px;
+  left: 0;
+}
+
+.playmat-opponent-view-container-mini {
+  width: 100vw;
+  height: calc(100vh - (334px + 5px));
+  position: fixed;
+  bottom: 334px;
+  left: 0;
+}
+
+.playmat-opponent-wrapper {
+  position: relative;
+  width: 604px;
+  height: 214px;
+  overflow: visible;
+  max-width: 604px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+  z-index: 2;
+}
+
+.playmat-opponent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 604px;
+  height: 214px;
+  padding: 0 !important;
+  margin: auto;
+}
+
 //Player List And Log (Game Data)
 .game-data-container {
   position: fixed;
