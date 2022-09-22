@@ -18,6 +18,21 @@
   .dropdown-item {
     color: white;
   }
+
+  .shadow-text {
+    color: white;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    background: rgba(0, 0, 0, 0.40);
+    padding: 0 5px 0 5px;
+    border-radius: 30%;
+    text-align: center;
+  }
+
+  .simple-a {
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+  }
 }
 
 .light-theme {
@@ -51,24 +66,39 @@ p, h1, h2, h3, h4, h5, h6 {
   filter: grayscale(100%);
 }
 
-.shadow-text {
-  color: white;
-  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-  background: rgba(0, 0, 0, 0.40);
-  padding: 0 5px 0 5px;
-  border-radius: 40%;
-  text-align: center;
-}
-
-.simple-a {
-  text-decoration: none;
-  color: white;
-  cursor: pointer;
-}
-
 /*
 ------------ User Playmat ------------
  */
+
+//Player List And Log (Game Data)
+.game-data-container {
+  position: fixed;
+  bottom: 215px;
+  left: 10px;
+  height: 409px;
+  width: calc((100vw - (1284px + 50px)) / 2);
+  z-index: 5;
+  pointer-events: all;
+}
+
+.game-data-wrapper {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background: rgba(black, 0.2);
+  @include mat.elevation(3);
+}
+
+.game-data-wrapper .game-data-player-list-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 200px;
+  background: rgba(red, 0.1);
+  z-index: 3;
+  overflow: visible;
+}
 
 //Outer Playmat Containers
 .playmat-user-container {
@@ -151,23 +181,23 @@ p, h1, h2, h3, h4, h5, h6 {
 .playmat-user-devotion-wrapper {}
 
 .playmat-user-devotion-wrapper .playmat-user-devotion-W {
-  background: $mtg-white;
+  background: $mtg-white !important;
 }
 
 .playmat-user-devotion-wrapper .playmat-user-devotion-U {
-  background: $mtg-blue;
+  background: $mtg-blue !important;
 }
 
 .playmat-user-devotion-wrapper .playmat-user-devotion-B {
-  background: $mtg-black;
+  background: $mtg-black !important;
 }
 
 .playmat-user-devotion-wrapper .playmat-user-devotion-R {
-  background: $mtg-red;
+  background: $mtg-red !important;
 }
 
 .playmat-user-devotion-wrapper .playmat-user-devotion-G {
-  background: $mtg-green;
+  background: $mtg-green !important;
 }
 
 .playmat-user-devotion-mini {
@@ -187,6 +217,7 @@ p, h1, h2, h3, h4, h5, h6 {
   height: 409px;
   padding: 0 !important;
   margin: 4px 0 0 0;
+  @include mat.elevation(5);
 }
 
 .playmat-user-mini {
@@ -462,7 +493,7 @@ p, h1, h2, h3, h4, h5, h6 {
   @include mat.elevation(3);
 }
 
-//User Exile
+//User Temp Zone
 .temp-zone-user-container {
   position: fixed;
   bottom: 10px;
@@ -544,7 +575,7 @@ p, h1, h2, h3, h4, h5, h6 {
   width: 100vw;
   height: 105px;
   position: fixed;
-  bottom: 20px;
+  bottom: 10px;
   left: 0;
 }
 

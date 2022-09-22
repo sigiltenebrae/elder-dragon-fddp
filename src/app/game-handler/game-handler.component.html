@@ -11,6 +11,19 @@
 </mat-menu>
 
 
+<!-- Game Data (Players List and Log) -->
+<div fxHide.lt-xl class="game-data-container">
+  <div class="game-data-wrapper">
+      <div class="game-data-player-list-container" [style.height.px]="players.length > 4? 200: players.length * 50">
+        <ng-scrollbar track="vertical" visibility="hover" pointerEventsMethod="scrollbar" [style.height.px]="200">
+          <mat-list>
+              <mat-list-item *ngFor="let player of players; let i = index" [style.height.px]="50">Player {{i + 1}}</mat-list-item>
+          </mat-list>
+        </ng-scrollbar>
+      </div>
+  </div>
+</div>
+
 <!-- User Playmat -->
 <div [ngClass.gt-md]="'playmat-user-container'" [ngClass.lt-lg]="'playmat-user-container-mini'">
   <ng-scrollbar track="horizontal" visibility="hover" pointerEventsMethod="scrollbar" style="width: 100%;">
@@ -24,7 +37,7 @@
         </div>
       </div>
       <div [ngClass.gt-md]="'playmat-user-teammate-actions'" [ngClass.lt-lg]="'playmat-user-teammate-actions-mini'"></div>
-      <mat-card [ngClass.gt-md]="'playmat-user'" [ngClass.lt-lg]="'playmat-user-mini'" fxLayout="row wrap" fxLayoutAlign="start start">
+      <div [ngClass.gt-md]="'playmat-user'" [ngClass.lt-lg]="'playmat-user-mini'" fxLayout="row wrap" fxLayoutAlign="start start">
         <img [ngClass.gt-md]="'playmat-user-background-image'" [ngClass.lt-lg]="'playmat-user-background-image-mini'" *ngIf="currentPlayer() != null && currentPlayer().playmat_image != null && currentPlayer().playmat_image !== ''" src="{{currentPlayer().playmat_image}}">
         <!--(cdkDropListDropped)="moveCardToZone($event, 'play')"
              (dblclick)="sendSelectedToSpot(spot, 'play')" -->
@@ -61,7 +74,7 @@
             </div>
           </div>
         </div>
-      </mat-card>
+      </div>
     </div>
   </ng-scrollbar>
 </div>

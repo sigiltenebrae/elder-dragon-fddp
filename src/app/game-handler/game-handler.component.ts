@@ -6192,6 +6192,8 @@ export class GameHandlerComponent implements OnInit {
     ]
   }
 
+  players: any[] = [1, 2, 3]
+
   //Page Interaction
   rightclicked_item: any = null; //Set to the object that triggers the right click event.
   menuTopLeftPosition =  {x: '0', y: '0'} //The top left position of the 'right click' menu
