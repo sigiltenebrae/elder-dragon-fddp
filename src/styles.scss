@@ -186,7 +186,7 @@ p, h1, h2, h3, h4, h5, h6 {
   width: 1144px;
   height: 409px;
   padding: 0 !important;
-  margin: 0;
+  margin: 4px 0 0 0;
 }
 
 .playmat-user-mini {
@@ -227,6 +227,7 @@ p, h1, h2, h3, h4, h5, h6 {
   width: 95px;
   height: 135px;
   box-shadow:inset 0px 0px 0px 2px gray;
+  margin: auto;
 }
 
 .playmat-user-spot-container-mini {
@@ -403,6 +404,7 @@ p, h1, h2, h3, h4, h5, h6 {
   position: relative;
   height: 100%;
   width: 100%;
+  @include mat.elevation(5);
 }
 
 .deck-user-wrapper .deck-quantity-text {
@@ -439,7 +441,7 @@ p, h1, h2, h3, h4, h5, h6 {
   height: 100%;
   width: 100%;
   background: rgba(black, 0.2);
-  @include mat.elevation(2);
+  @include mat.elevation(3);
 }
 
 //User Exile
@@ -456,7 +458,24 @@ p, h1, h2, h3, h4, h5, h6 {
   height: 100%;
   width: 100%;
   background: rgba(black, 0.2);
-  @include mat.elevation(2);
+  @include mat.elevation(3);
+}
+
+//User Exile
+.temp-zone-user-container {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  height: 105px;
+  width: 75px;
+}
+
+.temp-zone-user-wrapper {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background: rgba(black, 0.2);
+  @include mat.elevation(3);
 }
 
 //User Command Zone
@@ -481,7 +500,7 @@ p, h1, h2, h3, h4, h5, h6 {
   height: 100%;
   width: 100%;
   background: rgba(black, 0.2);
-  @include mat.elevation(2);
+  @include mat.elevation(3);
 }
 
 .commander-user-wrapper .command-tax-button-1 {
