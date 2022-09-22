@@ -39,7 +39,7 @@ $mtg-green: #087f23;
 ------------ Universals ------------
  */
 
-p {
+p, h1, h2, h3, h4, h5, h6 {
   font-family: Beleren, "Helvetica Neue", sans-serif !important;
 }
 
@@ -72,21 +72,19 @@ p {
 
 //Outer Playmat Containers
 .playmat-user-container {
+  width: 100vw;
+  height: 409px;
   position: fixed;
   bottom: 215px;
-  left: 50%;
-  -ms-transform: translateX(-50%);
-  transform: translateX(-50%);
-  z-index: 2;
+  left: 0;
 }
 
 .playmat-user-container-mini {
+  width: 100vw;
+  height: 214px;
   position: fixed;
   bottom: 105px;
-  left: 50%;
-  -ms-transform: translateX(-50%);
-  transform: translateX(-50%);
-  z-index: 2;
+  left: 0;
 }
 
 .playmat-user-wrapper {
@@ -94,6 +92,11 @@ p {
   width: 1284px;
   height: 409px;
   overflow: visible;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: auto;
+  margin: auto;
+  z-index: 2;
 }
 
 .playmat-user-wrapper-mini {
@@ -101,6 +104,11 @@ p {
   width: 684px;
   height: 214px;
   overflow: visible;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: auto;
+  margin: auto;
+  z-index: 2;
 }
 
 //Devotion data on the left of playmat
@@ -360,4 +368,59 @@ p {
 }
 .playmat-user-card-modifier-down {
   color: $mtg-red;
+}
+
+.zone-card-image {
+  width: 75px;
+  height: 105px;
+  border-radius: 5px;
+}
+
+.zone-card-image-mini {
+  width: 40px;
+  height: 56px;
+  border-radius: 3px;
+}
+
+//User Deck
+.deck-user-container {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  height: 105px;
+  width: 75px;
+}
+
+.deck-user-container-mini {
+  position: fixed;
+  bottom: 5px;
+  right: 5px;
+  height: 56px;
+  width: 40px;
+}
+
+.deck-user-wrapper {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.deck-user-wrapper .deck-quantity-text {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  z-index: 2;
+  margin-bottom: 0;
+  pointer-events: none;
+}
+
+.deck-user-wrapper .deck-owner-text {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  margin: 0;
+  z-index: 2;
+  pointer-events: none;
 }

@@ -2813,6 +2813,7 @@ export class GameHandlerComponent implements OnInit {
       ]
     },
     "name": "Chris",
+    "playmat_image": "https://i.ibb.co/Df3dC43/bolasplaymatfinal.png",
     "id": 1,
     "life": 40,
     "infect": 0,
@@ -6212,6 +6213,13 @@ export class GameHandlerComponent implements OnInit {
   /**------------------------------------------------
    *      Playmat Display Utility Functions         *
    ------------------------------------------------**/
+
+  /**
+   * Helper function for changing whose board is being displayed.
+   */
+  currentPlayer() {
+    return this.user;
+  }
 
   /**
    * Detects if a given card is a copy of a real card.
