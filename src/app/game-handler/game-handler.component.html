@@ -14,13 +14,20 @@
 <!-- Game Data (Players List and Log) -->
 <div fxHide.lt-xl class="game-data-container">
   <div class="game-data-wrapper">
-      <div class="game-data-player-list-container" [style.height.px]="players.length > 4? 200: players.length * 50">
-        <ng-scrollbar track="vertical" visibility="hover" pointerEventsMethod="scrollbar" [style.height.px]="200">
-          <mat-list>
-              <mat-list-item *ngFor="let player of players; let i = index" [style.height.px]="50">Player {{i + 1}}</mat-list-item>
-          </mat-list>
-        </ng-scrollbar>
-      </div>
+    <div class="game-data-player-list-container" [style.height.px]="players.length > 3? 200: players.length * 50">
+      <ng-scrollbar track="vertical" visibility="hover" pointerEventsMethod="scrollbar" [style.height.px]="200">
+        <mat-list>
+            <mat-list-item *ngFor="let player of players; let i = index" class="game-data-player-list-item">Player {{i + 1}}</mat-list-item>
+        </mat-list>
+      </ng-scrollbar>
+    </div>
+    <div class="game-data-log-container" [style.height.px]="players.length > 3? 209: 406 - (players.length * 50)">
+      <ng-scrollbar track="vertical" visibility="hover" pointerEventsMethod="scrollbar" [style.height.px]="players.length > 3? 207: 404 - (players.length * 50)">
+        <mat-list>
+          <mat-list-item *ngFor="let action of action_log; let i = index" class="game-data-log-list-item">{{action}}</mat-list-item>
+        </mat-list>
+      </ng-scrollbar>
+    </div>
   </div>
 </div>
 

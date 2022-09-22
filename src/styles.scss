@@ -78,6 +78,7 @@ p, h1, h2, h3, h4, h5, h6 {
   height: 409px;
   width: calc((100vw - (1284px + 50px)) / 2);
   z-index: 5;
+  border-radius: 10px;
   pointer-events: all;
 }
 
@@ -86,6 +87,7 @@ p, h1, h2, h3, h4, h5, h6 {
   height: 100%;
   width: 100%;
   background: rgba(black, 0.2);
+  border-radius: 10px;
   @include mat.elevation(3);
 }
 
@@ -95,9 +97,37 @@ p, h1, h2, h3, h4, h5, h6 {
   left: 0;
   width: 100%;
   height: 200px;
-  background: rgba(red, 0.1);
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  background: rgba(white, 0.05);
+  border: solid 2px #666;
   z-index: 3;
-  overflow: visible;
+}
+
+.game-data-player-list-item {
+  border-bottom: solid 2px #666;
+  height: 50px;
+  width: 100%
+}
+
+.game-data-wrapper .game-data-log-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 200px;
+  width: 100%;
+  background: rgba(black, 0.2);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  border: solid 2px #444;
+  z-index: 3;
+}
+
+.game-data-log-list-item {
+  border-bottom: solid 2px #444;
+  height: 50px;
+  width: 100%;
+  overflow: hidden;
 }
 
 //Outer Playmat Containers

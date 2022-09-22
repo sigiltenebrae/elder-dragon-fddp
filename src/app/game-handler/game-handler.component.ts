@@ -6192,7 +6192,58 @@ export class GameHandlerComponent implements OnInit {
     ]
   }
 
-  players: any[] = [1, 2, 3]
+  players: any[] = [1, 2, 3, 4, 5]
+
+  action_log: any[] = [
+    "Game created with type: commander.",
+    "*Chris* sent all from hand to deck_bottom",
+    "*Chris* {draw} 7 cards.",
+    "*Chris* moved  to exile",
+    "*Chris* sent all from hand to exile",
+    "*Chris* moved [[Gishath, Sun's Avatar]]  to play",
+    "*Chris* moved [[Arid Mesa]]  to play",
+    "*Chris* moved [[Arid Mesa]] [[Gishath, Sun's Avatar]]  to play",
+    "*Chris* moved [[Gishath, Sun's Avatar]] [[Arid Mesa]]  to grave",
+    "*Chris* moved  to grave",
+    "*Chris* moved  to grave",
+    "*Chris* moved  to grave",
+    "*Chris* moved  to grave",
+    "*Chris* moved  to grave",
+    "*Chris* moved  to grave",
+    "*Chris* {draw} 6 cards to grave",
+    "*Chris* moved [[Cavern of Souls]]  to temp_zone",
+    "*Chris* moved [[Noxious Revival]]  to play",
+    "*Chris* moved [[Farseek]]  to play",
+    "*Chris* moved [[Chaos Warp]]  to play",
+    "*Chris* moved [[Secluded Courtyard]]  to play",
+    "*Chris* moved [[Needletooth Raptor]]  to play",
+    "*Chris* moved [[Needletooth Raptor]] [[Noxious Revival]] [[Chaos Warp]] [[Secluded Courtyard]] [[Farseek]]  to grave",
+    "*Chris* sent all from hand to deck_bottom",
+    "*Chris* {draw} 7 cards.",
+    "*Chris* moved  to exile",
+    "*Chris* sent all from hand to exile",
+    "*Chris* sent all from hand to deck_bottom",
+    "*Chris* {draw} 7 cards.",
+    "*Chris* moved  to exile",
+    "*Chris* sent all from hand to exile",
+    "*Chris* sent all from hand to deck_bottom",
+    "*Chris* {draw} 7 cards.",
+    "*Chris* moved  to exile",
+    "*Chris* sent all from hand to exile",
+    "*Chris* {draw} 1 cards.",
+    "*Chris* {draw} 1 cards.",
+    "*Chris* {draw} 1 cards.",
+    "*Chris* {draw} 1 cards.",
+    "*Chris* {draw} 1 cards.",
+    "*Chris* {draw} 1 cards.",
+    "*Chris* {draw} 1 cards.",
+    "*Chris* moved  to exile",
+    "*Chris* sent all from hand to exile",
+    "*Chris* sent all from hand to deck_bottom",
+    "*Chris* {draw} 7 cards.",
+    "*Chris* moved  to exile",
+    "*Chris* sent all from hand to exile"
+  ]
 
   //Page Interaction
   rightclicked_item: any = null; //Set to the object that triggers the right click event.
