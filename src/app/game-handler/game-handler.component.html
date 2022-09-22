@@ -11,6 +11,9 @@
 </mat-menu>
 
 
+<!-- Opponent Playmats -->
+
+
 <!-- Game Data (Players List and Log) -->
 <div fxHide.lt-xl class="game-data-container">
   <div class="game-data-wrapper">
@@ -84,6 +87,13 @@
       </div>
     </div>
   </ng-scrollbar>
+</div>
+
+<!-- Magnifier Data -->
+<div fxHide.lt-xl class="magnifier-data-container">
+  <div class="magnifier-data-wrapper">
+    <img class="magnifier-data-card" [src]="magnified_card.image">
+  </div>
 </div>
 
 <!-- User Deck -->

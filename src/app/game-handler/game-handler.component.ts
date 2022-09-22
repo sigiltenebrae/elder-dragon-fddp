@@ -59,6 +59,67 @@ export class GameHandlerComponent implements OnInit {
     "theme": "dark"
   }
 
+  magnified_card: any = {
+    "id": 100,
+    "deckid": 9,
+    "name": "Farseek",
+    "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/6/061f0032-eb14-4c63-8231-aa61472396c2.png?1568004554",
+    "count": 1,
+    "iscommander": false,
+    "back_image": null,
+    "back_face": false,
+    "mana_cost": [
+      "1",
+      "G"
+    ],
+    "color_identity": [
+      "G"
+    ],
+    "back_mana_cost": [],
+    "types": [
+      "Sorcery"
+    ],
+    "back_types": [],
+    "oracle_text": "Search your library for a Plains, Island, Swamp, or Mountain card, put it onto the battlefield tapped, then shuffle.",
+    "back_oracle_text": "",
+    "power": null,
+    "back_power": null,
+    "toughness": null,
+    "back_toughness": null,
+    "loyalty": 0,
+    "back_loyalty": null,
+    "cmc": 2,
+    "tokens": [],
+    "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=470711",
+    "counter_1": false,
+    "counter_2": false,
+    "counter_3": false,
+    "multiplier": false,
+    "counter_1_value": 0,
+    "counter_2_value": 0,
+    "counter_3_value": 0,
+    "multiplier_value": 0,
+    "owner": 1,
+    "power_mod": 0,
+    "toughness_mod": 0,
+    "loyalty_mod": 0,
+    "locked": false,
+    "primed": false,
+    "triggered": false,
+    "is_token": false,
+    "tapped": "untapped",
+    "sidenav_visible": true,
+    "visible": [
+      1
+    ],
+    "alt": false,
+    "facedown": false,
+    "shaken": false,
+    "inverted": false,
+    "notes": "",
+    "selected": false
+  }
+
   user: any = {
     "star_color": null,
     "teammate_id": null,

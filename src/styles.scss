@@ -76,7 +76,8 @@ p, h1, h2, h3, h4, h5, h6 {
   bottom: 215px;
   left: 10px;
   height: 409px;
-  width: calc((100vw - (1284px + 50px)) / 2);
+  //width: calc((100vw - (1284px + 50px)) / 2);
+  width: 293px;
   z-index: 5;
   border-radius: 10px;
   pointer-events: all;
@@ -431,6 +432,37 @@ p, h1, h2, h3, h4, h5, h6 {
 }
 .playmat-user-card-modifier-down {
   color: $mtg-red;
+}
+
+
+//Magnifier Data
+.magnifier-data-container {
+  position: fixed;
+  bottom: 215px;
+  right: 10px;
+  height: 409px;
+  //width: calc((100vw - (1284px + 50px)) / 2);
+  width: 293px;
+  z-index: 5;
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+.magnifier-data-wrapper {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background: rgba(black, 0.2);
+  border-radius: 10px;
+  @include mat.elevation(6);
+}
+
+.magnifier-data-card {
+  height: auto;
+  width: auto;
+  max-height: 100%;
+  max-width: 100%;
+  border-radius: 10px;
 }
 
 .zone-card-image {
