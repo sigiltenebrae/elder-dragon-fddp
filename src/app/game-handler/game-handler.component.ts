@@ -6357,6 +6357,7 @@ export class GameHandlerComponent implements OnInit {
 
   //Board Interaction
   hovered_card: any = null; //Pointer to the card object
+  currently_dragging: any = null;
   teammate_view: boolean = false; //True if the player is viewing their partner's field (in partner game modes)
 
   //Messaging
@@ -6525,8 +6526,8 @@ export class GameHandlerComponent implements OnInit {
     else if (array == this.user.exile.cards) {
       return this.user.exile;
     }
-    else if (array == this.user.commander.cards) {
-      return this.user.commander;
+    else if (array == this.user.deck.commander.cards) {
+      return this.user.deck.commander;
     }
     else if (array == this.user.hand.cards) {
       return this.user.hand;
@@ -6559,6 +6560,8 @@ export class GameHandlerComponent implements OnInit {
         return this.getPlayerFromId(id).temp_zone;
       case 'play':
         return this.getPlayerFromId(id).playmat;
+      case this.getPlayerFromId(id).deck.name:
+        return this.getPlayerFromId(id).deck;
     }
   }
 
@@ -6568,7 +6571,61 @@ export class GameHandlerComponent implements OnInit {
    * @param dest_type string representing the destination
    */
   setVisibility(card: any, dest_type: string) {
-
+    /*switch(dest_type) {
+      case 'deck':
+        card.visible = [];
+        break;
+      case 'grave':
+        card.visible = [];
+        if (this.game_data.players) {
+          for (let player of this.game_data.players) {
+            card.visible.push(player.id);
+          }
+        }
+        break;
+      case 'exile':
+        if (!card.facedown) {
+          card.visible = [];
+          if (this.game_data.players) {
+            for (let player of this.game_data.players) {
+              card.visible.push(player.id);
+            }
+          }
+        }
+        break;
+      case 'commander':
+        card.visible = [];
+        if (this.game_data.players) {
+          for (let player of this.game_data.players) {
+            card.visible.push(player.id);
+          }
+        }
+        break;
+      case 'temp_zone':
+        if (!card.facedown) {
+          card.visible = [];
+          if (this.game_data.players) {
+            for (let player of this.game_data.players) {
+              card.visible.push(player.id);
+            }
+          }
+        }
+        break;
+      case 'hand':
+        card.visible = this.getPlayerFromId(card.owner).hand_preview;
+        break;
+      case 'play':
+        if (!card.facedown) {
+          card.visible = [];
+          if (this.game_data.players) {
+            for (let player of this.game_data.players) {
+              card.visible.push(player.id);
+            }
+          }
+        }
+        break;
+    }*/
+    card.visible = [1];
   }
 
   /**
@@ -6579,8 +6636,7 @@ export class GameHandlerComponent implements OnInit {
    */
   dragCard(card: any, dest: any, event: any) {
     //Need to get the source container (from the array)
-
-    this.sendCardToZone(card, this.getContainer(event.previousContainer), dest,
+    this.sendCardToZone(card, this.getContainer(event.previousContainer.data), dest,
       event.previousIndex, event.currentIndex);
   }
 
@@ -6609,7 +6665,7 @@ export class GameHandlerComponent implements OnInit {
           //clear the card of counters etc.
           this.setVisibility(card, dest.name);
           if (card.owner == dest.owner) {
-            if (options.deck && options.deck === 'bottom') {
+            if (options && options.deck && options.deck === 'bottom') {
               transferArrayItem(source.cards, dest.cards, previousIndex, dest.cards.length);
             }
             else {

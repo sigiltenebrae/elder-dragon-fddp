@@ -66,6 +66,15 @@ p, h1, h2, h3, h4, h5, h6 {
   filter: grayscale(100%);
 }
 
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-preview {
+  @include mat.elevation-transition();
+  @include mat.elevation(6)
+}
+
 /*
 ------------ User Playmat ------------
  */
@@ -639,6 +648,7 @@ p, h1, h2, h3, h4, h5, h6 {
   width: 100%;
   background: rgba(black, 0.2);
   @include mat.elevation(3);
+  overflow: hidden;
 }
 
 .exile-user-wrapper .exile-user-quantity-text {
@@ -777,6 +787,7 @@ p, h1, h2, h3, h4, h5, h6 {
   bottom: 10px;
   left: 0;
   z-index: 3;
+  pointer-events: none;
 }
 
 .hand-user-container-mini {
@@ -786,18 +797,18 @@ p, h1, h2, h3, h4, h5, h6 {
   bottom: 5px;
   left: 0;
   z-index: 1;
+  pointer-events: none;
 }
 
 .hand-user-wrapper {
   position: relative;
-  width: 1144px;
+  min-width: 75px;
   height: 105px;
   overflow: visible;
-  flex-grow: 1;
-  flex-shrink: 1;
-  flex-basis: auto;
   margin: auto;
   z-index: 2;
+  pointer-events: all;
+  background: rgba(red, 0.1);
 }
 
 .hand-user-wrapper-mini {
@@ -810,6 +821,7 @@ p, h1, h2, h3, h4, h5, h6 {
   flex-basis: auto;
   margin: auto;
   z-index: 2;
+  pointer-events: all;
 }
 
 .hand-user-wrapper .hand-quantity-text, .hand-user-wrapper-mini .hand-quantity-text {
