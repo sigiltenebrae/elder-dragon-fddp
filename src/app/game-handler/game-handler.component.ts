@@ -6594,15 +6594,19 @@ export class GameHandlerComponent implements OnInit {
    * 'currentIndex': the index the object is being moved to. Can be set manually for deck transfers.
    */
   sendCardToZone(card: any, source: any, dest: any, previousIndex: number, currentIndex: number, options?: any){
+    //need to write an insert predicate for sidenav cdkdroplist that prevents dragging in once list is sorted.
+    //Also prevents dragging in while scrying
     if (source == dest) {
+      //need to check for sidenav here (options.sendTo is allowed as opposed to drag)
       moveItemInArray(source.cards, previousIndex, currentIndex);
     }
     else {
-      if (dest.name !== 'play' && dest.name !== 'temp_zone') {
+      if (dest.name !== 'play' && dest.name !== 'temp_zone' && !(dest.name === 'commander' && !card.iscommander)) {
         if (card.is_token) {
           source.cards.splice(source.cards.indexOf(card), 1);
         }
         else {
+          //clear the card of counters etc.
           this.setVisibility(card, dest.name);
           if (card.owner == dest.owner) {
             if (options.deck && options.deck === 'bottom') {
@@ -6622,13 +6626,16 @@ export class GameHandlerComponent implements OnInit {
           }
         }
       }
-      else { //It should never be possible to send/drag to someone else's playmat
+      else if (dest.name === 'play' && dest.name === 'temp_zone') {
+        //It should never be possible to send/drag to someone else's playmat
         if (dest.name === 'play') {
-          if (dest.cards.length > 2) {
+          if (dest.cards.length < 3) {
+            this.setVisibility(card, dest.name); //wait to set visibility until move is confirmed
             transferArrayItem(source.cards, dest.cards, previousIndex, currentIndex);
           }
         }
-        else { //You can put anything in the temp zone
+        else if (dest.name === "temp_zone") { //You can put anything in the temp zone
+          //If visibility needs to change (draw to play) you have to do it before calling the move.
           transferArrayItem(source.cards, dest.cards, previousIndex, currentIndex);
         }
       }
