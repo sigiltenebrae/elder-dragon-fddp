@@ -62,128 +62,6 @@ export class GameHandlerComponent implements OnInit {
     "theme": "dark"
   }
 
-  magnified_card: any = {
-    "id": 100,
-    "deckid": 9,
-    "name": "Farseek",
-    "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/6/061f0032-eb14-4c63-8231-aa61472396c2.png?1568004554",
-    "count": 1,
-    "iscommander": false,
-    "back_image": null,
-    "back_face": false,
-    "mana_cost": [
-      "1",
-      "G"
-    ],
-    "color_identity": [
-      "G"
-    ],
-    "back_mana_cost": [],
-    "types": [
-      "Sorcery"
-    ],
-    "back_types": [],
-    "oracle_text": "Search your library for a Plains, Island, Swamp, or Mountain card, put it onto the battlefield tapped, then shuffle.",
-    "back_oracle_text": "",
-    "power": null,
-    "back_power": null,
-    "toughness": null,
-    "back_toughness": null,
-    "loyalty": 0,
-    "back_loyalty": null,
-    "cmc": 2,
-    "tokens": [],
-    "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=470711",
-    "counter_1": false,
-    "counter_2": false,
-    "counter_3": false,
-    "multiplier": false,
-    "counter_1_value": 0,
-    "counter_2_value": 0,
-    "counter_3_value": 0,
-    "multiplier_value": 0,
-    "owner": 1,
-    "power_mod": 0,
-    "toughness_mod": 0,
-    "loyalty_mod": 0,
-    "locked": false,
-    "primed": false,
-    "triggered": false,
-    "is_token": false,
-    "tapped": "untapped",
-    "sidenav_visible": true,
-    "visible": [
-      1
-    ],
-    "alt": false,
-    "facedown": false,
-    "shaken": false,
-    "inverted": false,
-    "notes": "",
-    "selected": false
-  }
-
-  test_card: any = {
-    "id": 95,
-    "deckid": 9,
-    "name": "Chaos Warp",
-    "image": "https://c1.scryfall.com/file/scryfall-cards/png/front/0/4/042431bc-0b21-4920-802f-6dd02e4c8721.png?1592713490",
-    "count": 1,
-    "iscommander": false,
-    "back_image": null,
-    "back_face": false,
-    "mana_cost": [
-      "2",
-      "R"
-    ],
-    "color_identity": [
-      "R"
-    ],
-    "back_mana_cost": [],
-    "types": [
-      "Instant"
-    ],
-    "back_types": [],
-    "oracle_text": "The owner of target permanent shuffles it into their library, then reveals the top card of their library. If it's a permanent card, they put it onto the battlefield.",
-    "back_oracle_text": "",
-    "power": null,
-    "back_power": null,
-    "toughness": null,
-    "back_toughness": null,
-    "loyalty": 0,
-    "back_loyalty": null,
-    "cmc": 3,
-    "tokens": [],
-    "gatherer": "https://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=236466",
-    "counter_1": false,
-    "counter_2": false,
-    "counter_3": false,
-    "multiplier": false,
-    "counter_1_value": 0,
-    "counter_2_value": 0,
-    "counter_3_value": 0,
-    "multiplier_value": 0,
-    "owner": 1,
-    "power_mod": 0,
-    "toughness_mod": 0,
-    "loyalty_mod": 0,
-    "locked": false,
-    "primed": false,
-    "triggered": false,
-    "is_token": false,
-    "tapped": "untapped",
-    "sidenav_visible": true,
-    "visible": [
-      1
-    ],
-    "alt": false,
-    "facedown": false,
-    "shaken": false,
-    "inverted": false,
-    "notes": "",
-    "selected": false
-  }
-
   user: any = {
     "star_color": null,
     "teammate_id": null,
@@ -6336,27 +6214,14 @@ export class GameHandlerComponent implements OnInit {
 
   players: any[] = [1, 2, 3, 4, 5]
 
-  action_log: any[] = [
-    {
-      message: "Game created with type: commander.",
-      cards: []
-    },
-    {
-      message: "*Chris* moved [[Gishath, Sun's Avatar]]  to play",
-      cards: []
-    },
-    {
-      message: "*Chris* moved [[Needletooth Raptor]] [[Noxious Revival]] [[Chaos Warp]] [[Secluded Courtyard]] [[Farseek]]  to grave",
-      cards: []
-    }
-  ]
+  action_log: any[] = [];
 
   //Page Interaction
   rightclicked_item: any = null; //Set to the object that triggers the right click event.
   menuTopLeftPosition =  {x: '0', y: '0'} //The top left position of the 'right click' menu
 
   //Board Interaction
-  hovered_card: any = null; //Pointer to the card object
+  magnified_card: any = null; //Pointer to the card object
   currently_dragging: any = null;
   teammate_view: boolean = false; //True if the player is viewing their partner's field (in partner game modes)
 
@@ -6635,7 +6500,6 @@ export class GameHandlerComponent implements OnInit {
    * @param event the drag event.
    */
   dragCard(card: any, dest: any, event: any) {
-    //Need to get the source container (from the array)
     this.sendCardToZone(card, this.getContainer(event.previousContainer.data), dest,
       event.previousIndex, event.currentIndex);
   }
@@ -6667,32 +6531,92 @@ export class GameHandlerComponent implements OnInit {
           if (card.owner == dest.owner) {
             if (options && options.deck && options.deck === 'bottom') {
               transferArrayItem(source.cards, dest.cards, previousIndex, dest.cards.length);
+              this.action_log.push([
+                {text: this.user.name, type: 'player'},
+                {text: 'moved', type: 'regular'},
+                {text: card.name, type: 'card', card: card},
+                {text: 'from', type: 'regular'},
+                {text: source.name, type: 'location'},
+                {text: 'to', type: 'regular'},
+                {text: dest.name, type: 'location'},
+              ]);
+              console.log(this.action_log);
             }
             else {
               transferArrayItem(source.cards, dest.cards, previousIndex, currentIndex);
+              this.action_log.push([
+                {text: this.user.name, type: 'player'},
+                {text: 'moved', type: 'regular'},
+                {text: card.name, type: 'card', card: card},
+                {text: 'from', type: 'regular'},
+                {text: source.name, type: 'location'},
+                {text: 'to', type: 'regular'},
+                {text: dest.name, type: 'location'},
+              ]);
+              console.log(this.action_log);
             }
           }
           else {
             if (options.deck && options.deck === 'bottom') {
               transferArrayItem(source.cards, this.getPlayerZone(card.owner, dest.name).cards, previousIndex, this.getPlayerZone(card.owner, dest.name).cards.length);
+              this.action_log.push([
+                {text: this.user.name, type: 'player'},
+                {text: 'moved', type: 'regular'},
+                {text: card.name, type: 'card', card: card},
+                {text: 'from', type: 'regular'},
+                {text: source.name, type: 'location'},
+                {text: 'to', type: 'regular'},
+                {text: dest.name, type: 'location'},
+              ]);
+              console.log(this.action_log);
             }
             else {
               transferArrayItem(source.cards, this.getPlayerZone(card.owner, dest.name).cards, previousIndex, 0);
+              this.action_log.push([
+                {text: this.user.name, type: 'player'},
+                {text: 'moved', type: 'regular'},
+                {text: card.name, type: 'card', card: card},
+                {text: 'from', type: 'regular'},
+                {text: source.name, type: 'location'},
+                {text: 'to', type: 'regular'},
+                {text: dest.name, type: 'location'},
+              ]);
+              console.log(this.action_log);
             }
           }
         }
       }
-      else if (dest.name === 'play' && dest.name === 'temp_zone') {
+      else if (dest.name === 'play' || dest.name === 'temp_zone') {
         //It should never be possible to send/drag to someone else's playmat
         if (dest.name === 'play') {
           if (dest.cards.length < 3) {
             this.setVisibility(card, dest.name); //wait to set visibility until move is confirmed
             transferArrayItem(source.cards, dest.cards, previousIndex, currentIndex);
+            this.action_log.push([
+              {text: this.user.name, type: 'player'},
+              {text: 'moved', type: 'regular'},
+              {text: card.name, type: 'card', card: card},
+              {text: 'from', type: 'regular'},
+              {text: source.name, type: 'location'},
+              {text: 'to', type: 'regular'},
+              {text: dest.name, type: 'location'},
+            ]);
+            console.log(this.action_log);
           }
         }
         else if (dest.name === "temp_zone") { //You can put anything in the temp zone
           //If visibility needs to change (draw to play) you have to do it before calling the move.
           transferArrayItem(source.cards, dest.cards, previousIndex, currentIndex);
+          this.action_log.push([
+            {text: this.user.name, type: 'player'},
+            {text: 'moved', type: 'regular'},
+            {text: card.name, type: 'card', card: card},
+            {text: 'from', type: 'regular'},
+            {text: source.name, type: 'location'},
+            {text: 'to', type: 'regular'},
+            {text: dest.name, type: 'location'},
+          ]);
+          console.log(this.action_log);
         }
       }
     }

@@ -76,7 +76,7 @@ p, h1, h2, h3, h4, h5, h6 {
 }
 
 /*
------------- User Playmat ------------
+------------ Opponent Playmat ------------
  */
 
 //Opponent Playmat Display
@@ -108,6 +108,8 @@ p, h1, h2, h3, h4, h5, h6 {
   margin-right: auto;
   margin-bottom: 20px;
   z-index: 2;
+  background: rgba(black, 0.2);
+  @include mat.elevation(3);
 }
 
 .playmat-opponent {
@@ -207,7 +209,9 @@ p, h1, h2, h3, h4, h5, h6 {
   position: fixed;
   bottom: 215px;
   left: 0;
-  z-index: 1;
+  z-index: 3;
+  pointer-events: none;
+  overflow: visible;
 }
 
 .playmat-user-container-mini {
@@ -217,6 +221,7 @@ p, h1, h2, h3, h4, h5, h6 {
   bottom: 105px;
   left: 0;
   z-index: 1;
+  pointer-events: none;
 }
 
 .playmat-user-wrapper {
@@ -229,6 +234,7 @@ p, h1, h2, h3, h4, h5, h6 {
   flex-basis: auto;
   margin: auto;
   z-index: 2;
+  pointer-events: none;
 }
 
 .playmat-user-wrapper-mini {
@@ -241,6 +247,7 @@ p, h1, h2, h3, h4, h5, h6 {
   flex-basis: auto;
   margin: auto;
   z-index: 2;
+  pointer-events: none;
 }
 
 //Devotion data on the left of playmat
@@ -319,6 +326,7 @@ p, h1, h2, h3, h4, h5, h6 {
   height: 409px;
   padding: 0 !important;
   margin: 4px 0 0 0;
+  background: rgba(black, 0.2);
   @include mat.elevation(5);
 }
 
@@ -336,7 +344,7 @@ p, h1, h2, h3, h4, h5, h6 {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 1;
+  z-index: 0;
   width: 1144px;
   height: 409px;
   opacity: 0.7;
@@ -347,7 +355,7 @@ p, h1, h2, h3, h4, h5, h6 {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 1;
+  z-index: 0;
   width: 604px;
   height: 214px;
   opacity: 0.7;
@@ -359,8 +367,28 @@ p, h1, h2, h3, h4, h5, h6 {
   float: left;
   width: 95px;
   height: 135px;
-  box-shadow:inset 0px 0px 0px 2px gray;
-  margin: auto;
+  pointer-events: all;
+}
+
+.playmat-user-spot-container .stack-1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.playmat-user-spot-container .stack-2 {
+  position: absolute;
+  top: 15px;
+  left: 10px;
+  z-index: 12;
+}
+
+.playmat-user-spot-container .stack-3 {
+  position: absolute;
+  top: 30px;
+  left: 20px;
+  z-index: 22;
 }
 
 .playmat-user-spot-container-mini {
@@ -368,14 +396,45 @@ p, h1, h2, h3, h4, h5, h6 {
   float: left;
   width: 50px;
   height: 70px;
-  box-shadow:inset 0px 0px 0px 2px gray;
+  //box-shadow:inset 0px 0px 0px 2px gray;
   margin: auto;
+  pointer-events: all;
 }
+
+.playmat-user-spot-container-mini .stack-1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.playmat-user-spot-container-mini .stack-2 {
+  position: absolute;
+  top: 7px;
+  left: 5px;
+  z-index: 12;
+}
+
+.playmat-user-spot-container-mini .stack-3 {
+  position: absolute;
+  top: 14px;
+  left: 10px;
+  z-index: 22;
+}
+
+.stack-1:hover,
+.stack-2:hover,
+.stack-3:hover {
+  z-index: 30;
+}
+
 
 .playmat-user-card-container {
   position: relative;
-  width: 75px;
-  height: 105px;
+  min-width: 75px;
+  min-height: 105px;
+  max-width: 75px;
+  max-height: 105px;
   border-radius: 5px;
   margin: 0;
   background-color: mat.get-color-from-palette($fddp-palette-primary-dark, 200);
@@ -499,10 +558,10 @@ p, h1, h2, h3, h4, h5, h6 {
 }
 
 .playmat-user-card-modifier-up {
-  color: $mtg-green;
+  color: $mtg-green !important;
 }
 .playmat-user-card-modifier-down {
-  color: $mtg-red;
+  color: $mtg-red !important;
 }
 
 
@@ -572,6 +631,7 @@ p, h1, h2, h3, h4, h5, h6 {
   height: 100%;
   width: 100%;
   @include mat.elevation(5);
+  overflow: hidden;
 }
 
 .deck-user-wrapper .deck-user-quantity-text {
@@ -610,6 +670,7 @@ p, h1, h2, h3, h4, h5, h6 {
   width: 100%;
   background: rgba(black, 0.2);
   @include mat.elevation(3);
+  overflow: hidden;
 }
 
 .grave-user-wrapper .grave-user-quantity-text {
@@ -687,6 +748,7 @@ p, h1, h2, h3, h4, h5, h6 {
   width: 100%;
   background: rgba(black, 0.2);
   @include mat.elevation(3);
+  overflow: hidden;
 }
 
 .temp-zone-user-wrapper .temp-zone-user-quantity-text {
@@ -808,7 +870,9 @@ p, h1, h2, h3, h4, h5, h6 {
   margin: auto;
   z-index: 2;
   pointer-events: all;
-  background: rgba(red, 0.1);
+  border-radius: 5px;
+  background: rgba(black, 0.2);
+  @include mat.elevation(8);
 }
 
 .hand-user-wrapper-mini {

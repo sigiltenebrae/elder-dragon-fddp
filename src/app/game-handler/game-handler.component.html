@@ -12,29 +12,23 @@
 
 <div cdkDropListGroup>
   <!-- Opponent Playmats -->
-  <div [ngClass.gt-md]="'playmat-opponent-view-container'" [ngClass.lt-lg]="'playmat-opponent-view-container-mini'">
+  <div class="playmat-opponent-view-container">
     <ng-scrollbar track="all" visibility="hover" pointerEventsMethod="scrollbar" style="width: 100%; height: 100%;">
       <div fxFlex fxLayout="row wrap">
         <div *ngFor="let player of [user, user, user]" fxFlex="604px" class="playmat-opponent-wrapper">
           <div class="playmat-opponent" fxLayout="row wrap" fxLayoutAlign="start start">
-            <img class="playmat-user-background-image-mini" *ngIf="currentPlayer() != null && currentPlayer().playmat_image != null && currentPlayer().playmat_image !== ''" src="{{currentPlayer().playmat_image}}">
-            <!--(cdkDropListDropped)="moveCardToZone($event, 'play')"
-                 (dblclick)="sendSelectedToSpot(spot, 'play')" -->
             <div *ngFor="let spot of currentPlayer().playmat"
                  class="playmat-user-spot-container-mini"
-                 cdkDropList [cdkDropListData]="spot.cards"
                  (contextmenu)="onRightClick($event, {type: 'user_playmat', spot: spot, from: spot})">
-              <div *ngFor="let card of spot.cards; let i = index" (dblclick)="$event.stopPropagation()">
+              <div *ngFor="let card of spot.cards; let i = index">
                 <div [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2, 'invert': card.inverted}"
-                     (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
-                     (cdkDragStarted)="hovered_card=null;"
+                     (pointerenter)="magnified_card=card" (pointerleave)="magnified_card=null"
                      class="playmat-user-card-container-mini"
                      [@userTappedState]="card.tapped"
-                     [@shakeCard]="card.shaken"
-                     cdkDrag>
+                     [@shakeCard]="card.shaken">
                   <div *ngIf="card.locked" class="playmat-user-card-lock"><mat-icon>lock</mat-icon></div>
                   <img [ngClass]="{'playmat-user-card-selected': card.selected, 'grayscale': isClone(card) }"
-                       [ngClass.gt-md]="'playmat-user-card'" [ngClass.lt-lg]="'playmat-user-card-mini'"
+                       class="playmat-user-card-mini"
                        [matTooltip]="card.notes"
                        [src]="card.visible.includes(user.id) ? card.image: user.deck.sleeves"
                        [alt]="card.visible.includes(user.id) ? card.name: ''"
@@ -78,7 +72,16 @@
         <ng-scrollbar track="vertical" visibility="hover" pointerEventsMethod="scrollbar" [style.height.px]="players.length > 3? 207: 404 - (players.length * 50)">
           <mat-list>
             <mat-list-item *ngFor="let action of action_log; let i = index" class="game-data-log-list-item">
-
+              <p>
+                <span *ngFor="let token of action">
+                  <span *ngIf="token.type === 'card'" style="color: mediumpurple"
+                        (pointerenter)="magnified_card = token.card"
+                        (pointerleave)="magnified_card = null">{{token.text}} </span>
+                  <span *ngIf="token.type === 'player'" style="color: darkorange">{{token.text}} </span>
+                  <span *ngIf="token.type === 'location'" style="color: goldenrod">{{token.text}} </span>
+                  <span *ngIf="token.type === 'regular'">{{token.text}} </span>
+                </span>
+              </p>
             </mat-list-item>
           </mat-list>
         </ng-scrollbar>
@@ -87,58 +90,54 @@
   </div>
 
   <!-- User Playmat -->
-  <div [ngClass.gt-md]="'playmat-user-container'" [ngClass.lt-lg]="'playmat-user-container-mini'">
-    <ng-scrollbar track="horizontal" visibility="hover" pointerEventsMethod="scrollbar" style="width: 100%;">
-      <div [ngClass.gt-md]="'playmat-user-wrapper'" [ngClass.lt-lg]="'playmat-user-wrapper-mini'" *ngIf="currentPlayer() != null">
-        <div [ngClass.gt-md]="'playmat-user-devotion-container'" [ngClass.lt-lg]="'playmat-user-devotion-container-mini'">
-          <div fxFlexFill fxLayout="column" fxLayoutAlign="space-evenly start">
-            <div class="playmat-user-devotion-wrapper" *ngFor="let color of ['W', 'U', 'B', 'R', 'G']">
-              <button fxHide.lt-lg mat-fab class="playmat-user-devotion-{{color}}">{{devotionCount(currentPlayer(), color)}}</button>
-              <button fxHide.gt-md mat-mini-fab class="playmat-user-devotion-{{color}} playmat-user-devotion-mini">{{devotionCount(currentPlayer(), color)}}</button>
-            </div>
-          </div>
+  <div class="playmat-user-container">
+    <div class="playmat-user-wrapper" *ngIf="currentPlayer() != null">
+    <div class="playmat-user-devotion-container">
+      <div fxFlexFill fxLayout="column" fxLayoutAlign="space-evenly start">
+        <div class="playmat-user-devotion-wrapper" *ngFor="let color of ['W', 'U', 'B', 'R', 'G']">
+          <button fxHide.lt-lg mat-fab class="playmat-user-devotion-{{color}}">{{devotionCount(currentPlayer(), color)}}</button>
+          <button fxHide.gt-md mat-mini-fab class="playmat-user-devotion-{{color}} playmat-user-devotion-mini">{{devotionCount(currentPlayer(), color)}}</button>
         </div>
-        <div [ngClass.gt-md]="'playmat-user-teammate-actions'" [ngClass.lt-lg]="'playmat-user-teammate-actions-mini'"></div>
-        <div [ngClass.gt-md]="'playmat-user'" [ngClass.lt-lg]="'playmat-user-mini'" fxLayout="row wrap" fxLayoutAlign="start start">
-          <img [ngClass.gt-md]="'playmat-user-background-image'" [ngClass.lt-lg]="'playmat-user-background-image-mini'" *ngIf="currentPlayer() != null && currentPlayer().playmat_image != null && currentPlayer().playmat_image !== ''" src="{{currentPlayer().playmat_image}}">
-          <!--(cdkDropListDropped)="moveCardToZone($event, 'play')"
-               (dblclick)="sendSelectedToSpot(spot, 'play')" -->
-          <div *ngFor="let spot of currentPlayer().playmat"
-               [ngClass.gt-md]="'playmat-user-spot-container'"
-               [ngClass.lt-lg]="'playmat-user-spot-container-mini'"
-               cdkDropList [cdkDropListData]="spot.cards"
-               (contextmenu)="onRightClick($event, {type: 'user_playmat', spot: spot, from: spot})">
-            <div *ngFor="let card of spot.cards; let i = index" (dblclick)="$event.stopPropagation()">
-              <div [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2, 'invert': card.inverted}"
-                   (pointerenter)="hovered_card=card" (pointerleave)="hovered_card=null"
-                   (cdkDragStarted)="hovered_card=null;"
-                   [ngClass.gt-md]="'playmat-user-card-container'" [ngClass.lt-lg]="'playmat-user-card-container-mini'"
-                   [@userTappedState]="card.tapped"
-                   [@shakeCard]="card.shaken"
-                   cdkDrag>
-                <div *ngIf="card.locked" class="playmat-user-card-lock"><mat-icon>lock</mat-icon></div>
-                <img [ngClass]="{'playmat-user-card-selected': card.selected, 'grayscale': isClone(card) }"
-                     [ngClass.gt-md]="'playmat-user-card'" [ngClass.lt-lg]="'playmat-user-card-mini'"
-                     [matTooltip]="card.notes"
-                     [src]="card.visible.includes(user.id) ? card.image: user.deck.sleeves"
-                     [alt]="card.visible.includes(user.id) ? card.name: ''"
-                     (contextmenu)="onRightClick($event,{type: 'user_play', card: card, spot: spot, from: spot});"
-                     (click)="card.selected=!card.selected" (dblclick)="toggleCardTap(card)" loading="lazy">
-                <button *ngIf="card.counter_1" class="playmat-user-card-counter playmat-user-card-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true" (click)="card.counter_1_value = card.counter_1_value + 1; updateCounter('Counter 1', card.counter_1_value, {card: card});" (contextmenu)="onRightClick($event, {type: 'counter_1', card: card})"><p>{{card.counter_1_value}}</p></button>
-                <button *ngIf="card.counter_2" class="playmat-user-card-counter playmat-user-card-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true" (click)="card.counter_2_value = card.counter_2_value + 1; updateCounter('Counter 2', card.counter_2_value, {card: card});" (contextmenu)="onRightClick($event, {type: 'counter_2', card: card})"><p>{{card.counter_2_value}}</p></button>
-                <button *ngIf="card.counter_3" class="playmat-user-card-counter playmat-user-card-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true" (click)="card.counter_3_value = card.counter_3_value + 1; updateCounter('Counter 3', card.counter_3_value, {card: card});" (contextmenu)="onRightClick($event, {type: 'counter_3', card: card})"><p>{{card.counter_3_value}}</p></button>
-                <button *ngIf="card.multiplier" class="playmat-user-card-counter playmat-user-card-multiplier" mat-fab color="accent" [class.mat-elevation-z8]="true" (click)="card.multiplier_value = card.multiplier_value + 1; updateCounter('Multiplier', card.multiplier_value, {card: card});" (contextmenu)="onRightClick($event, {type: 'multiplier', card: card})"><p>{{card.multiplier_value}}</p></button>
-                <h4 *ngIf="card.power && card.toughness && card.visible.includes(user.id)" class="playmat-user-card-pow-tough shadow-text">
-                  <a class="simple-a" [ngClass]="{'playmat-user-card-modifier-up': card.power_mod > 0, 'playmat-user-card-modifier-down': card.power_mod < 0}" (click)="card.power_mod = card.power_mod + 1; updateCounter('Power', card.power_mod + card.power, {card: card});" (contextmenu)="onRightClick($event, {type: 'power', card: card})">{{card.power + card.power_mod}}</a>/
-                  <a class="simple-a" [ngClass]="{'playmat-user-card-modifier-up': card.toughness_mod > 0, 'playmat-user-card-modifier-down': card.toughness_mod < 0}" (click)="card.toughness_mod = card.toughness_mod + 1; updateCounter('Toughness', card.toughness_mod + card.toughness, {card: card});" (contextmenu)="onRightClick($event, {type: 'toughness', card: card})">{{card.toughness + card.toughness_mod}}</a></h4>
-                <h4 *ngIf="card.loyalty && card.visible.includes(user.id)" class="mtg-card-loyalty shadow-text">
-                  <a class="simple-a" [ngClass]="{'playmat-user-card-modifier-up': card.loyalty_mod > 0, 'playmat-user-card-modifier-down': card.loyalty_mod < 0}" (click)="card.loyalty_mod = card.loyalty_mod + 1; updateCounter('Loyalty', card.loyalty_mod + card.loyalty, {card: card});" (contextmenu)="onRightClick($event, {type: 'loyalty', card: card})">{{card.loyalty + card.loyalty_mod}}</a></h4>
-              </div>
-            </div>
+      </div>
+    </div>
+    <div class="playmat-user-teammate-actions"></div>
+    <div class="playmat-user" fxLayout="row wrap" fxLayoutAlign="start start">
+      <!--          <img class="playmat-user-background-image" *ngIf="currentPlayer() != null && currentPlayer().playmat_image != null && currentPlayer().playmat_image !== ''" src="{{currentPlayer().playmat_image}}">-->
+      <!-- (dblclick)="sendSelectedToSpot(spot, 'play')" -->
+      <div *ngFor="let spot of currentPlayer().playmat"
+           class="playmat-user-spot-container"
+           cdkDropList
+           [cdkDropListData]="spot.cards"
+           (cdkDropListDropped)="dragCard(currently_dragging, spot, $event)">
+        <div *ngFor="let card of spot.cards; let j = index" (dblclick)="$event.stopPropagation()">
+          <div [ngClass]="{'stack-1': j == 0, 'stack-2': j == 1, 'stack-3': j == 2, 'invert': card.inverted}"
+               (pointerenter)="magnified_card=card" (pointerleave)="magnified_card=null"
+               (cdkDragStarted)="magnified_card=null;"
+               class="playmat-user-card-container"
+               [@userTappedState]="card.tapped"
+               [@shakeCard]="card.shaken"
+               cdkDrag>
+            <img [ngClass]="{'playmat-user-card-selected': card.selected, 'grayscale': isClone(card) }"
+                 class="playmat-user-card"
+                 [matTooltip]="card.notes"
+                 [src]="card.visible.includes(user.id) ? card.image: user.deck.sleeves"
+                 [alt]="card.visible.includes(user.id) ? card.name: ''"
+                 (contextmenu)="onRightClick($event,{type: 'user_play', card: card, spot: spot, from: spot});"
+                 (click)="card.selected=!card.selected" (dblclick)="toggleCardTap(card)" loading="lazy">
+            <button *ngIf="card.counter_1" class="playmat-user-card-counter playmat-user-card-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true" (click)="card.counter_1_value = card.counter_1_value + 1; updateCounter('Counter 1', card.counter_1_value, {card: card});" (contextmenu)="onRightClick($event, {type: 'counter_1', card: card})"><p>{{card.counter_1_value}}</p></button>
+            <button *ngIf="card.counter_2" class="playmat-user-card-counter playmat-user-card-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true" (click)="card.counter_2_value = card.counter_2_value + 1; updateCounter('Counter 2', card.counter_2_value, {card: card});" (contextmenu)="onRightClick($event, {type: 'counter_2', card: card})"><p>{{card.counter_2_value}}</p></button>
+            <button *ngIf="card.counter_3" class="playmat-user-card-counter playmat-user-card-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true" (click)="card.counter_3_value = card.counter_3_value + 1; updateCounter('Counter 3', card.counter_3_value, {card: card});" (contextmenu)="onRightClick($event, {type: 'counter_3', card: card})"><p>{{card.counter_3_value}}</p></button>
+            <button *ngIf="card.multiplier" class="playmat-user-card-counter playmat-user-card-multiplier" mat-fab color="accent" [class.mat-elevation-z8]="true" (click)="card.multiplier_value = card.multiplier_value + 1; updateCounter('Multiplier', card.multiplier_value, {card: card});" (contextmenu)="onRightClick($event, {type: 'multiplier', card: card})"><p>{{card.multiplier_value}}</p></button>
+            <h4 *ngIf="card.power && card.toughness && card.visible.includes(user.id)" class="playmat-user-card-pow-tough shadow-text">
+              <a class="simple-a" [ngClass]="{'playmat-user-card-modifier-up': card.power_mod > 0, 'playmat-user-card-modifier-down': card.power_mod < 0}" (click)="card.power_mod = card.power_mod + 1; updateCounter('Power', card.power_mod + card.power, {card: card});" (contextmenu)="onRightClick($event, {type: 'power', card: card})">{{card.power + card.power_mod}}</a>/
+              <a class="simple-a" [ngClass]="{'playmat-user-card-modifier-up': card.toughness_mod > 0, 'playmat-user-card-modifier-down': card.toughness_mod < 0}" (click)="card.toughness_mod = card.toughness_mod + 1; updateCounter('Toughness', card.toughness_mod + card.toughness, {card: card});" (contextmenu)="onRightClick($event, {type: 'toughness', card: card})">{{card.toughness + card.toughness_mod}}</a></h4>
+            <h4 *ngIf="card.loyalty && card.visible.includes(user.id)" class="mtg-card-loyalty shadow-text">
+              <a class="simple-a" [ngClass]="{'playmat-user-card-modifier-up': card.loyalty_mod > 0, 'playmat-user-card-modifier-down': card.loyalty_mod < 0}" (click)="card.loyalty_mod = card.loyalty_mod + 1; updateCounter('Loyalty', card.loyalty_mod + card.loyalty, {card: card});" (contextmenu)="onRightClick($event, {type: 'loyalty', card: card})">{{card.loyalty + card.loyalty_mod}}</a></h4>
           </div>
         </div>
       </div>
-    </ng-scrollbar>
+    </div>
+  </div>
   </div>
 
   <!-- Magnifier Data -->
@@ -149,7 +148,7 @@
   </div>
 
   <!-- User Deck -->
-  <div [ngClass.gt-md]="'deck-user-container'" [ngClass.lt-lg]="'deck-user-container-mini'">
+  <div class="deck-user-container">
     <div class="deck-user-wrapper"
          [cdkDropListData]="currentPlayer().deck.cards"
          (cdkDropListDropped)="dragCard(currently_dragging, user.deck, $event)"
@@ -158,8 +157,7 @@
       <h3 class="deck-user-quantity-text shadow-text">{{currentPlayer().deck.cards.length}}</h3>
       <h3 fxHide.lt-lg class="deck-user-owner-text shadow-text">{{currentPlayer().name}}</h3>
       <img loading="lazy"
-           [ngClass.gt-md]="'zone-card-image'"
-           [ngClass.lt-lg]="'zone-card-image-mini'"
+           class="zone-card-image"
            [src]="currentPlayer().top_flipped && currentPlayer().deck.cards.length > 0 ? currentPlayer().deck.cards[0]: currentPlayer().deck.sleeves"
            (pointerenter)="magnified_card = currentPlayer().top_flipped && currentPlayer().deck.cards.length > 0 ? currentPlayer().deck.cards[0]: null"
            (pointerleave)="magnified_card = null"
@@ -205,14 +203,14 @@
   </div>
 
   <!-- User Command Zone -->
-  <div [ngClass.gt-md]="'commander-user-container'" [ngClass.lt-lg]="'commander-user-container-mini'">
+  <div class="commander-user-container">
     <div class="commander-user-wrapper"
          [cdkDropListData]="currentPlayer().deck.commander.cards"
          (cdkDropListDropped)="dragCard(currently_dragging, user.deck.commander, $event)"
          cdkDropListOrientation="horizontal"
          cdkDropList>
-      <button mat-fab [ngClass.gt-md]="'command-tax-button-1'" [ngClass.lt-lg]="'command-tax-button-1-mini'"><h1>{{currentPlayer().command_tax_1}}</h1></button>
-      <button *ngIf="currentPlayer().deck.commander.saved.length == 2" mat-fab [ngClass.gt-md]="'command-tax-button-2'" [ngClass.lt-lg]="'command-tax-button-2-mini'" color="primary"><h1>{{currentPlayer().command_tax_2}}</h1></button>
+      <button mat-fab class="command-tax-button-1"><h1>{{currentPlayer().command_tax_1}}</h1></button>
+      <button *ngIf="currentPlayer().deck.commander.saved.length == 2" mat-fab class="command-tax-button-2" color="primary"><h1>{{currentPlayer().command_tax_2}}</h1></button>
       <img *ngIf="currentPlayer().deck.commander.cards.length > 0" class="commander-card-image" src="{{currentPlayer().deck.commander.cards[0].image}}"
            (pointerleave)="magnified_card = null"
            (cdkDragStarted)="magnified_card = null; currently_dragging=user.deck.commander.cards[0]"
@@ -239,32 +237,29 @@
   </div>
 
   <!-- User Hand -->
-  <div [ngClass.gt-md]="'hand-user-container'" [ngClass.lt-lg]="'hand-user-container-mini'">
-    <div [ngClass.gt-md]="'hand-user-wrapper'"
-         [ngStyle.gt-md]="{'max-width': currentPlayer().hand.cards.length * 75 < 1144 ? currentPlayer().hand.cards.length * 75 + 'px': '1144px', 'min-width': '75px'}"
-         [ngClass.lt-lg]="'hand-user-wrapper-mini'">
+  <div class="hand-user-container">
+    <div class="hand-user-wrapper"
+         [ngStyle]="{'max-width': currentPlayer().hand.cards.length * 75 < 1144 ? currentPlayer().hand.cards.length * 75 + 'px': '1144px', 'min-width': '75px'}">
       <mat-icon fxHide.lt-lg class="hand-menu shadow-text">more_vert</mat-icon>
       <h3 class="hand-quantity-text shadow-text">{{currentPlayer().hand.cards.length}}</h3>
       <ng-scrollbar track="horizontal"
                     visibility="hover"
                     pointerEventsMethod="scrollbar"
                     [ngStyle.gt-md]="{'min-width': '75px', 'width': currentPlayer().hand.cards.length * 75 < 1144 ? currentPlayer().hand.cards.length * 75 + 'px': '1144px'}">
-        <div [ngClass.gt-md]="'hand-user-droplist-wrapper'"
-             [ngClass.lt-lg]="'hand-user-droplist-wrapper-mini'"
-             fxLayout="row" fxLayoutAlign="center"
+        <div class="hand-user-droplist-wrapper"
+             fxLayout="row" fxLayoutAlign="start"
              scrollViewport
              [cdkDropListData]="currentPlayer().hand.cards"
              (cdkDropListDropped)="dragCard(currently_dragging, user.hand, $event)"
              cdkDropListOrientation="horizontal"
              cdkDropList>
           <div *ngFor="let card of currentPlayer().hand.cards"
-               [ngClass.gt-md]="'playmat-user-card-container'"
-               [ngClass.lt-lg]="'playmat-user-card-container-mini'"
+               class="playmat-user-card-container"
                (pointerenter)="magnified_card = card"
                (pointerleave)="magnified_card = null"
                (cdkDragStarted)="magnified_card = null; currently_dragging = card"
                cdkDrag>
-            <img [ngClass.gt-md]="'playmat-user-card'" [ngClass.lt-lg]="'playmat-user-card-mini'" [src]="card.visible.includes(user.id) ? card.image: currentPlayer().deck.sleeves">
+            <img class="playmat-user-card" [src]="card.visible.includes(user.id) ? card.image: currentPlayer().deck.sleeves">
           </div>
         </div>
       </ng-scrollbar>
