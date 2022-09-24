@@ -6293,12 +6293,12 @@ export class GameHandlerComponent implements OnInit {
    */
   toggleCardTap(card: any) {
     let log = '';
-    if (card.tapped) {
-      card.tapped = false;
+    if (card.tapped === 'tapped') {
+      card.tapped = 'untapped';
       log += ' {untap} ' + card.name
     }
     else {
-      card.tapped = true;
+      card.tapped = 'tapped';
       log += ' {tap} ' + card.name
     }
     /*
@@ -6545,11 +6545,9 @@ export class GameHandlerComponent implements OnInit {
           source.cards.splice(source.cards.indexOf(card), 1);
         }
         else {
-          console.log(card);
           //clear the card of counters etc.
           this.setVisibility(card, dest.name);
           if (card.owner == dest.owner) {
-            console.log('here');
             if (options && options.deck && options.deck === 'bottom') {
               transferArrayItem(source.cards, dest.cards, previousIndex, dest.cards.length);
               this.logAction('move', {card: card, source: source, dest: dest});
