@@ -6,7 +6,199 @@
 </div>
 
 <mat-menu #rightMenu="matMenu">
-  <button mat-menu-item>Button</button>
+  <div>
+    <ng-template matMenuContent>
+      <div *ngIf="rightclicked_item.type">
+        <div *ngIf="rightclicked_item.type === 'user_play'">
+          <button *ngIf="user != null && !user.scooped" mat-menu-item (click)="rightclicked_item.card.locked=!rightclicked_item.card.locked">(Un)Lock Tap</button>
+          <button *ngIf="user != null && !user.scooped" mat-menu-item (click)="shakeCard(rightclicked_item.card, user.id, 'play')">Shake</button>
+          <button *ngIf="user != null && user.scooped" mat-menu-item (click)="shakeCard(rightclicked_item.card, rightclicked_item.card.owner, 'play')">Shake</button>
+          <button *ngIf="user != null && !user.scooped" mat-menu-item (click)="cloneCard(rightclicked_item.card)">Clone</button>
+          <button *ngIf="user != null && !user.scooped" mat-menu-item (click)="editNotes(rightclicked_item.card)">Edit Notes</button>
+          <button *ngIf="user != null && !user.scooped" mat-menu-item [matMenuTriggerFor]="counters">Counters</button>
+          <button *ngIf="rightclicked_item && rightclicked_item.card && rightclicked_item.card.tokens && rightclicked_item.card.tokens.length> 0 && user != null && !user.scooped" mat-menu-item [matMenuTriggerFor]="token_menu">Tokens</button>
+          <button *ngIf="user != null && !user.scooped" mat-menu-item [matMenuTriggerFor]="orient">Orient</button>
+          <button *ngIf="user != null && !user.scooped" mat-menu-item [matMenuTriggerFor]="sendTo">Send To</button>
+        </div>
+
+        <div *ngIf="rightclicked_item.type === 'opponent_play'">
+          <button mat-menu-item (click)="shakeCard(rightclicked_item.card, rightclicked_item.userid, 'play')">Shake</button>
+          <button mat-menu-item (click)="cloneCard(rightclicked_item.card)">Clone</button>
+        </div>
+
+        <div *ngIf="rightclicked_item.type === 'user_playmat'">
+          <button *ngIf="!user.scooped" mat-menu-item (click)="untapAll()">Untap All</button>
+          <button *ngIf="!user.scooped" mat-menu-item (click)="openTokenDialog()">Insert Token</button>
+          <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px" *ngIf="!user.scooped">
+            <mat-label>Quick Insert Token</mat-label>
+            <input (keydown.enter)="createToken({name: quick_token.value})" #quick_token type="text" matInput (click)="$event.stopPropagation()">
+            <button matSuffix mat-icon-button aria-label="Draw" (click)="createToken({name: quick_token.value})"><mat-icon>add</mat-icon></button>
+          </mat-form-field>
+          <button mat-menu-item [matMenuTriggerFor]="play_counter">Insert Counter</button>
+          <button *ngIf="user != null && game_data != null && user.turn == game_data.current_turn" mat-menu-item (click)="endTurn()">End Turn</button>
+          <button *ngIf="user != null && game_data != null && game_data.type == 2 && game_data.current_turn == getTeam(this.user.id).turn" mat-menu-item (click)="endTurn()">End Turn</button>
+        </div>
+
+        <div *ngIf="rightclicked_item.type === 'type_counter'">
+          <button mat-menu-item (click)="deleteCounter(rightclicked_item.counter)">Delete</button>
+        </div>
+
+        <div *ngIf="rightclicked_item.type === 'opponent_playmat'">
+          <button *ngIf="user != null && !user.scooped" mat-menu-item>Taunt</button>
+        </div>
+
+        <div *ngIf="rightclicked_item.type === 'commander' && user != null && !user.scooped">
+          <button mat-menu-item (click)="openDeckSelectDialog()">Change Deck</button>
+          <button mat-menu-item (click)="scoopDeck()">Scoop Deck</button>
+          <button mat-menu-item>End Game</button>
+        </div>
+
+        <div *ngIf="rightclicked_item.type === 'user_hand'">
+          <button mat-menu-item [matMenuTriggerFor]="sendTo" *ngIf="user != null && !user.scooped">Send To</button>
+          <button *ngIf="rightclicked_item.card.back_face && user != null && !user.scooped" mat-menu-item (click)="altFaceCard(rightclicked_item.card)">Alt Face</button>
+          <button *ngIf="user != null && !user.scooped" mat-menu-item (click)="shakeCard(rightclicked_item.card, user.id, 'hand')">Shake</button>
+          <button *ngIf="user != null && user.scooped" mat-menu-item (click)="shakeCard(rightclicked_item.card, rightclicked_item.card.owner, 'hand')">Shake</button>
+        </div>
+
+        <div *ngIf="rightclicked_item.type === 'opponent_hand'">
+          <button mat-menu-item (click)="shakeCard(rightclicked_item.card, rightclicked_item.userid, 'hand')">Shake</button>
+        </div>
+
+        <div *ngIf="rightclicked_item.type === 'zone'">
+          <button mat-menu-item (click)="openSideNav(rightclicked_item.zone)">View Zone</button>
+          <button mat-menu-item (click)="selectRandom(rightclicked_item.zone.cards, rightclicked_item.zone)" *ngIf="user != null && !user.scooped">Select Random</button>
+          <button mat-menu-item [matMenuTriggerFor]="sendAll" *ngIf="user != null && !user.scooped">Send All To</button>
+        </div>
+
+        <div *ngIf="rightclicked_item.type === 'zone_card'">
+          <button mat-menu-item [matMenuTriggerFor]="sendTo" *ngIf="user != null && !user.scooped">Send To</button>
+          <button *ngIf="rightclicked_item.card.back_face && user != null && !user.scooped" mat-menu-item (click)="altFaceCard(rightclicked_item.card)">Alt Face</button>
+          <button *ngIf="(rightclicked_item.zone === 'exile' || rightclicked_item.zone === 'temp_zone') && user != null && !user.scooped" mat-menu-item (click)="flipCard(rightclicked_item.card)">Flip Face</button>
+          <button mat-menu-item (click)="shakeCard(rightclicked_item.card, sidenav_selected_player.id, rightclicked_item.zone)">Shake</button>
+        </div>
+
+        <div *ngIf="rightclicked_item.type === 'deck'">
+          <button mat-menu-item *ngIf="game_data && game_data.turn_count == 0" (click)="startGame()">Start Game</button>
+          <button mat-menu-item *ngIf="game_data && game_data.turn_count < 0" (click)="endGame(null, null)">End Game</button>
+          <button mat-menu-item (click)="openSideNav('deck')">Search</button>
+          <button mat-menu-item (click)="shuffleDeck(user.deck.cards)">Shuffle</button>
+          <button mat-menu-item (click)="flipTop()">Flip Top</button>
+          <div>
+            <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
+              <mat-label>Scry</mat-label>
+              <input (keydown.enter)="scryX(scry_count.value)" #scry_count type="text" matInput (click)="$event.stopPropagation()" value="1">
+              <button matSuffix mat-icon-button aria-label="Scry" (click)="scryX(scry_count.value)"><mat-icon>visibility</mat-icon></button>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
+              <mat-label>Draw</mat-label>
+              <input [(ngModel)]="draw_count" type="text" matInput (click)="$event.stopPropagation()" value="1">
+              <button matSuffix mat-icon-button aria-label="Draw" (click)="drawToX(this.user.hand)"><mat-icon>add_circle</mat-icon></button>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
+              <mat-label>Draw To</mat-label>
+              <input [(ngModel)]="draw_count" type="text" matInput (click)="$event.stopPropagation()" value="1">
+              <button matSuffix mat-icon-button aria-label="DrawTo" (click)="$event.stopPropagation()" [mat-menu-trigger-for]="drawTo"><mat-icon>navigate_next</mat-icon></button>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
+              <mat-label>Draw Until</mat-label>
+              <input (keydown.enter)="drawUntil(draw_until)" [(ngModel)]="draw_until" type="text" matInput (click)="$event.stopPropagation()" value="draw_until">
+              <button matSuffix mat-icon-button aria-label="DrawUntil" (click)="drawUntil(draw_until)"><mat-icon>fast_forward</mat-icon></button>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
+              <mat-label>Cascade</mat-label>
+              <input #cascade_until (keydown.enter)="cascade(cascade_until.value)" type="text" matInput (click)="$event.stopPropagation()" value="">
+              <button matSuffix mat-icon-button aria-label="Cascade" (click)="cascade(cascade_until.value)"><mat-icon>fast_forward</mat-icon></button>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <div *ngIf="rightclicked_item.type === 'deck_card'">
+          <button mat-menu-item [matMenuTriggerFor]="sendTo">Send To</button>
+          <button mat-menu-item>Shake</button>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</mat-menu>
+
+<mat-menu #hand_menu="matMenu">
+  <button mat-menu-item (click)="selectRandom(user.hand, 'hand')" >Select Random</button>
+  <button mat-menu-item [matMenuTriggerFor]="sendAll">Send All To</button>
+  <div>
+    <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
+      <mat-label>Mulligan</mat-label>
+      <input (keydown.enter)="mulliganHand(mulligan.value)" #mulligan type="text" matInput (click)="$event.stopPropagation()" value="7">
+      <button matSuffix mat-icon-button aria-label="Draw" (click)="mulliganHand(mulligan.value)"><mat-icon>refresh</mat-icon></button>
+    </mat-form-field>
+  </div>
+</mat-menu>
+
+<mat-menu #counters="matMenu">
+  <button mat-menu-item (click)="rightclicked_item.card.counter_1 = !rightclicked_item.card.counter_1">Counter 1</button>
+  <button mat-menu-item (click)="rightclicked_item.card.counter_2 = !rightclicked_item.card.counter_2">Counter 2</button>
+  <button mat-menu-item (click)="rightclicked_item.card.counter_3 = !rightclicked_item.card.counter_3">Counter 3</button>
+  <button mat-menu-item (click)="rightclicked_item.card.multiplier = !rightclicked_item.card.multiplier">Multiplier</button>
+</mat-menu>
+
+<mat-menu #token_menu="matMenu">
+  <div *ngIf="rightclicked_item && rightclicked_item.card && rightclicked_item.card.tokens">
+    <button *ngFor="let token of rightclicked_item.card.tokens" mat-menu-item (click)="createToken(token)">Create {{token.name}} Token</button>
+  </div>
+</mat-menu>
+
+<mat-menu #orient="matMenu">
+  <button mat-menu-item (click)="altFaceCard(rightclicked_item.card)">Alt Face</button>
+  <button mat-menu-item (click)="invertCard(rightclicked_item.card)">Invert</button>
+  <button mat-menu-item (click)="flipCard(rightclicked_item.card)">Flip Face</button>
+</mat-menu>
+
+<mat-menu #sendTo="matMenu">
+  <button mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.from, this.user.hand, rightclicked_item.from.cards.indexOf(rightclicked_item.card), 0)">Hand</button>
+  <button mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.from, this.user.grave, rightclicked_item.from.cards.indexOf(rightclicked_item.card), 0)">Graveyard</button>
+  <button mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.from, this.user.exile, rightclicked_item.from.cards.indexOf(rightclicked_item.card), 0)">Exile</button>
+  <button mat-menu-item [matMenuTriggerFor]="sendToDeck">Send to Deck</button>
+  <button mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.from, this.user.temp_zone, rightclicked_item.from.cards.indexOf(rightclicked_item.card), 0)">Temp Zone</button>
+</mat-menu>
+
+<mat-menu #sendToDeck="matMenu">
+  <button mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.from, this.user.deck, rightclicked_item.from.cards.indexOf(rightclicked_item.card), 0)">Deck Top</button>
+  <!--<button mat-menu-item (click)="selectCard(rightclicked_item.card, rightclicked_item.from);sendCardToZone(rightclicked_item.card, rightclicked_item.from, 'deck_bottom')">Deck Bottom</button>
+  <div>
+    <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
+      <mat-label>Sent to Position</mat-label>
+      <input (keydown.enter)="sendCardToZone(rightclicked_item.card, rightclicked_item.from, 'deck', undefined, deckpos.value)" #deckpos type="text" matInput (click)="$event.stopPropagation()" value="0">
+      <button (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.from, 'deck', undefined, deckpos.value)" matSuffix mat-icon-button aria-label="send to pos"><mat-icon>play_arrow</mat-icon></button>
+    </mat-form-field>
+  </div>-->
+</mat-menu>
+
+<mat-menu #sendAll="matMenu">
+  <button mat-menu-item (click)="sendAllTo(rightclicked_item.zone, this.user.hand)">Hand</button>
+  <button mat-menu-item (click)="sendAllTo(rightclicked_item.zone, this.user.grave)">Graveyard</button>
+  <button mat-menu-item (click)="sendAllTo(rightclicked_item.zone, this.user.exile)">Exile</button>
+  <button mat-menu-item (click)="sendAllTo(rightclicked_item.zone, this.user.deck)">Deck Top</button>
+  <!--<button mat-menu-item (click)="sendAllTo(rightclicked_item.zone, this.user.deck)">Deck Bottom</button> -->
+  <button mat-menu-item (click)="sendAllTo(rightclicked_item.zone, this.user.temp_zone)">Temp Zone</button>
+</mat-menu>
+
+<mat-menu #play_counter="matMenu">
+  <button mat-menu-item (click)="createCounter('play')">Play Counter</button>
+  <button mat-menu-item (click)="createCounter('type')">Type Counter</button>
+  <button mat-menu-item (click)="deleteAllCounters()">Delete All Counters</button>
+</mat-menu>
+
+<mat-menu #drawTo="matMenu">
+  <button mat-menu-item (click)="drawToX(this.user.grave)">Graveyard</button>
+  <button mat-menu-item (click)="drawToX(this.user.exile)">Exile</button>
+  <button mat-menu-item (click)="drawToX(this.user.temp_zone)">Temp Zone</button>
 </mat-menu>
 
 <div cdkDropListGroup *ngIf="game_data && currentPlayer() && currentPlayer().deck">
@@ -14,39 +206,41 @@
   <div class="playmat-opponent-view-container">
     <ng-scrollbar track="all" visibility="hover" pointerEventsMethod="scrollbar" style="width: 100%; height: 100%;">
       <div fxFlex fxLayout="row wrap">
-        <div *ngFor="let player of [user, user, user]" fxFlex="604px" class="playmat-opponent-wrapper">
-          <img class="playmat-user-background-image-mini" *ngIf="getUserTableData(player.id) != null && getUserTableData(player.id).playmat != null && getUserTableData(player.id).playmat !== ''" src="{{getUserTableData(player.id).playmat}}">
-          <div *ngIf="player.hand && player.deck.cards && player.grave && player.exile" class="playmat-opponent-player-information" fxFlexFill fxLayout="row" fxLayoutAlign="space-between">
-            <h3>{{player.name}}</h3>
-            <h3>Hand: {{player.hand.cards.length}}, Deck: {{player.deck.cards.length}}, Graveyard: {{player.grave.cards.length}}, Exile: {{player.exile.cards.length}}</h3>
-          </div>
-          <div class="playmat-opponent" fxLayout="row wrap" fxLayoutAlign="start start">
-            <div *ngFor="let spot of player.playmat"
-                 class="playmat-user-spot-container-mini"
-                 (contextmenu)="onRightClick($event, {type: 'opponent_playmat'})">
-              <div *ngFor="let card of spot.cards; let i = index">
-                <div [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2, 'invert': card.inverted}"
-                     (pointerenter)="magnified_card=card" (pointerleave)="magnified_card=null"
-                     class="playmat-user-card-container-mini"
-                     [@userTappedState]="card.tapped"
-                     [@shakeCard]="card.shaken">
-                  <div *ngIf="card.locked" class="playmat-user-card-lock"><mat-icon>lock</mat-icon></div>
-                  <img [ngClass]="{'playmat-user-card-selected': card.selected, 'grayscale': isClone(card) }"
-                       class="playmat-user-card-mini"
-                       [matTooltip]="card.notes"
-                       [src]="card.visible.includes(user.id) ? card.image: player.deck.sleeves"
-                       [alt]="card.visible.includes(user.id) ? card.name: ''"
-                       (contextmenu)="onRightClick($event,{type: 'opponent_play', card: card});"
-                       (click)="card.selected=!card.selected" (dblclick)="toggleCardTap(card)" loading="lazy">
-                  <button *ngIf="card.counter_1" class="playmat-user-card-counter playmat-user-card-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true"><p>{{card.counter_1_value}}</p></button>
-                  <button *ngIf="card.counter_2" class="playmat-user-card-counter playmat-user-card-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>{{card.counter_2_value}}</p></button>
-                  <button *ngIf="card.counter_3" class="playmat-user-card-counter playmat-user-card-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true" ><p>{{card.counter_3_value}}</p></button>
-                  <button *ngIf="card.multiplier" class="playmat-user-card-counter playmat-user-card-multiplier" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>{{card.multiplier_value}}</p></button>
-                  <h4 *ngIf="card.power && card.toughness && card.visible.includes(user.id)" class="playmat-user-card-pow-tough shadow-text">
-                    <a class="simple-a" [ngClass]="{'playmat-user-card-modifier-up': card.power_mod > 0, 'playmat-user-card-modifier-down': card.power_mod < 0}">{{card.power + card.power_mod}}</a>/
-                    <a class="simple-a" [ngClass]="{'playmat-user-card-modifier-up': card.toughness_mod > 0, 'playmat-user-card-modifier-down': card.toughness_mod < 0}">{{card.toughness + card.toughness_mod}}</a></h4>
-                  <h4 *ngIf="card.loyalty && card.visible.includes(user.id)" class="mtg-card-loyalty shadow-text">
-                    <a class="simple-a" [ngClass]="{'playmat-user-card-modifier-up': card.loyalty_mod > 0, 'playmat-user-card-modifier-down': card.loyalty_mod < 0}">{{card.loyalty + card.loyalty_mod}}</a></h4>
+        <div *ngFor="let player of game_data.players" fxFlex="604px" class="playmat-opponent-wrapper">
+          <div *ngIf="player != currentPlayer()">
+            <img class="playmat-user-background-image-mini" *ngIf="getUserTableData(player.id) != null && getUserTableData(player.id).playmat != null && getUserTableData(player.id).playmat !== ''" src="{{getUserTableData(player.id).playmat}}">
+            <div *ngIf="player.hand && player.deck.cards && player.grave && player.exile" class="playmat-opponent-player-information" fxFlexFill fxLayout="row" fxLayoutAlign="space-between">
+              <h3>{{player.name}}</h3>
+              <h3>Hand: {{player.hand.cards.length}}, Deck: {{player.deck.cards.length}}, Graveyard: {{player.grave.cards.length}}, Exile: {{player.exile.cards.length}}</h3>
+            </div>
+            <div class="playmat-opponent" fxLayout="row wrap" fxLayoutAlign="start start">
+              <div *ngFor="let spot of player.playmat"
+                   class="playmat-user-spot-container-mini"
+                   (contextmenu)="onRightClick($event, {type: 'opponent_playmat'})">
+                <div *ngFor="let card of spot.cards; let i = index">
+                  <div [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2, 'invert': card.inverted}"
+                       (pointerenter)="magnified_card=card" (pointerleave)="magnified_card=null"
+                       class="playmat-user-card-container-mini"
+                       [@userTappedState]="card.tapped"
+                       [@shakeCard]="card.shaken">
+                    <div *ngIf="card.locked" class="playmat-user-card-lock"><mat-icon>lock</mat-icon></div>
+                    <img [ngClass]="{'playmat-user-card-selected': card.selected, 'grayscale': isClone(card) }"
+                         class="playmat-user-card-mini"
+                         [matTooltip]="card.notes"
+                         [src]="card.visible.includes(user.id) ? card.image: player.deck.sleeves"
+                         [alt]="card.visible.includes(user.id) ? card.name: ''"
+                         (contextmenu)="onRightClick($event,{type: 'opponent_play', card: card});"
+                         (click)="card.selected=!card.selected" (dblclick)="toggleCardTap(card)" loading="lazy">
+                    <button *ngIf="card.counter_1" class="playmat-user-card-counter playmat-user-card-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true"><p>{{card.counter_1_value}}</p></button>
+                    <button *ngIf="card.counter_2" class="playmat-user-card-counter playmat-user-card-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>{{card.counter_2_value}}</p></button>
+                    <button *ngIf="card.counter_3" class="playmat-user-card-counter playmat-user-card-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true" ><p>{{card.counter_3_value}}</p></button>
+                    <button *ngIf="card.multiplier" class="playmat-user-card-counter playmat-user-card-multiplier" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>{{card.multiplier_value}}</p></button>
+                    <h4 *ngIf="card.power && card.toughness && card.visible.includes(user.id)" class="playmat-user-card-pow-tough shadow-text">
+                      <a class="simple-a" [ngClass]="{'playmat-user-card-modifier-up': card.power_mod > 0, 'playmat-user-card-modifier-down': card.power_mod < 0}">{{card.power + card.power_mod}}</a>/
+                      <a class="simple-a" [ngClass]="{'playmat-user-card-modifier-up': card.toughness_mod > 0, 'playmat-user-card-modifier-down': card.toughness_mod < 0}">{{card.toughness + card.toughness_mod}}</a></h4>
+                    <h4 *ngIf="card.loyalty && card.visible.includes(user.id)" class="mtg-card-loyalty shadow-text">
+                      <a class="simple-a" [ngClass]="{'playmat-user-card-modifier-up': card.loyalty_mod > 0, 'playmat-user-card-modifier-down': card.loyalty_mod < 0}">{{card.loyalty + card.loyalty_mod}}</a></h4>
+                  </div>
                 </div>
               </div>
             </div>

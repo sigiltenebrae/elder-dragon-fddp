@@ -82,6 +82,8 @@ export class GameHandlerComponent implements OnInit {
   autoscroll = true; //Whether to autoscroll the action log
   selected_player: any = null; //The currently higlighted player
   sidenav_selected_player: any = null; //The player whose zone you are currently viewing
+  draw_count: any = 1;
+  draw_until = '';
 
   //Messaging
   counter_buffer: any = false; //True if a counter update is in the message queue. Prevents counter updates from spamming
@@ -1146,6 +1148,14 @@ export class GameHandlerComponent implements OnInit {
   }
 
   /**------------------------------------------------
+   *               Sidenav Functions                *
+   ------------------------------------------------**/
+
+  openSideNav(zone: any) {
+
+  }
+
+  /**------------------------------------------------
    *           Card Relocation Functions            *
    ------------------------------------------------**/
 
@@ -1311,24 +1321,36 @@ export class GameHandlerComponent implements OnInit {
           if (card.owner == dest.owner) {
             if (options && options.deck && options.deck === 'bottom') {
               transferArrayItem(source.cards, dest.cards, previousIndex, dest.cards.length);
-              this.logAction('move', {card: card, source: source, dest: dest});
+              if (options && options.nolog) {}
+              else {
+                this.logAction('move', {card: card, source: source, dest: dest});
+              }
               this.updateSocketPlayer();
             }
             else {
               transferArrayItem(source.cards, dest.cards, previousIndex, currentIndex);
-              this.logAction('move', {card: card, source: source, dest: dest});
+              if (options && options.nolog) {}
+              else {
+                this.logAction('move', {card: card, source: source, dest: dest});
+              }
               this.updateSocketPlayer();
             }
           }
           else {
             if (options && options.deck && options.deck === 'bottom') {
               transferArrayItem(source.cards, this.getPlayerZone(card.owner, dest.name).cards, previousIndex, this.getPlayerZone(card.owner, dest.name).cards.length);
-              this.logAction('move', {card: card, source: source, dest: dest});
+              if (options && options.nolog) {}
+              else {
+                this.logAction('move', {card: card, source: source, dest: dest});
+              }
               this.updateSocketPlayer();
             }
             else {
               transferArrayItem(source.cards, this.getPlayerZone(card.owner, dest.name).cards, previousIndex, 0);
-              this.logAction('move', {card: card, source: source, dest: dest});
+              if (options && options.nolog) {}
+              else {
+                this.logAction('move', {card: card, source: source, dest: dest});
+              }
               this.updateSocketPlayer();
             }
           }
@@ -1340,17 +1362,63 @@ export class GameHandlerComponent implements OnInit {
           if (dest.cards.length < 3) {
             this.setVisibility(card, dest.name); //wait to set visibility until move is confirmed
             transferArrayItem(source.cards, dest.cards, previousIndex, currentIndex);
-            this.logAction('move', {card: card, source: source, dest: dest});
+            if (options && options.nolog) {}
+            else {
+              this.logAction('move', {card: card, source: source, dest: dest});
+            }
             this.updateSocketPlayer();
           }
         }
         else if (dest.name === "temp_zone") { //You can put anything in the temp zone
           //If visibility needs to change (draw to play) you have to do it before calling the move.
           transferArrayItem(source.cards, dest.cards, previousIndex, currentIndex);
-          this.logAction('move', {card: card, source: source, dest: dest});
+          if (options && options.nolog) {}
+          else {
+            this.logAction('move', {card: card, source: source, dest: dest});
+          }
           this.updateSocketPlayer();
         }
       }
     }
+  }
+
+  sendAllTo(source: any, dest: any) {
+    let cards = [];
+    for (let card of source.cards) {
+      cards.push(card);
+      this.sendCardToZone(card, source, dest, source.cards.indexOf(card), 0, {nolog: true});
+    }
+    this.logAction('send_all', {cards: cards, source: source, dest: dest});
+  }
+
+  drawToX(dest: any) {
+    let num_count = Number(this.draw_count);
+    let cards = [];
+    for (let i = 0; i < num_count; i++) {
+      if (this.user.deck.cards.length > 0) {
+        cards.push(this.user.deck.cards[0]);
+        this.sendCardToZone(this.user.deck.cards[0], this.user.deck, dest, 0, 0, {nolog: true});
+      }
+    }
+    this.logAction('draw', {cards: cards, source: this.user.deck, dest: dest});
+  }
+
+  mulliganHand(count: any) {
+    this.draw_count = Number(count);
+    this.sendAllTo(this.user.hand, this.user.deck);
+    this.shuffleDeck(this.user.deck.cards);
+    this.drawToX(this.user.hand);
+  }
+
+  cascade(value: any) {
+    let num_value = Number(value);
+  }
+
+  drawUntil(type: string) {
+
+  }
+
+  scryX(count: any) {
+
   }
 }
