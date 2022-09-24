@@ -58,7 +58,7 @@ export class GameHandlerComponent implements OnInit {
   current_user: any = {
     "id": 1,
     "name": "Chris",
-    "playmat": "https://i.ibb.co/Df3dC43/bolasplaymatfinal.png",
+    "playmat": "https://i.imgur.com/nrcc9KM.png",
     "theme": "dark"
   }
 

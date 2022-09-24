@@ -102,27 +102,28 @@
     </div>
     <div class="playmat-user-teammate-actions"></div>
     <div class="playmat-user" fxLayout="row wrap" fxLayoutAlign="start start">
-      <!--          <img class="playmat-user-background-image" *ngIf="currentPlayer() != null && currentPlayer().playmat_image != null && currentPlayer().playmat_image !== ''" src="{{currentPlayer().playmat_image}}">-->
-      <!-- (dblclick)="sendSelectedToSpot(spot, 'play')" -->
+      <img class="playmat-user-background-image" *ngIf="currentPlayer() != null && currentPlayer().playmat_image != null && currentPlayer().playmat_image !== ''" src="{{currentPlayer().playmat_image}}">
       <div *ngFor="let spot of currentPlayer().playmat"
            class="playmat-user-spot-container"
-           cdkDropList
+           (contextmenu)="onRightClick($event, {type: 'user_playmat', from: spot})"
            [cdkDropListData]="spot.cards"
-           (cdkDropListDropped)="dragCard(currently_dragging, spot, $event)">
+           (cdkDropListDropped)="dragCard(currently_dragging, spot, $event)"
+           cdkDropList>
         <div *ngFor="let card of spot.cards; let j = index" (dblclick)="$event.stopPropagation()" >
           <div [ngClass]="{'stack-1': j == 0, 'stack-2': j == 1, 'stack-3': j == 2, 'invert': card.inverted}"
-               (pointerenter)="magnified_card=card" (pointerleave)="magnified_card=null"
-               (cdkDragStarted)="magnified_card=null; currently_dragging = card"
                class="playmat-user-card-container"
+               (pointerenter)="magnified_card=card" (pointerleave)="magnified_card=null"
                [@userTappedState]="card.tapped"
                [@shakeCard]="card.shaken"
+               (cdkDragStarted)="magnified_card=null; currently_dragging = card"
                cdkDrag>
+            <div *ngIf="card.locked" class="playmat-user-card-lock"><mat-icon>lock</mat-icon></div>
             <img [ngClass]="{'playmat-user-card-selected': card.selected, 'grayscale': isClone(card) }"
                  class="playmat-user-card"
                  [matTooltip]="card.notes"
                  [src]="card.visible.includes(user.id) ? card.image: user.deck.sleeves"
                  [alt]="card.visible.includes(user.id) ? card.name: ''"
-                 (contextmenu)="onRightClick($event,{type: 'user_play', card: card, spot: spot, from: spot});"
+                 (contextmenu)="onRightClick($event,{type: 'user_play', card: card, from: spot});"
                  (dblclick)="toggleCardTap(card)" loading="lazy">
             <button *ngIf="card.counter_1" class="playmat-user-card-counter playmat-user-card-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true" (click)="card.counter_1_value = card.counter_1_value + 1; updateCounter('Counter 1', card.counter_1_value, {card: card});" (contextmenu)="onRightClick($event, {type: 'counter_1', card: card})"><p>{{card.counter_1_value}}</p></button>
             <button *ngIf="card.counter_2" class="playmat-user-card-counter playmat-user-card-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true" (click)="card.counter_2_value = card.counter_2_value + 1; updateCounter('Counter 2', card.counter_2_value, {card: card});" (contextmenu)="onRightClick($event, {type: 'counter_2', card: card})"><p>{{card.counter_2_value}}</p></button>
