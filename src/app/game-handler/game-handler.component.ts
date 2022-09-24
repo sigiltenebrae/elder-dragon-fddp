@@ -2880,7 +2880,8 @@ export class GameHandlerComponent implements OnInit {
               "shaken": false,
               "inverted": false,
               "notes": ""
-            }]
+            }],
+          owner: 1
         }
     },
     "name": "Chris",
@@ -6336,6 +6337,24 @@ export class GameHandlerComponent implements OnInit {
    *          Message Handling Functions            *
    ------------------------------------------------**/
 
+  logAction(type: string, data: any) {
+    switch(type) {
+      case 'move':
+        if (data.source.name !== data.dest.name) {
+          this.action_log.push([
+            {text: this.user.name, type: 'player'},
+            {text: 'moved', type: 'regular'},
+            {text: data.card.name, type: 'card', card: JSON.parse(JSON.stringify(data.card))}, //copy card so it isn't a pointer
+            {text: 'from', type: 'regular'},
+            {text: data.source.name, type: 'location'},
+            {text: 'to', type: 'regular'},
+            {text: data.dest.name, type: 'location'},
+          ]);
+          break;
+        }
+    }
+  }
+
   updateCounter(name: string, after: any, options?: any) {
       if (!this.counter_buffer) {
         this.counter_buffer = true;
@@ -6526,62 +6545,28 @@ export class GameHandlerComponent implements OnInit {
           source.cards.splice(source.cards.indexOf(card), 1);
         }
         else {
+          console.log(card);
           //clear the card of counters etc.
           this.setVisibility(card, dest.name);
           if (card.owner == dest.owner) {
+            console.log('here');
             if (options && options.deck && options.deck === 'bottom') {
               transferArrayItem(source.cards, dest.cards, previousIndex, dest.cards.length);
-              this.action_log.push([
-                {text: this.user.name, type: 'player'},
-                {text: 'moved', type: 'regular'},
-                {text: card.name, type: 'card', card: card},
-                {text: 'from', type: 'regular'},
-                {text: source.name, type: 'location'},
-                {text: 'to', type: 'regular'},
-                {text: dest.name, type: 'location'},
-              ]);
-              console.log(this.action_log);
+              this.logAction('move', {card: card, source: source, dest: dest});
             }
             else {
               transferArrayItem(source.cards, dest.cards, previousIndex, currentIndex);
-              this.action_log.push([
-                {text: this.user.name, type: 'player'},
-                {text: 'moved', type: 'regular'},
-                {text: card.name, type: 'card', card: card},
-                {text: 'from', type: 'regular'},
-                {text: source.name, type: 'location'},
-                {text: 'to', type: 'regular'},
-                {text: dest.name, type: 'location'},
-              ]);
-              console.log(this.action_log);
+              this.logAction('move', {card: card, source: source, dest: dest});
             }
           }
           else {
-            if (options.deck && options.deck === 'bottom') {
+            if (options && options.deck && options.deck === 'bottom') {
               transferArrayItem(source.cards, this.getPlayerZone(card.owner, dest.name).cards, previousIndex, this.getPlayerZone(card.owner, dest.name).cards.length);
-              this.action_log.push([
-                {text: this.user.name, type: 'player'},
-                {text: 'moved', type: 'regular'},
-                {text: card.name, type: 'card', card: card},
-                {text: 'from', type: 'regular'},
-                {text: source.name, type: 'location'},
-                {text: 'to', type: 'regular'},
-                {text: dest.name, type: 'location'},
-              ]);
-              console.log(this.action_log);
+              this.logAction('move', {card: card, source: source, dest: dest});
             }
             else {
               transferArrayItem(source.cards, this.getPlayerZone(card.owner, dest.name).cards, previousIndex, 0);
-              this.action_log.push([
-                {text: this.user.name, type: 'player'},
-                {text: 'moved', type: 'regular'},
-                {text: card.name, type: 'card', card: card},
-                {text: 'from', type: 'regular'},
-                {text: source.name, type: 'location'},
-                {text: 'to', type: 'regular'},
-                {text: dest.name, type: 'location'},
-              ]);
-              console.log(this.action_log);
+              this.logAction('move', {card: card, source: source, dest: dest});
             }
           }
         }
@@ -6592,31 +6577,13 @@ export class GameHandlerComponent implements OnInit {
           if (dest.cards.length < 3) {
             this.setVisibility(card, dest.name); //wait to set visibility until move is confirmed
             transferArrayItem(source.cards, dest.cards, previousIndex, currentIndex);
-            this.action_log.push([
-              {text: this.user.name, type: 'player'},
-              {text: 'moved', type: 'regular'},
-              {text: card.name, type: 'card', card: card},
-              {text: 'from', type: 'regular'},
-              {text: source.name, type: 'location'},
-              {text: 'to', type: 'regular'},
-              {text: dest.name, type: 'location'},
-            ]);
-            console.log(this.action_log);
+            this.logAction('move', {card: card, source: source, dest: dest});
           }
         }
         else if (dest.name === "temp_zone") { //You can put anything in the temp zone
           //If visibility needs to change (draw to play) you have to do it before calling the move.
           transferArrayItem(source.cards, dest.cards, previousIndex, currentIndex);
-          this.action_log.push([
-            {text: this.user.name, type: 'player'},
-            {text: 'moved', type: 'regular'},
-            {text: card.name, type: 'card', card: card},
-            {text: 'from', type: 'regular'},
-            {text: source.name, type: 'location'},
-            {text: 'to', type: 'regular'},
-            {text: dest.name, type: 'location'},
-          ]);
-          console.log(this.action_log);
+          this.logAction('move', {card: card, source: source, dest: dest});
         }
       }
     }
