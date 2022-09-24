@@ -170,6 +170,9 @@ export class GameHandlerComponent implements OnInit {
           }
         }
       }
+      if (json_data.log) {
+        this.game_data.action_log.push(json_data.log);
+      }
     });
 
     this.sleep(1500).then(() => {
@@ -198,10 +201,11 @@ export class GameHandlerComponent implements OnInit {
 
   @ViewChild('action_scroll') action_scroll: NgScrollbar;
   logAction(type: string, data: any) {
+    let log_action: any = null;
     switch(type) {
       case 'move':
         if (data.source.name !== data.dest.name) {
-          this.game_data.action_log.push([
+          log_action = [
             {text: this.user.name, type: 'player'},
             {text: 'moved', type: 'regular'},
             {text: data.card.name, type: 'card', card: JSON.parse(JSON.stringify(data.card))}, //copy card so it isn't a pointer
@@ -209,13 +213,22 @@ export class GameHandlerComponent implements OnInit {
             {text: data.source.name, type: 'location'},
             {text: 'to', type: 'regular'},
             {text: data.dest.name, type: 'location'},
-          ]);
+          ]
+          this.game_data.action_log.push(log_action);
         }
         break;
     }
     if (this.autoscroll) {
-      this.action_scroll.scrollTo({ bottom: 0, duration: 600});
+      console.log('scrolling');
+      this.sleep(500).then(() => {
+        this.action_scroll.scrollTo({ bottom: 0, duration: 600});
+      })
     }
+    if (log_action != null)
+    this.messageSocket({
+      game_id: this.game_id,
+      log: log_action
+    });
   }
 
   updateCounter(name: string, after: any, options?: any) {
