@@ -54,6 +54,13 @@ export class GameHandlerComponent implements OnInit {
 
   game_data: any;
 
+  users_list = [{
+    "id": 1,
+    "name": "Chris",
+    "playmat": "https://i.imgur.com/nrcc9KM.png",
+    "theme": "dark"
+  }]
+
   //Debugger Variables
   current_user: any = {
     "id": 1,
@@ -6249,6 +6256,19 @@ export class GameHandlerComponent implements OnInit {
     for (let player of this.game_data.players) {
       if (player.id == id) {
         return player;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Returns the data for a given user from the database, null if not found
+   * @param id id of the user to search
+   */
+  getUserTableData(id: number) {
+    for (let user_data of this.users_list) {
+      if (user_data.id == id) {
+        return user_data;
       }
     }
     return null;
