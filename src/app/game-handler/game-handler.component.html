@@ -9,7 +9,7 @@
   <button mat-menu-item>Button</button>
 </mat-menu>
 
-<div cdkDropListGroup>
+<div cdkDropListGroup *ngIf="game_data && currentPlayer() && currentPlayer().deck">
   <!-- Opponent Playmats -->
   <div class="playmat-opponent-view-container">
     <ng-scrollbar track="all" visibility="hover" pointerEventsMethod="scrollbar" style="width: 100%; height: 100%;">
@@ -80,10 +80,10 @@
           </mat-list>
         </ng-scrollbar>
       </div>
-      <div class="game-data-log-container" [style.height.px]="players.length > 3? 209: 406 - (players.length * 50)">
-        <ng-scrollbar #action_scroll track="vertical" visibility="hover" pointerEventsMethod="scrollbar" [style.height.px]="players.length > 3? 207: 404 - (players.length * 50)">
+      <div class="game-data-log-container" [style.height.px]="game_data.players.length > 3? 209: 406 - (game_data.players.length * 50)">
+        <ng-scrollbar #action_scroll track="vertical" visibility="hover" pointerEventsMethod="scrollbar" [style.height.px]="game_data.players.length > 3? 207: 404 - (game_data.players.length * 50)">
           <mat-list>
-            <mat-list-item *ngFor="let action of action_log; let i = index" class="game-data-log-list-item">
+            <mat-list-item *ngFor="let action of game_data.action_log; let i = index" class="game-data-log-list-item">
               <p>
                 <span *ngFor="let token of action">
                   <span *ngIf="token.type === 'card'" style="color: mediumpurple"

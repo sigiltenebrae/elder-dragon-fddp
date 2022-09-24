@@ -73,6 +73,7 @@ export class DeckSelectDialog {
     private fddp_data: FddpApiService
   )
   {
+    console.log(this.data);
     this.loading = true;
     this.fddp_data.getDecksBasic(this.data.user).then((decks: any) => {
       let temp_decks = decks;
