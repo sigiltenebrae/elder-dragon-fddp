@@ -1,5 +1,4 @@
 <!-- Right-Click Menus -->
-
 <div style="visibility: hidden; position: fixed"
      [style.left]="menuTopLeftPosition.x"
      [style.top]="menuTopLeftPosition.y"
@@ -60,21 +59,29 @@
   <!-- Game Data (Players List and Log) -->
   <div fxHide.lt-xl class="game-data-container">
     <div class="game-data-wrapper">
-      <div class="game-data-player-list-container" [style.height.px]="players.length > 3? 200: players.length * 50">
+      <div class="game-data-player-list-container" [style.height.px]="game_data.players.length > 3? 200: game_data.players.length * 50">
         <ng-scrollbar track="vertical" visibility="hover" pointerEventsMethod="scrollbar" [style.height.px]="200">
           <mat-list>
-            <div *ngFor="let player of players">
+            <div *ngFor="let player of game_data.players">
               <mat-list-item *ngIf="!player.scooped" class="game-data-player-list-item" fxLayout="row">
-                <button mat-button class="game-data-player-list-name">Reallllllllllllly Long Name</button>
-                <button mat-button class="game-data-player-list-counter">22</button>
-                <button mat-button class="game-data-player-list-counter">22</button>
+                <button mat-button class="game-data-player-list-name">{{player.name}}</button>
+                <button mat-button class="game-data-player-list-counter"
+                        (click)="lifeClick($event, player)"
+                        (contextmenu)="onRightClick($event, {type: 'life', player: player})">
+                  {{player.life}}
+                </button>
+                <button mat-button class="game-data-player-list-counter"
+                        (click)="infectClick($event, player)"
+                        (contextmenu)="onRightClick($event, {type: 'infect', player: player})">
+                  {{player.infect}}
+                </button>
               </mat-list-item>
             </div>
           </mat-list>
         </ng-scrollbar>
       </div>
       <div class="game-data-log-container" [style.height.px]="players.length > 3? 209: 406 - (players.length * 50)">
-        <ng-scrollbar track="vertical" visibility="hover" pointerEventsMethod="scrollbar" [style.height.px]="players.length > 3? 207: 404 - (players.length * 50)">
+        <ng-scrollbar #action_scroll track="vertical" visibility="hover" pointerEventsMethod="scrollbar" [style.height.px]="players.length > 3? 207: 404 - (players.length * 50)">
           <mat-list>
             <mat-list-item *ngFor="let action of action_log; let i = index" class="game-data-log-list-item">
               <p>
