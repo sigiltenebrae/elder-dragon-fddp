@@ -395,7 +395,8 @@
       <h3 fxHide.lt-lg class="deck-user-owner-text shadow-text">{{currentPlayer().name}}</h3>
       <img loading="lazy"
            class="zone-card-image"
-           [src]="currentPlayer().top_flipped && currentPlayer().deck.cards.length > 0 ? currentPlayer().deck.cards[0]: currentPlayer().deck.sleeves"
+           [src]="currentPlayer().top_flipped && currentPlayer().deck.cards.length > 0 ? currentPlayer().deck.cards[0].image: currentPlayer().deck.sleeves"
+           (contextmenu)="onRightClick($event, {type: 'deck'})"
            (pointerenter)="magnified_card = currentPlayer().top_flipped && currentPlayer().deck.cards.length > 0 ? currentPlayer().deck.cards[0]: null"
            (pointerleave)="magnified_card = null"
            (cdkDragStarted)="magnified_card = null; currently_dragging=user.deck.cards[0]"

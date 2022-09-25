@@ -361,6 +361,23 @@ export class GameHandlerComponent implements OnInit {
           ]
         }
         break;
+      case 'flipped_top':
+        log_action = [
+          {text: this.user.name, type: 'player'},
+          {text: 'flipped the top card of their library', type: 'regular'},
+        ]
+        break;
+      case 'draw':
+        if (data.cards) {
+          log_action = [
+            {text: this.user.name, type: 'player'},
+            {text: 'drew', type: 'regular'},
+            {text: '', type: 'card_list', cards: JSON.parse(JSON.stringify(data.cards))},
+            {text: 'to', type: 'regular'},
+            {text: data.dest.name === 'temp_zone'? 'temp zone': data.dest.name, type: 'location'},
+          ]
+        }
+        break;
     }
     if (log_action != null) {
       this.game_data.action_log.push(log_action);
@@ -1065,6 +1082,8 @@ export class GameHandlerComponent implements OnInit {
 
   flipTop() {
     this.user.top_flipped = !this.user.top_flipped;
+    this.updateSocketPlayer();
+    this.logAction('flipped_top', null);
   }
 
   shuffleDeck(cards: any[], options?: any) {
@@ -1683,6 +1702,11 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Draws the global 'draw_count' number of cards to the desired zone.
+   * @param dest the zone to draw to.
+   * @param options 'nolog' and 'noupdate'
+   */
   drawToX(dest: any, options?: any) {
     let num_count = Number(this.draw_count);
     let cards = [];
@@ -1698,7 +1722,7 @@ export class GameHandlerComponent implements OnInit {
     }
     if (options && options.nolog){}
     else {
-      this.logAction('draw', {cards: cards, source: this.user.deck, dest: dest});
+      this.logAction('draw', {cards: cards, dest: dest});
     }
   }
 
