@@ -261,7 +261,7 @@
               <div *ngIf="card.sidenav_visible && (card.visible.includes(user.id) || sidenav_type === 'deck' || sidenav_type === 'scry')" class="sidenav-list-item"
                    (pointerenter)="magnified_card=card" (pointerleave)="magnified_card=null"
                    (cdkDragStarted)="magnified_card=null; currently_dragging = card"
-                   (contextmenu)="onRightClick($event, {type: 'zone_card', card: card, from: getSidenavList()})"
+                   (contextmenu)="onRightClick($event, {type: 'zone_card', card: card, from: getSidenavContainer()})"
                    cdkDrag [cdkDragDisabled]="user.scooped">
                 {{card.name}}
                 <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="playmat-user-card" loading="lazy">
@@ -269,7 +269,7 @@
               </div>
               <div *ngIf="card.sidenav_visible && !card.visible.includes(user.id) && sidenav_type !== 'deck' && sidenav_type!=='scry'" class="sidenav-list-item"
                    (pointerenter)="magnified_card=null" (pointerleave)="magnified_card=null"
-                   [cdkDragDisabled]="true" (contextmenu)="onRightClick($event, {type: 'zone_card', card: card, from: getSidenavList()})"
+                   [cdkDragDisabled]="true" (contextmenu)="onRightClick($event, {type: 'zone_card', card: card, from: getSidenavContainer()})"
                    cdkDrag>
                 -------- Hidden --------
               </div>
