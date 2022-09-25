@@ -361,7 +361,6 @@ export class GameHandlerComponent implements OnInit {
           ]
         }
         break;
-
     }
     if (log_action != null) {
       this.game_data.action_log.push(log_action);
