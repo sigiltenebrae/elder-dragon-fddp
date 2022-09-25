@@ -66,7 +66,7 @@
 
         <div *ngIf="rightclicked_item.type === 'zone'">
           <button mat-menu-item (click)="openSideNav(rightclicked_item.zone)">View Zone</button>
-          <button mat-menu-item (click)="selectRandom(rightclicked_item.zone.cards, rightclicked_item.zone)" *ngIf="user != null && !user.scooped">Select Random</button>
+          <button mat-menu-item (click)="selectRandom(rightclicked_item.zone)" *ngIf="user != null && !user.scooped">Select Random</button>
           <button mat-menu-item [matMenuTriggerFor]="sendAll" *ngIf="user != null && !user.scooped">Send All To</button>
         </div>
 
@@ -130,7 +130,7 @@
 </mat-menu>
 
 <mat-menu #hand_menu="matMenu">
-  <button mat-menu-item (click)="selectRandom(user.hand, 'hand')" >Select Random</button>
+  <button mat-menu-item (click)="selectRandom(user.hand)" >Select Random</button>
   <button mat-menu-item [matMenuTriggerFor]="sendAll">Send All To</button>
   <div>
     <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
@@ -306,6 +306,9 @@
                   <span *ngIf="token.type === 'flip'">
                     <mat-icon style="transform: scale(0.75)">360</mat-icon>
                   </span>
+                  <span *ngIf="token.type === 'alt_face'">
+                    <mat-icon style="transform: scale(0.75)">360</mat-icon>
+                  </span>
                   <span *ngIf="token.type === 'shake'">
                     <mat-icon style="transform: scale(0.75)">notifications_active</mat-icon>
                   </span>
@@ -471,7 +474,7 @@
   <div class="hand-user-container">
     <div class="hand-user-wrapper"
          [ngStyle]="{'max-width': currentPlayer().hand.cards.length * 75 < 1144 ? currentPlayer().hand.cards.length * 75 + 'px': '1144px', 'min-width': '75px'}">
-      <mat-icon fxHide.lt-lg class="hand-menu shadow-text" [mat-menu-trigger-for]="hand_menu" (click)="rightclicked_item={zone: 'hand'}">more_vert</mat-icon>
+      <mat-icon fxHide.lt-lg class="hand-menu shadow-text" [mat-menu-trigger-for]="hand_menu" (click)="rightclicked_item={zone: user.hand}">more_vert</mat-icon>
       <h3 class="hand-quantity-text shadow-text">{{currentPlayer().hand.cards.length}}</h3>
       <ng-scrollbar track="horizontal"
                     visibility="hover"
@@ -486,9 +489,11 @@
              cdkDropList>
           <div *ngFor="let card of currentPlayer().hand.cards"
                class="playmat-user-card-container"
+               (contextmenu)="onRightClick($event, {type: 'user_hand', card: card, from: user.hand});"
                (pointerenter)="magnified_card = card"
                (pointerleave)="magnified_card = null"
                (cdkDragStarted)="magnified_card = null; currently_dragging = card"
+               [@shakeCard]="card.shaken"
                cdkDrag>
             <img class="playmat-user-card" [src]="card.visible.includes(user.id) ? card.image: currentPlayer().deck.sleeves">
           </div>

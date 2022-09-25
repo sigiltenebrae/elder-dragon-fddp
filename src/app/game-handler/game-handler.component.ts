@@ -215,11 +215,23 @@ export class GameHandlerComponent implements OnInit {
       case 'move':
         if (data.source.name !== data.dest.name) {
           log_action = [
+            //Maybe fix for deck?
             {text: this.user.name, type: 'player'},
             {text: 'moved', type: 'regular'},
             {text: data.card.name, type: 'card', card: JSON.parse(JSON.stringify(data.card))}, //copy card so it isn't a pointer
             {text: 'from', type: 'regular'},
             {text: data.source.name === 'temp_zone'? 'temp zone': data.source.name, type: 'location'},
+            {text: 'to', type: 'regular'},
+            {text: data.dest.name === 'temp_zone'? 'temp zone': data.dest.name, type: 'location'},
+          ]
+        }
+        break;
+      case 'move_all':
+        if (data.cards) {
+          log_action = [
+            {text: this.user.name, type: 'player'},
+            {text: 'moved', type: 'regular'},
+            {text: '', type: 'card_list', cards: data.cards},
             {text: 'to', type: 'regular'},
             {text: data.dest.name === 'temp_zone'? 'temp zone': data.dest.name, type: 'location'},
           ]
@@ -285,6 +297,15 @@ export class GameHandlerComponent implements OnInit {
           ]
         }
         break;
+      case 'alt_face':
+        if (data.card) {
+          log_action = [
+            {text: this.user.name, type: 'player'},
+            {text: '', type: 'alt_face'},
+            {text: data.card.name, type: 'card', card: JSON.parse(JSON.stringify(data.card))}
+          ]
+        }
+        break;
       case 'shake':
         if (data.card) {
           log_action = [
@@ -312,6 +333,18 @@ export class GameHandlerComponent implements OnInit {
             {text: 'token', type: 'regular'}
           ]
         }
+        break;
+      case 'random':
+        if (data.card && data.zone) {
+          log_action = [
+            {text: this.user.name, type: 'player'},
+            {text: 'selected', type: 'regular'},
+            {text: data.card.name, type: 'card', card: JSON.parse(JSON.stringify(data.card))},
+            {text: 'at random from', type: 'regular'},
+            {text: data.zone.name, type: 'location'},
+          ]
+        }
+        break;
     }
     if (log_action != null) {
       this.game_data.action_log.push(log_action);
@@ -321,7 +354,6 @@ export class GameHandlerComponent implements OnInit {
       });
     }
     if (this.autoscroll) {
-      console.log('scrolling');
       this.sleep(500).then(() => {
         this.action_scroll.scrollTo({ bottom: 0, duration: 600});
       })
@@ -850,6 +882,8 @@ export class GameHandlerComponent implements OnInit {
       card.back_loyalty = temp_loyalty;
 
       card.alt = !card.alt;
+      this.updateSocketPlayer();
+      this.logAction('alt_face', {card:card});
     }
   }
 
@@ -1143,18 +1177,19 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
-  selectRandom(zone: any[], location: string) {
+  selectRandom(zone: any) {
     let rand_card: any = {};
-    if (zone.length == 1) {
-      rand_card = zone[0];
-      this.snackbar.open('Selected ' + zone[0].name + ' at random.',
+    if (zone.cards.length == 1) {
+      rand_card = zone.cards[0];
+      this.snackbar.open('Selected ' + zone.cards[0].name + ' at random.',
         'dismiss', {duration: 3000});
     }
-    else if (zone.length > 1) {
-      rand_card = zone[Math.floor(Math.random() * zone.length)]
+    else if (zone.cards.length > 1) {
+      rand_card = zone.cards[Math.floor(Math.random() * zone.cards.length)]
       this.snackbar.open('Selected ' + '"' + rand_card.name + '"' + ' at random.',
         'dismiss', {duration: 3000});
     }
+    this.logAction('random', {zone: zone, card: rand_card});
   }
 
   /**------------------------------------------------
@@ -1610,12 +1645,12 @@ export class GameHandlerComponent implements OnInit {
 
   sendAllTo(source: any, dest: any) {
     let cards = [];
-    for (let card of source.cards) {
-      cards.push(card);
-      this.sendCardToZone(card, source, dest, source.cards.indexOf(card), 0, {nolog: true, noupdate: true});
+    while (source.cards.length > 0) {
+      cards.push(source.cards[0]);
+      this.sendCardToZone(source.cards[0], source, dest, 0, 0, {nolog: true, noupdate: true});
     }
     this.updateSocketPlayer();
-    this.logAction('send_all', {cards: cards, source: source, dest: dest});
+    this.logAction('move_all', {cards: cards, source: source, dest: dest});
   }
 
   drawToX(dest: any) {
