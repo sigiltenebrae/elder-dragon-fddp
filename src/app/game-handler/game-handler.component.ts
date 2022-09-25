@@ -303,6 +303,15 @@ export class GameHandlerComponent implements OnInit {
           ]
         }
         break;
+      case 'token':
+        if (data.card) {
+          log_action = [
+            {text: this.user.name, type: 'player'},
+            {text: 'created ', type: 'regular'},
+            {text: data.card.name, type: 'card', card: JSON.parse(JSON.stringify(data.card))},
+            {text: 'token', type: 'regular'}
+          ]
+        }
     }
     if (log_action != null) {
       this.game_data.action_log.push(log_action);
@@ -955,7 +964,9 @@ export class GameHandlerComponent implements OnInit {
           out_token.selected = false;
           out_token.image = images.length > 0 ? images[0]: null;
           this.clearCard(out_token);
-          this.user.temp_zone.push(out_token);
+          this.user.temp_zone.cards.push(out_token);
+          this.updateSocketPlayer();
+          this.logAction('token', {card: out_token});
           return;
         });
       })
@@ -973,7 +984,9 @@ export class GameHandlerComponent implements OnInit {
       for(let player of this.game_data.players) {
         out_token.visible.push(player.id);
       }
-      this.user.temp_zone.push(out_token);
+      this.user.temp_zone.cards.push(out_token);
+      this.updateSocketPlayer();
+      this.logAction('token', {card: out_token});
       return;
     });
 
