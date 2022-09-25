@@ -1879,6 +1879,18 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  sendCardToDeckPos(card: any, source: any, dest: any, previousIndex: number, currentIndex: any, options?: any){
+    let cur_ind = Number(currentIndex);
+    if (cur_ind < 0) {
+      cur_ind ++;
+      cur_ind = this.getPlayerZone(card.owner, 'deck').cards.length + cur_ind;
+    }
+    else if (cur_ind > 0) {
+      cur_ind --;
+    }
+    this.sendCardToZone(card, source, dest, previousIndex, cur_ind);
+  }
+
   /**
    * Draws the global 'draw_count' number of cards to the desired zone.
    * @param dest the zone to draw to.
