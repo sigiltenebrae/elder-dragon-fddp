@@ -246,7 +246,7 @@ export class GameHandlerComponent implements OnInit {
               {text: 'on', type: 'regular'},
               {text: data.options.card.name, type: 'card', card: JSON.parse(JSON.stringify(data.options.card))},
               {text: 'to', type: 'regular'},
-              {text: data.after, type: 'value'}
+              {text: this.getCounterValue(data.name, {card: data.options.card}), type: 'value'}
             ]
           }
           else {
@@ -255,7 +255,7 @@ export class GameHandlerComponent implements OnInit {
               {text: 'set', type: 'regular'},
               {text: data.name, type: 'counter'},
               {text: 'to', type: 'regular'},
-              {text: data.after, type: 'value'}
+              {text: this.getCounterValue(data.name), type: 'value'}
             ]
           }
         }
@@ -289,6 +289,40 @@ export class GameHandlerComponent implements OnInit {
         this.updateSocketPlayer();
         this.logAction('counter', {name: name, after: after, options: options});
       }, 3000);
+    }
+  }
+
+  getCounterValue(name: string, options?: any) {
+    if (name === 'Life') {
+      return this.game_data.type == 2 ? 0: this.user.life;
+    }
+    else if (name === 'Infect') {
+      return this.game_data.type == 2 ? 0: this.user.infect;
+    }
+    else {
+      if (options && options.card) {
+        if (name === 'Counter 1') {
+          return options.card.counter_1_value;
+        }
+        else if (name === 'Counter 2') {
+          return options.card.counter_2_value;
+        }
+        else if (name === 'Counter 3') {
+          return options.card.counter_3_value;
+        }
+        else if (name === 'Multiplier') {
+          return options.card.multiplier_value;
+        }
+        else if (name === 'Power') {
+          return options.card.power_mod + options.card.power;
+        }
+        else if (name === 'Toughness') {
+          return options.card.toughness_mod + options.card.toughness;
+        }
+        else if (name === 'Loyalty') {
+          return options.card.loyalty_mod + options.card.loyalty;
+        }
+      }
     }
   }
 
