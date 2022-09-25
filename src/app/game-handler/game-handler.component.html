@@ -93,7 +93,7 @@
           <div>
             <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
               <mat-label>Draw</mat-label>
-              <input [(ngModel)]="draw_count" type="text" matInput (click)="$event.stopPropagation()" value="1">
+              <input (keydown.enter)="drawToX(this.user.hand)" [(ngModel)]="draw_count" type="text" matInput (click)="$event.stopPropagation()" value="1">
               <button matSuffix mat-icon-button aria-label="Draw" (click)="drawToX(this.user.hand)"><mat-icon>add_circle</mat-icon></button>
             </mat-form-field>
           </div>
