@@ -445,6 +445,7 @@
   <!-- User Command Zone -->
   <div class="commander-user-container">
     <div class="commander-user-wrapper"
+         (contextmenu)="onRightClick($event, {type: 'commander'});"
          [cdkDropListData]="currentPlayer().deck.commander.cards"
          (cdkDropListDropped)="dragCard(currently_dragging, user.deck.commander, $event)"
          cdkDropListOrientation="horizontal"
