@@ -549,11 +549,17 @@ p, h1, h2, h3, h4, h5, h6 {
 }
 
 .playmat-user-card-container .playmat-user-card-counter {
-  height: 28px;
-  width: 28px;
+  min-height: 28px;
+  max-height: 28px;
+  min-width: 28px;
+  max-width: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.playmat-user-card-container .playmat-user-card-counter p {
+  margin-top: 10px;
 }
 
 .playmat-user-card-container-mini .playmat-user-card-counter {

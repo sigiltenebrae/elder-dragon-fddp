@@ -256,20 +256,7 @@ export class GameHandlerComponent implements OnInit {
     if (!this.counter_buffer) {
       this.counter_buffer = true;
       setTimeout(() => {this.counter_buffer = false;
-        if (options && options.team) {
-          if (options.card) {
 
-          }
-          //this.sendTeamUpdate('*' + this.user.name + '* {counter_change} ' + name + ' to ' + after);
-        }
-        else {
-          if (name !== '' && after != null) {
-            //this.sendPlayerUpdate('*' + this.user.name + '* {counter_change} ' + name + ' to ' + after)
-          }
-          else {
-            //this.sendPlayerUpdate(null);
-          }
-        }
       }, 3000);
     }
   }
