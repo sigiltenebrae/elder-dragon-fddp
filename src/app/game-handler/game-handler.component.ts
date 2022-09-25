@@ -267,6 +267,24 @@ export class GameHandlerComponent implements OnInit {
           }
         }
         break;
+      case 'invert':
+        if (data.card) {
+          log_action = [
+            {text: this.user.name, type: 'player'},
+            {text: '', type: 'invert'},
+            {text: data.card.name, type: 'card', card: JSON.parse(JSON.stringify(data.card))}
+          ]
+        }
+        break;
+      case 'flip':
+        if (data.card) {
+          log_action = [
+            {text: this.user.name, type: 'player'},
+            {text: '', type: 'flip'},
+            {text: data.card.name, type: 'card', card: JSON.parse(JSON.stringify(data.card))}
+          ]
+        }
+        break;
     }
     if (log_action != null) {
       this.game_data.action_log.push(log_action);
@@ -759,6 +777,8 @@ export class GameHandlerComponent implements OnInit {
 
   invertCard(card:any) {
     card.inverted = !card.inverted;
+    this.updateSocketPlayer();
+    this.logAction('invert', {card: card});
   }
 
   flipCard(card:any) {
@@ -772,6 +792,8 @@ export class GameHandlerComponent implements OnInit {
       card.facedown = true;
       card.visible = [];
     }
+    this.updateSocketPlayer();
+    this.logAction('flip', {card: card});
   }
 
   altFaceCard(card: any) {

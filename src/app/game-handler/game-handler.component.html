@@ -298,6 +298,12 @@
                           (pointerleave)="magnified_card = null">{{card.name}}
                     </span>
                   </span>
+                  <span *ngIf="token.type === 'invert'">
+                    <mat-icon style="transform: scale(0.75)">rotate_90_degrees_ccw</mat-icon>
+                  </span>
+                  <span *ngIf="token.type === 'flip'">
+                    <mat-icon style="transform: scale(0.75)">flip</mat-icon>
+                  </span>
                 </span>
               </p>
             </mat-list-item>
