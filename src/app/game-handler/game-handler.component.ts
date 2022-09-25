@@ -219,9 +219,9 @@ export class GameHandlerComponent implements OnInit {
             {text: 'moved', type: 'regular'},
             {text: data.card.name, type: 'card', card: JSON.parse(JSON.stringify(data.card))}, //copy card so it isn't a pointer
             {text: 'from', type: 'regular'},
-            {text: data.source.name, type: 'location'},
+            {text: data.source.name === 'temp_zone'? 'temp zone': data.source.name, type: 'location'},
             {text: 'to', type: 'regular'},
-            {text: data.dest.name, type: 'location'},
+            {text: data.dest.name === 'temp_zone'? 'temp zone': data.dest.name, type: 'location'},
           ]
         }
         break;
