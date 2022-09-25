@@ -286,6 +286,16 @@
                   <span *ngIf="token.type === 'player'" style="color: darkorange">{{token.text}} </span>
                   <span *ngIf="token.type === 'location'" style="color: goldenrod">{{token.text}} </span>
                   <span *ngIf="token.type === 'regular'">{{token.text}} </span>
+                  <span *ngIf="token.type === 'tap'">
+                    <img *ngIf="token.text === 'tapped'" class="game-data-log-list-icon" src="assets/action_symbols/tap.png">
+                    <img *ngIf="token.text === 'untapped'" class="game-data-log-list-icon" src="assets/action_symbols/untap.png">
+                  </span>
+                  <span *ngIf="token.type === 'card_list'">
+                    <span *ngFor="let card of token.cards" style="color: mediumpurple"
+                          (pointerenter)="magnified_card = card"
+                          (pointerleave)="magnified_card = null">{{card.name}}
+                    </span>
+                  </span>
                 </span>
               </p>
             </mat-list-item>

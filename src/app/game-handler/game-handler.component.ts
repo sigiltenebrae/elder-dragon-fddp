@@ -216,9 +216,33 @@ export class GameHandlerComponent implements OnInit {
             {text: 'to', type: 'regular'},
             {text: data.dest.name, type: 'location'},
           ]
-          this.game_data.action_log.push(log_action);
         }
         break;
+      case 'tap':
+        if (data.card) {
+          log_action = [
+            {text: this.user.name, type: 'player'},
+            {text: data.card.tapped, type: 'tap'},
+            {text: data.card.name, type: 'card', card: JSON.parse(JSON.stringify(data.card))}
+          ]
+        }
+        break;
+      case 'untap_all':
+        if (data.cards) {
+          log_action = [
+            {text: this.user.name, type: 'player'},
+            {text: 'untapped', type: 'tap'},
+            {text: '', type: 'card_list', cards: data.cards}
+          ]
+        }
+
+    }
+    if (log_action != null) {
+      this.game_data.action_log.push(log_action);
+      this.messageSocket({
+        game_id: this.game_id,
+        log: log_action
+      });
     }
     if (this.autoscroll) {
       console.log('scrolling');
@@ -226,11 +250,6 @@ export class GameHandlerComponent implements OnInit {
         this.action_scroll.scrollTo({ bottom: 0, duration: 600});
       })
     }
-    if (log_action != null)
-    this.messageSocket({
-      game_id: this.game_id,
-      log: log_action
-    });
   }
 
   updateCounter(name: string, after: any, options?: any) {
@@ -653,6 +672,22 @@ export class GameHandlerComponent implements OnInit {
     else {
       card.tapped = 'tapped';
     }
+    this.updateSocketPlayer();
+    this.logAction('tap', {card: card});
+  }
+
+  untapAll() {
+    let cards = [];
+    for (let spot of this.user.playmat) {
+      for (let card of spot.cards) {
+        if (!card.locked) {
+          cards.push(card);
+          card.tapped = 'untapped';
+        }
+      }
+    }
+    this.updateSocketPlayer();
+    this.logAction('untap_all', {cards: cards});
   }
 
   invertCard(card:any) {
@@ -852,18 +887,6 @@ export class GameHandlerComponent implements OnInit {
         resolve(image_data.images);
       });
     })
-  }
-
-  untapAll() {
-    let log = '*' + this.user.name + '*' + ' {untap}';
-    for (let spot of this.user.playmat) {
-      for (let card of spot) {
-        if (!card.locked) {
-          card.tapped = 'untapped';
-          log += ' ' + card.name
-        }
-      }
-    }
   }
 
   flipTop() {
@@ -1325,7 +1348,10 @@ export class GameHandlerComponent implements OnInit {
               else {
                 this.logAction('move', {card: card, source: source, dest: dest});
               }
-              this.updateSocketPlayer();
+              if (options && options.noupdate) {}
+              else {
+                this.updateSocketPlayer();
+              }
             }
             else {
               transferArrayItem(source.cards, dest.cards, previousIndex, currentIndex);
@@ -1333,7 +1359,10 @@ export class GameHandlerComponent implements OnInit {
               else {
                 this.logAction('move', {card: card, source: source, dest: dest});
               }
-              this.updateSocketPlayer();
+              if (options && options.noupdate) {}
+              else {
+                this.updateSocketPlayer();
+              }
             }
           }
           else {
@@ -1343,7 +1372,10 @@ export class GameHandlerComponent implements OnInit {
               else {
                 this.logAction('move', {card: card, source: source, dest: dest});
               }
-              this.updateSocketPlayer();
+              if (options && options.noupdate) {}
+              else {
+                this.updateSocketPlayer();
+              }
             }
             else {
               transferArrayItem(source.cards, this.getPlayerZone(card.owner, dest.name).cards, previousIndex, 0);
@@ -1351,7 +1383,10 @@ export class GameHandlerComponent implements OnInit {
               else {
                 this.logAction('move', {card: card, source: source, dest: dest});
               }
-              this.updateSocketPlayer();
+              if (options && options.noupdate) {}
+              else {
+                this.updateSocketPlayer();
+              }
             }
           }
         }
@@ -1366,7 +1401,10 @@ export class GameHandlerComponent implements OnInit {
             else {
               this.logAction('move', {card: card, source: source, dest: dest});
             }
-            this.updateSocketPlayer();
+            if (options && options.noupdate) {}
+            else {
+              this.updateSocketPlayer();
+            }
           }
         }
         else if (dest.name === "temp_zone") { //You can put anything in the temp zone
@@ -1376,7 +1414,10 @@ export class GameHandlerComponent implements OnInit {
           else {
             this.logAction('move', {card: card, source: source, dest: dest});
           }
-          this.updateSocketPlayer();
+          if (options && options.noupdate) {}
+          else {
+            this.updateSocketPlayer();
+          }
         }
       }
     }
@@ -1386,8 +1427,9 @@ export class GameHandlerComponent implements OnInit {
     let cards = [];
     for (let card of source.cards) {
       cards.push(card);
-      this.sendCardToZone(card, source, dest, source.cards.indexOf(card), 0, {nolog: true});
+      this.sendCardToZone(card, source, dest, source.cards.indexOf(card), 0, {nolog: true, noupdate: true});
     }
+    this.updateSocketPlayer();
     this.logAction('send_all', {cards: cards, source: source, dest: dest});
   }
 
@@ -1397,9 +1439,10 @@ export class GameHandlerComponent implements OnInit {
     for (let i = 0; i < num_count; i++) {
       if (this.user.deck.cards.length > 0) {
         cards.push(this.user.deck.cards[0]);
-        this.sendCardToZone(this.user.deck.cards[0], this.user.deck, dest, 0, 0, {nolog: true});
+        this.sendCardToZone(this.user.deck.cards[0], this.user.deck, dest, 0, 0, {nolog: true, noupdate: true});
       }
     }
+    this.updateSocketPlayer();
     this.logAction('draw', {cards: cards, source: this.user.deck, dest: dest});
   }
 
