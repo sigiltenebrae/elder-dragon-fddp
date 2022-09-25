@@ -428,8 +428,8 @@
          (cdkDropListDropped)="dragCard(currently_dragging, user.deck.commander, $event)"
          cdkDropListOrientation="horizontal"
          cdkDropList>
-      <button mat-fab class="command-tax-button-1"><h1>{{currentPlayer().command_tax_1}}</h1></button>
-      <button *ngIf="currentPlayer().deck.commander.saved.length == 2" mat-fab class="command-tax-button-2" color="primary"><h1>{{currentPlayer().command_tax_2}}</h1></button>
+      <button mat-fab class="command-tax-button-1" (click)="user.command_tax_1 = user.command_tax_1 + 1; updateCounter('Command Tax', user.command_tax_1);" (contextmenu)="onRightClick($event, {type: 'command_tax_1'})"><h1>{{currentPlayer().command_tax_1}}</h1></button>
+      <button *ngIf="currentPlayer().deck.commander.saved.length == 2" mat-fab class="command-tax-button-2" color="primary" (click)="user.command_tax_2 = user.command_tax_2 + 1; updateCounter('Command Tax 2', user.command_tax_2);" (contextmenu)="onRightClick($event, {type: 'command_tax_2'})"><h1>{{currentPlayer().command_tax_2}}</h1></button>
       <img *ngIf="currentPlayer().deck.commander.cards.length > 0" class="commander-card-image" src="{{currentPlayer().deck.commander.cards[0].image}}"
            (pointerleave)="magnified_card = null"
            (cdkDragStarted)="magnified_card = null; currently_dragging=user.deck.commander.cards[0]"

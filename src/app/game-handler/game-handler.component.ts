@@ -287,7 +287,9 @@ export class GameHandlerComponent implements OnInit {
       this.counter_buffer = true;
       setTimeout(() => {this.counter_buffer = false;
         this.updateSocketPlayer();
-        this.logAction('counter', {name: name, after: after, options: options});
+        if (name !== '' && name !== 'Command Tax' && name !== 'Command Tax 2') {
+          this.logAction('counter', {name: name, after: after, options: options});
+        }
       }, 3000);
     }
   }
