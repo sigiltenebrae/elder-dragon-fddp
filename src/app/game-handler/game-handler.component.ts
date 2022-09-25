@@ -378,6 +378,46 @@ export class GameHandlerComponent implements OnInit {
           ]
         }
         break;
+      case 'cascade':
+        if (data.cmc && data.count) {
+          if (data.failed) {
+            log_action = [
+              {text: this.user.name, type: 'player'},
+              {text: 'revealed', type: 'regular'},
+              {text: data.count + ' cards and failed to find cmc less than', type: 'regular'},
+              {text: data.cmc, type: 'regular'}
+            ]
+          }
+          else {
+            log_action = [
+              {text: this.user.name, type: 'player'},
+              {text: 'revealed', type: 'regular'},
+              {text: data.count + ' cards until they revealed cmc less than', type: 'regular'},
+              {text: data.cmc, type: 'regular'}
+            ]
+          }
+        }
+        break;
+      case 'draw_until':
+        if (data.type && data.count) {
+          if (data.failed) {
+            log_action = [
+              {text: this.user.name, type: 'player'},
+              {text: 'revealed', type: 'regular'},
+              {text: data.count + ' cards and failed to find a ', type: 'regular'},
+              {text: data.type, type: 'regular'}
+            ]
+          }
+          else {
+            log_action = [
+              {text: this.user.name, type: 'player'},
+              {text: 'revealed', type: 'regular'},
+              {text: data.count + ' cards until they revealed a(n) ', type: 'regular'},
+              {text: data.type, type: 'regular'}
+            ]
+          }
+        }
+        break;
     }
     if (log_action != null) {
       this.game_data.action_log.push(log_action);
@@ -538,6 +578,7 @@ export class GameHandlerComponent implements OnInit {
           let out_player: any = {};
           out_player.star_color = null;
           out_player.teammate_id = null;
+          out_player.playmat_image = this.current_user.playmat;
           out_player.deck = deck;
           out_player.deck.commander = {name: 'commander', cards: [], saved: [], owner: out_player.deck.owner};
           out_player.name = name;
@@ -1740,8 +1781,38 @@ export class GameHandlerComponent implements OnInit {
    * @param value the cmc of the current cascade.
    */
   cascade(value: any) {
-    let num_value = Number(value);
-
+    let cmc = Number(value);
+    let count = 0;
+    let failed = false;
+    while(true) {
+      if (this.user.deck.cards.length > 0) {
+        count ++;
+        let cur_card = this.user.deck.cards[0];
+        this.sendCardToZone(cur_card, this.user.deck, this.user.temp_zone, 0, 0,
+          {nolog: true, noupdate: true})
+        if (cur_card.cmc != null) {
+          if (cur_card.cmc < cmc) {
+            if (cur_card.cmc > 0) {
+              break;
+            }
+            if (cur_card.types) {
+              if (!cur_card.types.includes("Land")) {
+                break;
+              }
+            }
+            else {
+              break;
+            }
+          }
+        }
+      }
+      else {
+        failed = true;
+        break;
+      }
+    }
+    this.updateSocketPlayer();
+    this.logAction('cascade', {cmc: cmc, count: count, failed: failed});
   }
 
   /**
@@ -1749,7 +1820,51 @@ export class GameHandlerComponent implements OnInit {
    * @param type the type string to look for, or 'permanent', 'historic' or 'unnatural'
    */
   drawUntil(type: string) {
-
+    let count = 0;
+    let failed = false;
+    while(true) {
+      if (this.user.deck.cards.length > 0) {
+        count++;
+        let cur_card = this.user.deck.cards[0];
+        this.sendCardToZone(cur_card, this.user.deck, this.user.temp_zone, 0, 0,
+          {nolog: true, noupdate: true})
+        if (cur_card.types) {
+          if (type.toLowerCase() === 'permanent') {
+            if (this.isPermanent(cur_card)) {
+              break;
+            }
+          }
+          if (type.toLowerCase() === 'unnatural') {
+            if (this.isUnnatural(cur_card)) {
+              break;
+            }
+          }
+          if (type.toLowerCase() === 'historic') {
+            if (this.isHistoric(cur_card)) {
+              break;
+            }
+          } else {
+            let f = false;
+            for (let cur_type of cur_card.types) {
+              if (cur_type.toLowerCase() === type.toLowerCase()) {
+                f = true;
+                break;
+              }
+            }
+            if (f) {
+              break;
+            }
+          }
+        } else {
+          break;
+        }
+      } else {
+        failed = true;
+        break;
+      }
+    }
+    this.updateSocketPlayer();
+    this.logAction('draw_until', {type: type, count: count, failed: failed});
   }
 
   scryX(count: any) {
