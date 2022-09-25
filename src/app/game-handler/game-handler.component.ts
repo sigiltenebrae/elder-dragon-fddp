@@ -85,6 +85,12 @@ export class GameHandlerComponent implements OnInit {
   draw_count: any = 1;
   draw_until = '';
 
+  //Sidenav
+  sidenav_type: any = null;
+  sidenav_sort_type: string = '';
+  sidenav_sort = '';
+  sidenav_scry_count = 0;
+
   //Messaging
   counter_buffer: any = false; //True if a counter update is in the message queue. Prevents counter updates from spamming
 
@@ -619,8 +625,8 @@ export class GameHandlerComponent implements OnInit {
             card.triggered = false;
             card.is_token = false;
             card.tapped = 'untapped';
-            card.sidenav_visible = true;
             card.visible = [];
+            card.sidenav_visible = false;
             card.alt = false;
             card.facedown = false;
             card.shaken = false;
@@ -1478,8 +1484,107 @@ export class GameHandlerComponent implements OnInit {
    *               Sidenav Functions                *
    ------------------------------------------------**/
 
+  @ViewChild('fddp_sidenav') fddp_sidenav: any;
   openSideNav(zone: any) {
+    this.sidenav_selected_player = this.user;
+    this.sidenav_type = zone.name === this.user.deck.name ? 'deck': zone.name;
+    if (zone !== 'scry') {
+      this.sidenav_sort = '';
+      this.sidenav_sort_type = '';
+      this.getSidenavSort();
+    }
+    else {
+      let items = this.getSidenavList();
+      for (let i = 0; i < items.length; i++) {
+        if (i > this.sidenav_scry_count - 1) {
+          items[i].sidenav_visible = false;
+        }
+        else {
+          items[i].sidenav_visible = true;
+        }
+      }
+    }
+    this.fddp_sidenav.open();
+  }
 
+  closeSideNav() {
+    this.sidenav_sort = '';
+    this.sidenav_selected_player = null;
+    this.sidenav_type = null;
+    this.fddp_sidenav.close();
+    this.sidenav_sort = '';
+  }
+
+  getSidenavSort() {
+    let items: any[] = this.getSidenavList();
+
+    if (this.sidenav_sort && this.sidenav_sort !== '') {
+      for (let item of items) {
+        item.sidenav_visible = item.name.toLowerCase().includes(this.sidenav_sort.toLowerCase());
+      }
+    }
+    else {
+      for (let item of items) {
+        item.sidenav_visible = true;
+      }
+    }
+    if (this.sidenav_sort_type && this.sidenav_sort_type != '') {
+      for (let item of items) {
+        if (item.types) {
+          let found = false;
+          for (let card_type of item.types) {
+            if (this.sidenav_sort_type.toLowerCase() === card_type.toLowerCase()) {
+              found = true;
+              break;
+            }
+          }
+          if (item.sidenav_visible) {
+            item.sidenav_visible = found;
+          }
+        }
+        else {
+          item.sidenav_visible = false;
+        }
+      }
+    }
+    if (this.sidenav_type !== 'deck') {
+      if ((this.sidenav_sort && this.sidenav_sort !== '') || (this.sidenav_sort_type && this.sidenav_sort_type != '')){
+        for (let item of items) {
+          if (!item.visible.includes(this.user.id)) {
+            item.sidenav_visible = false;
+          }
+        }
+      }
+    }
+  }
+
+  getSidenavList() {
+    let items: any[] = []
+    switch(this.sidenav_type) {
+      case 'grave':
+        items = this.sidenav_selected_player.grave.cards;
+        break;
+      case 'exile':
+        items = this.sidenav_selected_player.exile.cards;
+        break;
+      case 'temp_zone':
+        items = this.sidenav_selected_player.temp_zone.cards;
+        break;
+      case 'deck':
+        items = this.sidenav_selected_player.deck.cards;
+        break;
+      case 'scry':
+        items = this.sidenav_selected_player.deck.cards;
+    }
+    return items;
+  }
+
+  getSidenavContainer() {
+    return this.getPlayerZone(this.sidenav_selected_player.id, this.sidenav_type);
+  }
+
+  sidenavPredicate() {
+    return this.sidenav_sort === '' && this.sidenav_sort_type === '';
   }
 
   /**------------------------------------------------
@@ -1613,9 +1718,15 @@ export class GameHandlerComponent implements OnInit {
    * @param dest the destination container, containing the destination array.
    * @param event the drag event.
    */
-  dragCard(card: any, dest: any, event: any) {
-    this.sendCardToZone(card, this.getContainer(event.previousContainer.data), dest,
-      event.previousIndex, event.currentIndex);
+  dragCard(card: any, dest: any, event: any, options?: any) {
+    if (event.previousContainer.data == this.getSidenavList()) {
+      this.sendCardToZone(card, this.getContainer(event.previousContainer.data), dest,
+        this.getSidenavList().indexOf(card), event.currentIndex, options);
+    }
+    else {
+      this.sendCardToZone(card, this.getContainer(event.previousContainer.data), dest,
+        event.previousIndex, event.currentIndex, options);
+    }
   }
 
   /**
@@ -1633,9 +1744,16 @@ export class GameHandlerComponent implements OnInit {
     //need to write an insert predicate for sidenav cdkdroplist that prevents dragging in once list is sorted.
     //Also prevents dragging in while scrying
     if (source == dest) {
-      //need to check for sidenav here (options.sendTo is allowed as opposed to drag)
-      moveItemInArray(source.cards, previousIndex, currentIndex);
-      this.updateSocketPlayer();
+      if (options && options.sidenav) {
+        if (this.sidenavPredicate()) {
+          moveItemInArray(source.cards, previousIndex, currentIndex);
+          this.updateSocketPlayer();
+        }
+      }
+      else {
+        moveItemInArray(source.cards, previousIndex, currentIndex);
+        this.updateSocketPlayer();
+      }
     }
     else {
       if (dest.name !== 'play' && dest.name !== 'temp_zone' && !(dest.name === 'commander' && !card.iscommander)) {
