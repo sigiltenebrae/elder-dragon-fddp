@@ -282,7 +282,9 @@
                 <span *ngFor="let token of action">
                   <span *ngIf="token.type === 'card'" style="color: mediumpurple"
                         (pointerenter)="magnified_card = token.card"
-                        (pointerleave)="magnified_card = null">{{token.text}} </span>
+                        (pointerleave)="magnified_card = null">{{token.text}}
+                    <span *ngIf="isClone(token.card)"> (clone) </span>
+                  </span>
                   <span *ngIf="token.type === 'player'" style="color: darkorange">{{token.text}} </span>
                   <span *ngIf="token.type === 'location'" style="color: goldenrod">{{token.text}} </span>
                   <span *ngIf="token.type === 'counter'" style="color: dodgerblue">{{token.text}} </span>
@@ -307,6 +309,7 @@
                   <span *ngIf="token.type === 'shake'">
                     <mat-icon style="transform: scale(0.75)">notifications_active</mat-icon>
                   </span>
+                  <span *ngIf="token.type === 'clone'" style="color: darkgreen">cloned </span>
                 </span>
               </p>
             </mat-list-item>

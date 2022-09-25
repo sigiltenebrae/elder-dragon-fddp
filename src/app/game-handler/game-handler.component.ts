@@ -294,6 +294,15 @@ export class GameHandlerComponent implements OnInit {
           ]
         }
         break;
+      case 'clone':
+        if (data.card) {
+          log_action = [
+            {text: this.user.name, type: 'player'},
+            {text: '', type: 'clone'},
+            {text: data.card.name, type: 'card', card: JSON.parse(JSON.stringify(data.card))}
+          ]
+        }
+        break;
     }
     if (log_action != null) {
       this.game_data.action_log.push(log_action);
@@ -901,7 +910,9 @@ export class GameHandlerComponent implements OnInit {
     for(let player of this.game_data.players) {
       card_clone.visible.push(player.id);
     }
-    this.user.temp_zone.push(card_clone);
+    this.user.temp_zone.cards.push(card_clone);
+    this.updateSocketPlayer();
+    this.logAction('clone', {card: card_clone});
   }
 
   createToken(token: any) {
