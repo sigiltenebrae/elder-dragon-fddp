@@ -1735,10 +1735,19 @@ export class GameHandlerComponent implements OnInit {
     this.logAction('mulligan', {count: count});
   }
 
+  /**
+   * Draws cards from the top of the deck to the temp zone until it reveals a non-land card with cmc less than value.
+   * @param value the cmc of the current cascade.
+   */
   cascade(value: any) {
     let num_value = Number(value);
+
   }
 
+  /**
+   * Draws cards from the top of the deck to the temp zone until it reveals a card of the chosen type.
+   * @param type the type string to look for, or 'permanent', 'historic' or 'unnatural'
+   */
   drawUntil(type: string) {
 
   }
