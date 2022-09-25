@@ -280,6 +280,44 @@
     </div>
   </mat-sidenav>
   <mat-sidenav-content >
+    <!-- Counters -->
+    <div *ngFor="let counter of user.play_counters" class="counter-creator">
+      <mat-card *ngIf="counter.type === 'type'" class="commander-dashboard-custom-counter"
+                (contextmenu)="onRightClick($event, {type: 'type_counter', counter: counter})"
+                style="padding: 0" cdkDrag cdkDragBoundary=".counter-creator" [cdkDragFreeDragPosition]="counter.position"
+                (cdkDragEnded)="setCounterPosition($event, counter)">
+        <mat-form-field appearance="fill" class="commander-dashboard-input">
+          <mat-label>Enter a Type</mat-label>
+          <input [(ngModel)]="counter.search_type" matInput>
+        </mat-form-field>
+        <div fxFlex="100" fxLayout="row" fxLayoutGap="10" class="commander-dashboard-select-holder" fxLayoutAlign="space-between">
+          <mat-form-field appearance="outline" class="commander-dashboard-select">
+            <mat-label>Player</mat-label>
+            <mat-select [(ngModel)]="counter.search_player">
+              <mat-option *ngFor="let player of game_data.players" [value]="player.id">{{player.name}}</mat-option>
+              <mat-option [value]="'All'">All</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="commander-dashboard-select">
+            <mat-label>Zone</mat-label>
+            <mat-select [(ngModel)]="counter.search_zone">
+              <mat-option [value]="'play'">Play</mat-option>
+              <mat-option [value]="'grave'">Graveyard</mat-option>
+              <mat-option [value]="'exile'">Exile</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <h1 class="commander-dashboard-text" style="text-align: end">Count: {{typeCount(counter.search_player, counter.search_zone, counter.search_type)}}</h1>
+      </mat-card>
+      <button *ngIf="counter.type === 'play'" cdkDrag mat-fab (click)="counterClick($event, counter)"
+              (contextmenu)="onRightClick($event, {type: 'custom_counter', counter: counter})"
+              (keydown.escape)="deleteCounter(counter)"
+              [style.background]="counter.color"
+              cdkDragBoundary=".counter-creator" [cdkDragFreeDragPosition]="counter.position"
+              (cdkDragEnded)="setCounterPosition($event, counter)"
+              style="pointer-events: all;">{{counter.value}}</button>
+    </div>
+
     <!-- Opponent Playmats -->
     <div class="playmat-opponent-view-container">
       <ng-scrollbar track="all" visibility="hover" pointerEventsMethod="scrollbar" style="width: 100%; height: 100%;">

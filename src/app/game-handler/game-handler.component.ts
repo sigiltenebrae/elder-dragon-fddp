@@ -1260,14 +1260,17 @@ export class GameHandlerComponent implements OnInit {
       type: type,
       position: {x: 20, y: 20}
     });
+    this.updateSocketPlayer();
   }
 
   deleteCounter(counter: any) {
     this.user.play_counters.splice(this.user.play_counters.indexOf(counter), 1);
+    this.updateSocketPlayer();
   }
 
   deleteAllCounters() {
     this.user.play_counters = [];
+    this.updateSocketPlayer();
   }
 
   /**
@@ -1278,6 +1281,7 @@ export class GameHandlerComponent implements OnInit {
   setCounterPosition(event: any, counter: any) {
     if (this.user != null) {
       counter.position = { ...(<any>event.source._dragRef)._passiveTransform };
+      this.updateSocketPlayer();
     }
   }
 
