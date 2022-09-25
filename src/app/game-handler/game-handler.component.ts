@@ -285,6 +285,15 @@ export class GameHandlerComponent implements OnInit {
           ]
         }
         break;
+      case 'shake':
+        if (data.card) {
+          log_action = [
+            {text: this.user.name, type: 'player'},
+            {text: '', type: 'shake'},
+            {text: data.card.name, type: 'card', card: JSON.parse(JSON.stringify(data.card))}
+          ]
+        }
+        break;
     }
     if (log_action != null) {
       this.game_data.action_log.push(log_action);
@@ -841,6 +850,8 @@ export class GameHandlerComponent implements OnInit {
 
   shakeCard(card: any, id: number, location: string) {
     card.shaken = true;
+    this.updateSocketPlayer();
+    this.logAction('shake', {card: card});
     setTimeout(() => {
       card.shaken = false;
     }, 3000);
