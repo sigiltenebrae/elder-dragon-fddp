@@ -80,7 +80,7 @@
         <div *ngIf="rightclicked_item.type === 'deck'">
           <button mat-menu-item *ngIf="game_data && game_data.turn_count == 0" (click)="startGame()">Start Game</button>
           <button mat-menu-item *ngIf="game_data && game_data.turn_count < 0" (click)="endGame(null, null)">End Game</button>
-          <button mat-menu-item (click)="openSideNav('deck')">Search</button>
+          <button mat-menu-item (click)="openSideNav(this.user.deck)">Search</button>
           <button mat-menu-item (click)="shuffleDeck(user.deck.cards)">Shuffle</button>
           <button mat-menu-item (click)="flipTop()">Flip Top</button>
           <div>
@@ -392,6 +392,12 @@
                   </span>
                   <span *ngIf="token.type === 'shuffle'">
                     <mat-icon style="transform: scale(0.75)">shuffle</mat-icon>
+                  </span>
+                  <span *ngIf="token.type === 'scry'">
+                    <mat-icon style="transform: scale(0.75)">remove_red_eye</mat-icon>
+                  </span>
+                  <span *ngIf="token.type === 'search'">
+                    <mat-icon style="transform: scale(0.75)">search</mat-icon>
                   </span>
                   <span *ngIf="token.type === 'clone'" style="color: darkgreen">cloned </span>
                 </span>

@@ -424,6 +424,20 @@ export class GameHandlerComponent implements OnInit {
           }
         }
         break;
+      case 'scry':
+        log_action = [
+          {text: this.user.name, type: 'player'},
+          {text: '', type: 'scry'},
+          {text: 'the top ' + this.sidenav_scry_count + ' cards of their library', type: 'regular'}
+        ]
+        break;
+      case 'search':
+        log_action = [
+          {text: this.user.name, type: 'player'},
+          {text: '', type: 'search'},
+          {text: 'their library', type: 'regular'}
+        ]
+        break;
     }
     if (log_action != null) {
       this.game_data.action_log.push(log_action);
@@ -1485,15 +1499,11 @@ export class GameHandlerComponent implements OnInit {
    ------------------------------------------------**/
 
   @ViewChild('fddp_sidenav') fddp_sidenav: any;
-  openSideNav(zone: any) {
+  openSideNav(zone: any, options?: any) {
     this.sidenav_selected_player = this.user;
     this.sidenav_type = zone.name === this.user.deck.name ? 'deck': zone.name;
-    if (zone !== 'scry') {
-      this.sidenav_sort = '';
-      this.sidenav_sort_type = '';
-      this.getSidenavSort();
-    }
-    else {
+    if (options && options.scry) {
+      this.sidenav_type = 'scry';
       let items = this.getSidenavList();
       for (let i = 0; i < items.length; i++) {
         if (i > this.sidenav_scry_count - 1) {
@@ -1503,6 +1513,14 @@ export class GameHandlerComponent implements OnInit {
           items[i].sidenav_visible = true;
         }
       }
+    }
+    else {
+      this.sidenav_sort = '';
+      this.sidenav_sort_type = '';
+      this.getSidenavSort();
+    }
+    if (this.sidenav_type === 'deck') {
+      this.logAction('search', null)
     }
     this.fddp_sidenav.open();
   }
@@ -1986,6 +2004,8 @@ export class GameHandlerComponent implements OnInit {
   }
 
   scryX(count: any) {
-
+    this.sidenav_scry_count = Number(count);
+    this.openSideNav(this.user.deck, {scry: true});
+    this.logAction('scry', null);
   }
 }
