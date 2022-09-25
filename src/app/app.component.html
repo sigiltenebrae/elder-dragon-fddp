@@ -1,8 +1,8 @@
-<div class="fdpp-nav-button">
-  <button mat-fab *ngIf="!root_sidenav.opened" (click)="root_sidenav.open()" style="display: none"><mat-icon>menu</mat-icon></button>
+<div class="fddp-nav-button">
+  <button mat-fab *ngIf="!root_sidenav.opened" (click)="root_sidenav.open()"><mat-icon>menu</mat-icon></button>
 </div>
 
-<mat-sidenav-container fxFlexFill>
+<mat-sidenav-container fxFlexFill style="position: fixed; top: 0; left: 0; z-index: 501">
   <mat-sidenav #root_sidenav (keydown.escape)="root_sidenav.close()" position="end">
     <mat-toolbar color="primary">
       <div fxFlex="100" fxLayout="row" fxLayoutAlign="space-between center">

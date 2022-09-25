@@ -8,6 +8,9 @@
 @import 'src/dark-theme';
 @import 'src/light-theme';
 
+/* Importing Drag Select Styles */
+@import 'ngx-drag-to-select';
+
 .dark-theme {
   @include mat.all-component-themes($fddp-theme-dark);
 
@@ -74,6 +77,266 @@ p, h1, h2, h3, h4, h5, h6 {
   @include mat.elevation-transition();
   @include mat.elevation(6)
 }
+
+.star { //for ngb-rating
+  font-size: 1.5rem;
+  color: rgba(mat.get-color-from-palette($fddp-palette-primary-dark, 500), 0.4);
+}
+
+.filled { //also for ngb-rating
+  color: mat.get-color-from-palette($fddp-palette-primary-dark, 500);
+}
+
+.fddp-nav-button {
+  top: 10px;
+  right: 10px;
+  position: fixed;
+  z-index: 5000;
+  opacity: 0.3;
+}
+
+.fddp-nav-button:hover {
+  opacity: 1;
+}
+
+.cdk-global-overlay-wrapper, .cdk-overlay-container {
+  z-index: 99999 !important;
+}
+
+/*****************************************
+      Custom-Image-Manager-Component
+ *****************************************/
+
+.custom-image-card-holder {
+  position: relative;
+  max-width: 254px;
+  max-height: 355px;
+  min-width: 254px;
+  min-height: 355px;
+  width: 254px;
+  height: 355px;
+}
+
+.custom-image-card-holder .custom-image-card-delete {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%);
+  z-index: 2;
+  display: none;
+}
+
+.custom-image-card-holder .custom-image-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: 254px;
+  max-height: 355px;
+  min-width: 254px;
+  min-height: 355px;
+  width: 254px;
+  height: 355px;
+  border-radius: 12px;
+  z-index: 1;
+}
+
+.custom-image-card-holder:hover .custom-image-card {
+  opacity: 0.5;
+}
+
+.custom-image-card-holder:hover .custom-image-card-delete {
+  display: block;
+}
+
+/*****************************************
+         Custom-Images-Component
+ *****************************************/
+
+.custom-images-card-preview {
+  max-width: 254px;
+  max-height: 355px;
+  min-width: 254px;
+  min-height: 355px;
+  border-radius: 12px;
+  border: dotted #ccc 2px;
+}
+
+.custom-images-card {
+  max-width: 254px;
+  max-height: 355px;
+  min-width: 254px;
+  min-height: 355px;
+  border-radius: 12px;
+}
+
+
+/*****************************************
+         Deck-Edit-Component
+ *****************************************/
+
+.deck-edit-input-holder {
+  min-width: 350px;
+}
+
+.deck-edit-image {
+  background: black;
+  max-width: 254px;
+  max-height: 355px;
+  min-width: 254px;
+  min-height: 355px;
+  border-radius: 12px;
+}
+
+.deck-edit-preview {
+  min-width: 75px;
+  min-height: 105px;
+  max-width: 75px;
+  max-height: 105px;
+  border-radius: 5px;
+}
+
+.deck-edit-card-list {
+  min-width: 500px;
+  overflow-y: auto;
+}
+
+.deck-edit-card-list-commander {
+  background: mat.get-color-from-palette($fddp-palette-primary-dark, 500);
+}
+
+.deck-edit-card-display {
+  min-height: 48px;
+}
+
+.deck-edit-card-select {
+  min-width: 150px;
+  max-width: 150px;
+  min-height: 210px;
+  max-height: 210px;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+
+/*****************************************
+         Deck-Manager-Component
+ *****************************************/
+
+.deck-manager-commander-viewer {
+  font-family: Beleren, "Helvetica Neue", sans-serif;
+  position: relative;
+  float: left;
+  overflow: hidden;
+  width: 300px;
+  text-align: center;
+  height: 372px;
+  border: none;
+  background: #333;
+  @include mat.elevation(4);
+}
+
+.deck-manager-commander-viewer .deck-manager-background-card-closed {
+  position: absolute;
+  top: 0;
+  left: 0;
+  float: left;
+  width: 300px;
+  height: 200px;
+  overflow: hidden;
+  z-index: 5;
+}
+
+deck-manager-commander-viewer .deck-manager-background-card-open {
+  position: absolute;
+  top: 0;
+  left: 0;
+  float: left;
+  width: 300px;
+  height: 200px;
+  overflow: hidden;
+  background-color: black;
+  z-index: 5;
+}
+
+.deck-manager-commander-viewer .deck-manager-commander-crop,
+.deck-manager-commander-viewer .deck-manager-commander-crop-no-filter {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 560px;
+  width: 360px;
+  margin-left: -30px;
+  margin-top: -70px;
+  opacity: 0.9;
+  background-color: black;
+  z-index: 1;
+}
+
+.deck-manager-commander-viewer .deck-manager-background-card-open:hover .deck-manager-commander-crop {
+  filter: grayscale(100%);
+}
+
+.deck-manager-commander-viewer .deck-manager-background-card-open .deck-manager-commander-edit,
+.deck-manager-commander-viewer .deck-manager-background-card-closed .deck-manager-commander-edit {
+  position: absolute;
+  color: white;
+  top: 5px;
+  right: 5px;
+  opacity: 0.8;
+  z-index: 2;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  display: none;
+}
+
+.deck-manager-commander-viewer .deck-manager-background-card-open:hover .deck-manager-commander-edit {
+  display: block;
+}
+
+.deck-manager-commander-viewer .deck-manager-content {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  float: left;
+  left: 0;
+  top: 0;
+  z-index: 2;
+}
+
+.deck-manager-commander-viewer .deck-manager-content-holder {
+  position: absolute;
+  height: 162px;
+  width: 300px;
+  top: 210px;
+  left: 0;
+  z-index: 2;
+}
+
+.deck-manager-commander-viewer .deck-manager-commander-name {
+  margin-top:-10px !important;
+  opacity: 0.7;
+}
+
+.deck-manager-commander-colors {
+  position: absolute;
+  height: 16px;
+  width: 100%;
+  bottom: 10px;
+  left: 0;
+}
+
+.deck-manager-commander-viewer .deck-manager-commander-colors .deck-manager-commander-color {
+  height: 16px;
+  width: 16px;
+  margin: 0 2px 0 2px;
+  border-radius: 50%;
+  @include mat.elevation(2);
+}
+
+
 
 /*****************************************
          Game-Manager-Component
@@ -1113,4 +1376,64 @@ commander-dashboard-select-zone {
   position: absolute;
   bottom: 10px;
   left: 150px;
+}
+
+/*****************************************
+          Game-Handler-Addons
+ *****************************************/
+
+.two-headed-container {
+  width: 250px;
+  max-width: 100%;
+  margin: 0 25px 25px 0;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.two-headed-box {
+  padding: 20px 10px;
+  border-bottom: solid 1px #ccc;
+  color: rgba(0, 0, 0, 0.87);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  cursor: move;
+  background: white;
+  font-size: 14px;
+}
+
+.two-headed-list {
+  border: solid 1px #ccc;
+  min-height: 60px;
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
+  display: block;
+}
+
+
+/*****************************************
+          Game-Manager-Component
+ *****************************************/
+
+.game-manager-game-viewer {
+  font-family: Beleren, "Helvetica Neue", sans-serif;
+  position: relative;
+  float: left;
+  overflow: hidden;
+  width: 400px;
+  text-align: center;
+  height: 300px;
+  border: none;
+}
+
+.game-manager-game-viewer .game-manager-content {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  float: left;
+  left: 0;
+  top: 0;
 }

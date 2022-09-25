@@ -47,7 +47,6 @@ import { CustomImageManagerComponent } from './custom-image-manager/custom-image
 import { DeckManagerComponent } from './deck-manager/deck-manager.component';
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { MatDialogModule } from "@angular/material/dialog";
-import { TestWsComponent } from './test-ws/test-ws.component';
 import { GameManagerComponent } from './game-manager/game-manager.component';
 
 
@@ -66,7 +65,6 @@ import { GameManagerComponent } from './game-manager/game-manager.component';
     DeckSelectDialog,
     CounterSetDialog,
     TwoHeadedTeamsDialog,
-    TestWsComponent,
     GameManagerComponent,
   ],
   imports: [
@@ -103,8 +101,7 @@ import { GameManagerComponent } from './game-manager/game-manager.component';
       {path: 'games/:gameid', component: GameHandlerComponent},
       {path: 'decks/:deckid', component: DeckEditComponent},
       {path: 'upload', component: CustomImagesComponent},
-      {path: 'custom', component: CustomImageManagerComponent},
-      {path: 'testws', component: TestWsComponent}
+      {path: 'custom', component: CustomImageManagerComponent}
     ]),
     FlexLayoutModule,
     DragDropModule,

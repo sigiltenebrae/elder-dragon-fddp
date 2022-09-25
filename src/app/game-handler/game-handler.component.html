@@ -201,7 +201,7 @@
   <button mat-menu-item (click)="drawToX(this.user.temp_zone)">Temp Zone</button>
 </mat-menu>
 
-<mat-sidenav-container cdkDropListGroup fxFlexFill hasBackdrop="false" *ngIf="game_data && currentPlayer() && currentPlayer().deck" style="overflow: hidden; position: fixed; top: 0; left: 0; z-index: 900">
+<mat-sidenav-container cdkDropListGroup fxFlexFill hasBackdrop="false" *ngIf="game_data && currentPlayer() && currentPlayer().deck" style="overflow: hidden; position: fixed; top: 0; left: 0; z-index: 500">
   <mat-sidenav #fddp_sidenav disableClose *ngIf="game_data != null" style="overflow: hidden">
     <mat-toolbar color="primary">
       <div fxFlex="100" fxLayout="row" fxLayoutAlign="space-between center">
@@ -322,8 +322,8 @@
     <div class="playmat-opponent-view-container">
       <ng-scrollbar track="all" visibility="hover" pointerEventsMethod="scrollbar" style="width: 100%; height: 100%;">
         <div fxFlex fxLayout="row wrap">
-          <div *ngFor="let player of game_data.players" fxFlex="604px" class="playmat-opponent-wrapper">
-            <div *ngIf="player != currentPlayer()">
+          <div *ngFor="let player of getOtherPlayers()" fxFlex="604px" class="playmat-opponent-wrapper">
+            <div>
               <img class="playmat-user-background-image-mini" *ngIf="getUserTableData(player.id) != null && getUserTableData(player.id).playmat != null && getUserTableData(player.id).playmat !== ''" src="{{getUserTableData(player.id).playmat}}">
               <div *ngIf="player.hand && player.deck.cards && player.grave && player.exile" class="playmat-opponent-player-information" fxFlexFill fxLayout="row" fxLayoutAlign="space-between">
                 <h3>{{player.name}}</h3>
@@ -509,6 +509,7 @@
     <!-- User Deck -->
     <div class="deck-user-container">
       <div class="deck-user-wrapper"
+           (dblclick)="drawToX(currentPlayer().hand, 1)"
            [cdkDropListData]="currentPlayer().deck.cards"
            (cdkDropListDropped)="dragCard(currently_dragging, user.deck, $event)"
            cdkDropListOrientation="horizontal"

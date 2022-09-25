@@ -65,13 +65,7 @@ export class GameHandlerComponent implements OnInit {
   game_id = -1; //The game id (from the url)
   game_data: any = null; //The full game data object
   users_list: any[] = []; //The list of all users in the db
-  //current_user: any = null; //The currently logged-in user
-  current_user: any = {
-    id: 1,
-    name: "Chris",
-    playmat: "https://i.ibb.co/Df3dC43/bolasplaymatfinal.png",
-    theme: "dark"
-  }
+  current_user: any = null; //The currently logged-in user
   user: any = null; //The game data for the currently logged-in user
 
   //Board Interaction
@@ -104,7 +98,7 @@ export class GameHandlerComponent implements OnInit {
     const routeParams = this.route.snapshot.paramMap;
     this.game_id = Number(routeParams.get('gameid'));
 
-    //this.current_user = this.tokenStorage.getUser();
+    this.current_user = this.tokenStorage.getUser();
 
     this.WebsocketService.messages.subscribe(msg => {
       let json_data = msg;
@@ -797,6 +791,16 @@ export class GameHandlerComponent implements OnInit {
     else if (this.user.spectating) {
       return this.selected_player;
     }
+  }
+
+  getOtherPlayers() {
+    let out_players: any[] = [];
+    for (let player of this.game_data.players) {
+      if (player != this.currentPlayer()) {
+        out_players.push(player);
+      }
+    }
+    return out_players;
   }
 
   selectPlayer(selector: any) {
@@ -1673,7 +1677,7 @@ export class GameHandlerComponent implements OnInit {
    * @param dest_type string representing the destination
    */
   setVisibility(card: any, dest_type: string) {
-    /*switch(dest_type) {
+    switch(dest_type) {
       case 'deck':
         card.visible = [];
         break;
@@ -1726,8 +1730,7 @@ export class GameHandlerComponent implements OnInit {
           }
         }
         break;
-    }*/
-    card.visible = [1];
+    }
   }
 
   /**

@@ -3,7 +3,7 @@
 </div>
 <div *ngIf="!loading && deck" fxFlexFill style="margin: 20px;" fxLayoutAlign="center center">
   <mat-card fxFlex="80" fxLayout="row wrap" fxLayoutGap="20">
-    <div class="deck-form-input-holder" style="min-height: 640px; max-height: 640px;" fxLayout="column">
+    <div class="deck-edit-input-holder" style="min-height: 640px; max-height: 640px;" fxLayout="column">
       <mat-form-field appearance="fill" style="margin-top: 10px;">
         <mat-label>Deck Name</mat-label>
         <input matInput [type]="'text'" name="deckname" [(ngModel)]="deck.name" required minlength="1">
@@ -71,10 +71,10 @@
         <button mat-icon-button matSuffix type="button" (click)="addCardToDeck()"><mat-icon>add</mat-icon></button>
       </mat-form-field>
       <h4 *ngIf="card_type === 'cards'">Cards: {{getTotal(deck.cards)}}/{{deck.cards.length}}</h4>
-      <div *ngIf="card_type === 'cards'" class="deck-form-card-list">
+      <div *ngIf="card_type === 'cards'" class="deck-edit-card-list">
         <mat-list>
-          <div *ngFor="let card of deck.cards; let i = index" class="deck-form-card-display">
-            <mat-list-item [ngClass]="{'deck-form-card-list-commander': card.iscommander}">
+          <div *ngFor="let card of deck.cards; let i = index" class="deck-edit-card-display">
+            <mat-list-item [ngClass]="{'deck-edit-card-list-commander': card.iscommander}">
               <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
                 <div fxLayout="column" fxFlex="100">
                   <button mat-button style="text-align: start"
@@ -99,9 +99,9 @@
         <button mat-icon-button matSuffix type="button" (click)="addTokenToDeck()"><mat-icon>add</mat-icon></button>
       </mat-form-field>
       <h4 *ngIf="card_type === 'tokens'">Cards: {{deck.tokens.length}}</h4>
-      <div *ngIf="card_type === 'tokens'" class="deck-form-card-list">
+      <div *ngIf="card_type === 'tokens'" class="deck-edit-card-list">
         <mat-list>
-          <div *ngFor="let card of deck.tokens; let i = index" class="deck-form-card-display">
+          <div *ngFor="let card of deck.tokens; let i = index" class="deck-edit-card-display">
             <mat-list-item>
               <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
                 <div fxLayout="column" fxFlex="100">
@@ -143,10 +143,10 @@
     <div *ngIf="selected_card && (changing_image || changing_back_image)" fxLayout="column" fxFlex fxLayoutAlign="center center">
       <div fxFlex fxLayout="row wrap" fxLayoutAlign="center" style="overflow-y: scroll; min-height: 640px; max-height: 640px; margin-top: 10px;">
         <div *ngIf="changing_image">
-          <img *ngFor="let card_image of image_options" class="mtg-card-deck-form-select" src="{{card_image}}" (click)="selected_card.image=card_image; changing_image=false;" loading="lazy">
+          <img *ngFor="let card_image of image_options" class="deck-edit-card-select" src="{{card_image}}" (click)="selected_card.image=card_image; changing_image=false;" loading="lazy">
         </div>
         <div *ngIf="changing_back_image">
-          <img *ngFor="let card_image of back_image_options" class="mtg-card-deck-form-select" src="{{card_image}}" (click)="selected_card.back_image=card_image; changing_back_image=false;" loading="lazy">
+          <img *ngFor="let card_image of back_image_options" class="deck-edit-card-select" src="{{card_image}}" (click)="selected_card.back_image=card_image; changing_back_image=false;" loading="lazy">
         </div>
       </div>
       <button mat-raised-button color="warn" (click)="changing_image=false; changing_back_image=false;" style="margin-top: 10px;">Cancel</button>
