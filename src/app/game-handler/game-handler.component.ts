@@ -235,7 +235,31 @@ export class GameHandlerComponent implements OnInit {
             {text: '', type: 'card_list', cards: data.cards}
           ]
         }
-
+        break;
+      case 'counter':
+        if (data.name && data.after) {
+          if (data.options && data.options.card) {
+            log_action = [
+              {text: this.user.name, type: 'player'},
+              {text: 'set', type: 'regular'},
+              {text: data.name, type: 'counter'},
+              {text: 'on', type: 'regular'},
+              {text: data.options.card.name, type: 'card', card: JSON.parse(JSON.stringify(data.options.card))},
+              {text: 'to', type: 'regular'},
+              {text: data.after, type: 'value'}
+            ]
+          }
+          else {
+            log_action = [
+              {text: this.user.name, type: 'player'},
+              {text: 'set', type: 'regular'},
+              {text: data.name, type: 'counter'},
+              {text: 'to', type: 'regular'},
+              {text: data.after, type: 'value'}
+            ]
+          }
+        }
+        break;
     }
     if (log_action != null) {
       this.game_data.action_log.push(log_action);
@@ -252,11 +276,18 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Sends a counter update to the websocket within a buffered timeframe.
+   * @param name the name of the counter
+   * @param after the new value of the counter
+   * @param options accepts 'card'
+   */
   updateCounter(name: string, after: any, options?: any) {
     if (!this.counter_buffer) {
       this.counter_buffer = true;
       setTimeout(() => {this.counter_buffer = false;
-
+        this.updateSocketPlayer();
+        this.logAction('counter', {name: name, after: after, options: options});
       }, 3000);
     }
   }
@@ -1088,10 +1119,71 @@ export class GameHandlerComponent implements OnInit {
   onRightClick(event: MouseEvent, item: any) {
     event.preventDefault();
     event.stopPropagation();
-    this.rightclicked_item = item;
-    this.menuTopLeftPosition.x = event.clientX + 'px';
-    this.menuTopLeftPosition.y = event.clientY + 'px';
-    this.matMenuTrigger.openMenu();
+    if (item.type && item.type !== 'none') {
+      switch (item.type) {
+        case 'life':
+          item.player.life--;
+          this.updateCounter('Life', item.player.life);
+          break;
+        case 'infect':
+          item.player.infect--;
+          this.updateCounter('Infect', item.player.infect);
+          break;
+        case 'counter_1':
+          item.card.counter_1_value--;
+          this.updateCounter('Counter 1', item.card.counter_1_value, {card: item.card});
+          break;
+        case 'counter_2':
+          item.card.counter_2_value--;
+          this.updateCounter('counter 2', item.card.counter_2_value, {card: item.card});
+          break;
+        case 'counter_3':
+          item.card.counter_3_value--;
+          this.updateCounter('counter 3', item.card.counter_3_value, {card: item.card});
+          break;
+        case 'multiplier':
+          item.card.multiplier_value--;
+          this.updateCounter('Multiplier', item.card.counter_multiplier_value, {card: item.card});
+          break;
+        case 'power':
+          item.card.power_mod--;
+          this.updateCounter('Power',item.card.power_mod + item.card.power, {card: item.card});
+          break;
+        case 'toughness':
+          item.card.toughness_mod--;
+          this.updateCounter('Toughness', item.card.toughness_mod + item.card.toughness, {card: item.card});
+          break;
+        case 'loyalty':
+          item.card.loyalty_mod--;
+          this.updateCounter('Loyalty', item.card.loyalty_mod + item.card.loyalty, {card: item.card});
+          break;
+        case 'command_tax_1':
+          this.user.command_tax_1--;
+          this.updateCounter('Command Tax', this.user.command_tax_1);
+          break;
+        case 'command_tax_2':
+          this.user.command_tax_2--;
+          this.updateCounter('Command Tax 2', this.user.command_tax_2);
+          break;
+        case 'custom_counter':
+          item.counter.value--;
+          this.updateCounter('', null);
+          break;
+        case 'team_life':
+          item.team.life--;
+          this.updateCounter('Life', item.team.life);
+          break;
+        case 'team_infect':
+          item.team.infect--;
+          this.updateCounter('Infect', item.team.infect);
+          break;
+        default:
+          this.rightclicked_item = item;
+          this.menuTopLeftPosition.x = event.clientX + 'px';
+          this.menuTopLeftPosition.y = event.clientY + 'px';
+          this.matMenuTrigger.openMenu();
+      }
+    }
   }
 
   counterClick(event: any, counter: any) {
@@ -1115,7 +1207,7 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
-  lifeClick(event: any, player: any, team?: boolean) {
+  lifeClick(event: any, player: any) {
     if (event.ctrlKey) {
       const counterDialogRef = this.dialog.open(CounterSetDialog, {
         width: '500px',
@@ -1126,17 +1218,17 @@ export class GameHandlerComponent implements OnInit {
       counterDialogRef.afterClosed().subscribe(result => {
         if (result) {
           player.life = result;
-          this.updateCounter('life', player.life, team);
+          this.updateCounter('Life', player.life);
         }
       });
     }
     else {
       player.life = player.life + 1;
-      this.updateCounter('life', player.life, team);
+      this.updateCounter('Life', player.life);
     }
   }
 
-  infectClick(event: any, player: any, team?: boolean) {
+  infectClick(event: any, player: any) {
     if (event.ctrlKey) {
       const counterDialogRef = this.dialog.open(CounterSetDialog, {
         width: '500px',
@@ -1147,13 +1239,13 @@ export class GameHandlerComponent implements OnInit {
       counterDialogRef.afterClosed().subscribe(result => {
         if (result) {
           player.infect = result;
-          this.updateCounter('infect', player.infect, team);
+          this.updateCounter('Infect', player.infect);
         }
       });
     }
     else {
       player.infect = player.infect + 1;
-      this.updateCounter('infect', player.infect, team);
+      this.updateCounter('Infect', player.infect);
     }
   }
 

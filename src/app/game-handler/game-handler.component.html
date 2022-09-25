@@ -285,6 +285,8 @@
                         (pointerleave)="magnified_card = null">{{token.text}} </span>
                   <span *ngIf="token.type === 'player'" style="color: darkorange">{{token.text}} </span>
                   <span *ngIf="token.type === 'location'" style="color: goldenrod">{{token.text}} </span>
+                  <span *ngIf="token.type === 'counter'" style="color: dodgerblue">{{token.text}} </span>
+                  <span *ngIf="token.type === 'value'" style="color: indianred">{{token.text}} </span>
                   <span *ngIf="token.type === 'regular'">{{token.text}} </span>
                   <span *ngIf="token.type === 'tap'">
                     <img *ngIf="token.text === 'tapped'" class="game-data-log-list-icon" src="assets/action_symbols/tap.png">
