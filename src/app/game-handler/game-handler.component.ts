@@ -673,18 +673,9 @@ export class GameHandlerComponent implements OnInit {
 
   initializeSpectator(name: string, id: number) {
     let out_player: any = {};
-    out_player.scooped = true;
-    out_player.deck = null;
     out_player.name = name;
     out_player.id = id;
-    out_player.playmat = []
-    out_player.turn = -1;
-    out_player.card_preview = { position : {x: 0, y: 0}}
-    out_player.play_counters = [];
-    out_player.hand = null;
-    out_player.grave = null;
-    out_player.exile = null;
-    out_player.temp_zone = null;
+    out_player.spectating = true;
   }
 
   startGame() {
@@ -800,7 +791,12 @@ export class GameHandlerComponent implements OnInit {
    * Helper function for changing whose board is being displayed.
    */
   currentPlayer() {
-    return this.user;
+    if (this.user.deck) {
+      return this.user;
+    }
+    else if (this.user.spectating) {
+      return this.selected_player;
+    }
   }
 
   selectPlayer(selector: any) {
