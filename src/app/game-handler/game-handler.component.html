@@ -310,7 +310,10 @@
                     <mat-icon style="transform: scale(0.75)">360</mat-icon>
                   </span>
                   <span *ngIf="token.type === 'shake'">
-                    <mat-icon style="transform: scale(0.75)">notifications_active</mat-icon>
+                    <mat-icon style="transform: scale(0.75)">vibration</mat-icon>
+                  </span>
+                  <span *ngIf="token.type === 'shuffle'">
+                    <mat-icon style="transform: scale(0.75)">shuffle</mat-icon>
                   </span>
                   <span *ngIf="token.type === 'clone'" style="color: darkgreen">cloned </span>
                 </span>

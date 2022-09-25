@@ -345,6 +345,23 @@ export class GameHandlerComponent implements OnInit {
           ]
         }
         break;
+      case 'shuffle':
+        log_action = [
+          {text: this.user.name, type: 'player'},
+          {text: '', type: 'shuffle'},
+          {text: 'their library', type: 'regular'}
+        ]
+        break;
+      case 'mulligan':
+        if (data.count) {
+          log_action = [
+            {text: this.user.name, type: 'player'},
+            {text: 'mulliganed for', type: 'regular'},
+            {text: data.count, type: 'regular'}
+          ]
+        }
+        break;
+
     }
     if (log_action != null) {
       this.game_data.action_log.push(log_action);
@@ -560,7 +577,7 @@ export class GameHandlerComponent implements OnInit {
             out_player.deck.commander.saved.push(card);
             out_player.deck.cards.splice(deck.cards.indexOf(card), 1);
           })
-          this.shuffleDeck(out_player.deck.cards);
+          this.shuffleDeck(out_player.deck.cards, {nolog: true, noupdate: true});
           for (let i = 0; i < this.game_data.players.length; i++) {
             if (this.game_data.players[i].id == this.current_user.id) {
               this.game_data.players[i] = out_player;
@@ -1051,12 +1068,20 @@ export class GameHandlerComponent implements OnInit {
     this.user.top_flipped = !this.user.top_flipped;
   }
 
-  shuffleDeck(cards: any[]) {
+  shuffleDeck(cards: any[], options?: any) {
     for (let i = 0; i < cards.length; i++) {
       let r = i + Math.floor(Math.random() * (cards.length - i));
       let temp = cards[r];
       cards[r] = cards[i];
       cards[i] = temp;
+    }
+    if (options && options.noupdate) {}
+    else {
+      this.updateSocketPlayer();
+    }
+    if (options && options.nolog) {}
+    else {
+      this.logAction('shuffle', null);
     }
   }
 
@@ -1643,17 +1668,23 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
-  sendAllTo(source: any, dest: any) {
+  sendAllTo(source: any, dest: any, options?: any) {
     let cards = [];
     while (source.cards.length > 0) {
       cards.push(source.cards[0]);
       this.sendCardToZone(source.cards[0], source, dest, 0, 0, {nolog: true, noupdate: true});
     }
-    this.updateSocketPlayer();
-    this.logAction('move_all', {cards: cards, source: source, dest: dest});
+    if (options && options.nolog) {}
+    else {
+      this.logAction('move_all', {cards: cards, source: source, dest: dest});
+    }
+    if (options && options.noupdate) {}
+    else {
+      this.updateSocketPlayer();
+    }
   }
 
-  drawToX(dest: any) {
+  drawToX(dest: any, options?: any) {
     let num_count = Number(this.draw_count);
     let cards = [];
     for (let i = 0; i < num_count; i++) {
@@ -1662,15 +1693,23 @@ export class GameHandlerComponent implements OnInit {
         this.sendCardToZone(this.user.deck.cards[0], this.user.deck, dest, 0, 0, {nolog: true, noupdate: true});
       }
     }
-    this.updateSocketPlayer();
-    this.logAction('draw', {cards: cards, source: this.user.deck, dest: dest});
+    if (options && options.noupdate){}
+    else {
+      this.updateSocketPlayer();
+    }
+    if (options && options.nolog){}
+    else {
+      this.logAction('draw', {cards: cards, source: this.user.deck, dest: dest});
+    }
   }
 
   mulliganHand(count: any) {
     this.draw_count = Number(count);
-    this.sendAllTo(this.user.hand, this.user.deck);
-    this.shuffleDeck(this.user.deck.cards);
-    this.drawToX(this.user.hand);
+    this.sendAllTo(this.user.hand, this.user.deck, {nolog: true, noupdate: true});
+    this.shuffleDeck(this.user.deck.cards, {nolog: true, noupdate: true});
+    this.drawToX(this.user.hand, {nolog: true, noupdate: true});
+    this.updateSocketPlayer();
+    this.logAction('mulligan', {count: count});
   }
 
   cascade(value: any) {
