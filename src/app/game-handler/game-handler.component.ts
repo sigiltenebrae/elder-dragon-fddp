@@ -201,7 +201,14 @@ export class GameHandlerComponent implements OnInit {
    *          Message Handling Functions            *
    ------------------------------------------------**/
 
+
   @ViewChild('action_scroll') action_scroll: NgScrollbar;
+
+  /**
+   * Logs the given action and passes it to the web socket
+   * @param type type of action to log
+   * @param data parameters for the action.
+   */
   logAction(type: string, data: any) {
     let log_action: any = null;
     switch(type) {
@@ -294,6 +301,12 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+
+  /**
+   * Returns the real-time value of the named counter for logging
+   * @param name name of the counter
+   * @param options 'card' if the counter is on a card.
+   */
   getCounterValue(name: string, options?: any) {
     if (name === 'Life') {
       return this.game_data.type == 2 ? 0: this.user.life;

@@ -459,7 +459,7 @@
   <div class="hand-user-container">
     <div class="hand-user-wrapper"
          [ngStyle]="{'max-width': currentPlayer().hand.cards.length * 75 < 1144 ? currentPlayer().hand.cards.length * 75 + 'px': '1144px', 'min-width': '75px'}">
-      <mat-icon fxHide.lt-lg class="hand-menu shadow-text">more_vert</mat-icon>
+      <mat-icon fxHide.lt-lg class="hand-menu shadow-text" [mat-menu-trigger-for]="hand_menu" (click)="rightclicked_item={zone: 'hand'}">more_vert</mat-icon>
       <h3 class="hand-quantity-text shadow-text">{{currentPlayer().hand.cards.length}}</h3>
       <ng-scrollbar track="horizontal"
                     visibility="hover"
