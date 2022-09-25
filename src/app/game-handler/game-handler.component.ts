@@ -843,9 +843,9 @@ export class GameHandlerComponent implements OnInit {
     noteDialogRef.afterClosed().subscribe(result => {
       if (result) {
         card.notes = result;
+        this.updateSocketPlayer();
       }
     })
-
   }
 
   shakeCard(card: any, id: number, location: string) {
