@@ -407,6 +407,7 @@
   <!-- User Grave -->
   <div fxHide.lt-lg class="grave-user-container">
     <div class="grave-user-wrapper"
+         (contextmenu)="onRightClick($event, {type: 'zone', zone: this.user.grave})"
          [cdkDropListData]="currentPlayer().grave.cards"
          (cdkDropListDropped)="dragCard(currently_dragging, user.grave, $event)"
          cdkDropListOrientation="horizontal"
@@ -425,6 +426,7 @@
   <!-- User Exile -->
   <div fxHide.lt-lg class="exile-user-container">
     <div class="exile-user-wrapper"
+         (contextmenu)="onRightClick($event, {type: 'zone', zone: this.user.exile})"
          [cdkDropListData]="currentPlayer().exile.cards"
          (cdkDropListDropped)="dragCard(currently_dragging, user.exile, $event)"
          cdkDropListOrientation="horizontal"
@@ -459,6 +461,7 @@
   <!-- User Temp Zone -->
   <div fxHide.lt-lg class="temp-zone-user-container">
     <div class="temp-zone-user-wrapper"
+         (contextmenu)="onRightClick($event, {type: 'zone', zone: this.user.temp_zone})"
          [cdkDropListData]="currentPlayer().temp_zone.cards"
          (cdkDropListDropped)="dragCard(currently_dragging, user.temp_zone, $event)"
          cdkDropListOrientation="horizontal"
