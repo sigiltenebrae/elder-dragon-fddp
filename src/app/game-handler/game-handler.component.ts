@@ -976,12 +976,15 @@ export class GameHandlerComponent implements OnInit {
   }
 
   isTeammate(player: any) {
-    if (this.user != null && player == this.getTeammate()) {
-      return true;
+    if (this.game_data.team_data) {
+      if (this.user != null && player == this.getTeammate()) {
+        return true;
+      }
+      else {
+        return false;
+      }
     }
-    else {
-      return false;
-    }
+    return false;
   }
 
   clearCard(card: any) {
