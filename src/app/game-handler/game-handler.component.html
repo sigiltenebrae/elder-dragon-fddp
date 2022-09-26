@@ -418,10 +418,13 @@
               <mat-list-item *ngFor="let action of game_data.action_log; let i = index" class="game-data-log-list-item">
                 <p>
                 <span *ngFor="let token of action">
-                  <span *ngIf="token.type === 'card'" style="color: mediumpurple"
+                  <span *ngIf="token.type === 'card' && token.card.visible.includes(user.id)" style="color: mediumpurple"
                         (pointerenter)="magnified_card = token.card"
                         (pointerleave)="magnified_card = null">{{token.text}}
                     <span *ngIf="isClone(token.card)"> (clone) </span>
+                  </span>
+                  <span *ngIf="token.type === 'card' && !token.card.visible.includes(user.id)" style="color: mediumpurple">
+                    --hidden--
                   </span>
                   <span *ngIf="token.type === 'player'" style="color: darkorange">{{token.text}} </span>
                   <span *ngIf="token.type === 'location'" style="color: goldenrod">{{token.text}} </span>
@@ -433,9 +436,13 @@
                     <img *ngIf="token.text === 'untapped'" class="game-data-log-list-icon" src="assets/action_symbols/untap.png">
                   </span>
                   <span *ngIf="token.type === 'card_list'">
-                    <span *ngFor="let card of token.cards" style="color: mediumpurple"
+                    <span *ngFor="let card of token.cards" style="color: mediumpurple">
+                      <span *ngIf="card.visible.includes(user.id)"
                           (pointerenter)="magnified_card = card"
-                          (pointerleave)="magnified_card = null">{{card.name}}
+                            (pointerleave)="magnified_card = null"> {{card.name}} </span>
+                      <span *ngIf="!card.visible.includes(user.id)">
+                        --hidden--
+                      </span>
                     </span>
                   </span>
                   <span *ngIf="token.type === 'invert'">
@@ -604,8 +611,9 @@
            cdkDropList>
         <button mat-fab class="command-tax-button-1" (click)="user.command_tax_1 = user.command_tax_1 + 1; updateCounter('Command Tax', user.command_tax_1);" (contextmenu)="onRightClick($event, {type: 'command_tax_1'})"><h1>{{currentPlayer().command_tax_1}}</h1></button>
         <button *ngIf="currentPlayer().deck.commander.saved.length == 2" mat-fab class="command-tax-button-2" color="primary" (click)="user.command_tax_2 = user.command_tax_2 + 1; updateCounter('Command Tax 2', user.command_tax_2);" (contextmenu)="onRightClick($event, {type: 'command_tax_2'})"><h1>{{currentPlayer().command_tax_2}}</h1></button>
-        <img *ngIf="currentPlayer().deck.commander.cards.length > 0" class="commander-card-image" src="{{currentPlayer().deck.commander.cards[0].image}}"
-             (pointerleave)="magnified_card = null"
+        <img *ngIf="currentPlayer().deck.commander.cards.length == 1" class="commander-card-image" src="{{currentPlayer().deck.commander.cards[0].image}}"
+             (pointerenter)="magnified_card = currentPlayer().deck.commander.cards[0]"
+             (pointerleave)="magnified_card = null;"
              (cdkDragStarted)="magnified_card = null; currently_dragging=user.deck.commander.cards[0]"
              [cdkDragDisabled]="user.spectating"
              cdkDrag>
@@ -649,7 +657,7 @@
             <div *ngFor="let card of selected_player.hand.cards"
                  class="playmat-user-card-container-mini"
                  (contextmenu)="onRightClick($event, {type: 'opponent_hand', card: card, from: selected_player.hand});"
-                 (pointerenter)="magnified_card = card"
+                 (pointerenter)="magnified_card = card.visible.includes(user.id) ? card: null"
                  (pointerleave)="magnified_card = null"
                  [@shakeCard]="card.shaken">
               <img class="playmat-user-card-mini" [src]="card.visible.includes(user.id) ? card.image: selected_player.deck.sleeves">
