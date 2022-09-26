@@ -466,6 +466,10 @@
                   <span *ngIf="token.type === 'search'">
                     <mat-icon style="transform: scale(0.75)">search</mat-icon>
                   </span>
+                  <span *ngIf="token.type === 'reveal'">
+                    <mat-icon *ngIf="token.showed" style="transform: scale(0.75)">visibility</mat-icon>
+                    <mat-icon *ngIf="!token.showed" style="transform: scale(0.75)">visibility_off</mat-icon>
+                  </span>
                   <span *ngIf="token.type === 'clone'" style="color: darkgreen">cloned </span>
                 </span>
                 </p>

@@ -508,6 +508,24 @@ export class GameHandlerComponent implements OnInit {
           {text: this.user.name, type: 'player'},
           {text: 'has ended the turn', type: 'regular'}
         ]
+        break;
+      case 'reveal':
+        log_action = [
+          {text: this.user.name, type: 'player'},
+          {text: '', type: 'reveal', showed: data.showed},
+          {text: '', type: 'card', card: JSON.parse(JSON.stringify(data.card))},
+          {text: ' to ', type: 'regular'},
+          {text: this.getPlayerFromId(data.whomst).name, type: 'player'},
+        ]
+        break;
+      case 'reveal_hand':
+        log_action = [
+          {text: this.user.name, type: 'player'},
+          {text: '', type: 'reveal', showed: data.showed},
+          {text: ' their hand to ', type: 'regular'},
+          {text: this.getPlayerFromId(data.whomst).name, type: 'player'},
+        ]
+        break;
     }
     if (log_action != null) {
       this.game_data.action_log.push(log_action);
@@ -1313,6 +1331,86 @@ export class GameHandlerComponent implements OnInit {
     else {
       this.logAction('shuffle', null);
     }
+  }
+
+  toggleCardReveal(card: any, whomst: number, options?: any) {
+    let showed = false;
+    if (whomst == -6969) {
+      card.visible = [];
+      for (let player of this.game_data.players) {
+        card.visible.push(player.id);
+      }
+      for (let player of this.game_data.spectators) {
+        card.visible.push(player.id);
+      }
+      showed = true;
+    }
+    else if (whomst == -1) {
+      card.visible = [];
+    }
+    else {
+      if (card.visible.includes(whomst)) {
+        if (options && options.forcevisible) {}
+        else {
+          card.visible.splice(card.visible.indexOf(whomst), 1);
+        }
+      }
+      else {
+        if (options && options.forceinvisible) {}
+        else{
+          card.visible.push(whomst);
+          showed = true;
+        }
+      }
+    }
+    if (options && options.noupdate) {}
+    else {
+      this.updateSocketPlayer();
+    }
+    if (options && options.nolog) {}
+    else {
+      this.logAction('reveal', {card: card, whomst: whomst, showed: showed});
+    }
+  }
+
+  revealHandToggle(whomst: number) {
+    let showed = false;
+    if (whomst == -6969) {
+      showed = true;
+      this.user.hand_preview = [];
+      for (let player of this.game_data.players) {
+        this.user.hand_preview.push(player.id);
+      }
+      for (let player of this.game_data.spectators) {
+        this.user.hand_preview.push(player.id);
+      }
+      for (let card of this.user.hand.cards) {
+        this.toggleCardReveal(card, whomst, {nolog: true, noupdate: true});
+      }
+    }
+    else if (whomst == -1) {
+      this.user.hand_preview = [this.user.id];
+      for (let card of this.user.hand.cards) {
+        this.toggleCardReveal(card, whomst, {nolog: true, noupdate: true});
+      }
+    }
+    else {
+      if (this.user.hand_preview.includes(whomst)) {
+        this.user.hand_preview.splice(this.user.hand_preview.indexOf(whomst), 1);
+        for (let card of this.user.hand.cards) {
+          this.toggleCardReveal(card, whomst, {nolog: true, noupdate: true, forceinvisible: true});
+        }
+      }
+      else {
+        this.user.hand_preview.push(whomst);
+        for (let card of this.user.hand.cards) {
+          showed = true;
+          this.toggleCardReveal(card, whomst, {nolog: true, noupdate: true, forcevisible: true});
+        }
+      }
+    }
+    this.updateSocketPlayer();
+    this.logAction('reveal_hand', {whomst: whomst, showed: showed});
   }
 
   /**
