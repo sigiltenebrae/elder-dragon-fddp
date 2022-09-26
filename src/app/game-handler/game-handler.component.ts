@@ -27,7 +27,7 @@ import {TokenStorageService} from "../../services/token-storage.service";
 import {FddpWebsocketService} from "../../services/fddp-websocket.service";
 import {Scrollbar} from "ngx-scrollbar/lib/scrollbar/scrollbar";
 import {NgScrollbar, NgScrollbarModule} from "ngx-scrollbar";
-import {TokenInsertDialog, TokenSelectDialog, NoteDialog, DeckSelectDialog, CounterSetDialog, TwoHeadedTeamsDialog} from "./game-handler-addons.component";
+import {TokenInsertDialog, TokenSelectDialog, NoteDialog, DeckSelectDialog, CounterSetDialog, TwoHeadedTeamsDialog, EndGameDialog} from "./game-handler-addons.component";
 
 
 @Component({
@@ -891,15 +891,21 @@ export class GameHandlerComponent implements OnInit {
   }
 
   endGame() {
-    let winner = null;
-    let winner_two = null;
-
-    this.messageSocket({
-      game_id: this.game_id,
-      put: {
-        action:'end',
-        winner: winner,
-        winner_two: winner_two
+    const endGameRef = this.dialog.open(EndGameDialog, {
+      data: {
+        players: this.game_data.players
+      }
+    });
+    endGameRef.afterClosed().subscribe((result) => {
+      if (result != null) {
+        this.messageSocket({
+          game_id: this.game_id,
+          put: {
+            action:'end',
+            winner: result.winner1,
+            winner_two: result.winner2
+          }
+        });
       }
     });
   }

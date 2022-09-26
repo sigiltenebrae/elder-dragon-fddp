@@ -1165,6 +1165,36 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   z-index: 1;
 }
 
+.commander-card-image-partner-1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 65px;
+  min-height: 95px;
+  max-width: 65px;
+  max-height: 95px;
+  border-radius: 5px;
+  display: block;
+  z-index: 11;
+}
+
+.commander-card-image-partner-2 {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  min-width: 65px;
+  min-height: 95px;
+  max-width: 65px;
+  max-height: 95px;
+  border-radius: 5px;
+  display: block;
+  z-index: 12;
+}
+
+.commander-card-image-partner-1:hover, .commander-card-image-partner-2:hover {
+  z-index: 13;
+}
+
 .commander-user-wrapper .command-tax-button-1 {
   position: absolute;
   bottom: -9px;
