@@ -474,6 +474,11 @@
                         (pointerleave)="magnified_card = null">{{token.text}}
                     <span *ngIf="isClone(token.card)"> (clone) </span>
                   </span>
+                  <span *ngIf="token.type === 'plane'" style="color: mediumpurple"
+                        (pointerenter)="magnified_card = token.card"
+                        (pointerleave)="magnified_card = null">{{token.text}}
+                    <span *ngIf="isClone(token.card)"> (clone) </span>
+                  </span>
                   <span *ngIf="token.type === 'card' && !token.card.visible.includes(user.id)" style="color: mediumpurple">
                     --hidden--
                   </span>
@@ -545,6 +550,12 @@
         <div class="playmat-user-actions-container">
           <div fxFlexFill fxLayout="column" fxLayoutAlign="space-evenly start">
             <div class="playmat-user-actions-wrapper">
+              <button mat-fab
+                      (pointerenter)="magnified_card = game_data.current_plane != null? game_data.current_plane: null"
+                      (pointerleave)="magnified_card = null"
+                      (click)="setPlane()">
+                <mat-icon>gesture</mat-icon>
+              </button>
               <button *ngIf="game_data.type == 2" fxHide.lt-lg mat-fab>
                 <mat-icon *ngIf="!teamview" (click)="teamview=!teamview">keyboard_arrow_right</mat-icon>
                 <mat-icon *ngIf="teamview" (click)="teamview=!teamview">keyboard_arrow_left</mat-icon>
@@ -596,7 +607,10 @@
 
     <!-- Magnifier Data -->
     <div fxHide.lt-xl class="magnifier-data-container" *ngIf="magnified_card">
-      <div class="magnifier-data-wrapper">
+      <div *ngIf="magnified_card.plane" class="magnifier-data-wrapper" style="transform: rotate(90deg) translateY(200px); ">
+        <img class="magnifier-data-card" [src]="magnified_card.image">
+      </div>
+      <div *ngIf="!magnified_card.plane" class="magnifier-data-wrapper">
         <img class="magnifier-data-card" [src]="magnified_card.image">
       </div>
     </div>

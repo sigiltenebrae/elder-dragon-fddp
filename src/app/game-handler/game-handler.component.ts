@@ -64,6 +64,7 @@ export class GameHandlerComponent implements OnInit {
 
   //Game Data
   game_id = -1; //The game id (from the url)
+  planes: any[] = [];
   game_data: any = null; //The full game data object
   users_list: any[] = []; //The list of all users in the db
   current_user: any = null; //The currently logged-in user
@@ -97,6 +98,10 @@ export class GameHandlerComponent implements OnInit {
 
     this.fddp_data.getUsers().then((users: any) => {
       this.users_list = users;
+    });
+
+    this.fddp_data.getPlanes().then((planes: any) => {
+      this.planes = planes;
     });
 
     const routeParams = this.route.snapshot.paramMap;
@@ -235,6 +240,10 @@ export class GameHandlerComponent implements OnInit {
         }
         if (json_data.get.shake_data != null) {
           this.cardShake(json_data.get.shake_data.card.id, json_data.get.shake_data.id, json_data.get.shake_data.location);
+        }
+        if (json_data.get.plane_data != null) {
+          console.log('updating plane');
+          this.game_data.current_plane = json_data.get.plane_data;
         }
       }
       if (json_data.log) {
@@ -531,6 +540,13 @@ export class GameHandlerComponent implements OnInit {
           {text: data.whomst > 0 ? this.getPlayerFromId(data.whomst).name: 'all', type: 'player'},
         ]
         break;
+      case 'plane':
+        log_action = [
+          {text: this.user.name, type: 'player'},
+          {text: 'set the plane to ', type: 'regular'},
+          {text: data.plane.name, type: 'plane', card: JSON.parse(JSON.stringify(data.plane))},
+        ]
+        break;
     }
     if (log_action != null) {
       this.game_data.action_log.push(log_action);
@@ -629,6 +645,17 @@ export class GameHandlerComponent implements OnInit {
         put: {
           action: 'update',
           team_data: this.getTeam(this.user.id)
+        }
+      });
+  }
+
+  updateSocketPlane(plane: any) {
+    this.messageSocket(
+      {
+        game_id: this.game_id,
+        put: {
+          action: 'update',
+          plane_data: plane
         }
       });
   }
@@ -927,6 +954,23 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+
+  setPlane() {
+    let new_plane = this.planes[Math.floor(Math.random() * (this.planes.length))];
+    console.log(new_plane);
+    this.fddp_data.getCardInfo(new_plane).then((plane_data: any) => {
+      this.getCardImages(new_plane).then((image_data: any) => {
+        let images = image_data;
+        let new_plane: any = plane_data;
+        new_plane.plane = true;
+        new_plane.image = images.length > 0 ? images[0]: null;
+        console.log(plane_data)
+        this.game_data.current_plane = plane_data;
+        this.updateSocketPlane(plane_data);
+        this.logAction('plane', {plane: plane_data});
+      });
+    });
+  }
 
 
   /**------------------------------------------------
