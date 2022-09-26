@@ -381,7 +381,8 @@
                 <h3>{{player.name}}</h3>
                 <h3>Hand: {{player.hand.cards.length}}, Deck: {{player.deck.cards.length}}, Graveyard: {{player.grave.cards.length}}, Exile: {{player.exile.cards.length}}</h3>
               </div>
-              <div class="playmat-opponent" fxLayout="row wrap" fxLayoutAlign="start start">
+              <div class="playmat-opponent" fxLayout="row wrap" fxLayoutAlign="start start"
+              [ngClass]="{'playmat-opponent-selected': player == selected_player, 'playmat-opponent-turn': player.turn == game_data.current_turn}">
                 <div *ngFor="let spot of player.playmat"
                      class="playmat-user-spot-container-mini"
                      (contextmenu)="onRightClick($event, {type: 'opponent_playmat'})">
@@ -550,7 +551,8 @@
             </div>
           </div>
         </div>
-        <div class="playmat-user" fxLayout="row wrap" fxLayoutAlign="start start">
+        <div class="playmat-user" fxLayout="row wrap" fxLayoutAlign="start start"
+        [ngClass]="{'playmat-opponent-turn': currentPlayer().turn == game_data.current_turn}">
           <img class="playmat-user-background-image" *ngIf="currentPlayer() != null && currentPlayer().playmat_image != null && currentPlayer().playmat_image !== ''" src="{{currentPlayer().playmat_image}}">
           <div *ngFor="let spot of currentPlayer().playmat"
                class="playmat-user-spot-container"
