@@ -861,22 +861,6 @@ export class GameHandlerComponent implements OnInit {
   }
 
   scoopDeck(): void {
-    this.sendAllTo(this.user.temp_zone, this.user.deck, {nolog: true, noupdate: true});
-    let user_updates = [];
-    for (let spot of this.user.playmat) {
-      for(let card of spot.cards) {
-        if (card.owner != this.user.id) {
-          if (!user_updates.includes(card.owner)) {
-            user_updates.push(card.owner);
-          }
-          this.sendCardToZone(card, spot, this.getPlayerZone(card.owner, 'temp_zone'),
-            spot.cards.indexOf(card), 0, {nolog: true, noupdate: true});
-        }
-      }
-    }
-    for (let uz of user_updates) {
-      this.updateSocketZone(this.getPlayerZone(uz, 'temp_zone'));
-    }
     let spectator = {
       id: this.user.id,
       name: this.user.name,

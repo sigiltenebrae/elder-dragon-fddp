@@ -205,6 +205,13 @@
         <span>{{player.name}}</span>
       </div>
     </button>
+    <button mat-menu-item *ngFor="let player of game_data.spectators" (click)="toggleCardReveal(rightclicked_item.card, player.id)">
+      <div *ngIf="rightclicked_item && rightclicked_item.card">
+        <mat-icon *ngIf="rightclicked_item.card.visible.includes(player.id)">visibility</mat-icon>
+        <mat-icon *ngIf="!rightclicked_item.card.visible.includes(player.id)">visibility_off</mat-icon>
+        <span>{{player.name}}</span>
+      </div>
+    </button>
     <button mat-menu-item (click)="toggleCardReveal(rightclicked_item.card, -6969)">All</button>
     <button mat-menu-item (click)="toggleCardReveal(rightclicked_item.card, -1)">None</button>
   </div>
@@ -217,6 +224,13 @@
       <div>
         <mat-icon *ngIf="user.hand_preview.includes(player.id)">visibility</mat-icon>
         <mat-icon *ngIf="!user.hand_preview.includes(player.id)">visibility_off</mat-icon>
+        <span>{{player.name}}</span>
+      </div>
+    </button>
+    <button mat-menu-item *ngFor="let player of game_data.spectators" (click)="toggleCardReveal(rightclicked_item.card, player.id)">
+      <div>
+        <mat-icon *ngIf="rightclicked_item.card.visible.includes(player.id)">visibility</mat-icon>
+        <mat-icon *ngIf="!rightclicked_item.card.visible.includes(player.id)">visibility_off</mat-icon>
         <span>{{player.name}}</span>
       </div>
     </button>
@@ -298,7 +312,7 @@
                    (pointerenter)="magnified_card=card" (pointerleave)="magnified_card=null"
                    (cdkDragStarted)="magnified_card=null; currently_dragging = card"
                    (contextmenu)="onRightClick($event, {type: 'zone_card', card: card, from: getSidenavContainer()})"
-                   cdkDrag [cdkDragDisabled]="user.spectating">
+                   cdkDrag [cdkDragDisabled]="user.id != card.owner">
                 {{card.name}}
                 <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="playmat-user-card" loading="lazy">
                 <img *cdkDragPlaceholder class="playmat-user-card" [src]="card.image" [alt]="card.name" loading="lazy">
