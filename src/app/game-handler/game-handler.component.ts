@@ -226,6 +226,11 @@ export class GameHandlerComponent implements OnInit {
           }
           this.game_data.spectators.push(json_data.get.scoop_data);
         }
+        if (json_data.get.turn_update != null) {
+          console.log('turn update')
+          console.log(json_data.get.turn_update);
+          this.game_data.current_turn = json_data.get.turn_update;
+        }
       }
       if (json_data.log) {
         this.game_data.action_log.push(json_data.log);
@@ -498,7 +503,11 @@ export class GameHandlerComponent implements OnInit {
           {text: 'has scooped their library and is now spectating', type: 'regular'}
         ]
         break;
-
+      case 'end_turn':
+        log_action = [
+          {text: this.user.name, type: 'player'},
+          {text: 'has ended the turn', type: 'regular'}
+        ]
     }
     if (log_action != null) {
       this.game_data.action_log.push(log_action);
@@ -763,7 +772,13 @@ export class GameHandlerComponent implements OnInit {
   startGame() {
     if (this.game_data.type == 1 || this.game_data.type == 3) {
       this.game_data.turn_count = 1;
-
+      this.messageSocket(
+        {
+          game_id: this.game_data.id,
+          put: {
+            action: 'start',
+          }
+        });
     }
     else if (this.game_data.type == 2) {
       this.selectTeams();
@@ -864,12 +879,25 @@ export class GameHandlerComponent implements OnInit {
   }
 
   endGame(winner: any, winner_two: any) {
-
+    this.messageSocket({
+      game_id: this.game_id,
+      put: {
+        action:'end',
+        winner: winner,
+        winner_two: winner_two
+      }
+    });
   }
 
   endTurn() {
     if (this.game_data.type == 1 || this.game_data.type == 3) {
       if (this.game_data.current_turn == this.user.turn) {
+        this.messageSocket({
+          game_id: this.game_id,
+          put: {
+            action:'end_turn',
+          }
+        });
       }
     }
     else if (this.game_data.type == 2) {
@@ -900,7 +928,7 @@ export class GameHandlerComponent implements OnInit {
   getOtherPlayers() {
     let out_players: any[] = [];
     for (let player of this.game_data.players) {
-      if (player != this.currentPlayer()) {
+      if (this.currentPlayer() == null || player != this.currentPlayer()) {
         out_players.push(player);
       }
     }

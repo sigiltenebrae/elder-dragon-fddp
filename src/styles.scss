@@ -484,6 +484,14 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   width: 100%;
 }
 
+.game-data-player-list-item-turn {
+  background: mat.get-color-from-palette($fddp-palette-accent-dark, 500);
+}
+
+.game-data-player-list-item-selected {
+  background: mat.get-color-from-palette($fddp-palette-primary-dark, 500);
+}
+
 .game-data-player-list-name {
   width: 132px;
   overflow-x: hidden !important;
