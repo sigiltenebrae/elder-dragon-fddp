@@ -8,9 +8,6 @@
 @import 'src/dark-theme';
 @import 'src/light-theme';
 
-/* Importing Drag Select Styles */
-@import 'ngx-drag-to-select';
-
 .dark-theme {
   @include mat.all-component-themes($fddp-theme-dark);
 

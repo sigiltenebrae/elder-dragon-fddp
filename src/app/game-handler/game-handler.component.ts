@@ -87,8 +87,10 @@ export class GameHandlerComponent implements OnInit {
 
   //Messaging
   counter_buffer: any = false; //True if a counter update is in the message queue. Prevents counter updates from spamming
+  ds: any = null;
 
   ngOnInit(): void {
+
     this.rightClickHandler.overrideRightClick();
 
     this.fddp_data.getUsers().then((users: any) => {
@@ -114,20 +116,30 @@ export class GameHandlerComponent implements OnInit {
                   if (this.user.deck) {
                     console.log('user loaded: ' + this.user.name);
                   }
+                  if (this.user != null && !this.user.deck) {
+                    this.openDeckSelectDialog();
+                  }
                 }
               }
             }
-            if (this.user == null || !this.user.deck) {
-              console.log('user is null');
-              this.messageSocket({
-                game_id: this.game_id,
-                put: {
-                  action: 'update',
-                  player_data: {
-                    id: this.current_user.id
-                  }
-                }});
-              this.openDeckSelectDialog();
+            if (this.user == null) {
+              for (let spectator of this.game_data.spectators) {
+                if (spectator.id == this.current_user.id) {
+                  this.user = spectator;
+                }
+              }
+              if (this.user == null) {
+                console.log('user is null');
+                this.messageSocket({
+                  game_id: this.game_id,
+                  put: {
+                    action: 'update',
+                    player_data: {
+                      id: this.current_user.id,
+                      name: this.current_user.name
+                    }
+                  }});
+              }
             }
           }
           else {
@@ -140,7 +152,27 @@ export class GameHandlerComponent implements OnInit {
             for (let i = 0; i < this.game_data.players.length; i++) {
               if (this.game_data.players[i].id == json_data.get.player_data.id) {
                 this.game_data.players[i] = json_data.get.player_data;
+                if (this.selected_player.id == json_data.get.player_data.id) {
+                  this.selected_player = this.game_data.players[i];
+                }
                 break;
+              }
+            }
+          }
+        }
+        if (json_data.get.spectator_data) {
+          if (this.game_data) {
+            let includes = false;
+            for (let spec of this.game_data.spectators) {
+              if (spec.id == json_data.get.spectator_data.id) {
+                includes = true;
+                break;
+              }
+            }
+            if (!includes) {
+              this.game_data.push(json_data.get.spectator_data);
+              if (json_data.get.spectator_data.id == this.current_user.id) {
+                this.user = json_data.get.spectator_data.id;
               }
             }
           }
@@ -171,9 +203,27 @@ export class GameHandlerComponent implements OnInit {
             }
           }
         }
+        if (json_data.get.scoop_data) {
+          let ind = -1;
+          for (let i = 0; i < this.game_data.players.length; i++) {
+            if (this.game_data.players[i].id === json_data.get.scoop_data.id) {
+              ind = i;
+              break;
+            }
+          }
+          if(ind > -1) {
+            this.game_data.players.splice(ind, 1);
+          }
+          this.game_data.spectators.push(json_data.get.scoop_data);
+        }
       }
       if (json_data.log) {
         this.game_data.action_log.push(json_data.log);
+        if (this.autoscroll) {
+          this.sleep(500).then(() => {
+            this.action_scroll.scrollTo({ bottom: 0, duration: 600});
+          })
+        }
       }
     });
 
@@ -432,6 +482,13 @@ export class GameHandlerComponent implements OnInit {
           {text: 'their library', type: 'regular'}
         ]
         break;
+      case 'scoop':
+        log_action = [
+          {text: this.user.name, type: 'player'},
+          {text: 'has scooped their library and is now spectating', type: 'regular'}
+        ]
+        break;
+
     }
     if (log_action != null) {
       this.game_data.action_log.push(log_action);
@@ -506,12 +563,21 @@ export class GameHandlerComponent implements OnInit {
   }
 
   updateSocketPlayer() {
-    console.log(this.user);
     this.messageSocket({
       game_id: this.game_id,
       put: {
         action:'update',
         player_data: this.user
+      }
+    });
+  }
+
+  updateSocketZone(zone: any) {
+    this.messageSocket({
+      game_id: this.game_id,
+      put: {
+        action:'update',
+        zone_data: zone
       }
     });
   }
@@ -603,7 +669,7 @@ export class GameHandlerComponent implements OnInit {
           out_player.turn = -1;
           out_player.command_tax_1 = 0;
           out_player.command_tax_2 = 0;
-          out_player.scooped = false;
+          out_player.spectating = false;
           out_player.top_flipped = false;
           out_player.card_preview = { position : {x: 1502, y: 430}}
           out_player.play_counters = [];
@@ -665,13 +731,6 @@ export class GameHandlerComponent implements OnInit {
     });
   }
 
-  initializeSpectator(name: string, id: number) {
-    let out_player: any = {};
-    out_player.name = name;
-    out_player.id = id;
-    out_player.spectating = true;
-  }
-
   startGame() {
     if (this.game_data.type == 1 || this.game_data.type == 3) {
       this.game_data.turn_count = 1;
@@ -684,9 +743,7 @@ export class GameHandlerComponent implements OnInit {
   selectTeams(): void {
     let p: any[] = [];
     for (let player of this.game_data.players) {
-      if (!player.scooped) {
-        p.push(player);
-      }
+      p.push(player);
     }
     if (p.length % 2 == 0) {
       let team_array: any[] = []
@@ -711,53 +768,59 @@ export class GameHandlerComponent implements OnInit {
   }
 
   openDeckSelectDialog(): void {
-    console.log(this.current_user);
-    const deckDialogRef = this.dialog.open(DeckSelectDialog, {
-      width: '1600px',
-      data: {user: this.current_user.id}
-    });
+    if (this.dialog.openDialogs.length == 0) {
+      console.log(this.current_user);
+      const deckDialogRef = this.dialog.open(DeckSelectDialog, {
+        width: '1600px',
+        data: {user: this.current_user.id}
+      });
 
-    deckDialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        this.selectDeck(result);
-      }
-    })
+      deckDialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.selectDeck(result);
+        }
+      })
+    }
   }
 
   selectDeck(deck: any) {
     this.initializePlayerDeck(this.current_user.name, this.current_user.id, deck.id);
   }
 
-  scoopDeck(noUpdateTeam?: boolean): void {
-    /*
-    this.clearSelection();
-    for (let player of this.game_data.players) {
-      for (let spot of player.playmat) {
-        for (let card of spot) {
-          if (card.owner == this.user.id) {
-            this.sendCardToZone(card, spot, 'deck', true);
-          }
-        }
-      }
-    }
-    this.sendAllTo(this.user.hand, 'hand', 'deck');
-    this.sendAllTo(this.user.grave, 'grave', 'deck');
-    this.sendAllTo(this.user.exile, 'exile', 'deck');
-    this.sendAllTo(this.user.temp_zone, 'temp_zone', 'deck');
+  scoopDeck(): void {
+    this.sendAllTo(this.user.temp_zone, this.user.deck, {nolog: true, noupdate: true});
+    let user_updates = [];
     for (let spot of this.user.playmat) {
-      for(let card of spot) {
-        this.selectCard(card, spot);
+      for(let card of spot.cards) {
         if (card.owner != this.user.id) {
-          this.sendCardToZone(card, spot, 'temp_zone', true);
-        }
-        else {
-          this.sendCardToZone(card, spot, 'deck', true);
+          if (!user_updates.includes(card.owner)) {
+            user_updates.push(card.owner);
+          }
+          this.sendCardToZone(card, spot, this.getPlayerZone(card.owner, 'temp_zone'),
+            spot.cards.indexOf(card), 0, {nolog: true, noupdate: true});
         }
       }
     }
-    this.user.deck = null;
-    this.user.scooped = true;
-     */
+    for (let uz of user_updates) {
+      this.updateSocketZone(this.getPlayerZone(uz, 'temp_zone'));
+    }
+    let spectator = {
+      id: this.user.id,
+      name: this.user.name,
+      spectating: true,
+      play_counters: []
+    }
+    this.game_data.players.splice(this.game_data.players.indexOf(this.user), 1);
+    this.user = spectator;
+    this.game_data.spectators.push(spectator);
+    this.messageSocket({
+      game_id: this.game_id,
+      put: {
+        action:'scoop',
+        player_data: this.user
+      }
+    });
+    this.logAction('scoop', null);
   }
 
   endGame(winner: any, winner_two: any) {
@@ -1687,6 +1750,9 @@ export class GameHandlerComponent implements OnInit {
           for (let player of this.game_data.players) {
             card.visible.push(player.id);
           }
+          for (let player of this.game_data.spectators) {
+            card.visible.push(player.id);
+          }
         }
         break;
       case 'exile':
@@ -1694,6 +1760,9 @@ export class GameHandlerComponent implements OnInit {
           card.visible = [];
           if (this.game_data.players) {
             for (let player of this.game_data.players) {
+              card.visible.push(player.id);
+            }
+            for (let player of this.game_data.spectators) {
               card.visible.push(player.id);
             }
           }
@@ -1705,6 +1774,9 @@ export class GameHandlerComponent implements OnInit {
           for (let player of this.game_data.players) {
             card.visible.push(player.id);
           }
+          for (let player of this.game_data.spectators) {
+            card.visible.push(player.id);
+          }
         }
         break;
       case 'temp_zone':
@@ -1712,6 +1784,9 @@ export class GameHandlerComponent implements OnInit {
           card.visible = [];
           if (this.game_data.players) {
             for (let player of this.game_data.players) {
+              card.visible.push(player.id);
+            }
+            for (let player of this.game_data.spectators) {
               card.visible.push(player.id);
             }
           }
@@ -1725,6 +1800,9 @@ export class GameHandlerComponent implements OnInit {
           card.visible = [];
           if (this.game_data.players) {
             for (let player of this.game_data.players) {
+              card.visible.push(player.id);
+            }
+            for (let player of this.game_data.spectators) {
               card.visible.push(player.id);
             }
           }
@@ -1900,6 +1978,9 @@ export class GameHandlerComponent implements OnInit {
    * @param options 'nolog' and 'noupdate'
    */
   drawToX(dest: any, options?: any) {
+    if (this.user.spectating) {
+      return;
+    }
     let num_count = Number(this.draw_count);
     let cards = [];
     for (let i = 0; i < num_count; i++) {
