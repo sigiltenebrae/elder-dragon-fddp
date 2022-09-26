@@ -79,6 +79,7 @@ export class GameHandlerComponent implements OnInit {
   sidenav_selected_player: any = null; //The player whose zone you are currently viewing
   draw_count: any = 1;
   draw_until = '';
+  teamview = false;
 
   //Sidenav
   sidenav_type: any = null;
@@ -105,6 +106,7 @@ export class GameHandlerComponent implements OnInit {
 
     this.WebsocketService.messages.subscribe(msg => {
       let json_data = msg;
+      console.log(json_data);
       if (json_data.get) {
         if (json_data.get.game_data) {
           console.log('got game data');
@@ -148,7 +150,7 @@ export class GameHandlerComponent implements OnInit {
             this.router.navigate(['/game']);
           }
         }
-        if (json_data.get.player_data) {
+        if (json_data.get.player_data != null) {
           if (this.game_data) {
             for (let i = 0; i < this.game_data.players.length; i++) {
               if (this.game_data.players[i].id == json_data.get.player_data.id) {
@@ -161,7 +163,7 @@ export class GameHandlerComponent implements OnInit {
             }
           }
         }
-        if (json_data.get.spectator_data) {
+        if (json_data.get.spectator_data != null) {
           if (this.game_data) {
             let includes = false;
             for (let spec of this.game_data.spectators) {
@@ -204,7 +206,7 @@ export class GameHandlerComponent implements OnInit {
             }
           }
         }
-        if (json_data.get.team_data) {
+        if (json_data.get.team_data != null) {
           for (let i = 0; i < this.game_data.team_data.length; i++) {
             if (this.game_data.team_data[i].id === json_data.get.team_data.id) {
               console.log('found team to update');
@@ -213,7 +215,7 @@ export class GameHandlerComponent implements OnInit {
             }
           }
         }
-        if (json_data.get.scoop_data) {
+        if (json_data.get.scoop_data != null) {
           let ind = -1;
           for (let i = 0; i < this.game_data.players.length; i++) {
             if (this.game_data.players[i].id === json_data.get.scoop_data.id) {
@@ -230,6 +232,9 @@ export class GameHandlerComponent implements OnInit {
           console.log('turn update')
           console.log(json_data.get.turn_update);
           this.game_data.current_turn = json_data.get.turn_update;
+        }
+        if (json_data.get.shake_data != null) {
+          this.cardShake(json_data.get.shake_data.card.id, json_data.get.shake_data.id, json_data.get.shake_data.location);
         }
       }
       if (json_data.log) {
@@ -523,7 +528,7 @@ export class GameHandlerComponent implements OnInit {
           {text: this.user.name, type: 'player'},
           {text: '', type: 'reveal', showed: data.showed},
           {text: data.showed? ' their hand to ': ' their hand from ', type: 'regular'},
-          {text: this.getPlayerFromId(data.whomst).name, type: 'player'},
+          {text: data.whomst > 0 ? this.getPlayerFromId(data.whomst).name: 'all', type: 'player'},
         ]
         break;
     }
@@ -659,6 +664,11 @@ export class GameHandlerComponent implements OnInit {
    */
   getPlayerFromId(id: number) {
     for (let player of this.game_data.players) {
+      if (player.id == id) {
+        return player;
+      }
+    }
+    for (let player of this.game_data.spectators) {
       if (player.id == id) {
         return player;
       }
@@ -921,7 +931,10 @@ export class GameHandlerComponent implements OnInit {
    * Helper function for changing whose board is being displayed.
    */
   currentPlayer() {
-    if (this.user && this.user.deck) {
+    if (this.game_data.type == 2 && this.teamview) {
+      return this.getTeammate();
+    }
+    else if (this.user && this.user.deck) {
       return this.user;
     }
     else if (this.user.spectating) {
@@ -967,12 +980,12 @@ export class GameHandlerComponent implements OnInit {
   getTeammate() {
     let t = -1;
     for (let i = 0; i < this.game_data.team_data.length; i++) {
-      if (this.game_data.team_data.players[i].contains(this.user.id)) {
+      if (this.game_data.team_data[i].players.includes(this.user.id)) {
         t = i;
         break;
       }
     }
-    for (let player of this.game_data.team_data.players[t]) {
+    for (let player of this.game_data.team_data[t].players) {
       if (player != this.user.id) {
         return this.getPlayerFromId(player);
       }
@@ -1152,7 +1165,15 @@ export class GameHandlerComponent implements OnInit {
 
   shakeCard(card: any, id: number, location: string) {
     card.shaken = true;
-    this.updateSocketPlayer();
+    this.messageSocket({
+      game_id: this.game_id,
+      put: {
+        action:'shake',
+        card: card,
+        id: id,
+        location: location
+      }
+    });
     this.logAction('shake', {card: card});
     setTimeout(() => {
       card.shaken = false;
@@ -1164,7 +1185,7 @@ export class GameHandlerComponent implements OnInit {
     if (shake_player) {
       switch (location) {
         case 'hand':
-          for (let card of shake_player.hand) {
+          for (let card of shake_player.hand.cards) {
             if (card.id == cardid) {
               card.shaken = true;
               setTimeout(() => {
@@ -1175,7 +1196,7 @@ export class GameHandlerComponent implements OnInit {
           }
           break;
         case 'play':
-          for (let spot of shake_player.playmat) {
+          for (let spot of shake_player.playmat.cards) {
             for (let card of spot) {
               if (card.id == cardid) {
                 card.shaken = true;
@@ -1372,7 +1393,7 @@ export class GameHandlerComponent implements OnInit {
         this.user.hand_preview.push(player.id);
       }
       for (let card of this.user.hand.cards) {
-        this.toggleCardReveal(card, whomst, {nolog: true, noupdate: true});
+        this.toggleCardReveal(card, whomst, {nolog: true, noupdate: true, forcevisible: true});
       }
     }
     else if (whomst == -1) {
@@ -1390,8 +1411,8 @@ export class GameHandlerComponent implements OnInit {
       }
       else {
         this.user.hand_preview.push(whomst);
+        showed = true;
         for (let card of this.user.hand.cards) {
-          showed = true;
           this.toggleCardReveal(card, whomst, {nolog: true, noupdate: true, forcevisible: true});
         }
       }

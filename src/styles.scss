@@ -605,16 +605,17 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   overflow: visible;
 }
 
-.playmat-user-teammate-actions {
+.playmat-user-actions-container {
   position: absolute;
   top: 0;
   right: 0;
   width: 60px;
   height: 409px;
   overflow: visible;
+  pointer-events: none;
 }
 
-.playmat-user-devotion-teammate-actions-mini {
+.playmat-user-actions-container-mini {
   position: absolute;
   top: 0;
   left: 0;
@@ -623,7 +624,13 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   overflow: visible;
 }
 
-.playmat-user-devotion-wrapper {}
+.playmat-user-devotion-wrapper {
+  pointer-events: all;
+}
+
+.playmat-user-actions-wrapper {
+  pointer-events: all;
+}
 
 .playmat-user-devotion-wrapper .playmat-user-devotion-W {
   background: $mtg-white !important;

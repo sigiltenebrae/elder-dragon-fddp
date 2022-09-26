@@ -11,8 +11,7 @@
       <div *ngIf="rightclicked_item && rightclicked_item.type">
         <div *ngIf="rightclicked_item.type === 'user_play'">
           <button *ngIf="user != null && !user.spectating" mat-menu-item (click)="rightclicked_item.card.locked=!rightclicked_item.card.locked">(Un)Lock Tap</button>
-          <button *ngIf="user != null && !user.spectating" mat-menu-item (click)="shakeCard(rightclicked_item.card, user.id, 'play')">Shake</button>
-          <button *ngIf="user != null && user.spectating" mat-menu-item (click)="shakeCard(rightclicked_item.card, rightclicked_item.card.owner, 'play')">Shake</button>
+          <button *ngIf="user != null" mat-menu-item (click)="shakeCard(rightclicked_item.card, rightclicked_item.card.owner, 'play')">Shake</button>
           <button *ngIf="user != null && !user.spectating" mat-menu-item (click)="cloneCard(rightclicked_item.card)">Clone</button>
           <button *ngIf="user != null && !user.spectating" mat-menu-item (click)="editNotes(rightclicked_item.card)">Edit Notes</button>
           <button *ngIf="user != null && !user.spectating" mat-menu-item [matMenuTriggerFor]="counters">Counters</button>
@@ -61,8 +60,7 @@
           sendCardToZone(rightclicked_item.card, this.user.hand, this.user.temp_zone,
           this.user.hand.cards.indexOf(rightclicked_item.card),0)">Play Face Down</button>
           <button *ngIf="rightclicked_item.card.back_face && user != null && !user.spectating" mat-menu-item (click)="altFaceCard(rightclicked_item.card)">Alt Face</button>
-          <button *ngIf="user != null && !user.spectating" mat-menu-item (click)="shakeCard(rightclicked_item.card, user.id, 'hand')">Shake</button>
-          <button *ngIf="user != null && user.spectating" mat-menu-item (click)="shakeCard(rightclicked_item.card, rightclicked_item.card.owner, 'hand')">Shake</button>
+          <button *ngIf="user != null" mat-menu-item (click)="shakeCard(rightclicked_item.card, rightclicked_item.card.owner, 'hand')">Shake</button>
           <button *ngIf="user != null && !user.spectating" mat-menu-item [matMenuTriggerFor]="revealTo">Reveal To</button>
         </div>
 
@@ -218,19 +216,20 @@
 </mat-menu>
 
 <mat-menu #revealAllHand="matMenu">
-  <div *ngIf="game_data != null && user != null && !user.scooped">
+  <div *ngIf="game_data != null && user != null && !user.spectating && user.hand_preview != null">
     <button mat-menu-item *ngFor="let player of game_data.players"
             (click)="revealHandToggle(player.id)">
       <div>
-        <mat-icon *ngIf="user.hand_preview.includes(player.id)">visibility</mat-icon>
-        <mat-icon *ngIf="!user.hand_preview.includes(player.id)">visibility_off</mat-icon>
+        <mat-icon *ngIf="user.hand_preview && user.hand_preview.includes(player.id)">visibility</mat-icon>
+        <mat-icon *ngIf="user.hand_preview && !user.hand_preview.includes(player.id)">visibility_off</mat-icon>
         <span>{{player.name}}</span>
       </div>
     </button>
-    <button mat-menu-item *ngFor="let player of game_data.spectators" (click)="toggleCardReveal(rightclicked_item.card, player.id)">
+    <button mat-menu-item *ngFor="let player of game_data.spectators"
+            (click)="revealHandToggle(player.id)">
       <div>
-        <mat-icon *ngIf="rightclicked_item.card.visible.includes(player.id)">visibility</mat-icon>
-        <mat-icon *ngIf="!rightclicked_item.card.visible.includes(player.id)">visibility_off</mat-icon>
+        <mat-icon *ngIf="user.hand_preview && user.hand_preview.includes(player.id)">visibility</mat-icon>
+        <mat-icon *ngIf="user.hand_preview && !user.hand_preview.includes(player.id)">visibility_off</mat-icon>
         <span>{{player.name}}</span>
       </div>
     </button>
@@ -541,7 +540,16 @@
             </div>
           </div>
         </div>
-        <div class="playmat-user-teammate-actions"></div>
+        <div class="playmat-user-actions-container">
+          <div fxFlexFill fxLayout="column" fxLayoutAlign="space-evenly start">
+            <div class="playmat-user-actions-wrapper">
+              <button *ngIf="game_data.type == 2" fxHide.lt-lg mat-fab>
+                <mat-icon *ngIf="!teamview" (click)="teamview=!teamview">keyboard_arrow_right</mat-icon>
+                <mat-icon *ngIf="teamview" (click)="teamview=!teamview">keyboard_arrow_left</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
         <div class="playmat-user" fxLayout="row wrap" fxLayoutAlign="start start">
           <img class="playmat-user-background-image" *ngIf="currentPlayer() != null && currentPlayer().playmat_image != null && currentPlayer().playmat_image !== ''" src="{{currentPlayer().playmat_image}}">
           <div *ngFor="let spot of currentPlayer().playmat"
@@ -726,7 +734,7 @@
       <div class="hand-user-wrapper"
            *ngIf="currentPlayer() != null"
            [ngStyle]="{'max-width': currentPlayer().hand.cards.length * 75 < 1144 ? currentPlayer().hand.cards.length * 75 + 'px': '1144px', 'min-width': '75px'}">
-        <mat-icon fxHide.lt-lg class="hand-menu shadow-text" [mat-menu-trigger-for]="hand_menu" (click)="rightclicked_item={zone: user.hand}">more_vert</mat-icon>
+        <mat-icon *ngIf="currentPlayer() == user" fxHide.lt-lg class="hand-menu shadow-text" [mat-menu-trigger-for]="hand_menu" (click)="rightclicked_item={zone: user.hand}">more_vert</mat-icon>
         <h3 class="hand-quantity-text shadow-text">{{currentPlayer().hand.cards.length}}</h3>
         <ng-scrollbar track="horizontal"
                       visibility="hover"
