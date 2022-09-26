@@ -513,8 +513,8 @@ export class GameHandlerComponent implements OnInit {
         log_action = [
           {text: this.user.name, type: 'player'},
           {text: '', type: 'reveal', showed: data.showed},
-          {text: '', type: 'card', card: JSON.parse(JSON.stringify(data.card))},
-          {text: ' to ', type: 'regular'},
+          {text: data.card.name, type: 'card', card: JSON.parse(JSON.stringify(data.card))},
+          {text: data.showed? ' to ': ' from ', type: 'regular'},
           {text: this.getPlayerFromId(data.whomst).name, type: 'player'},
         ]
         break;
@@ -522,7 +522,7 @@ export class GameHandlerComponent implements OnInit {
         log_action = [
           {text: this.user.name, type: 'player'},
           {text: '', type: 'reveal', showed: data.showed},
-          {text: ' their hand to ', type: 'regular'},
+          {text: data.showed? ' their hand to ': ' their hand from ', type: 'regular'},
           {text: this.getPlayerFromId(data.whomst).name, type: 'player'},
         ]
         break;
@@ -896,7 +896,10 @@ export class GameHandlerComponent implements OnInit {
     this.logAction('scoop', null);
   }
 
-  endGame(winner: any, winner_two: any) {
+  endGame() {
+    let winner = null;
+    let winner_two = null;
+
     this.messageSocket({
       game_id: this.game_id,
       put: {
@@ -2167,7 +2170,12 @@ export class GameHandlerComponent implements OnInit {
     let cards = [];
     while (source.cards.length > 0) {
       cards.push(source.cards[0]);
-      this.sendCardToZone(source.cards[0], source, dest, 0, 0, {nolog: true, noupdate: true});
+      if (options && options.bottom) {
+        this.sendCardToZone(source.cards[0], source, dest, 0, dest.cards.length, {nolog: true, noupdate: true});
+      }
+      else {
+        this.sendCardToZone(source.cards[0], source, dest, 0, 0, {nolog: true, noupdate: true});
+      }
     }
     if (options && options.nolog) {}
     else {
