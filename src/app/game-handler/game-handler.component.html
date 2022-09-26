@@ -633,6 +633,32 @@
       </div>
     </div>
 
+    <!-- Selected Hand -->
+    <div class="hand-selected-container">
+      <div class="hand-selected-wrapper"
+           *ngIf="selected_player != null && selected_player != currentPlayer()"
+           [ngStyle]="{'max-width': selected_player.hand.cards.length * 40 < 1144 ? selected_player.hand.cards.length * 40 + 'px': '1144px', 'min-width': '40px'}">
+        <h3 class="hand-quantity-text shadow-text">{{selected_player.hand.cards.length}}</h3>
+        <ng-scrollbar track="horizontal"
+                      visibility="hover"
+                      pointerEventsMethod="scrollbar"
+                      [ngStyle.gt-md]="{'min-width': '40px', 'width': selected_player.hand.cards.length * 40 < 1144 ? selected_player.hand.cards.length * 40 + 'px': '1144px'}">
+          <div class="hand-selected-droplist-wrapper"
+               fxLayout="row" fxLayoutAlign="start"
+               scrollViewport>
+            <div *ngFor="let card of selected_player.hand.cards"
+                 class="playmat-user-card-container-mini"
+                 (contextmenu)="onRightClick($event, {type: 'opponent_hand', card: card, from: selected_player.hand});"
+                 (pointerenter)="magnified_card = card"
+                 (pointerleave)="magnified_card = null"
+                 [@shakeCard]="card.shaken">
+              <img class="playmat-user-card-mini" [src]="card.visible.includes(user.id) ? card.image: selected_player.deck.sleeves">
+            </div>
+          </div>
+        </ng-scrollbar>
+      </div>
+    </div>
+
     <!-- User Hand -->
     <div class="hand-user-container">
       <div class="hand-user-wrapper"
