@@ -2,7 +2,9 @@ import {Component, Inject} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {FddpApiService} from "../../services/fddp-api.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
+import {CDK_DRAG_CONFIG, CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
+
+
 
 @Component({
   selector: 'token-insert-dialog',
@@ -177,9 +179,16 @@ export class CounterSetDialog {
   }
 }
 
+const DragConfig = {
+  dragStartThreshold: 0,
+  pointerDirectionChangeThreshold: 5,
+  zIndex: 10000
+};
+
 @Component({
   selector: 'two-headed-teams-dialog',
   templateUrl: 'two-headed-teams.html',
+  providers: [{ provide: CDK_DRAG_CONFIG, useValue: DragConfig }]
 })
 export class TwoHeadedTeamsDialog {
   constructor(

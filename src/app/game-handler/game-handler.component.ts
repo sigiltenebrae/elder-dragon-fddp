@@ -1,5 +1,5 @@
 import {Component, HostListener, Inject, Injectable, OnInit, ViewChild} from '@angular/core';
-import {CdkDrag, CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
+import {CDK_DRAG_CONFIG, CdkDrag, CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {animate, state, style, transition, trigger, useAnimation} from "@angular/animations";
 import {MatMenuTrigger} from "@angular/material/menu";
 import { RightclickHandlerServiceService } from "../../services/rightclick-handler-service.service";
@@ -29,6 +29,7 @@ import {Scrollbar} from "ngx-scrollbar/lib/scrollbar/scrollbar";
 import {NgScrollbar, NgScrollbarModule} from "ngx-scrollbar";
 import {TokenInsertDialog, TokenSelectDialog, NoteDialog, DeckSelectDialog, CounterSetDialog, TwoHeadedTeamsDialog} from "./game-handler-addons.component";
 
+
 @Component({
   selector: 'app-game-handler',
   templateUrl: './game-handler.component.html',
@@ -48,7 +49,7 @@ import {TokenInsertDialog, TokenSelectDialog, NoteDialog, DeckSelectDialog, Coun
       transition('untapped => tapped', animate('250ms ease-in'))
     ]),
     trigger('shakeCard', [transition('false => true', useAnimation(shakeX))])
-  ]
+  ],
 })
 export class GameHandlerComponent implements OnInit {
 
@@ -87,7 +88,7 @@ export class GameHandlerComponent implements OnInit {
 
   //Messaging
   counter_buffer: any = false; //True if a counter update is in the message queue. Prevents counter updates from spamming
-  ds: any = null;
+  team_counter = false;
 
   ngOnInit(): void {
 
@@ -152,7 +153,7 @@ export class GameHandlerComponent implements OnInit {
             for (let i = 0; i < this.game_data.players.length; i++) {
               if (this.game_data.players[i].id == json_data.get.player_data.id) {
                 this.game_data.players[i] = json_data.get.player_data;
-                if (this.selected_player.id == json_data.get.player_data.id) {
+                if (this.selected_player != null && this.selected_player.id == json_data.get.player_data.id) {
                   this.selected_player = this.game_data.players[i];
                 }
                 break;
@@ -200,6 +201,15 @@ export class GameHandlerComponent implements OnInit {
                   player.deck = json_data.get.zone_data;
                   break;
               }
+            }
+          }
+        }
+        if (json_data.get.team_data) {
+          for (let i = 0; i < this.game_data.team_data.length; i++) {
+            if (this.game_data.team_data[i].id === json_data.get.team_data.id) {
+              console.log('found team to update');
+              this.game_data.team_data[i] = json_data.get.team_data;
+              break;
             }
           }
         }
@@ -512,8 +522,15 @@ export class GameHandlerComponent implements OnInit {
    */
   updateCounter(name: string, after: any, options?: any) {
     if (!this.counter_buffer) {
+      if (options && options.team) {
+        this.team_counter = true;
+      }
       this.counter_buffer = true;
       setTimeout(() => {this.counter_buffer = false;
+        if (this.team_counter) {
+          this.team_counter = false;
+          this.updateSocketTeam();
+        }
         this.updateSocketPlayer();
         if (name !== '' && name !== 'Command Tax' && name !== 'Command Tax 2') {
           this.logAction('counter', {name: name, after: after, options: options});
@@ -530,10 +547,10 @@ export class GameHandlerComponent implements OnInit {
    */
   getCounterValue(name: string, options?: any) {
     if (name === 'Life') {
-      return this.game_data.type == 2 ? 0: this.user.life;
+      return this.game_data.type == 2 ? this.getTeam(this.user.id).life: this.user.life;
     }
     else if (name === 'Infect') {
-      return this.game_data.type == 2 ? 0: this.user.infect;
+      return this.game_data.type == 2 ? this.getTeam(this.user.id).infect: this.user.infect;
     }
     else {
       if (options && options.card) {
@@ -570,6 +587,18 @@ export class GameHandlerComponent implements OnInit {
         player_data: this.user
       }
     });
+  }
+
+  updateSocketTeam() {
+    console.log(this.getTeam(this.user.id))
+    this.messageSocket(
+      {
+        game_id: this.game_id,
+        put: {
+          action: 'update',
+          team_data: this.getTeam(this.user.id)
+        }
+      });
   }
 
   updateSocketZone(zone: any) {
@@ -734,6 +763,7 @@ export class GameHandlerComponent implements OnInit {
   startGame() {
     if (this.game_data.type == 1 || this.game_data.type == 3) {
       this.game_data.turn_count = 1;
+
     }
     else if (this.game_data.type == 2) {
       this.selectTeams();
@@ -758,7 +788,17 @@ export class GameHandlerComponent implements OnInit {
         }
       });
       teamDialogRef.afterClosed().subscribe((result) => {
-
+        if (result) {
+          console.log('yay');
+          this.messageSocket(
+            {
+              game_id: this.game_data.id,
+              put: {
+                action: 'start',
+                teams: result
+              }
+            });
+        }
       });
     }
     else {
@@ -848,12 +888,13 @@ export class GameHandlerComponent implements OnInit {
    * Helper function for changing whose board is being displayed.
    */
   currentPlayer() {
-    if (this.user.deck) {
+    if (this.user && this.user.deck) {
       return this.user;
     }
     else if (this.user.spectating) {
       return this.selected_player;
     }
+    return null;
   }
 
   getOtherPlayers() {
@@ -890,8 +931,24 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  getTeammate() {
+    let t = -1;
+    for (let i = 0; i < this.game_data.team_data.length; i++) {
+      if (this.game_data.team_data.players[i].contains(this.user.id)) {
+        t = i;
+        break;
+      }
+    }
+    for (let player of this.game_data.team_data.players[t]) {
+      if (player != this.user.id) {
+        return this.getPlayerFromId(player);
+      }
+    }
+    return null;
+  }
+
   isTeammate(player: any) {
-    if (this.user != null && player.id == this.user.teammate_id) {
+    if (this.user != null && player == this.getTeammate()) {
       return true;
     }
     else {
@@ -1434,12 +1491,24 @@ export class GameHandlerComponent implements OnInit {
     if (item.type && item.type !== 'none') {
       switch (item.type) {
         case 'life':
-          item.player.life--;
-          this.updateCounter('Life', item.player.life);
+          if (item.player) {
+            item.player.life--;
+            this.updateCounter('Life', item.player.life);
+          }
+          else if (item.team) {
+            item.team.life--;
+            this.updateCounter('Life', item.team.life, {team: true});
+          }
           break;
         case 'infect':
-          item.player.infect--;
-          this.updateCounter('Infect', item.player.infect);
+          if (item.player) {
+            item.player.infect--;
+            this.updateCounter('Infect', item.player.infect);
+          }
+          else if (item.team) {
+            item.team.infect--;
+            this.updateCounter('Infect', item.team.infect, {team: true});
+          }
           break;
         case 'counter_1':
           item.card.counter_1_value--;
@@ -1530,13 +1599,24 @@ export class GameHandlerComponent implements OnInit {
       counterDialogRef.afterClosed().subscribe(result => {
         if (result) {
           player.life = result;
-          this.updateCounter('Life', player.life);
+          if (this.game_data.type == 2) {
+            this.updateCounter('Life', player.life, {team: true});
+          }
+          else {
+            this.updateCounter('Life', player.life);
+          }
+
         }
       });
     }
     else {
       player.life = player.life + 1;
-      this.updateCounter('Life', player.life);
+      if (this.game_data.type == 2) {
+        this.updateCounter('Life', player.life, {team: true});
+      }
+      else {
+        this.updateCounter('Life', player.life);
+      }
     }
   }
 
@@ -1551,13 +1631,23 @@ export class GameHandlerComponent implements OnInit {
       counterDialogRef.afterClosed().subscribe(result => {
         if (result) {
           player.infect = result;
-          this.updateCounter('Infect', player.infect);
+          if (this.game_data.type == 2) {
+            this.updateCounter('Infect', player.infect, {team: true});
+          }
+          else {
+            this.updateCounter('Infect', player.infect);
+          }
         }
       });
     }
     else {
       player.infect = player.infect + 1;
-      this.updateCounter('Infect', player.infect);
+      if (this.game_data.type == 2) {
+        this.updateCounter('Infect', player.infect, {team: true});
+      }
+      else {
+        this.updateCounter('Infect', player.infect);
+      }
     }
   }
 

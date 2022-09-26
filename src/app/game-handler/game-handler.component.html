@@ -374,19 +374,37 @@
       <div class="game-data-wrapper">
         <div class="game-data-player-list-container" [style.height.px]="game_data.players.length > 3? 200: game_data.players.length * 50">
           <ng-scrollbar track="vertical" visibility="hover" pointerEventsMethod="scrollbar" [style.height.px]="200">
-            <mat-list>
+            <mat-list *ngIf="game_data.type != 2">
               <div *ngFor="let player of game_data.players">
                 <mat-list-item class="game-data-player-list-item" fxLayout="row">
                   <button (click)="selectPlayer(player)" mat-button class="game-data-player-list-name">{{player.name}}</button>
                   <button mat-button class="game-data-player-list-counter"
-                          (click)="lifeClick($event, player)"
+                          (click)="lifeClick($event, player)" [disabled]="player != user"
                           (contextmenu)="onRightClick($event, {type: 'life', player: player})">
                     {{player.life}}
                   </button>
                   <button mat-button class="game-data-player-list-counter"
-                          (click)="infectClick($event, player)"
+                          (click)="infectClick($event, player)" [disabled]="player != user"
                           (contextmenu)="onRightClick($event, {type: 'infect', player: player})">
                     {{player.infect}}
+                  </button>
+                </mat-list-item>
+              </div>
+            </mat-list>
+            <mat-list *ngIf="game_data.type == 2 && game_data.team_data">
+              <div *ngFor="let team of game_data.team_data">
+                <mat-list-item class="game-data-player-list-item" fxLayout="row">
+                  <button (click)="selectPlayer(getPlayerFromId(team.players[0]))" mat-button class="game-data-player-list-name-two-headed">{{getPlayerFromId(team.players[0]).name}}</button>
+                  <button (click)="selectPlayer(getPlayerFromId(team.players[1]))" mat-button class="game-data-player-list-name-two-headed">{{getPlayerFromId(team.players[1]).name}}</button>
+                  <button mat-button class="game-data-player-list-counter"
+                          (click)="lifeClick($event, team)" [disabled]="!(getPlayerFromId(team.players[0]) == user || getPlayerFromId(team.players[1]) == user)"
+                          (contextmenu)="onRightClick($event, {type: 'life', team: team})">
+                    {{team.life}}
+                  </button>
+                  <button mat-button class="game-data-player-list-counter"
+                          (click)="infectClick($event, team)" [disabled]="!(getPlayerFromId(team.players[0]) == user || getPlayerFromId(team.players[1]) == user)"
+                          (contextmenu)="onRightClick($event, {type: 'infect', team: team})">
+                    {{team.infect}}
                   </button>
                 </mat-list-item>
               </div>

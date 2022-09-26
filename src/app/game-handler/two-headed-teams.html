@@ -1,3 +1,17 @@
+<style>
+  .cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0 8px 10px 1px rgba(0, 0, 0, 0.14),
+    0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  }
+
+  .cdk-drag-placeholder {
+    opacity: 1 !important;
+  }
+</style>
+
 <div fxFlexFill fxLayout="row" fxLayoutAlign="center center" style="position: relative">
   <div style="position: absolute; top: 5px; right: 5px; cursor: pointer; width: 24px; height: 24px; z-index: 20">
     <mat-icon (click)="onNoClick()">close</mat-icon>
@@ -13,7 +27,9 @@
           [cdkDropListData]="players"
           class="two-headed-list"
           (cdkDropListDropped)="drop($event)">
-          <div class="two-headed-box" *ngFor="let player of players" cdkDrag>{{player.name}}</div>
+          <div class="two-headed-box" *ngFor="let player of players" cdkDrag>
+            <div *cdkDragPlaceholder class="two-headed-box-placeholder"></div>
+            {{player.name}}</div>
         </div>
       </div>
       <div fxLayout="column" *ngFor="let team of team_slots; let i = index" class="two-headed-container">
@@ -22,7 +38,9 @@
              [cdkDropListData]="team"
              class="two-headed-list"
              (cdkDropListDropped)="drop($event)">
-          <div class="two-headed-box" *ngFor="let player of team" cdkDrag>{{player.name}}</div>
+          <div class="two-headed-box" *ngFor="let player of team" cdkDrag>
+            <div *cdkDragPlaceholder class="two-headed-box-placeholder"></div>
+            {{player.name}}</div>
         </div>
       </div>
     </div>
