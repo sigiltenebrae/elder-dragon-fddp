@@ -52,6 +52,7 @@ import { MatDialogModule } from "@angular/material/dialog";
 import { GameManagerComponent } from './game-manager/game-manager.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
 
 
@@ -74,6 +75,7 @@ import { RegisterComponent } from './register/register.component';
     GameManagerComponent,
     LoginComponent,
     RegisterComponent,
+    ChangePasswordComponent,
   ],
   imports: [
     BrowserModule,
@@ -107,6 +109,7 @@ import { RegisterComponent } from './register/register.component';
       {path: '', component: DeckManagerComponent},
       {path: 'login', component: LoginComponent},
       {path: 'register', component: RegisterComponent},
+      {path: 'password', component: ChangePasswordComponent},
       {path: 'game', component: GameManagerComponent},
       {path: 'games/:gameid', component: GameHandlerComponent},
       {path: 'decks/:deckid', component: DeckEditComponent},
