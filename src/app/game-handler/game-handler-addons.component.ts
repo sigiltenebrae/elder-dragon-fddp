@@ -203,6 +203,35 @@ export class TwoHeadedTeamsDialog {
     this.dialogRef.close(null);
   }
 
+  randomTeams() {
+    for (let team of this.team_slots) {
+      for (let player of team) {
+        transferArrayItem(
+          team,
+          this.players,
+          team.indexOf(player),
+          0,
+        );
+      }
+    }
+    for (let i = 0; i < this.players.length; i++) {
+      while(true) {
+        let current = Math.floor(Math.random() * this.team_slots.length);
+        if (this.team_slots[current].length < 2) {
+          transferArrayItem(
+            this.players,
+            this.team_slots[current],
+            0,
+            0,
+          );
+          i -= 1;
+          break;
+        }
+      }
+      console.log(this.team_slots);
+    }
+  }
+
   checkValidTeams() {
     if (this.players.length == 0) {
       let bad = false;
@@ -241,7 +270,7 @@ export class TwoHeadedTeamsDialog {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      if (event.container.data.length < 2) {
+      if (event.container.data.length < 2 || event.container.data == this.players) {
         transferArrayItem(
           event.previousContainer.data,
           event.container.data,
