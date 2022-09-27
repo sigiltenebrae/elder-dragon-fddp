@@ -51,6 +51,7 @@ import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { MatDialogModule } from "@angular/material/dialog";
 import { GameManagerComponent } from './game-manager/game-manager.component';
 import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
 
 
 
@@ -72,6 +73,7 @@ import { LoginComponent } from './login/login.component';
     SelectColorsDialog,
     GameManagerComponent,
     LoginComponent,
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,
@@ -104,6 +106,7 @@ import { LoginComponent } from './login/login.component';
     RouterModule.forRoot([
       {path: '', component: DeckManagerComponent},
       {path: 'login', component: LoginComponent},
+      {path: 'register', component: RegisterComponent},
       {path: 'game', component: GameManagerComponent},
       {path: 'games/:gameid', component: GameHandlerComponent},
       {path: 'decks/:deckid', component: DeckEditComponent},
