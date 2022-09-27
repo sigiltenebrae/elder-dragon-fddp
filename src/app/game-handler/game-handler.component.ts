@@ -28,7 +28,7 @@ import {FddpWebsocketService} from "../../services/fddp-websocket.service";
 import {Scrollbar} from "ngx-scrollbar/lib/scrollbar/scrollbar";
 import {NgScrollbar, NgScrollbarModule} from "ngx-scrollbar";
 import {TokenInsertDialog, TokenSelectDialog, NoteDialog, DeckSelectDialog, CounterSetDialog, TwoHeadedTeamsDialog, EndGameDialog} from "./game-handler-addons.component";
-
+import {Howl, Howler} from 'howler'
 
 @Component({
   selector: 'app-game-handler',
@@ -61,6 +61,7 @@ export class GameHandlerComponent implements OnInit {
   //Page Interaction
   rightclicked_item: any = null; //Set to the object that triggers the right click event.
   menuTopLeftPosition =  {x: '0', y: '0'} //The top left position of the 'right click' menu
+  notification_sound: any = null;
 
   //Game Data
   game_id = -1; //The game id (from the url)
@@ -93,6 +94,10 @@ export class GameHandlerComponent implements OnInit {
   team_counter = false;
 
   ngOnInit(): void {
+
+    this.notification_sound = new Howl({
+      src: ['assets/sound/synth-twinkle-alert-sound-001-8436.mp3']
+    });
 
     this.rightClickHandler.overrideRightClick();
 
@@ -237,6 +242,9 @@ export class GameHandlerComponent implements OnInit {
           console.log('turn update')
           console.log(json_data.get.turn_update);
           this.game_data.current_turn = json_data.get.turn_update;
+          if (this.user.turn != null && this.game_data.current_turn == this.user.turn) {
+            this.notification_sound.play();
+          }
         }
         if (json_data.get.shake_data != null) {
           this.cardShake(json_data.get.shake_data.card.id, json_data.get.shake_data.id, json_data.get.shake_data.location);
