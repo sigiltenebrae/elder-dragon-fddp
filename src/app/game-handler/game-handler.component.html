@@ -474,7 +474,7 @@
               <div class="playmat-opponent" fxLayout="row wrap" fxLayoutAlign="start start"
               [ngClass]="{'playmat-opponent-selected': player == selected_player, 'playmat-opponent-turn': player.turn == game_data.current_turn}">
                 <div *ngFor="let spot of player.playmat"
-                     class="playmat-user-spot-container-mini"
+                     class="playmat-user-spot-container-mini" [ngClass]="{'playmat-gridlines': gridlines}"
                      (contextmenu)="onRightClick($event, {type: 'opponent_playmat'})">
                   <div *ngFor="let card of spot.cards; let i = index">
                     <div [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2, 'invert': card.inverted}"
@@ -648,17 +648,23 @@
         <div class="playmat-user-actions-container">
           <div fxFlexFill fxLayout="column" fxLayoutAlign="space-evenly start" fxLayoutGap="20px">
             <div class="playmat-user-actions-wrapper" fxLayout="row">
+              <button fxHide.lt-lg mat-fab color="warn">
+                <mat-icon *ngIf="!gridlines" (click)="gridlines=!gridlines">grid_off</mat-icon>
+                <mat-icon *ngIf="gridlines" (click)="gridlines=!gridlines">grid_on</mat-icon>
+              </button>
+            </div>
+            <div *ngIf="game_data.type == 2" class="playmat-user-actions-wrapper" fxLayout="row">
+              <button  fxHide.lt-lg mat-fab>
+                <mat-icon *ngIf="!teamview" (click)="teamview=!teamview">keyboard_arrow_right</mat-icon>
+                <mat-icon *ngIf="teamview" (click)="teamview=!teamview">keyboard_arrow_left</mat-icon>
+              </button>
+            </div>
+            <div class="playmat-user-actions-wrapper" fxLayout="row">
               <button mat-fab color="primary"
                       (pointerenter)="magnified_card = game_data.current_plane != null? game_data.current_plane: null"
                       (pointerleave)="magnified_card = null"
                       (click)="setPlane()">
                 <mat-icon>gesture</mat-icon>
-              </button>
-            </div>
-            <div class="playmat-user-actions-wrapper" fxLayout="row">
-              <button *ngIf="game_data.type == 2" fxHide.lt-lg mat-fab>
-                <mat-icon *ngIf="!teamview" (click)="teamview=!teamview">keyboard_arrow_right</mat-icon>
-                <mat-icon *ngIf="teamview" (click)="teamview=!teamview">keyboard_arrow_left</mat-icon>
               </button>
             </div>
           </div>
@@ -667,7 +673,7 @@
         [ngClass]="{'playmat-opponent-turn': currentPlayer().turn == game_data.current_turn}">
           <img class="playmat-user-background-image" *ngIf="currentPlayer() != null && currentPlayer().playmat_image != null && currentPlayer().playmat_image !== ''" src="{{currentPlayer().playmat_image}}">
           <div *ngFor="let spot of currentPlayer().playmat"
-               class="playmat-user-spot-container"
+               class="playmat-user-spot-container" [ngClass]="{'playmat-gridlines': gridlines}"
                (contextmenu)="onRightClick($event, {type: 'user_playmat', from: spot})"
                [cdkDropListData]="spot.cards"
                (cdkDropListDropped)="dragCard(currently_dragging, spot, $event)"

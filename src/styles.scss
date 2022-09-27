@@ -594,6 +594,11 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   margin-right: 10px;
 }
 
+//Global Playmat
+.playmat-gridlines {
+  box-shadow:inset 0px 0px 0px 2px rgba(gray, 0.3);
+}
+
 //Outer Playmat Containers
 .playmat-user-container {
   width: 100vw;

@@ -91,6 +91,7 @@ export class GameHandlerComponent implements OnInit {
   draw_count: any = 1;
   draw_until = '';
   teamview = false;
+  gridlines = false;
 
   //Sidenav
   sidenav_type: any = null;
