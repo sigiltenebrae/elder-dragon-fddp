@@ -474,7 +474,7 @@
               <div class="playmat-opponent" fxLayout="row wrap" fxLayoutAlign="start start"
               [ngClass]="{'playmat-opponent-selected': player == selected_player, 'playmat-opponent-turn': player.turn == game_data.current_turn}">
                 <div *ngFor="let spot of player.playmat"
-                     class="playmat-user-spot-container-mini" [ngClass]="{'playmat-gridlines': gridlines}"
+                     class="playmat-user-spot-container-mini"
                      (contextmenu)="onRightClick($event, {type: 'opponent_playmat'})">
                   <div *ngFor="let card of spot.cards; let i = index">
                     <div [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2, 'invert': card.inverted}"

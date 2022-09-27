@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import {environment} from "../environments/environment";
 import {TokenStorageService} from "./token-storage.service";
 
-const AUTH_API = environment.fddp_api_url + '/auth';
+const AUTH_API = environment.fddp_api_url + '/auth/';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json'})
 };
