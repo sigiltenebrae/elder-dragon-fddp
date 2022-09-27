@@ -5,7 +5,7 @@
       <div fxLayout="column">
         <mat-form-field appearance="outline" fxLayout="row" fxFlex>
           <mat-label>Username</mat-label>
-          <input matInput type="text">
+          <input matInput type="text" [(ngModel)]="user.username">
         </mat-form-field>
 
         <mat-form-field appearance="outline" fxLayout="row" fxFlex>
@@ -26,6 +26,9 @@
             <mat-option [value]="'light'">Light</mat-option>
           </mat-select>
         </mat-form-field>
+
+        <mat-slide-toggle [(ngModel)]="user.gridlines">Enable Gridlines</mat-slide-toggle>
+        &nbsp;
 
         <div fxLayout="row" fxFlex fxLayoutAlign="space-between">
           <button mat-raised-button color="accent">Password</button>

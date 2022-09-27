@@ -123,6 +123,7 @@ export class GameHandlerComponent implements OnInit {
     this.game_id = Number(routeParams.get('gameid'));
 
     this.current_user = this.tokenStorage.getUser();
+    this.gridlines = this.current_user.gridlines;
 
     this.WebsocketService.messages.subscribe(msg => {
       let json_data = msg;
