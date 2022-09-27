@@ -24,6 +24,17 @@ export class GameManagerComponent implements OnInit {
     this.WebsocketService.messages.next(message);
   }
 
+  public secondsToString(game: any) {
+    let time_in_seconds = (new Date().getTime() - game.started) / 1000;
+    let seconds: string | number = Math.floor(time_in_seconds % 60)
+    let minutes: string | number = Math.floor( (time_in_seconds / 60) % 60)
+    let hours: string | number = Math.floor((time_in_seconds / (60 * 60)) % 60)
+    seconds = (seconds < 10) ? '0' + seconds : seconds;
+    minutes = (minutes < 10) ? '0' + minutes : minutes;
+    hours = (hours < 10) ? '0' + hours : hours;
+    return `${hours}:${minutes}:${seconds}`;
+  }
+
   createGame(name: string, max_players: any, type?: string) {
     this.sendMsg(
       {

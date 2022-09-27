@@ -43,7 +43,10 @@
           <div fxFlex fxLayout="row" fxLayoutAlign="center center">
             <div fxLayout="column" fxLayoutAlign="center center">
               <h2>{{game.name}}</h2>
-              <h5>Running Time: 00:00</h5>
+              <h3>{{game.type == 1? 'Commander': game.type == 2? 'Two Headed': 'Star'}}</h3>
+              <h5>Players: {{game.players.length}} of {{game.max_players}}</h5>
+              <h5>Connected: {{game.connected.length}}</h5>
+              <h5>Running Time: {{secondsToString(game)}}</h5>
               <button mat-raised-button color="primary" style="max-width: 50px"
               [routerLink]="'/games/' + game.id">Join</button>
             </div>

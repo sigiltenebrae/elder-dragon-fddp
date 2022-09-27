@@ -242,6 +242,7 @@ export class GameHandlerComponent implements OnInit {
           console.log('turn update')
           console.log(json_data.get.turn_update);
           this.game_data.current_turn = json_data.get.turn_update;
+          this.game_data.last_turn = new Date().getTime();
           if (this.user.turn != null && this.game_data.current_turn == this.user.turn) {
             this.notification_sound.play();
           }
@@ -691,6 +692,22 @@ export class GameHandlerComponent implements OnInit {
   /**------------------------------------------------
    *        Game Data Management Functions          *
    ------------------------------------------------**/
+
+  public secondsToString(time: any) {
+    if (time != null) {
+      let time_in_seconds = (new Date().getTime() - time) / 1000;
+      let seconds: string | number = Math.floor(time_in_seconds % 60)
+      let minutes: string | number = Math.floor( (time_in_seconds / 60) % 60)
+      let hours: string | number = Math.floor((time_in_seconds / (60 * 60)) % 60)
+      seconds = (seconds < 10) ? '0' + seconds : seconds;
+      minutes = (minutes < 10) ? '0' + minutes : minutes;
+      hours = (hours < 10) ? '0' + hours : hours;
+      return `${hours}:${minutes}:${seconds}`;
+    }
+    else {
+      return '00:00:00';
+    }
+  }
 
   /**
    * Returns the player with the given id from the game data, null if player

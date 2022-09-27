@@ -451,6 +451,11 @@
     </div>
 
 
+    <!-- Timer -->
+    <div class="game-timer-total">
+      <h3>Game Time: {{secondsToString(game_data.started)}} &nbsp;&nbsp;&nbsp; Turn Time: {{secondsToString(game_data.last_turn)}}</h3>
+    </div>
+
     <!-- Opponent Playmats -->
     <div class="playmat-opponent-view-container">
       <ng-scrollbar track="all" visibility="hover" pointerEventsMethod="scrollbar" style="width: 100%; height: 100%;">

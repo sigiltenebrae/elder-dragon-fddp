@@ -367,6 +367,19 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
  *****************************************/
 
 /*
+------------ Game Timer ------------
+ */
+
+.game-timer-total {
+  width: 500px;
+  height: 64px;
+  position: fixed;
+  top: 10px;
+  left: 5px;
+  z-index: 65;
+}
+
+/*
 ------------ Opponent Playmat ------------
  */
 

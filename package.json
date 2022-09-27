@@ -26,6 +26,7 @@
     "@popperjs/core": "^2.10.2",
     "bootstrap": "^5.2.0",
     "crypto-js": "^4.1.1",
+    "howler": "^2.2.3",
     "ng-animate": "^2.0.1",
     "ngx-scrollbar": "^10.0.1",
     "rxjs": "~7.5.0",

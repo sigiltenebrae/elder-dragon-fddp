@@ -57,7 +57,7 @@
     </div>
 
     <div fxLayout="row" fxLayoutAlign="end">
-      <button mat-raised-button color="warn" *ngIf="winner1.length == 0 && winner2.length == 0" (click)="submit_winners">No Winners</button>
+      <button mat-raised-button color="warn" *ngIf="winner1.length == 0 && winner2.length == 0" (click)="submit_winners()">No Winners</button>
       <button mat-raised-button color="accent" *ngIf="winner1.length > 0 || winner2.length > 0" (click)="submit_winners()">Submit Winners</button>
     </div>
   </div>
