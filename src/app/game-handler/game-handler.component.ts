@@ -116,10 +116,8 @@ export class GameHandlerComponent implements OnInit {
 
     this.WebsocketService.messages.subscribe(msg => {
       let json_data = msg;
-      console.log(json_data);
       if (json_data.get) {
         if (json_data.get.game_data) {
-          console.log('got game data');
           if (json_data.get.game_data.id) {
             this.game_data = json_data.get.game_data;
             if (this.game_data.players) {
@@ -142,7 +140,6 @@ export class GameHandlerComponent implements OnInit {
                 }
               }
               if (this.user == null) {
-                console.log('user is null');
                 this.messageSocket({
                   game_id: this.game_id,
                   put: {
@@ -239,8 +236,6 @@ export class GameHandlerComponent implements OnInit {
           this.game_data.spectators.push(json_data.get.scoop_data);
         }
         if (json_data.get.turn_update != null) {
-          console.log('turn update')
-          console.log(json_data.get.turn_update);
           this.game_data.current_turn = json_data.get.turn_update;
           this.game_data.last_turn = new Date().getTime();
           if (this.user.turn != null && this.game_data.current_turn == this.user.turn) {
@@ -251,7 +246,6 @@ export class GameHandlerComponent implements OnInit {
           this.cardShake(json_data.get.shake_data.card.id, json_data.get.shake_data.id, json_data.get.shake_data.location);
         }
         if (json_data.get.plane_data != null) {
-          console.log('updating plane');
           this.game_data.current_plane = json_data.get.plane_data;
         }
       }
@@ -647,7 +641,6 @@ export class GameHandlerComponent implements OnInit {
   }
 
   updateSocketTeam() {
-    console.log(this.getTeam(this.user.id))
     this.messageSocket(
       {
         game_id: this.game_id,
@@ -874,7 +867,6 @@ export class GameHandlerComponent implements OnInit {
       let team_array: any[] = []
       for (let i = 0; i < p.length / 2; i++){
         team_array.push([]);
-        console.log(team_array);
       }
       const teamDialogRef = this.dialog.open(TwoHeadedTeamsDialog, {
         data: {
@@ -884,7 +876,6 @@ export class GameHandlerComponent implements OnInit {
       });
       teamDialogRef.afterClosed().subscribe((result) => {
         if (result) {
-          console.log('yay');
           this.messageSocket(
             {
               game_id: this.game_data.id,
@@ -904,7 +895,6 @@ export class GameHandlerComponent implements OnInit {
 
   openDeckSelectDialog(): void {
     if (this.dialog.openDialogs.length == 0) {
-      console.log(this.current_user);
       const deckDialogRef = this.dialog.open(DeckSelectDialog, {
         width: '1600px',
         data: {user: this.current_user.id}
@@ -982,14 +972,12 @@ export class GameHandlerComponent implements OnInit {
 
   setPlane() {
     let new_plane = this.planes[Math.floor(Math.random() * (this.planes.length))];
-    console.log(new_plane);
     this.fddp_data.getCardInfo(new_plane).then((plane_data: any) => {
       this.getCardImages(new_plane).then((image_data: any) => {
         let images = image_data;
         let new_plane: any = plane_data;
         new_plane.plane = true;
         new_plane.image = images.length > 0 ? images[0]: null;
-        console.log(plane_data)
         this.game_data.current_plane = plane_data;
         this.updateSocketPlane(plane_data);
         this.logAction('plane', {plane: plane_data});
@@ -1284,7 +1272,6 @@ export class GameHandlerComponent implements OnInit {
           }
           break;
         default:
-          console.log('shake');
           break;
       }
     }
