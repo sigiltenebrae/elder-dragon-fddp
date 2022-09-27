@@ -53,6 +53,7 @@ import { GameManagerComponent } from './game-manager/game-manager.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
+import { ProfileComponent } from './profile/profile.component';
 
 
 
@@ -76,6 +77,7 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
     LoginComponent,
     RegisterComponent,
     ChangePasswordComponent,
+    ProfileComponent,
   ],
   imports: [
     BrowserModule,
@@ -110,6 +112,7 @@ import { ChangePasswordComponent } from './change-password/change-password.compo
       {path: 'login', component: LoginComponent},
       {path: 'register', component: RegisterComponent},
       {path: 'password', component: ChangePasswordComponent},
+      {path: 'profile', component: ProfileComponent},
       {path: 'game', component: GameManagerComponent},
       {path: 'games/:gameid', component: GameHandlerComponent},
       {path: 'decks/:deckid', component: DeckEditComponent},
