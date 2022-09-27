@@ -302,3 +302,82 @@ export class EndGameDialog {
     }
   }
 }
+
+@Component({
+  selector: 'select-colors-dialog',
+  templateUrl: 'star-select-colors.html',
+})
+export class SelectColorsDialog {
+  constructor(
+    public dialogRef: MatDialogRef<EndGameDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
+  players: any[] = this.data.players;
+
+  colors = ['W', 'U', 'B', 'R', 'G'];
+
+  onNoClick(): void {
+    this.dialogRef.close(null);
+  }
+
+  nextColor(player: any) {
+    console.log('clicked');
+    console.log(player.star_color)
+    if (player.star_color == null) {
+      player.star_color = 'W';
+    }
+    else if (player.star_color === 'W') {
+      player.star_color = 'U';
+    }
+    else if (player.star_color === 'U') {
+      player.star_color = 'B';
+    }
+    else if (player.star_color === 'B') {
+      player.star_color = 'R';
+    }
+    else if (player.star_color === 'R') {
+      player.star_color = 'G';
+    }
+    else if (player.star_color === 'G') {
+      player.star_color = null;
+    }
+  }
+
+  colorsComplete() {
+    let w_true = false;
+    let u_true = false;
+    let b_true = false;
+    let r_true = false;
+    let g_true = false;
+    for (let player of this.players){
+      if (player.star_color == 'W') {
+        w_true = true;
+      }
+      if (player.star_color == 'U') {
+        u_true = true;
+      }
+      if (player.star_color == 'B') {
+        b_true = true;
+      }
+      if (player.star_color == 'R') {
+        r_true = true;
+      }
+      if (player.star_color == 'G') {
+        g_true = true;
+      }
+    }
+    return w_true && u_true && b_true && r_true && g_true;
+  }
+
+  submit_colors() {
+    let colors_out = [];
+    for (let player of this.players) {
+      colors_out.push({id: player.id, star_color: player.star_color});
+    }
+    this.dialogRef.close({
+      colors: colors_out
+    });
+  }
+
+
+}

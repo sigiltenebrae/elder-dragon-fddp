@@ -37,6 +37,7 @@ import {DeckSelectDialog,
   NoteDialog,
   CounterSetDialog,
   TwoHeadedTeamsDialog,
+  SelectColorsDialog,
   EndGameDialog} from './game-handler/game-handler-addons.component'
 import {MatMenuModule} from "@angular/material/menu";
 import {FormsModule} from "@angular/forms";
@@ -67,6 +68,7 @@ import { GameManagerComponent } from './game-manager/game-manager.component';
     CounterSetDialog,
     TwoHeadedTeamsDialog,
     EndGameDialog,
+    SelectColorsDialog,
     GameManagerComponent,
   ],
   imports: [

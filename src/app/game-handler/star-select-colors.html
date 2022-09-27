@@ -1,0 +1,27 @@
+<div fxFlexFill fxLayout="row" fxLayoutAlign="center center" style="position: relative">
+  <div style="position: absolute; top: 5px; right: 5px; cursor: pointer; width: 24px; height: 24px; z-index: 20">
+    <mat-icon (click)="onNoClick()">close</mat-icon>
+  </div>
+  <div fxLayout="column" fxFlex="100" fxLayoutAlign="start center" style="height: 500px;">
+    <div fxLayout="row">
+      <h1>Select Colors</h1>
+    </div>
+    <div fxLayout="row">
+      <h3>Click a player to change their color</h3>
+    </div>
+    <div fxLayout="row">
+      <div fxLayout="column" class="two-headed-container" style="pointer-events: none;">
+        <h2>Players</h2>
+        <div>
+          <div class="two-headed-box star-box-{{player.star_color != null? player.star_color: null}}" *ngFor="let player of players" (click) = nextColor(player)
+          style="pointer-events: all">
+            {{player.name}}</div>
+        </div>
+      </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="end">
+      <button mat-raised-button color="accent" *ngIf="colorsComplete()" (click)="submit_colors()">Submit Colors</button>
+    </div>
+  </div>
+</div>

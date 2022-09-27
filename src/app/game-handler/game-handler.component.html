@@ -467,6 +467,10 @@
                 <h3>{{player.name}}</h3>
                 <h3>Hand: {{player.hand.cards.length}}, Deck: {{player.deck.cards.length}}, Graveyard: {{player.grave.cards.length}}, Exile: {{player.exile.cards.length}}</h3>
               </div>
+              <div *ngIf="game_data != null && game_data.type == 3" class="playmat-opponent-alliance-information">
+                <h3 *ngIf="isAlly(player)" class="playmat-opponent-ally">Ally</h3>
+                <h3 *ngIf="!isAlly(player)" class="playmat-opponent-enemy">Enemy</h3>
+              </div>
               <div class="playmat-opponent" fxLayout="row wrap" fxLayoutAlign="start start"
               [ngClass]="{'playmat-opponent-selected': player == selected_player, 'playmat-opponent-turn': player.turn == game_data.current_turn}">
                 <div *ngFor="let spot of player.playmat"
@@ -510,12 +514,18 @@
       <div class="game-data-wrapper">
         <div class="game-data-player-list-container" [style.height.px]="game_data.players.length > 3? 200: game_data.players.length * 50">
           <ng-scrollbar track="vertical" visibility="hover" pointerEventsMethod="scrollbar" [style.height.px]="200">
-            <mat-list *ngIf="game_data.type != 2">
+            <mat-list *ngIf="game_data.type != 2" style="margin-top: -10px">
               <div *ngFor="let player of game_data.players">
-                <mat-list-item class="game-data-player-list-item" fxLayout="row" [ngClass]="{'game-data-player-list-item-turn': player.turn == game_data.current_turn,
-                'game-data-player-list-item-selected': player == selected_player}">
+                <mat-list-item class="game-data-player-list-item" fxLayout="row" fxLayoutAlign="start center" [ngClass]="{'game-data-player-list-item-turn': player.turn == game_data.current_turn,
+                'game-data-player-list-item-selected': player == selected_player,
+                'star-player-text-outline-W': player.star_color === 'W',
+                          'star-player-text-outline-U': player.star_color === 'U',
+                          'star-player-text-outline-B': player.star_color === 'B',
+                          'star-player-text-outline-R': player.star_color === 'R',
+                          'star-player-text-outline-G': player.star_color === 'G'}">
                   <button (click)="selectPlayer(player)" (pointerenter)="magnified_card = player.deck.commander.saved[0]" (pointerleave)="magnified_card = null"
-                          mat-button class="game-data-player-list-name">{{player.name}}</button>
+                          mat-button class="game-data-player-list-name"
+                          >{{player.name}}</button>
                   <button mat-button class="game-data-player-list-counter"
                           (pointerenter)="magnified_card = player.deck.commander.saved.length == 2? player.deck.commander.saved[1]: null"
                           (pointerleave)="magnified_card = null"
@@ -533,7 +543,7 @@
             </mat-list>
             <mat-list *ngIf="game_data.type == 2 && game_data.team_data">
               <div *ngFor="let team of game_data.team_data">
-                <mat-list-item class="game-data-player-list-item" fxLayout="row" [ngClass]="{'game-data-player-list-item-turn': team.turn == game_data.current_turn}">
+                <mat-list-item class="game-data-player-list-item" fxLayout="row" fxLayoutAlign="start center" [ngClass]="{'game-data-player-list-item-turn': team.turn == game_data.current_turn}">
                   <button (click)="selectPlayer(getPlayerFromId(team.players[0]))" (pointerenter)="magnified_card = getPlayerFromId(team.players[0]).deck.commander.saved[0]" mat-button class="game-data-player-list-name-two-headed">{{getPlayerFromId(team.players[0]).name}}</button>
                   <button (click)="selectPlayer(getPlayerFromId(team.players[1]))" (pointerenter)="magnified_card = getPlayerFromId(team.players[1]).deck.commander.saved[0]" mat-button class="game-data-player-list-name-two-headed">{{getPlayerFromId(team.players[1]).name}}</button>
                   <button mat-button class="game-data-player-list-counter"

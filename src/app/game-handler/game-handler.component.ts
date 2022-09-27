@@ -27,7 +27,16 @@ import {TokenStorageService} from "../../services/token-storage.service";
 import {FddpWebsocketService} from "../../services/fddp-websocket.service";
 import {Scrollbar} from "ngx-scrollbar/lib/scrollbar/scrollbar";
 import {NgScrollbar, NgScrollbarModule} from "ngx-scrollbar";
-import {TokenInsertDialog, TokenSelectDialog, NoteDialog, DeckSelectDialog, CounterSetDialog, TwoHeadedTeamsDialog, EndGameDialog} from "./game-handler-addons.component";
+import {
+  TokenInsertDialog,
+  TokenSelectDialog,
+  NoteDialog,
+  DeckSelectDialog,
+  CounterSetDialog,
+  TwoHeadedTeamsDialog,
+  EndGameDialog,
+  SelectColorsDialog
+} from "./game-handler-addons.component";
 import {Howl, Howler} from 'howler'
 
 @Component({
@@ -843,7 +852,7 @@ export class GameHandlerComponent implements OnInit {
   }
 
   startGame() {
-    if (this.game_data.type == 1 || this.game_data.type == 3) {
+    if (this.game_data.type == 1) {
       this.game_data.turn_count = 1;
       this.messageSocket(
         {
@@ -855,6 +864,26 @@ export class GameHandlerComponent implements OnInit {
     }
     else if (this.game_data.type == 2) {
       this.selectTeams();
+    }
+    else if (this.game_data.type == 3) {
+      const selectColorsRef = this.dialog.open(SelectColorsDialog, {
+        data: {
+          players: this.game_data.players
+        }
+      });
+      selectColorsRef.afterClosed().subscribe((result) => {
+        if (result != null) {
+          this.game_data.turn_count = 1;
+          this.messageSocket({
+            game_id: this.game_id,
+            put: {
+              action: 'start',
+              colors: result.colors,
+            }
+          });
+        }
+      });
+
     }
   }
 
@@ -1060,6 +1089,30 @@ export class GameHandlerComponent implements OnInit {
     if (this.game_data.team_data) {
       if (this.user != null && player == this.getTeammate()) {
         return true;
+      }
+      else {
+        return false;
+      }
+    }
+    return false;
+  }
+
+  isAlly(player: any) {
+    if (this.game_data.type == 3 && this.currentPlayer() != null) {
+      if (this.currentPlayer().star_color === 'W') {
+        return player.star_color === 'U' || player.star_color === 'G';
+      }
+      else if (this.currentPlayer().star_color === 'U') {
+        return player.star_color === 'W' || player.star_color === 'B';
+      }
+      else if (this.currentPlayer().star_color === 'B') {
+        return player.star_color === 'U' || player.star_color === 'R';
+      }
+      else if (this.currentPlayer().star_color === 'R') {
+        return player.star_color === 'B' || player.star_color === 'G';
+      }
+      else if (this.currentPlayer().star_color === 'G') {
+        return player.star_color === 'W' || player.star_color === 'R';
       }
       else {
         return false;
