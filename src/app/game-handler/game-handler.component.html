@@ -329,6 +329,87 @@
     </div>
   </mat-sidenav>
   <mat-sidenav-content>
+
+    <!-- Magnifier Data -->
+    <div fxHide.lt-xl class="magnifier-data-container" *ngIf="magnified_card">
+      <div *ngIf="magnified_card.plane">
+        <div *ngIf="!magnifier_data.shift_pressed" class="magnifier-data-wrapper" style="transform: rotate(90deg) translateY(200px);">
+          <img class="magnifier-data-card-image" [src]="magnified_card.image" [alt]="magnified_card.name">
+        </div>
+        <div *ngIf="magnifier_data.shift_pressed" class="magnifier-data-wrapper">
+          <div fxFlexFill fxLayout="row" fxLayoutAlign="center center">
+            <div fxLayout="column" fxLayoutAlign="center center">
+              <div style="text-align: center">
+                <h3 *ngIf="magnified_card.name" style="margin: 2px">{{magnified_card.name}}</h3>
+                <h3 style="margin: 2px">(Plane)</h3>
+                <mat-divider></mat-divider>
+                <h3 *ngIf="magnified_card.oracle_text" style="margin: 10px; white-space: pre-line">{{magnified_card.oracle_text}}</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="!magnified_card.plane" class="magnifier-data-wrapper">
+        <img *ngIf="!magnifier_data.shift_pressed &&
+              (!magnifier_data.control_pressed || !magnified_card.back_face)"
+             class="magnifier-data-card-image"
+             [src]="magnified_card.image"
+             [alt]="magnified_card.name">
+        <img *ngIf="!magnifier_data.shift_pressed && magnifier_data.control_pressed && magnified_card.back_face"
+             class="magnifier-data-card-image"
+             [src]="magnified_card.back_image"
+             [alt]="magnified_card.name">
+        <div *ngIf="magnifier_data.shift_pressed && (!magnifier_data.control_pressed || !magnified_card.back_face)"
+             fxFlexFill fxLayout="row" fxLayoutAlign="center center">
+          <div fxLayout="column" fxLayoutAlign="center center">
+            <div style="text-align: center">
+              <h3 *ngIf="magnified_card.name" style="margin: 2px">{{magnified_card.name}}</h3>
+              <h3 style="margin: 2px" *ngIf="magnified_card.is_token && !magnified_card.types.includes('Token') && !magnified_card.types.includes('Emblem')">(Copy)</h3>
+              <h3 style="margin: 2px" *ngIf="magnified_card.is_token && magnified_card.types.includes('Token')">(Token)</h3>
+              <h3 style="margin: 2px" *ngIf="magnified_card.is_token && magnified_card.types.includes('Emblem')">(Emblem)</h3>
+              <mat-divider></mat-divider>
+              <h3 *ngIf="magnified_card.mana_cost" style="margin: 2px">{{magnified_card.mana_cost.join(' ')}}</h3>
+              <h3 *ngIf="magnified_card.types" style="margin: 2px">{{magnified_card.types.join(' ')}}</h3>
+              <mat-divider></mat-divider>
+              <h3 *ngIf="magnified_card.oracle_text" style="margin: 10px; white-space: pre-line">{{magnified_card.oracle_text}}</h3>
+              <h3 *ngIf="magnified_card.power && magnified_card.power != null && magnified_card.toughness && magnified_card.toughness != null">
+                {{magnified_card.power}}/{{magnified_card.toughness}}
+              </h3>
+              <h3 *ngIf="magnified_card.loyalty && magnified_card.loyalty !== null">{{magnified_card.loyalty}}</h3>
+              <h3 *ngIf="magnified_card.notes && magnified_card.notes !== ''">Notes: </h3>
+              <h3 *ngIf="magnified_card.notes && magnified_card.notes !== ''">{{magnified_card.notes}}</h3>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="magnifier_data.shift_pressed && magnifier_data.control_pressed && magnified_card.back_face"
+             fxFlexFill fxLayout="row" fxLayoutAlign="center center">
+          <div fxLayout="column" fxLayoutAlign="center center">
+            <div style="text-align: center">
+              <h3 style="margin: 2px">{{magnified_card.name}}</h3>
+              <mat-divider></mat-divider>
+              <h3 style="margin: 2px">{{magnified_card.back_mana_cost.join(' ')}}</h3>
+              <h3 style="margin: 2px">{{magnified_card.back_types.join(' ')}}</h3>
+              <mat-divider></mat-divider>
+              <h3 style="margin: 10px; white-space: pre-line">{{magnified_card.back_oracle_text}}</h3>
+              <h3 *ngIf="magnified_card.back_power && magnified_card.back_power != null && magnified_card.back_toughness && magnified_card.back_toughness != null">
+                {{magnified_card.back_power}}/{{magnified_card.back_toughness}}
+              </h3>
+              <h3 *ngIf="magnified_card.back_loyalty && magnified_card.back_loyalty !== null">{{magnified_card.back_loyalty}}</h3>
+              <h3 *ngIf="magnified_card.notes && magnified_card.notes !== ''">Notes: </h3>
+              <h3 *ngIf="magnified_card.notes && magnified_card.notes !== ''">{{magnified_card.notes}}</h3>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="magnified_card && magnified_card.iscommander" class="magnifier-data-commander-counter">
+          <button mat-fab>{{getPlayerFromId(magnified_card.owner).command_tax_1}}</button>
+        </div>
+        <div *ngIf="magnified_card && magnified_card.iscommander && getPlayerFromId(magnified_card.owner).deck.commander.saved.length == 2" class="magnifier-data-commander-counter-2">
+          <button mat-fab color="primary">{{getPlayerFromId(magnified_card.owner).command_tax_2}}</button>
+        </div>
+      </div>
+    </div>
+
+
     <!-- Counters -->
     <div *ngIf="user != null">
       <div *ngFor="let counter of user.play_counters" class="counter-creator">
@@ -428,9 +509,11 @@
               <div *ngFor="let player of game_data.players">
                 <mat-list-item class="game-data-player-list-item" fxLayout="row" [ngClass]="{'game-data-player-list-item-turn': player.turn == game_data.current_turn,
                 'game-data-player-list-item-selected': player == selected_player}">
-                  <button (click)="selectPlayer(player)" (pointerenter)="magnified_card = player.deck.commander.saved[0]" mat-button class="game-data-player-list-name">{{player.name}}</button>
+                  <button (click)="selectPlayer(player)" (pointerenter)="magnified_card = player.deck.commander.saved[0]" (pointerleave)="magnified_card = null"
+                          mat-button class="game-data-player-list-name">{{player.name}}</button>
                   <button mat-button class="game-data-player-list-counter"
                           (pointerenter)="magnified_card = player.deck.commander.saved.length == 2? player.deck.commander.saved[1]: null"
+                          (pointerleave)="magnified_card = null"
                           (click)="lifeClick($event, player)" [disabled]="player != user"
                           (contextmenu)="onRightClick($event, {type: 'life', player: player})">
                     {{player.life}}
@@ -605,13 +688,18 @@
       </div>
     </div>
 
-    <!-- Magnifier Data -->
-    <div fxHide.lt-xl class="magnifier-data-container" *ngIf="magnified_card">
-      <div *ngIf="magnified_card.plane" class="magnifier-data-wrapper" style="transform: rotate(90deg) translateY(200px); ">
-        <img class="magnifier-data-card" [src]="magnified_card.image">
-      </div>
-      <div *ngIf="!magnified_card.plane" class="magnifier-data-wrapper">
-        <img class="magnifier-data-card" [src]="magnified_card.image">
+
+
+    <!-- Selected Player Deck -->
+    <div fxHide.lt-xl class="deck-selected-player-container">
+      <div class="deck-user-wrapper" *ngIf="selected_player != null">
+        <h3 class="deck-user-quantity-text shadow-text">{{selected_player.deck.cards.length}}</h3>
+        <h3 fxHide.lt-lg class="deck-user-owner-text shadow-text">{{selected_player.name}}</h3>
+        <img loading="lazy"
+             class="zone-card-image"
+             [src]="selected_player.top_flipped && selected_player.deck.cards.length > 0 ? selected_player.deck.cards[0].image: selected_player.deck.sleeves"
+             (pointerenter)="magnified_card = selected_player.top_flipped && selected_player.deck.cards.length > 0 ? selected_player.deck.cards[0]: null"
+             (pointerleave)="magnified_card = null">
       </div>
     </div>
 
@@ -694,7 +782,7 @@
              (pointerenter)="magnified_card = currentPlayer().deck.commander.cards[0]"
              (pointerleave)="magnified_card = null;"
              (cdkDragStarted)="magnified_card = null; currently_dragging=user.deck.commander.cards[0]"
-             [cdkDragDisabled]="user.spectating"
+             [cdkDragDisabled]="user != currentPlayer()"
              cdkDrag>
         <img *ngIf="currentPlayer().deck.commander.cards.length == 2" class="commander-card-image-partner-1" src="{{currentPlayer().deck.commander.cards[0].image}}"
              (pointerenter)="magnified_card = currentPlayer().deck.commander.cards[0]"
