@@ -325,10 +325,18 @@ export class GameHandlerComponent implements OnInit {
         break;
       case 'move_all':
         if (data.cards) {
+          let out_cards = [];
+          for (let card of data.cards) {
+            let out_card: any = JSON.parse(JSON.stringify(card))
+            if (data.hand_fix) {
+              this.setVisibility(out_card, 'play');
+            }
+            out_cards.push(out_card);
+          }
           log_action = [
             {text: this.user.name, type: 'player'},
             {text: 'moved', type: 'regular'},
-            {text: '', type: 'card_list', cards: data.cards},
+            {text: '', type: 'card_list', cards: out_cards},
             {text: 'to', type: 'regular'},
             {text: data.dest.name === 'temp_zone'? 'temp zone': data.dest.name, type: 'location'},
           ]
@@ -2286,7 +2294,7 @@ export class GameHandlerComponent implements OnInit {
     }
     if (options && options.nolog) {}
     else {
-      this.logAction('move_all', {cards: cards, source: source, dest: dest});
+      this.logAction('move_all', {cards: cards, source: source, dest: dest, hand_fix: dest == this.user.hand && source != this.user.deck});
     }
     if (options && options.noupdate) {}
     else {
