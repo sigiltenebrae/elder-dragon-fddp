@@ -585,6 +585,7 @@
                   <span *ngIf="token.type === 'location'" style="color: goldenrod">{{token.text}} </span>
                   <span *ngIf="token.type === 'counter'" style="color: dodgerblue">{{token.text}} </span>
                   <span *ngIf="token.type === 'value'" style="color: indianred">{{token.text}} </span>
+                  <span *ngIf="token.type === 'number'" style="color: darkgreen">{{token.text}} </span>
                   <span *ngIf="token.type === 'regular'">{{token.text}} </span>
                   <span *ngIf="token.type === 'tap'">
                     <img *ngIf="token.text === 'tapped'" class="game-data-log-list-icon" src="assets/action_symbols/tap.png">
@@ -623,6 +624,9 @@
                   <span *ngIf="token.type === 'search'">
                     <mat-icon style="transform: scale(0.75)">search</mat-icon>
                   </span>
+                  <span *ngIf="token.type === 'roll'">
+                    <img src="assets/action_symbols/diceroll.png" style="height: 28px; width: 28px; filter: invert(1); opacity: 0.8">
+                  </span>
                   <span *ngIf="token.type === 'reveal'">
                     <mat-icon *ngIf="token.showed" style="transform: scale(0.75)">visibility</mat-icon>
                     <mat-icon *ngIf="!token.showed" style="transform: scale(0.75)">visibility_off</mat-icon>
@@ -651,9 +655,13 @@
         <div class="playmat-user-actions-container">
           <div fxFlexFill fxLayout="column" fxLayoutAlign="space-evenly start" fxLayoutGap="20px">
             <div class="playmat-user-actions-wrapper" fxLayout="row">
-              <button fxHide.lt-lg mat-fab color="warn">
-                <mat-icon *ngIf="!gridlines" (click)="gridlines=!gridlines">grid_off</mat-icon>
-                <mat-icon *ngIf="gridlines" (click)="gridlines=!gridlines">grid_on</mat-icon>
+              <button (click)="rollD6()" fxHide.lt-lg mat-fab color="warn">
+                <img src="assets/action_symbols/d6.svg" style="height: 64px; width: 64px; margin-top: -20px; margin-left: -4px; filter: invert(1); opacity: 0.8">
+              </button>
+            </div>
+            <div class="playmat-user-actions-wrapper" fxLayout="row">
+              <button (click)="rollD20()" fxHide.lt-lg mat-fab color="accent">
+                <img src="assets/action_symbols/d20.svg" style="height: 64px; width: 64px; margin-top: -20px; margin-left: -4px; filter: invert(1); opacity: 0.8">
               </button>
             </div>
             <div *ngIf="game_data.type == 2" class="playmat-user-actions-wrapper" fxLayout="row">

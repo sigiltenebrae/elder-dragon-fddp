@@ -462,7 +462,7 @@ export class GameHandlerComponent implements OnInit {
           log_action = [
             {text: this.user.name, type: 'player'},
             {text: 'mulliganed for', type: 'regular'},
-            {text: data.count, type: 'regular'}
+            {text: data.count, type: 'number'}
           ]
         }
         break;
@@ -489,16 +489,18 @@ export class GameHandlerComponent implements OnInit {
             log_action = [
               {text: this.user.name, type: 'player'},
               {text: 'revealed', type: 'regular'},
-              {text: data.count + ' cards and failed to find cmc less than', type: 'regular'},
-              {text: data.cmc, type: 'regular'}
+              {text: data.count, type: 'number'},
+              {text: ' cards and failed to find cmc less than', type: 'regular'},
+              {text: data.cmc, type: 'value'}
             ]
           }
           else {
             log_action = [
               {text: this.user.name, type: 'player'},
               {text: 'revealed', type: 'regular'},
-              {text: data.count + ' cards until they revealed cmc less than', type: 'regular'},
-              {text: data.cmc, type: 'regular'}
+              {text: data.count, type: 'number'},
+              {text: ' cards until they revealed cmc less than', type: 'regular'},
+              {text: data.cmc, type: 'value'}
             ]
           }
         }
@@ -509,16 +511,18 @@ export class GameHandlerComponent implements OnInit {
             log_action = [
               {text: this.user.name, type: 'player'},
               {text: 'revealed', type: 'regular'},
-              {text: data.count + ' cards and failed to find a ', type: 'regular'},
-              {text: data.type, type: 'regular'}
+              {text: data.count, type: 'number'},
+              {text: ' cards and failed to find a ', type: 'regular'},
+              {text: data.type, type: 'value'}
             ]
           }
           else {
             log_action = [
               {text: this.user.name, type: 'player'},
               {text: 'revealed', type: 'regular'},
-              {text: data.count + ' cards until they revealed a(n) ', type: 'regular'},
-              {text: data.type, type: 'regular'}
+              {text: data.count, type: 'number'},
+              {text: ' cards until they revealed a(n) ', type: 'regular'},
+              {text: data.type, type: 'value'}
             ]
           }
         }
@@ -571,6 +575,14 @@ export class GameHandlerComponent implements OnInit {
           {text: this.user.name, type: 'player'},
           {text: 'set the plane to ', type: 'regular'},
           {text: data.plane.name, type: 'plane', card: JSON.parse(JSON.stringify(data.plane))},
+        ]
+        break;
+      case 'roll':
+        log_action = [
+          {text: this.user.name, type: 'player'},
+          {text: '', type: 'roll'},
+          {text: ' a ' + data.type + ' for', type: 'regular'},
+          {text: data.roll, type: 'number'},
         ]
         break;
     }
@@ -1026,6 +1038,16 @@ export class GameHandlerComponent implements OnInit {
         this.logAction('plane', {plane: plane_data});
       });
     });
+  }
+
+  rollD6() {
+    let roll = Math.floor(Math.random() * 6) + 1;
+    this.logAction('roll', {roll: roll, type: 'd6'});
+  }
+
+  rollD20() {
+    let roll = Math.floor(Math.random() * 20) + 1;
+    this.logAction('roll', {roll: roll, type: 'd20'});
   }
 
 
