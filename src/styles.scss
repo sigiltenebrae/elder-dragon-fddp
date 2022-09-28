@@ -282,12 +282,12 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   top: 5px;
   right: 5px;
   opacity: 0.8;
-  z-index: 2;
+  z-index: 30;
   height: 40px;
   width: 40px;
   border-radius: 50%;
   border: 2px solid rgba(255, 255, 255, 0.8);
-  display: none;
+  display: block;
 }
 
 .deck-manager-commander-viewer .deck-manager-background-card-open:hover .deck-manager-commander-edit {
@@ -582,7 +582,7 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
 
 .game-data-log-list-item {
   border-bottom: solid 2px #444;
-  height: 50px;
+  height: auto !important;
   width: 100%;
   overflow: hidden;
 }

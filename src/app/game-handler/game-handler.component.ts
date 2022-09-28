@@ -307,11 +307,15 @@ export class GameHandlerComponent implements OnInit {
     switch(type) {
       case 'move':
         if (data.source.name !== data.dest.name) {
+          let out_card: any = JSON.parse(JSON.stringify(data.card))
+          if (data.hand_fix) {
+            this.setVisibility(out_card, 'play');
+          }
           log_action = [
             //Maybe fix for deck?
             {text: this.user.name, type: 'player'},
             {text: 'moved', type: 'regular'},
-            {text: data.card.name, type: 'card', card: JSON.parse(JSON.stringify(data.card))}, //copy card so it isn't a pointer
+            {text: data.card.name, type: 'card', card: out_card}, //copy card so it isn't a pointer
             {text: 'from', type: 'regular'},
             {text: data.source.name === 'temp_zone'? 'temp zone': data.source.name, type: 'location'},
             {text: 'to', type: 'regular'},
@@ -985,7 +989,7 @@ export class GameHandlerComponent implements OnInit {
 
   endTurn() {
     if (this.game_data.type == 1 || this.game_data.type == 3) {
-      if (this.game_data.current_turn == this.user.turn) {
+      if (this.game_data.current_turn == this.user.turn || this.user.id == 1) {
         this.messageSocket({
           game_id: this.game_id,
           put: {
@@ -1364,7 +1368,9 @@ export class GameHandlerComponent implements OnInit {
       }
     }
     if (out_tokens.length == 1) {
-      this.user.temp_zone.push(out_tokens[0]);
+      this.user.temp_zone.cards.unshift(out_tokens[0]);
+      this.updateSocketPlayer();
+      this.logAction('token', {card: out_tokens[0]});
     }
     else if (out_tokens.length > 1) {
       const tokDialogRef = this.dialog.open(TokenSelectDialog, {
@@ -1385,8 +1391,9 @@ export class GameHandlerComponent implements OnInit {
           out_token.is_token = true;
           out_token.selected = false;
           out_token.image = images.length > 0 ? images[0]: null;
+          out_token.visible = [];
           this.clearCard(out_token);
-          this.user.temp_zone.cards.push(out_token);
+          this.user.temp_zone.cards.unshift(out_token);
           this.updateSocketPlayer();
           this.logAction('token', {card: out_token});
           return;
@@ -1406,7 +1413,7 @@ export class GameHandlerComponent implements OnInit {
       for(let player of this.game_data.players) {
         out_token.visible.push(player.id);
       }
-      this.user.temp_zone.cards.push(out_token);
+      this.user.temp_zone.cards.unshift(out_token);
       this.updateSocketPlayer();
       this.logAction('token', {card: out_token});
       return;
@@ -1711,6 +1718,8 @@ export class GameHandlerComponent implements OnInit {
           this.shuffleDeck(this.user.deck.cards);
           break;
         case "d":
+          this.draw_count = 1;
+          this.drawToX(this.user.hand);
           break;
         case "f":
           break;
@@ -2222,31 +2231,7 @@ export class GameHandlerComponent implements OnInit {
               transferArrayItem(source.cards, dest.cards, previousIndex, currentIndex);
               if (options && options.nolog) {}
               else {
-                this.logAction('move', {card: card, source: source, dest: dest});
-              }
-              if (options && options.noupdate) {}
-              else {
-                this.updateSocketPlayer();
-              }
-            }
-          }
-          else {
-            if (options && options.deck && options.deck === 'bottom') {
-              transferArrayItem(source.cards, this.getPlayerZone(card.owner, dest.name).cards, previousIndex, this.getPlayerZone(card.owner, dest.name).cards.length);
-              if (options && options.nolog) {}
-              else {
-                this.logAction('move', {card: card, source: source, dest: dest});
-              }
-              if (options && options.noupdate) {}
-              else {
-                this.updateSocketPlayer();
-              }
-            }
-            else {
-              transferArrayItem(source.cards, this.getPlayerZone(card.owner, dest.name).cards, previousIndex, 0);
-              if (options && options.nolog) {}
-              else {
-                this.logAction('move', {card: card, source: source, dest: dest});
+                this.logAction('move', {card: card, source: source, dest: dest, hand_fix: dest == this.user.hand && source != this.user.deck});
               }
               if (options && options.noupdate) {}
               else {
@@ -2327,7 +2312,7 @@ export class GameHandlerComponent implements OnInit {
    * @param options 'nolog' and 'noupdate'
    */
   drawToX(dest: any, options?: any) {
-    if (this.user.spectating) {
+    if (this.user != this.currentPlayer()) {
       return;
     }
     let num_count = Number(this.draw_count);

@@ -15,7 +15,7 @@
           <button *ngIf="user != null && user == currentPlayer()" mat-menu-item (click)="cloneCard(rightclicked_item.card)">Clone</button>
           <button *ngIf="user != null && user == currentPlayer()" mat-menu-item (click)="editNotes(rightclicked_item.card)">Edit Notes</button>
           <button *ngIf="user != null && user == currentPlayer()" mat-menu-item [matMenuTriggerFor]="counters">Counters</button>
-          <button *ngIf="rightclicked_item && rightclicked_item.card && rightclicked_item.card.tokens && rightclicked_item.card.tokens.length> 0 && user != null && user != currentPlayer()" mat-menu-item [matMenuTriggerFor]="token_menu">Tokens</button>
+          <button *ngIf="rightclicked_item && rightclicked_item.card && rightclicked_item.card.tokens && rightclicked_item.card.tokens.length> 0 && user != null && user == currentPlayer()" mat-menu-item [matMenuTriggerFor]="token_menu">Tokens</button>
           <button *ngIf="user != null && user == currentPlayer()" mat-menu-item [matMenuTriggerFor]="orient">Orient</button>
           <button *ngIf="user != null && user == currentPlayer()" mat-menu-item [matMenuTriggerFor]="sendTo">Send To</button>
           <button *ngIf="user != null && !user.scooped" mat-menu-item [matMenuTriggerFor]="revealTo">Reveal To</button>
@@ -29,13 +29,14 @@
         <div *ngIf="rightclicked_item.type === 'user_playmat'">
           <button *ngIf="user != null && user == currentPlayer()" mat-menu-item (click)="untapAll()">Untap All</button>
           <button *ngIf="user != null && user == currentPlayer()" mat-menu-item (click)="openTokenDialog()">Insert Token</button>
-          <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px" *ngIf="user != currentPlayer()">
+          <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px" *ngIf="user == currentPlayer()">
             <mat-label>Quick Insert Token</mat-label>
             <input (keydown.enter)="createToken({name: quick_token.value})" #quick_token type="text" matInput (click)="$event.stopPropagation()">
             <button matSuffix mat-icon-button aria-label="Draw" (click)="createToken({name: quick_token.value})"><mat-icon>add</mat-icon></button>
           </mat-form-field>
           <button mat-menu-item [matMenuTriggerFor]="play_counter" *ngIf="user == currentPlayer()">Insert Counter</button>
           <button *ngIf="user != null && user == currentPlayer() && game_data != null && user.turn == game_data.current_turn" mat-menu-item (click)="endTurn()">End Turn</button>
+          <button mat-menu-item *ngIf="user != null && user.id == 1" (click)="endTurn()">End Turn Debug</button>
           <button *ngIf="user != null && user == currentPlayer() && game_data != null && game_data.type == 2 && game_data.current_turn == getTeam(this.user.id).turn" mat-menu-item (click)="endTurn()">End Turn</button>
         </div>
 
@@ -311,7 +312,7 @@
                    (pointerenter)="magnified_card=card" (pointerleave)="magnified_card=null"
                    (cdkDragStarted)="magnified_card=null; currently_dragging = card"
                    (contextmenu)="onRightClick($event, {type: 'zone_card', card: card, from: getSidenavContainer()})"
-                   cdkDrag [cdkDragDisabled]="user.id != card.owner">
+                   cdkDrag [cdkDragDisabled]="(user.id != card.owner && !card.is_token)">
                 {{card.name}}
                 <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="playmat-user-card" loading="lazy">
                 <img *cdkDragPlaceholder class="playmat-user-card" [src]="card.image" [alt]="card.name" loading="lazy">
@@ -567,7 +568,7 @@
               <mat-list-item *ngFor="let action of game_data.action_log; let i = index" class="game-data-log-list-item">
                 <p>
                 <span *ngFor="let token of action">
-                  <span *ngIf="token.type === 'card' && token.card.visible.includes(user.id)" style="color: mediumpurple"
+                  <span *ngIf="token.type === 'card' && token.card.visible && token.card.visible.includes(user.id)" style="color: mediumpurple"
                         (pointerenter)="magnified_card = token.card"
                         (pointerleave)="magnified_card = null">{{token.text}}
                     <span *ngIf="isClone(token.card)"> (clone) </span>
@@ -577,7 +578,7 @@
                         (pointerleave)="magnified_card = null">{{token.text}}
                     <span *ngIf="isClone(token.card)"> (clone) </span>
                   </span>
-                  <span *ngIf="token.type === 'card' && !token.card.visible.includes(user.id)" style="color: mediumpurple">
+                  <span *ngIf="token.type === 'card' && (!token.card.visible || !token.card.visible.includes(user.id))" style="color: mediumpurple">
                     --hidden--
                   </span>
                   <span *ngIf="token.type === 'player'" style="color: darkorange">{{token.text}} </span>
@@ -590,13 +591,15 @@
                     <img *ngIf="token.text === 'untapped'" class="game-data-log-list-icon" src="assets/action_symbols/untap.png">
                   </span>
                   <span *ngIf="token.type === 'card_list'">
-                    <span *ngFor="let card of token.cards" style="color: mediumpurple">
-                      <span *ngIf="card.visible.includes(user.id)"
+                    <span *ngFor="let card of token.cards; let k = index" style="color: mediumpurple">
+                      <span *ngIf="card.visible && card.visible.includes(user.id)"
                           (pointerenter)="magnified_card = card"
-                            (pointerleave)="magnified_card = null"> {{card.name}} </span>
-                      <span *ngIf="!card.visible.includes(user.id)">
+                            (pointerleave)="magnified_card = null">{{card.name}}</span>
+                      <span *ngIf="!card.visible || !card.visible.includes(user.id)">
                         --hidden--
                       </span>
+                      <span *ngIf="k != token.cards.length - 1">, </span>
+                      <span *ngIf="k == token.cards.length - 1">&nbsp;</span>
                     </span>
                   </span>
                   <span *ngIf="token.type === 'invert'">
@@ -729,7 +732,7 @@
     <!-- User Deck -->
     <div class="deck-user-container">
       <div class="deck-user-wrapper" *ngIf="currentPlayer() != null"
-           (dblclick)="drawToX(currentPlayer().hand, 1)"
+           (dblclick)="draw_count=1; drawToX(currentPlayer().hand)"
            [cdkDropListData]="currentPlayer().deck.cards"
            (cdkDropListDropped)="dragCard(currently_dragging, user.deck, $event)"
            cdkDropListOrientation="horizontal"
