@@ -425,6 +425,7 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   padding: 0 !important;
   margin: auto;
   z-index: 3;
+
 }
 
 .playmat-opponent-wrapper .playmat-opponent-player-information {
@@ -955,8 +956,12 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
 
 .playmat-user-card-container-mini .playmat-user-card-multiplier {
   position: absolute;
-  top: -10px;
-  right: -10px;
+  top: -5px;
+  right: -5px;
+}
+
+.playmat-user-card-container-mini .playmat-user-card-counter p {
+  margin-top: 11px;
 }
 
 .playmat-user-card-container .playmat-user-card-pow-tough {

@@ -21,7 +21,7 @@
           <button *ngIf="user != null && !user.scooped" mat-menu-item [matMenuTriggerFor]="revealTo">Reveal To</button>
         </div>
 
-        <div *ngIf="rightclicked_item.type === 'opponent_playmat'">
+        <div *ngIf="rightclicked_item.type === 'opponent_play'">
           <button mat-menu-item (click)="shakeCard(rightclicked_item.card, rightclicked_item.userid, 'play')">Shake</button>
           <button mat-menu-item (click)="cloneCard(rightclicked_item.card)">Clone</button>
         </div>
@@ -373,10 +373,10 @@
               <h3 *ngIf="magnified_card.types" style="margin: 2px">{{magnified_card.types.join(' ')}}</h3>
               <mat-divider></mat-divider>
               <h3 *ngIf="magnified_card.oracle_text" style="margin: 10px; white-space: pre-line">{{magnified_card.oracle_text}}</h3>
-              <h3 *ngIf="magnified_card.power && magnified_card.power != null && magnified_card.toughness && magnified_card.toughness != null">
+              <h3 *ngIf="magnified_card.power != null && magnified_card.toughness != null">
                 {{magnified_card.power}}/{{magnified_card.toughness}}
               </h3>
-              <h3 *ngIf="magnified_card.loyalty && magnified_card.loyalty !== null">{{magnified_card.loyalty}}</h3>
+              <h3 *ngIf="magnified_card.loyalty != null">{{magnified_card.loyalty}}</h3>
               <h3 *ngIf="magnified_card.notes && magnified_card.notes !== ''">Notes: </h3>
               <h3 *ngIf="magnified_card.notes && magnified_card.notes !== ''">{{magnified_card.notes}}</h3>
             </div>
@@ -392,10 +392,10 @@
               <h3 style="margin: 2px">{{magnified_card.back_types.join(' ')}}</h3>
               <mat-divider></mat-divider>
               <h3 style="margin: 10px; white-space: pre-line">{{magnified_card.back_oracle_text}}</h3>
-              <h3 *ngIf="magnified_card.back_power && magnified_card.back_power != null && magnified_card.back_toughness && magnified_card.back_toughness != null">
+              <h3 *ngIf="magnified_card.back_power != null && magnified_card.back_toughness != null">
                 {{magnified_card.back_power}}/{{magnified_card.back_toughness}}
               </h3>
-              <h3 *ngIf="magnified_card.back_loyalty && magnified_card.back_loyalty !== null">{{magnified_card.back_loyalty}}</h3>
+              <h3 *ngIf="magnified_card.back_loyalty !== null">{{magnified_card.back_loyalty}}</h3>
               <h3 *ngIf="magnified_card.notes && magnified_card.notes !== ''">Notes: </h3>
               <h3 *ngIf="magnified_card.notes && magnified_card.notes !== ''">{{magnified_card.notes}}</h3>
             </div>
@@ -460,7 +460,7 @@
     <!-- Opponent Playmats -->
     <div class="playmat-opponent-view-container">
       <ng-scrollbar track="all" visibility="hover" pointerEventsMethod="scrollbar" style="width: 100%; height: 100%;">
-        <div fxFlex fxLayout="row wrap">
+        <div fxFlex fxLayout="row wrap" style="margin-top: 5px;">
           <div *ngFor="let player of getOtherPlayers()" fxFlex="604px" class="playmat-opponent-wrapper">
             <div>
               <img class="playmat-user-background-image-mini" *ngIf="getUserTableData(player.id) != null && getUserTableData(player.id).playmat != null && getUserTableData(player.id).playmat !== ''" src="{{getUserTableData(player.id).playmat}}">
@@ -489,16 +489,16 @@
                            [matTooltip]="card.notes"
                            [src]="card.visible.includes(user.id) ? card.image: player.deck.sleeves"
                            [alt]="card.visible.includes(user.id) ? card.name: ''"
-                           (contextmenu)="onRightClick($event,{type: 'opponent_playmat', card: card});"
+                           (contextmenu)="onRightClick($event,{type: 'opponent_play', card: card});"
                            (click)="card.selected=!card.selected" (dblclick)="toggleCardTap(card)" loading="lazy">
                       <button *ngIf="card.counter_1" class="playmat-user-card-counter playmat-user-card-counter-1" mat-fab color="primary" [class.mat-elevation-z8]="true"><p>{{card.counter_1_value}}</p></button>
                       <button *ngIf="card.counter_2" class="playmat-user-card-counter playmat-user-card-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>{{card.counter_2_value}}</p></button>
                       <button *ngIf="card.counter_3" class="playmat-user-card-counter playmat-user-card-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true" ><p>{{card.counter_3_value}}</p></button>
                       <button *ngIf="card.multiplier" class="playmat-user-card-counter playmat-user-card-multiplier" mat-fab color="accent" [class.mat-elevation-z8]="true"><p>{{card.multiplier_value}}</p></button>
-                      <h4 *ngIf="card.power && card.toughness && card.visible.includes(user.id)" class="playmat-user-card-pow-tough shadow-text">
+                      <h4 *ngIf="card.power != null && card.toughness != null && card.visible.includes(user.id)" class="playmat-user-card-pow-tough shadow-text">
                         <a class="simple-a" [ngClass]="{'playmat-user-card-modifier-up': card.power_mod > 0, 'playmat-user-card-modifier-down': card.power_mod < 0}">{{card.power + card.power_mod}}</a>/
                         <a class="simple-a" [ngClass]="{'playmat-user-card-modifier-up': card.toughness_mod > 0, 'playmat-user-card-modifier-down': card.toughness_mod < 0}">{{card.toughness + card.toughness_mod}}</a></h4>
-                      <h4 *ngIf="card.loyalty && card.visible.includes(user.id)" class="mtg-card-loyalty shadow-text">
+                      <h4 *ngIf="card.loyalty != null && card.visible.includes(user.id)" class="mtg-card-loyalty shadow-text">
                         <a class="simple-a" [ngClass]="{'playmat-user-card-modifier-up': card.loyalty_mod > 0, 'playmat-user-card-modifier-down': card.loyalty_mod < 0}">{{card.loyalty + card.loyalty_mod}}</a></h4>
                     </div>
                   </div>
@@ -710,10 +710,10 @@
                 <button *ngIf="card.counter_2" class="playmat-user-card-counter playmat-user-card-counter-2" mat-fab color="accent" [class.mat-elevation-z8]="true" (click)="card.counter_2_value = card.counter_2_value + 1; updateCounter('Counter 2', card.counter_2_value, {card: card});" (contextmenu)="onRightClick($event, {type: 'counter_2', card: card})"><p>{{card.counter_2_value}}</p></button>
                 <button *ngIf="card.counter_3" class="playmat-user-card-counter playmat-user-card-counter-3" mat-fab color="warn" [class.mat-elevation-z8]="true" (click)="card.counter_3_value = card.counter_3_value + 1; updateCounter('Counter 3', card.counter_3_value, {card: card});" (contextmenu)="onRightClick($event, {type: 'counter_3', card: card})"><p>{{card.counter_3_value}}</p></button>
                 <button *ngIf="card.multiplier" class="playmat-user-card-counter playmat-user-card-multiplier" mat-fab color="accent" [class.mat-elevation-z8]="true" (click)="card.multiplier_value = card.multiplier_value + 1; updateCounter('Multiplier', card.multiplier_value, {card: card});" (contextmenu)="onRightClick($event, {type: 'multiplier', card: card})"><p>{{card.multiplier_value}}</p></button>
-                <h4 *ngIf="card.power && card.toughness && card.visible.includes(user.id)" class="playmat-user-card-pow-tough shadow-text">
+                <h4 *ngIf="card.power != null && card.toughness != null && card.visible.includes(user.id)" class="playmat-user-card-pow-tough shadow-text">
                   <a class="simple-a" [ngClass]="{'playmat-user-card-modifier-up': card.power_mod > 0, 'playmat-user-card-modifier-down': card.power_mod < 0}" (click)="card.power_mod = card.power_mod + 1; updateCounter('Power', card.power_mod + card.power, {card: card});" (contextmenu)="onRightClick($event, {type: 'power', card: card})">{{card.power + card.power_mod}}</a>/
                   <a class="simple-a" [ngClass]="{'playmat-user-card-modifier-up': card.toughness_mod > 0, 'playmat-user-card-modifier-down': card.toughness_mod < 0}" (click)="card.toughness_mod = card.toughness_mod + 1; updateCounter('Toughness', card.toughness_mod + card.toughness, {card: card});" (contextmenu)="onRightClick($event, {type: 'toughness', card: card})">{{card.toughness + card.toughness_mod}}</a></h4>
-                <h4 *ngIf="card.loyalty && card.visible.includes(user.id)" class="mtg-card-loyalty shadow-text">
+                <h4 *ngIf="card.loyalty != null && card.visible.includes(user.id)" class="mtg-card-loyalty shadow-text">
                   <a class="simple-a" [ngClass]="{'playmat-user-card-modifier-up': card.loyalty_mod > 0, 'playmat-user-card-modifier-down': card.loyalty_mod < 0}" (click)="card.loyalty_mod = card.loyalty_mod + 1; updateCounter('Loyalty', card.loyalty_mod + card.loyalty, {card: card});" (contextmenu)="onRightClick($event, {type: 'loyalty', card: card})">{{card.loyalty + card.loyalty_mod}}</a></h4>
               </div>
             </div>
