@@ -44,7 +44,7 @@ import {FormsModule} from "@angular/forms";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import { DeckEditComponent } from './deck-edit/deck-edit.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { CustomImagesComponent } from './custom-images/custom-images.component';
+import { CustomImagesComponent, CustomTokenDialog } from './custom-images/custom-images.component';
 import { CustomImageManagerComponent } from './custom-image-manager/custom-image-manager.component';
 import { DeckManagerComponent } from './deck-manager/deck-manager.component';
 import { MatSnackBarModule } from "@angular/material/snack-bar";
@@ -63,6 +63,7 @@ import { ProfileComponent } from './profile/profile.component';
     GameHandlerComponent,
     DeckEditComponent,
     CustomImagesComponent,
+    CustomTokenDialog,
     CustomImageManagerComponent,
     DeckManagerComponent,
     TokenInsertDialog,

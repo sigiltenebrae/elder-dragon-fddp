@@ -12,7 +12,7 @@
         <mat-label>Name</mat-label>
         <input type="text" placeholder="Enter Card Name" matInput
                [(ngModel)]="name">
-        <button type="button" mat-icon-button matSuffix>
+        <button type="button" mat-icon-button matSuffix (click)="openTokenDialog()">
           <mat-icon>search</mat-icon>
         </button>
       </mat-form-field>

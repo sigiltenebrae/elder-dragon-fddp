@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {debounceTime, distinctUntilChanged, Observable, OperatorFunction, switchMap, tap} from "rxjs";
 import * as Scry from "scryfall-sdk";
 import {FddpApiService} from "../../services/fddp-api.service";
 import {Router} from "@angular/router";
 import {TokenStorageService} from "../../services/token-storage.service";
+import {TokenSelectDialog} from "../game-handler/game-handler-addons.component";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-custom-images',
@@ -23,7 +25,8 @@ export class CustomImagesComponent implements OnInit {
   token_text = '';
   token_colors = { w: false, u: false, b: false, r: false, g: false};
 
-  constructor(private fddp_data: FddpApiService, private router: Router, private tokenStorage: TokenStorageService) {
+  constructor(private fddp_data: FddpApiService, public dialog: MatDialog,
+              private router: Router, private tokenStorage: TokenStorageService) {
   }
 
   ngOnInit(): void {
@@ -73,4 +76,55 @@ export class CustomImagesComponent implements OnInit {
     }
   }
 
+  openTokenDialog() {
+    if (this.name != null && this.name !== '' && this.card_type === 'tokens') {
+      this.fddp_data.getAllOfCard(this.name).then((token_list) => {
+        if (token_list.length > 0) {
+          console.log(token_list);
+          const tokDialogRef = this.dialog.open(CustomTokenDialog, {
+            width: '800px',
+            data: {tokens: token_list},
+          });
+          tokDialogRef.afterClosed().subscribe(result => {
+            if (result) {
+              this.token_type = result.type_line != null ? result.type_line: 'Token';
+              this.token_power = result.power != null? result.power: '';
+              this.token_toughness = result.toughness != null? result.toughness: '';
+              this.token_text = result.oracle_text != null? result.oracle_text: '';
+              if (result.colors != null && result.colors.length > 0) {
+                this.token_colors.w = result.colors.includes("W");
+                this.token_colors.u = result.colors.includes("U");
+                this.token_colors.b = result.colors.includes("B");
+                this.token_colors.r = result.colors.includes("R");
+                this.token_colors.g = result.colors.includes("G");
+              }
+            }
+          });
+        }
+      })
+    }
+  }
+
+}
+
+
+@Component({
+  selector: 'custom-token-dialog',
+  templateUrl: 'custom-token-dialog.html',
+})
+export class CustomTokenDialog {
+  constructor(
+    public dialogRef: MatDialogRef<CustomTokenDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+  ) {}
+
+  tokens: any[] = this.data.tokens;
+
+  onNoClick(): void {
+    this.dialogRef.close(null);
+  }
+
+  selectToken(res: any) {
+    this.dialogRef.close(res);
+  }
 }
