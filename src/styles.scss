@@ -108,11 +108,10 @@ p, h1, h2, h3, h4, h5, h6 {
 .custom-image-card-holder {
   position: relative;
   max-width: 254px;
-  max-height: 355px;
+  max-height: 455px;
   min-width: 254px;
   min-height: 355px;
-  width: 254px;
-  height: 355px;
+  margin-bottom: 100px;
 }
 
 .custom-image-card-holder .custom-image-card-delete {
@@ -145,6 +144,16 @@ p, h1, h2, h3, h4, h5, h6 {
 
 .custom-image-card-holder:hover .custom-image-card-delete {
   display: block;
+}
+
+.custom-image-card-name {
+  position: absolute;
+  top: 355px;
+  left: 0;
+  max-height: 100px;
+  min-width: 254px;
+  max-width: 254px;
+  text-align: center;
 }
 
 /*****************************************

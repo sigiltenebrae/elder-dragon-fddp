@@ -1,5 +1,7 @@
 import {AfterContentInit, AfterViewInit, Component, OnInit} from '@angular/core';
 import {FddpWebsocketService} from "../../services/fddp-websocket.service";
+import {TokenStorageService} from "../../services/token-storage.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-game-manager',
@@ -11,7 +13,7 @@ export class GameManagerComponent implements OnInit {
   games: any[] = [];
   received: any[] = [];
 
-  constructor(private WebsocketService: FddpWebsocketService) {
+  constructor(private WebsocketService: FddpWebsocketService, private tokenStorage: TokenStorageService, private router: Router) {
   }
 
   sendMsg(content: any) {
@@ -53,15 +55,21 @@ export class GameManagerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.WebsocketService.messages.subscribe(msg => {
-      let json_data = msg;
-      if (json_data.games) {
-        this.games = json_data.games;
-      }
-    });
-    this.sleep(1500).then(() => {
-      this.refresh();
-    })
+    if (this.tokenStorage.getUser() == null || this.tokenStorage.getUser() == {} ||
+      this.tokenStorage.getUser().id == null || this.tokenStorage.getUser().id < 0) {
+      this.router.navigate(['login']);
+    }
+    else {
+      this.WebsocketService.messages.subscribe(msg => {
+        let json_data = msg;
+        if (json_data.games) {
+          this.games = json_data.games;
+        }
+      });
+      this.sleep(1500).then(() => {
+        this.refresh();
+      })
+    }
   }
 
   sleep(ms: number) {

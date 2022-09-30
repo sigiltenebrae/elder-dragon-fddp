@@ -34,37 +34,47 @@ export class DeckEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fddp_data.getUsers().then((users: any) => {
-      this.users = users;
-    });
-    const routeParams = this.route.snapshot.paramMap;
-    this.deckid = Number(routeParams.get('deckid'));
-    this.current_user = this.tokenStorage.getUser();
-    if (this.deckid == -1) {
-      this.deck = {};
-      this.deck.id = this.deckid;
-      this.deck.name = '';
-      this.deck.image = '';
-      this.deck.sleeves = 'https://c1.scryfall.com/file/scryfall-card-backs/large/59/597b79b3-7d77-4261-871a-60dd17403388.jpg?1561757129';
-      this.deck.link = '';
-      this.deck.rating = 3;
-      this.deck.owner = 0;
-      this.deck.cards = [];
-      this.deck.tokens = [];
-      this.deck.owner = this.current_user.id;
-    }
-    else if (this.deckid < 0) {
-      this.router.navigate(['/']);
+    if (this.tokenStorage.getUser() == null || this.tokenStorage.getUser() == {} ||
+      this.tokenStorage.getUser().id == null || this.tokenStorage.getUser().id < 0) {
+      this.router.navigate(['login']);
     }
     else {
-      this.fddp_data.getDeckForPlay(this.deckid).then((deck) => {
-        this.deck = deck;
-        this.deck.delete = [];
-        this.deck.token_delete = [];
-        this.deck.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+      this.fddp_data.getUsers().then((users: any) => {
+        this.users = users;
       });
+      const routeParams = this.route.snapshot.paramMap;
+      this.deckid = Number(routeParams.get('deckid'));
+      this.current_user = this.tokenStorage.getUser();
+      if (this.deckid == -1) {
+        this.deck = {};
+        this.deck.id = this.deckid;
+        this.deck.name = '';
+        this.deck.image = '';
+        this.deck.sleeves = 'https://c1.scryfall.com/file/scryfall-card-backs/large/59/597b79b3-7d77-4261-871a-60dd17403388.jpg?1561757129';
+        this.deck.link = '';
+        this.deck.rating = 3;
+        this.deck.owner = 0;
+        this.deck.cards = [];
+        this.deck.tokens = [];
+        this.deck.owner = this.current_user.id;
+      }
+      else if (this.deckid < 0) {
+        this.router.navigate(['/']);
+      }
+      else {
+        this.fddp_data.getDeckForPlay(this.deckid).then((deck) => {
+          this.deck = deck;
+          if (this.deck.owner !== this.tokenStorage.getUser().id &&  !this.tokenStorage.getUser().isAdmin) {
+            this.router.navigate(['/']);
+          }
+          this.deck.delete = [];
+          this.deck.token_delete = [];
+          this.deck.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+        });
+      }
     }
   }
+
 
   searching = false;
   /**

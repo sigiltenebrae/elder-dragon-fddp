@@ -16,7 +16,7 @@ export class ChangePasswordComponent implements OnInit {
     //force user to log in to view
     if (this.tokenStorage.getUser() == null || this.tokenStorage.getUser() == {} ||
       this.tokenStorage.getUser().id == null || this.tokenStorage.getUser().id < 0) {
-      //this.router.navigate(['login']);
+      this.router.navigate(['login']);
     }
   }
 

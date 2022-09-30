@@ -166,23 +166,26 @@ export class FddpApiService {
     })
   }
 
-  public createCustomCard(name: any, image: any): Promise<any> {
-    return new Promise<any>((resolve_card, reject) => {
+  public createCustomCard(name: any, image: any): Promise<void> {
+    return new Promise<void>((resolve_card, reject) => {
       this.http.post(environment.fddp_api_url + '/custom_cards',
         JSON.stringify({name: name, image: image}),
         {headers : new HttpHeaders({'Content-Type': 'application/json'})}).subscribe((card_response: any) => {
+          console.log('sent custom card');
         if (card_response.errors) {
           console.log('Error in custom card creation: ');
           card_response.errors.forEach((err: any) => {
             console.log(err);
           });
-          resolve_card(null);
+          console.log('done');
+          resolve_card();
         }
       }, (err) => {
         console.log('Error in custom card creation: ');
         console.log(err);
-        resolve_card(null);
+        resolve_card();
       })
+      setTimeout(resolve_card, 3000);
     })
   }
 

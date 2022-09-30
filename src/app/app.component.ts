@@ -26,15 +26,6 @@ export class AppComponent {
     }
   }
 
-  public signOut():void {
-    this.tokenStorage.signOut();
-  }
-
-  public signIn(user: any) {
-    this.tokenStorage.saveUser(user);
-    this.reloadPage();
-  }
-
   reloadPage(): void {
     window.location.reload();
   }

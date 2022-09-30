@@ -18,6 +18,10 @@
              [ngbTypeahead]="card_search" [(ngModel)]="name" [editable]="false">
     </mat-form-field>
     <mat-form-field appearance="fill" style="margin-top: 10px;">
+      <mat-label>Google Drive Share Link Formatter (optional)</mat-label>
+      <input matInput [type]="'text'" name="imageurl" [(ngModel)]="image_google" (ngModelChange)="formatLink('google')">
+    </mat-form-field>
+    <mat-form-field appearance="fill" style="margin-top: 10px;">
       <mat-label>Custom Image Url</mat-label>
       <input matInput [type]="'text'" name="imageurl" [(ngModel)]="image" required minlength="1">
     </mat-form-field>

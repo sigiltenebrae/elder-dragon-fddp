@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FddpApiService} from "../../services/fddp-api.service";
 import {TokenStorageService} from "../../services/token-storage.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-deck-manager',
@@ -14,25 +15,31 @@ export class DeckManagerComponent implements OnInit {
 
   temp = false;
 
-  constructor(private fddp_data: FddpApiService, private tokenStorage: TokenStorageService) { }
+  constructor(private fddp_data: FddpApiService, private tokenStorage: TokenStorageService, private router: Router) { }
 
   ngOnInit(): void {
     this.loading = true;
-    this.user = this.tokenStorage.getUser();
-    if(this.user && this.user.id) {
-      this.fddp_data.getDecksBasic(this.user.id).then((decks: any) => {
-        let temp_decks = decks;
-        let deck_promises: any[] = [];
-        temp_decks.forEach((deck: any) => {
-          deck_promises.push(this.getDeckData(deck.id));
+    if (this.tokenStorage.getUser() == null || this.tokenStorage.getUser() == {} ||
+      this.tokenStorage.getUser().id == null || this.tokenStorage.getUser().id < 0) {
+      this.router.navigate(['login']);
+    }
+    else {
+      this.user = this.tokenStorage.getUser();
+      if(this.user && this.user.id) {
+        this.fddp_data.getDecksBasic(this.user.id).then((decks: any) => {
+          let temp_decks = decks;
+          let deck_promises: any[] = [];
+          temp_decks.forEach((deck: any) => {
+            deck_promises.push(this.getDeckData(deck.id));
+          });
+          Promise.all(deck_promises).then(() => {
+            for (let deck of this.decks) {
+              deck.hovered = false;
+            }
+            this.loading = false;
+          });
         });
-        Promise.all(deck_promises).then(() => {
-          for (let deck of this.decks) {
-            deck.hovered = false;
-          }
-          this.loading = false;
-        });
-      });
+      }
     }
   }
 
