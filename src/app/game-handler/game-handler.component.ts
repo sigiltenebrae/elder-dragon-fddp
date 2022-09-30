@@ -1374,12 +1374,9 @@ export class GameHandlerComponent implements OnInit {
   cloneCard(card: any) {
     let card_clone = JSON.parse(JSON.stringify(card));
     card_clone.is_token = true;
-    card_clone.selected = false;
+    card_clone.owner = this.user.id;
     this.clearCard(card_clone);
-    card_clone.visible = [];
-    for(let player of this.game_data.players) {
-      card_clone.visible.push(player.id);
-    }
+    this.setVisibility(card, 'play');
     this.user.temp_zone.cards.push(card_clone);
     this.updateSocketPlayer();
     this.logAction('clone', {card: card_clone});
