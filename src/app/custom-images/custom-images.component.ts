@@ -57,10 +57,8 @@ export class CustomImagesComponent implements OnInit {
       }));
 
   createCustomCard() {
-    console.log('create');
     if (this.name && this.image !== '') {
       this.fddp_data.createCustomCard(this.name, this.image, this.tokenStorage.getUser().id).then(() => {
-        console.log('success');
         this.image = '';
         this.image_google = '';
         this.name = null;
@@ -80,7 +78,6 @@ export class CustomImagesComponent implements OnInit {
     if (this.name != null && this.name !== '' && this.card_type === 'tokens') {
       this.fddp_data.getAllOfCard(this.name).then((token_list) => {
         if (token_list.length > 0) {
-          console.log(token_list);
           const tokDialogRef = this.dialog.open(CustomTokenDialog, {
             width: '800px',
             data: {tokens: token_list},
