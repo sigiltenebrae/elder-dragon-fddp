@@ -28,6 +28,7 @@
     "bootstrap": "^5.2.0",
     "crypto-js": "^4.1.1",
     "howler": "^2.2.3",
+    "http-server": "^14.1.1",
     "ng-animate": "^2.0.1",
     "ngx-scrollbar": "^10.0.1",
     "rxjs": "~7.5.0",
