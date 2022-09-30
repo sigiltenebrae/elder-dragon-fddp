@@ -166,10 +166,10 @@ export class FddpApiService {
     })
   }
 
-  public createCustomCard(name: any, image: any): Promise<void> {
+  public createCustomCard(name: any, image: any, creator: number): Promise<void> {
     return new Promise<void>((resolve_card, reject) => {
       this.http.post(environment.fddp_api_url + '/custom_cards',
-        JSON.stringify({name: name, image: image}),
+        JSON.stringify({name: name, image: image, creator: creator}),
         {headers : new HttpHeaders({'Content-Type': 'application/json'})}).subscribe((card_response: any) => {
           console.log('sent custom card');
         if (card_response.errors) {

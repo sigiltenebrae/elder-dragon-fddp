@@ -50,7 +50,7 @@ export class CustomImagesComponent implements OnInit {
   createCustomCard() {
     console.log('create');
     if (this.name && this.image !== '') {
-      this.fddp_data.createCustomCard(this.name, this.image).then(() => {
+      this.fddp_data.createCustomCard(this.name, this.image, this.tokenStorage.getUser().id).then(() => {
         console.log('success');
         this.image = '';
         this.image_google = '';
