@@ -17,6 +17,12 @@ export class CustomImagesComponent implements OnInit {
   image_google: string = '';
   card_type = 'cards';
 
+  token_type = '';
+  token_power = '';
+  token_toughness = '';
+  token_text = '';
+  token_colors = { w: false, u: false, b: false, r: false, g: false};
+
   constructor(private fddp_data: FddpApiService, private router: Router, private tokenStorage: TokenStorageService) {
   }
 
