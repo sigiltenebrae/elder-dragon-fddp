@@ -117,170 +117,179 @@ export class GameHandlerComponent implements OnInit {
 
       this.fddp_data.getUsers().then((users: any) => {
         this.users_list = users;
-      });
 
-      this.fddp_data.getPlanes().then((planes: any) => {
-        this.planes = planes;
-      });
+        for (let user of this.users_list) {
+          if (user.id == this.tokenStorage.getUser().id) {
+            this.current_user = user;
+            break;
+          }
+        }
 
-      const routeParams = this.route.snapshot.paramMap;
-      this.game_id = Number(routeParams.get('gameid'));
+        this.fddp_data.getPlanes().then((planes: any) => {
+          this.planes = planes;
+        });
 
-      this.current_user = this.tokenStorage.getUser();
-      this.gridlines = this.current_user.gridlines;
+        const routeParams = this.route.snapshot.paramMap;
+        this.game_id = Number(routeParams.get('gameid'));
 
-      this.WebsocketService.messages.subscribe(msg => {
-        let json_data = msg;
-        if (json_data.get) {
-          if (json_data.get.game_data) {
-            if (json_data.get.game_data.id) {
-              this.game_data = json_data.get.game_data;
-              if (this.game_data.players) {
-                for (let player of this.game_data.players) {
-                  if (player.id == this.current_user.id) {
-                    this.user = player;
-                    if (this.user.deck) {
-                      console.log('user loaded: ' + this.user.name);
+
+        this.gridlines = this.current_user.gridlines;
+
+        this.WebsocketService.messages.subscribe(msg => {
+          let json_data = msg;
+          if (json_data.get) {
+            if (json_data.get.game_data) {
+              if (json_data.get.game_data.id) {
+                this.game_data = json_data.get.game_data;
+                if (this.game_data.players) {
+                  for (let player of this.game_data.players) {
+                    if (player.id == this.current_user.id) {
+                      this.user = player;
+                      if (this.user.deck) {
+                        console.log('user loaded: ' + this.user.name);
+                      }
+                      if (this.user != null && !this.user.deck) {
+                        this.openDeckSelectDialog();
+                      }
                     }
-                    if (this.user != null && !this.user.deck) {
-                      this.openDeckSelectDialog();
-                    }
-                  }
-                }
-              }
-              if (this.user == null) {
-                for (let spectator of this.game_data.spectators) {
-                  if (spectator.id == this.current_user.id) {
-                    this.user = spectator;
                   }
                 }
                 if (this.user == null) {
-                  this.messageSocket({
-                    game_id: this.game_id,
-                    put: {
-                      action: 'update',
-                      player_data: {
-                        id: this.current_user.id,
-                        name: this.current_user.name
-                      }
-                    }});
-                }
-              }
-            }
-            else {
-              console.log('game does not exist');
-              this.router.navigate(['/game']);
-            }
-          }
-          if (json_data.get.player_data != null) {
-            if (this.game_data) {
-              for (let i = 0; i < this.game_data.players.length; i++) {
-                if (this.game_data.players[i].id == json_data.get.player_data.id) {
-                  this.game_data.players[i] = json_data.get.player_data;
-                  if (this.selected_player != null && this.selected_player.id == json_data.get.player_data.id) {
-                    this.selected_player = this.game_data.players[i];
+                  for (let spectator of this.game_data.spectators) {
+                    if (spectator.id == this.current_user.id) {
+                      this.user = spectator;
+                    }
                   }
+                  if (this.user == null) {
+                    this.messageSocket({
+                      game_id: this.game_id,
+                      put: {
+                        action: 'update',
+                        player_data: {
+                          id: this.current_user.id,
+                          name: this.current_user.name
+                        }
+                      }});
+                  }
+                }
+              }
+              else {
+                console.log('game does not exist');
+                this.router.navigate(['/game']);
+              }
+            }
+            if (json_data.get.player_data != null) {
+              if (this.game_data) {
+                for (let i = 0; i < this.game_data.players.length; i++) {
+                  if (this.game_data.players[i].id == json_data.get.player_data.id) {
+                    this.game_data.players[i] = json_data.get.player_data;
+                    if (this.selected_player != null && this.selected_player.id == json_data.get.player_data.id) {
+                      this.selected_player = this.game_data.players[i];
+                    }
+                    break;
+                  }
+                }
+              }
+            }
+            if (json_data.get.spectator_data != null) {
+              if (this.game_data) {
+                let includes = false;
+                for (let spec of this.game_data.spectators) {
+                  if (spec.id == json_data.get.spectator_data.id) {
+                    includes = true;
+                    break;
+                  }
+                }
+                if (!includes) {
+                  this.game_data.push(json_data.get.spectator_data);
+                  if (json_data.get.spectator_data.id == this.current_user.id) {
+                    this.user = json_data.get.spectator_data.id;
+                  }
+                }
+              }
+            }
+            if (json_data.get.zone_data) {
+              for (let player of this.game_data.players) {
+                if (player.id == json_data.get.zone_data.owner) {
+                  switch(json_data.get.zone_data.name) {
+                    case 'hand':
+                      player.hand = json_data.get.zone_data;
+                      break;
+                    case 'grave':
+                      player.grave = json_data.get.zone_data;
+                      break;
+                    case 'exile':
+                      player.exile = json_data.get.zone_data;
+                      break;
+                    case 'temp_zone':
+                      player.temp_zone = json_data.get.zone_data;
+                      break;
+                    case 'deck':
+                      player.deck = json_data.get.zone_data;
+                      break;
+                    case player.deck.name:
+                      player.deck = json_data.get.zone_data;
+                      break;
+                  }
+                }
+              }
+            }
+            if (json_data.get.team_data != null) {
+              for (let i = 0; i < this.game_data.team_data.length; i++) {
+                if (this.game_data.team_data[i].id === json_data.get.team_data.id) {
+                  console.log('found team to update');
+                  this.game_data.team_data[i] = json_data.get.team_data;
                   break;
                 }
               }
             }
-          }
-          if (json_data.get.spectator_data != null) {
-            if (this.game_data) {
-              let includes = false;
-              for (let spec of this.game_data.spectators) {
-                if (spec.id == json_data.get.spectator_data.id) {
-                  includes = true;
+            if (json_data.get.scoop_data != null) {
+              let ind = -1;
+              for (let i = 0; i < this.game_data.players.length; i++) {
+                if (this.game_data.players[i].id === json_data.get.scoop_data.id) {
+                  ind = i;
                   break;
                 }
               }
-              if (!includes) {
-                this.game_data.push(json_data.get.spectator_data);
-                if (json_data.get.spectator_data.id == this.current_user.id) {
-                  this.user = json_data.get.spectator_data.id;
-                }
+              if(ind > -1) {
+                this.game_data.players.splice(ind, 1);
+              }
+              this.game_data.spectators.push(json_data.get.scoop_data);
+            }
+            if (json_data.get.turn_update != null) {
+              this.game_data.current_turn = json_data.get.turn_update;
+              this.game_data.last_turn = new Date().getTime();
+              if (this.user.turn != null && this.game_data.current_turn == this.user.turn) {
+                this.notification_sound.play();
               }
             }
-          }
-          if (json_data.get.zone_data) {
-            for (let player of this.game_data.players) {
-              if (player.id == json_data.get.zone_data.owner) {
-                switch(json_data.get.zone_data.name) {
-                  case 'hand':
-                    player.hand = json_data.get.zone_data;
-                    break;
-                  case 'grave':
-                    player.grave = json_data.get.zone_data;
-                    break;
-                  case 'exile':
-                    player.exile = json_data.get.zone_data;
-                    break;
-                  case 'temp_zone':
-                    player.temp_zone = json_data.get.zone_data;
-                    break;
-                  case 'deck':
-                    player.deck = json_data.get.zone_data;
-                    break;
-                  case player.deck.name:
-                    player.deck = json_data.get.zone_data;
-                    break;
-                }
-              }
+            if (json_data.get.shake_data != null) {
+              this.cardShake(json_data.get.shake_data.card.id, json_data.get.shake_data.id, json_data.get.shake_data.location);
+            }
+            if (json_data.get.plane_data != null) {
+              this.game_data.current_plane = json_data.get.plane_data;
             }
           }
-          if (json_data.get.team_data != null) {
-            for (let i = 0; i < this.game_data.team_data.length; i++) {
-              if (this.game_data.team_data[i].id === json_data.get.team_data.id) {
-                console.log('found team to update');
-                this.game_data.team_data[i] = json_data.get.team_data;
-                break;
-              }
+          if (json_data.log) {
+            this.game_data.action_log.push(json_data.log);
+            if (this.autoscroll) {
+              this.sleep(500).then(() => {
+                this.action_scroll.scrollTo({ bottom: 0, duration: 600});
+              })
             }
           }
-          if (json_data.get.scoop_data != null) {
-            let ind = -1;
-            for (let i = 0; i < this.game_data.players.length; i++) {
-              if (this.game_data.players[i].id === json_data.get.scoop_data.id) {
-                ind = i;
-                break;
-              }
-            }
-            if(ind > -1) {
-              this.game_data.players.splice(ind, 1);
-            }
-            this.game_data.spectators.push(json_data.get.scoop_data);
-          }
-          if (json_data.get.turn_update != null) {
-            this.game_data.current_turn = json_data.get.turn_update;
-            this.game_data.last_turn = new Date().getTime();
-            if (this.user.turn != null && this.game_data.current_turn == this.user.turn) {
-              this.notification_sound.play();
-            }
-          }
-          if (json_data.get.shake_data != null) {
-            this.cardShake(json_data.get.shake_data.card.id, json_data.get.shake_data.id, json_data.get.shake_data.location);
-          }
-          if (json_data.get.plane_data != null) {
-            this.game_data.current_plane = json_data.get.plane_data;
-          }
-        }
-        if (json_data.log) {
-          this.game_data.action_log.push(json_data.log);
-          if (this.autoscroll) {
-            this.sleep(500).then(() => {
-              this.action_scroll.scrollTo({ bottom: 0, duration: 600});
-            })
-          }
-        }
-      });
+        });
 
-      this.sleep(1500).then(() => {
-        this.messageSocket({
-          game_id: this.game_id,
-          get: { game: this.game_id },
-          post: { join: true }
+        this.sleep(1500).then(() => {
+          this.messageSocket({
+            game_id: this.game_id,
+            get: { game: this.game_id },
+            post: { join: true }
+          });
         });
       });
+
+
     }
   }
 
