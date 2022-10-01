@@ -66,6 +66,30 @@ export class CustomImagesComponent implements OnInit {
     }
   }
 
+  createCustomToken() {
+    if(this.name && this.image) {
+      let out_token: any = {
+        name: this.name,
+        image: this.image,
+        type_line: this.token_type,
+        power: this.token_power === ''? null: this.token_power,
+        toughness: this.token_toughness === ''? null: this.token_toughness,
+        oracle_text: this.token_text,
+        colors: this.token_colors,
+        creator: this.tokenStorage.getUser().id
+      }
+      this.fddp_data.createCustomToken(out_token).then(() => {
+        this.image = '';
+        this.image_google = '';
+        this.token_type = '';
+        this.token_power = '';
+        this.token_toughness = '';
+        this.token_text = '';
+        this.token_colors = { w: false, u: false, b: false, r: false, g: false};
+      })
+    }
+  }
+
   formatLink(type: string) {
     if (type === 'google') {
       if (this.image_google.includes('/file/d/') && this.image_google.includes('/view?usp=sharing')) {
@@ -84,6 +108,7 @@ export class CustomImagesComponent implements OnInit {
           });
           tokDialogRef.afterClosed().subscribe(result => {
             if (result) {
+              this.name = result.name;
               this.token_type = result.type_line != null ? result.type_line: 'Token';
               this.token_power = result.power != null? result.power: '';
               this.token_toughness = result.toughness != null? result.toughness: '';

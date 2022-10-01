@@ -55,7 +55,8 @@
         <input matInput [type]="'text'" name="imageurl" [(ngModel)]="image" required minlength="1">
       </mat-form-field>
       <div fxLayout="row" fxLayoutAlign="end">
-        <button mat-raised-button color="accent" (click)="createCustomCard()">Submit</button>
+        <button *ngIf="card_type==='cards'" mat-raised-button color="accent" (click)="createCustomCard()">Submit</button>
+        <button *ngIf="card_type==='tokens'" mat-raised-button color="accent" (click)="createCustomToken()">Submit</button>
       </div>
     </div>
     <div fxLayout="column" fxFlex="254px">

@@ -223,7 +223,7 @@ export class DeckEditComponent implements OnInit {
   }
 
   tokensEqual(card1: any, card2: any): boolean {
-    return card1.name === card2.name &&
+    return card1.name.toLowerCase() === card2.name.toLowerCase() &&
       card1.power === card2.power &&
       card1.toughness === card2.toughness &&
       card1.colors.includes("W") == card2.colors.includes("W") &&

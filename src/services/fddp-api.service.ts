@@ -213,6 +213,27 @@ export class FddpApiService {
     })
   }
 
+  public createCustomToken(token:any): Promise<void> {
+    return new Promise<void>((resolve_token, reject) => {
+      this.http.post(environment.fddp_api_url + '/custom_tokens',
+        JSON.stringify({token: token}),
+        {headers : new HttpHeaders({'Content-Type': 'application/json'})}).subscribe((card_response: any) => {
+        if (card_response.errors) {
+          console.log('Error in custom token creation: ');
+          card_response.errors.forEach((err: any) => {
+            console.log(err);
+          });
+          resolve_token();
+        }
+      }, (err) => {
+        console.log('Error in custom token creation: ');
+        console.log(err);
+        resolve_token();
+      })
+      setTimeout(resolve_token, 3000);
+    })
+  }
+
   public getCustomCards(): Promise<any> {
     return new Promise<any>((resolve) => {
       this.http.get(environment.fddp_api_url + '/custom_cards').subscribe((cards: any) => {
