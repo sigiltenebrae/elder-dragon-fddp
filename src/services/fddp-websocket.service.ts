@@ -37,7 +37,7 @@ export class FddpWebsocketService {
   }
 
   private create(url: string): AnonymousSubject<MessageEvent> {
-    let ws = new ReconnectingWebSocket(url);
+    let ws = new ReconnectingWebSocket(url, [], this.options);
     let observable = new Observable((obs: Observer<MessageEvent>) => {
       ws.onmessage = obs.next.bind(obs);
       ws.onerror = obs.error.bind(obs);
