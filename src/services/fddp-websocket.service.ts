@@ -48,6 +48,15 @@ export class FddpWebsocketService {
         if (ws.readyState === WebSocket.OPEN) {
           ws.send(JSON.stringify(data));
         }
+        else {
+          this.messages = <Subject<any>>this.connect(environment.fddp_websocket_url).pipe(
+            map(
+              (response: MessageEvent): any => {
+                return JSON.parse(response.data);
+              }
+            )
+          );
+        }
       }
     };
     // @ts-ignore
