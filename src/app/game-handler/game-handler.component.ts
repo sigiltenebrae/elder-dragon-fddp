@@ -103,6 +103,8 @@ export class GameHandlerComponent implements OnInit {
   counter_buffer: any = false; //True if a counter update is in the message queue. Prevents counter updates from spamming
   team_counter = false;
 
+  ping: any;
+
   ngOnInit(): void {
     if (this.tokenStorage.getUser() == null || this.tokenStorage.getUser() == {} ||
       this.tokenStorage.getUser().id == null || this.tokenStorage.getUser().id < 0) {
@@ -287,9 +289,20 @@ export class GameHandlerComponent implements OnInit {
             post: { join: true }
           });
         });
+
+        this.ping = setInterval(() => {
+          this.messageSocket({
+            game_id: this.game_id,
+            ping: true
+          });
+        }, 30000)
       });
+    }
+  }
 
-
+  ngOnDestroy() {
+    if (this.ping) {
+      clearInterval(this.ping);
     }
   }
 

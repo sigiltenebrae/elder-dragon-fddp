@@ -4,7 +4,7 @@ import {Subject} from "rxjs";
 import {AnonymousSubject} from 'rxjs/internal/Subject';
 import {map} from 'rxjs/operators';
 import {environment} from "../environments/environment";
-import ReconnectingWebSocket from 'reconnecting-websocket';
+
 
 @Injectable({
   providedIn: 'root'
@@ -31,13 +31,9 @@ export class FddpWebsocketService {
     return this.subject;
   }
 
-  options = {
-    connectionTimeout: 1000,
-    maxRetries: 10
-  }
 
   private create(url: string): AnonymousSubject<MessageEvent> {
-    let ws = new ReconnectingWebSocket(url, [], this.options);
+    let ws = new WebSocket(url);
     let observable = new Observable((obs: Observer<MessageEvent>) => {
       ws.onmessage = obs.next.bind(obs);
       ws.onerror = obs.error.bind(obs);
@@ -49,12 +45,8 @@ export class FddpWebsocketService {
       complete: null,
       next: (data: Object) => {
         console.log('Message sent to websocket: ', data);
-        if (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING) {
-          console.log('message actually sent');
+        if (ws.readyState === WebSocket.OPEN) {
           ws.send(JSON.stringify(data));
-        }
-        else {
-          console.log('sad');
         }
       }
     };

@@ -51,7 +51,9 @@ export class GameManagerComponent implements OnInit {
   }
 
   refresh() {
-    this.sendMsg({request: 'games'});
+    this.sendMsg({get: {
+      game: 'All'
+      }});
   }
 
   ngOnInit(): void {
@@ -62,8 +64,12 @@ export class GameManagerComponent implements OnInit {
     else {
       this.WebsocketService.messages.subscribe(msg => {
         let json_data = msg;
-        if (json_data.games) {
-          this.games = json_data.games;
+        console.log(json_data);
+        if (json_data) {
+          if (json_data.get && json_data.get.game_data && json_data.get.game_data.games){
+
+          }
+          this.games = json_data.get.game_data.games;
         }
       });
       this.sleep(1500).then(() => {
