@@ -54,10 +54,7 @@ export class FddpWebsocketService {
           ws.send(JSON.stringify(data));
         }
         else {
-          ws.reconnect();
-          if (ws.readyState === WebSocket.OPEN) {
-            ws.send(JSON.stringify(data));
-          }
+          console.log('sad');
         }
       }
     };
