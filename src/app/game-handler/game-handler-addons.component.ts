@@ -18,17 +18,13 @@ export class TokenInsertDialog {
   ) {}
 
   results: any[] = [];
-  name = '';
 
   async searchToken(token: string) {
     this.results = [];
     //const values = await Scry.Cards.search('"' + token + '"', {include_extras: true}).waitForAll();
-    this.fddp_data.getImagesForCard(token).then((values: any) => {
-      for (let val of values.images) {
-        this.results.push(val)
-      }
-      this.name = token;
-    });
+    this.fddp_data.getAllOfToken(token).then((token_list) => {
+      this.results = token_list;
+    })
   }
 
   onNoClick(): void {
@@ -36,8 +32,7 @@ export class TokenInsertDialog {
   }
 
   createToken(res: any) {
-    let out_token = {name: this.name, image: res}
-    this.dialogRef.close(out_token);
+    this.dialogRef.close(res);
   }
 }
 

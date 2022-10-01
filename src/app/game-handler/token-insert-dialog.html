@@ -13,8 +13,11 @@
         <button mat-icon-button matSuffix type="button" (click)="searchToken(token_str.value)"><mat-icon>search</mat-icon></button>
       </mat-form-field>
     </div>
-    <div fxLayout="row wrap" fxLayoutAlign="center" style="max-height: 200px; overflow-y: scroll">
-      <img *ngFor="let res of results" src="{{res}}" style="width: 150px; height: 210px; margin: 5px; cursor: pointer" (click)="createToken(res)">
+    <div *ngIf="results.length > 0" fxLayout="row wrap" fxLayoutAlign="center" style="max-height: 200px; overflow-y: scroll">
+      <img *ngFor="let res of results" src="{{res.image}}" style="width: 150px; height: 210px; margin: 5px; cursor: pointer" (click)="createToken(res)">
+    </div>
+    <div *ngIf="results.length == 0" fxLayout="row wrap" fxLayoutAlign="center" style="max-height: 200px; overflow-y: scroll">
+      <img *ngFor="let tok of data.deck_tokens" src="{{tok.image}}" style="width: 150px; height: 210px; margin: 5px; cursor: pointer" (click)="createToken(tok)">
     </div>
   </div>
 </div>

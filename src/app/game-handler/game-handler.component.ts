@@ -1472,34 +1472,24 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
-  createTokenFromImage(result: any) {
-    this.fddp_data.getCardInfo(result.name).then((token_data: any) => {
-      let out_token: any = token_data;
-      out_token.is_token = true;
-      out_token.selected = false;
-      out_token.image = result.image;
-      this.clearCard(out_token);
-      out_token.visible = [];
-      for(let player of this.game_data.players) {
-        out_token.visible.push(player.id);
-      }
-      this.user.temp_zone.cards.unshift(out_token);
-      this.updateSocketPlayer();
-      this.logAction('token', {card: out_token});
-      return;
-    });
-
-  }
-
   openTokenDialog(): void {
     const tokDialogRef = this.dialog.open(TokenInsertDialog, {
       width: '800px',
-      data: {},
+      data: {
+        deck_tokens: this.user.deck.tokens
+      },
     });
 
     tokDialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.createTokenFromImage(result);
+        let out_token = JSON.parse(JSON.stringify(result));
+        out_token.is_token = true;
+        out_token.owner = -1;
+        this.clearCard(out_token);
+        this.setVisibility(out_token, 'play');
+        this.user.temp_zone.cards.unshift(out_token);
+        this.updateSocketPlayer();
+        this.logAction('token', {card: out_token});
       }
     });
   }
