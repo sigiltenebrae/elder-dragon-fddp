@@ -49,7 +49,7 @@ export class FddpWebsocketService {
       complete: null,
       next: (data: Object) => {
         console.log('Message sent to websocket: ', data);
-        if (ws.readyState === WebSocket.OPEN) {
+        if (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING) {
           console.log('message actually sent');
           ws.send(JSON.stringify(data));
         }
