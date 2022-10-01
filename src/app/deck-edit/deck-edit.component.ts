@@ -73,6 +73,7 @@ export class DeckEditComponent implements OnInit {
           this.deck.delete = [];
           this.deck.token_delete = [];
           this.deck.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+          this.deck.tokens.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
         });
       }
     }
