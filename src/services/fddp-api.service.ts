@@ -76,6 +76,18 @@ export class FddpApiService {
     });
   }
 
+  public getAllOfToken(card: string): Promise<any[]> {
+    return new Promise<any[]>((resolve_card, reject) => {
+      this.http.post(environment.fddp_api_url + '/tokens/all',
+        JSON.stringify({name: card}),
+        {headers : new HttpHeaders({'Content-Type': 'application/json'})}).subscribe((token_data: any) => {
+        resolve_card(token_data);
+      }, () => {
+        resolve_card([]);
+      });
+    });
+  }
+
   public getCardInfo(card: string): Promise<any> {
     return new Promise<any>((resolve) => {
       this.http.post(environment.fddp_api_url + '/cards',

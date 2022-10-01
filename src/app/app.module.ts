@@ -42,7 +42,7 @@ import {DeckSelectDialog,
 import {MatMenuModule} from "@angular/material/menu";
 import {FormsModule} from "@angular/forms";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
-import { DeckEditComponent } from './deck-edit/deck-edit.component';
+import { DeckEditComponent, TokenFinderDialog } from './deck-edit/deck-edit.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CustomImagesComponent, CustomTokenDialog } from './custom-images/custom-images.component';
 import { CustomImageManagerComponent } from './custom-image-manager/custom-image-manager.component';
@@ -64,6 +64,7 @@ import { environment } from '../environments/environment';
     AppComponent,
     GameHandlerComponent,
     DeckEditComponent,
+    TokenFinderDialog,
     CustomImagesComponent,
     CustomTokenDialog,
     CustomImageManagerComponent,

@@ -95,6 +95,9 @@
             },
             "development": {
               "browserTarget": "elder-dragon-fddp:build:development"
+            },
+            "tenebris": {
+              "browserTarget": "elder-dragon-fddp:build:tenebris"
             }
           },
           "defaultConfiguration": "development"

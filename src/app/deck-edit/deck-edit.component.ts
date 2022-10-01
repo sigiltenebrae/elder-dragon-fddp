@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import { debounceTime, distinctUntilChanged, map, Observable, OperatorFunction, startWith, switchMap, tap } from "rxjs";
 import { FormControl } from "@angular/forms";
 import { FddpApiService } from "../../services/fddp-api.service";
 import * as Scry from "scryfall-sdk";
 import {ActivatedRoute, Router} from "@angular/router";
 import {TokenStorageService} from "../../services/token-storage.service";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {CustomTokenDialog} from "../custom-images/custom-images.component";
 
 @Component({
   selector: 'app-deck-edit',
@@ -23,13 +25,14 @@ export class DeckEditComponent implements OnInit {
   changing_image = false;
   changing_back_image = false;
   image_options: any[] = [];
+  token_options: any[] = [];
   back_image_options: any[] = [];
   new_card_temp: any = null;
   new_token_temp = '';
   deleting = false;
   card_type = 'cards';
 
-  constructor(private fddp_data: FddpApiService, private route: ActivatedRoute, private router: Router, private tokenStorage: TokenStorageService) {
+  constructor(private fddp_data: FddpApiService, private route: ActivatedRoute, private router: Router, private tokenStorage: TokenStorageService, public dialog: MatDialog) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
 
@@ -151,9 +154,6 @@ export class DeckEditComponent implements OnInit {
         });
         Promise.all(token_promises).then(() => {
           this.deck.tokens.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
-          this.deck.tokens.forEach((token: any) => {
-            this.getCardImage(token);
-          });
         });
       });
     }
@@ -176,7 +176,7 @@ export class DeckEditComponent implements OnInit {
 
   hasToken(token: any) {
     for (let tok of this.deck.tokens) {
-      if (tok.name === token.name) {
+      if (this.tokensEqual(tok, token)) {
         return true;
       }
     }
@@ -222,10 +222,44 @@ export class DeckEditComponent implements OnInit {
     });
   }
 
+  tokensEqual(card1: any, card2: any): boolean {
+    return card1.name === card2.name &&
+      card1.power === card2.power &&
+      card1.toughness === card2.toughness &&
+      card1.colors.includes("W") == card2.colors.includes("W") &&
+      card1.colors.includes("U") == card2.colors.includes("U") &&
+      card1.colors.includes("B") == card2.colors.includes("B") &&
+      card1.colors.includes("R") == card2.colors.includes("R") &&
+      card1.colors.includes("G") == card2.colors.includes("G")
+  }
+
+
   async getCardImages(card: any) {
-    let image_data: any = await this.fddp_data.getImagesForCard(card.name);
-    this.image_options = image_data.images;
-    this.back_image_options = image_data.back_images;
+    if (this.card_type === 'tokens') {
+      this.token_options = [];
+      let token_data = await this.fddp_data.getAllOfToken(card.name);
+      for (let token of token_data) {
+        if (this.tokensEqual(card, token)) {
+          this.token_options.push(token);
+        }
+      }
+    }
+
+    if (this.card_type === 'cards') {
+      let image_data: any = await this.fddp_data.getImagesForCard(card.name);
+      this.image_options = image_data.images;
+      this.back_image_options = image_data.back_images;
+    }
+  }
+
+  copyToSelected(card: any) {
+    this.selected_card.name = card.name;
+    this.selected_card.image = card.image;
+    this.selected_card.type_line = card.type_line;
+    this.selected_card.power = card.power;
+    this.selected_card.toughness = card.toughness;
+    this.selected_card.oracle_text = card.oracle_text;
+    this.selected_card.colors = card.colors;
   }
 
   resetCard(card:any) {
@@ -261,19 +295,19 @@ export class DeckEditComponent implements OnInit {
 
   addTokenToDeck() {
     if (this.new_token_temp !== '') {
-      //for (let card of this.deck.tokens) {
-      //  if (card.name === this.new_token_temp) {
-      //    return;
-      //  }
-      //}
-      let temp_card = {
-        name: this.new_token_temp,
-        image: '',
-      }
-      this.deck.tokens.push(temp_card);
-      this.deck.tokens.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
-      this.getCardImage(temp_card);
-      this.new_token_temp = '';
+      this.fddp_data.getAllOfToken(this.new_token_temp).then((token_list) => {
+        if (token_list.length > 0) {
+          const tokDialogRef = this.dialog.open(TokenFinderDialog, {
+            width: '800px',
+            data: {tokens: token_list},
+          });
+          tokDialogRef.afterClosed().subscribe(result => {
+            if (result) {
+              this.deck.tokens.push(result);
+            }
+          })
+        }
+      })
     }
   }
 
@@ -320,5 +354,26 @@ export class DeckEditComponent implements OnInit {
         }
       }
     }
+  }
+}
+
+@Component({
+  selector: 'token-finder-dialog',
+  templateUrl: 'token-finder-dialog.html',
+})
+export class TokenFinderDialog {
+  constructor(
+    public dialogRef: MatDialogRef<TokenFinderDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+  ) {}
+
+  tokens: any[] = this.data.tokens;
+
+  onNoClick(): void {
+    this.dialogRef.close(null);
+  }
+
+  selectToken(res: any) {
+    this.dialogRef.close(res);
   }
 }
