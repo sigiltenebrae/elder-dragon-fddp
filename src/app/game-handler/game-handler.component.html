@@ -31,7 +31,7 @@
           <button *ngIf="user != null && user == currentPlayer()" mat-menu-item (click)="openTokenDialog()">Insert Token</button>
           <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px" *ngIf="user == currentPlayer()">
             <mat-label>Quick Insert Token</mat-label>
-            <input (keydown.enter)="createToken({name: quick_token.value})" #quick_token type="text" matInput (click)="$event.stopPropagation()">
+            <input (keydown.enter)="quickCreateToken(quick_token.value)" #quick_token type="text" matInput (click)="$event.stopPropagation()">
             <button matSuffix mat-icon-button aria-label="Draw" (click)="createToken({name: quick_token.value})"><mat-icon>add</mat-icon></button>
           </mat-form-field>
           <button mat-menu-item [matMenuTriggerFor]="play_counter" *ngIf="user == currentPlayer()">Insert Counter</button>

@@ -223,8 +223,6 @@ export class DeckEditComponent implements OnInit {
   }
 
   tokensEqual(card1: any, card2: any): boolean {
-    console.log(card1);
-    console.log(card2);
     return card1.name.toLowerCase() === card2.name.toLowerCase() &&
       card1.power === card2.power &&
       card1.toughness === card2.toughness &&
@@ -262,6 +260,7 @@ export class DeckEditComponent implements OnInit {
     this.selected_card.toughness = card.toughness;
     this.selected_card.oracle_text = card.oracle_text;
     this.selected_card.colors = card.colors;
+    console.log(this.selected_card);
   }
 
   resetCard(card:any) {

@@ -1382,20 +1382,27 @@ export class GameHandlerComponent implements OnInit {
     this.logAction('clone', {card: card_clone});
   }
 
-  createToken(token: any) {
-    let out_tokens: any[] = [];
+  isEqualToken(card1: any, card2: any) {
+    return card1.name.toLowerCase() === card2.name.toLowerCase() &&
+      card1.power === card2.power &&
+      card1.toughness === card2.toughness &&
+      card1.colors.includes("W") == card2.colors.includes("W") &&
+      card1.colors.includes("U") == card2.colors.includes("U") &&
+      card1.colors.includes("B") == card2.colors.includes("B") &&
+      card1.colors.includes("R") == card2.colors.includes("R") &&
+      card1.colors.includes("G") == card2.colors.includes("G")
+  }
+
+  quickCreateToken(token: string) {
+    let out_tokens = [];
     for (let tok of this.user.deck.tokens) {
-      if (tok.name.toLowerCase() === token.name.toLowerCase()) {
+      if (tok.name.toLowerCase() === token.toLowerCase()) {
         let out_token: any = null;
         out_token = JSON.parse(JSON.stringify(tok));
         out_token.is_token = true;
-        out_token.selected = false;
         out_token.owner = -1;
         this.clearCard(out_token);
-        out_token.visible = [];
-        for(let player of this.game_data.players) {
-          out_token.visible.push(player.id);
-        }
+        this.setVisibility(out_token, 'play');
         out_tokens.push(out_token);
       }
     }
@@ -1411,26 +1418,57 @@ export class GameHandlerComponent implements OnInit {
       });
       tokDialogRef.afterClosed().subscribe(result => {
         if (result) {
-          this.createTokenFromImage(result);
+          this.user.temp_zone.cards.unshift(result);
+          this.updateSocketPlayer();
+          this.logAction('token', {card: result});
         }
       });
     }
     else {
-      this.fddp_data.getCardInfo(token.name).then((token_data: any) => {
-        this.getCardImages(token.name).then((image_data: any) => {
-          let images = image_data;
-          let out_token = token_data;
-          out_token.is_token = true;
-          out_token.selected = false;
-          out_token.image = images.length > 0 ? images[0]: null;
-          out_token.visible = [];
-          this.clearCard(out_token);
-          this.user.temp_zone.cards.unshift(out_token);
+      //dialog saying could not quick create
+    }
+  }
+
+  createToken(token: any) {
+    let out_tokens: any[] = [];
+    for (let tok of this.user.deck.tokens) {
+      if (this.isEqualToken(tok, token)) {
+        let out_token: any = null;
+        out_token = JSON.parse(JSON.stringify(tok));
+        out_token.is_token = true;
+        out_token.owner = -1;
+        this.clearCard(out_token);
+        this.setVisibility(out_token, 'play');
+        out_tokens.push(out_token);
+      }
+    }
+    if (out_tokens.length == 1) {
+      this.user.temp_zone.cards.unshift(out_tokens[0]);
+      this.updateSocketPlayer();
+      this.logAction('token', {card: out_tokens[0]});
+    }
+    else if (out_tokens.length > 1) {
+      const tokDialogRef = this.dialog.open(TokenSelectDialog, {
+        width: '800px',
+        data: {tokens: out_tokens},
+      });
+      tokDialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.user.temp_zone.cards.unshift(result);
           this.updateSocketPlayer();
-          this.logAction('token', {card: out_token});
-          return;
-        });
-      })
+          this.logAction('token', {card: result});
+        }
+      });
+    }
+    else {
+      let out_token = JSON.parse(JSON.stringify(token));
+      out_token.is_token = true;
+      out_token.owner = -1;
+      this.clearCard(out_token);
+      this.setVisibility(out_token, 'play');
+      this.user.temp_zone.cards.unshift(out_token);
+      this.updateSocketPlayer();
+      this.logAction('token', {card: out_token});
     }
   }
 
