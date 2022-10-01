@@ -32,6 +32,7 @@
     "http-server": "^14.1.1",
     "ng-animate": "^2.0.1",
     "ngx-scrollbar": "^10.0.1",
+    "reconnecting-websocket": "^4.4.0",
     "rxjs": "~7.5.0",
     "scryfall-sdk": "^3.2.1",
     "tslib": "^2.3.0",
