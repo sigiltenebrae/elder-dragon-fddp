@@ -4,7 +4,7 @@ import {Subject} from "rxjs";
 import {AnonymousSubject} from 'rxjs/internal/Subject';
 import {map} from 'rxjs/operators';
 import {environment} from "../environments/environment";
-
+import ReconnectingWebSocket from 'reconnecting-websocket';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +33,7 @@ export class FddpWebsocketService {
 
 
   private create(url: string): AnonymousSubject<MessageEvent> {
-    let ws = new WebSocket(url);
+    let ws = new ReconnectingWebSocket(url);
     let observable = new Observable((obs: Observer<MessageEvent>) => {
       ws.onmessage = obs.next.bind(obs);
       ws.onerror = obs.error.bind(obs);
