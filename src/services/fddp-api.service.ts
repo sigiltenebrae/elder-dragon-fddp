@@ -42,7 +42,7 @@ export class FddpApiService {
 
   public getArchidektDeck(archidekt_deckid: number): Promise<any> {
     return new Promise<any> ((resolve) => {
-      this.http.get('/archidekt/api/decks/' + archidekt_deckid + '/').subscribe((archidekt_data: any) => {
+      this.http.get(environment.fddp_api_url + '/archidekt/deck/' + archidekt_deckid).subscribe((archidekt_data: any) => {
         resolve(archidekt_data);
       }, (error) => {
         console.log('Error pulling data from archidekt');
