@@ -31,6 +31,10 @@ export class FddpWebsocketService {
     return this.subject;
   }
 
+  options = {
+    connectionTimeout: 1000,
+    maxRetries: 10
+  }
 
   private create(url: string): AnonymousSubject<MessageEvent> {
     let ws = new ReconnectingWebSocket(url);
@@ -46,7 +50,14 @@ export class FddpWebsocketService {
       next: (data: Object) => {
         console.log('Message sent to websocket: ', data);
         if (ws.readyState === WebSocket.OPEN) {
+          console.log('message actually sent');
           ws.send(JSON.stringify(data));
+        }
+        else {
+          ws.reconnect();
+          if (ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify(data));
+          }
         }
       }
     };
