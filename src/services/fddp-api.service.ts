@@ -190,6 +190,16 @@ export class FddpApiService {
     })
   }
 
+  public getRandomDeck(): Promise<any> {
+    return new Promise<any>((resolve) => {
+      this.http.get(environment.fddp_api_url + '/cheap/randomdeck').subscribe((deck_data) => {
+        resolve(deck_data);
+      }, () => {
+        resolve(null);
+      })
+    })
+  }
+
   public createCustomCard(name: any, image: any, creator: number): Promise<void> {
     return new Promise<void>((resolve_card, reject) => {
       this.http.post(environment.fddp_api_url + '/custom_cards',

@@ -70,21 +70,31 @@ export class DeckSelectDialog {
     private fddp_data: FddpApiService
   )
   {
-    console.log(this.data);
     this.loading = true;
-    this.fddp_data.getDecksBasic(this.data.user).then((decks: any) => {
-      let temp_decks = decks;
-      let deck_promises: any[] = [];
-      temp_decks.forEach((deck: any) => {
-        deck_promises.push(this.getDeckData(deck.id));
+    if (this.data.game_type != 4) {
+      this.fddp_data.getDecksBasic(this.data.user).then((decks: any) => {
+        let temp_decks = decks;
+        let deck_promises: any[] = [];
+        temp_decks.forEach((deck: any) => {
+          deck_promises.push(this.getDeckData(deck.id));
+        });
+        Promise.all(deck_promises).then(() => {
+          for (let deck of this.decks) {
+            deck.hovered = false;
+          }
+          this.loading = false;
+        });
       });
-      Promise.all(deck_promises).then(() => {
-        for (let deck of this.decks) {
-          deck.hovered = false;
+    }
+    else {
+      this.fddp_data.getRandomDeck().then((deck) => {
+        if (deck != null) {
+          console.log(deck);
+          this.loading = false;
+          this.dialogRef.close(deck);
         }
-        this.loading = false;
       });
-    });
+    }
   }
 
   getDeckData(deckid: number): Promise<void> {

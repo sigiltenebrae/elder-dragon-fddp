@@ -1,43 +1,27 @@
-import {Component, HostListener, Inject, Injectable, OnInit, ViewChild} from '@angular/core';
-import {CDK_DRAG_CONFIG, CdkDrag, CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
+import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
+import {moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
 import {animate, state, style, transition, trigger, useAnimation} from "@angular/animations";
 import {MatMenuTrigger} from "@angular/material/menu";
-import { RightclickHandlerServiceService } from "../../services/rightclick-handler-service.service";
-import {MatSelectionListChange} from "@angular/material/list";
-import {MatSidenav} from "@angular/material/sidenav";
+import {RightclickHandlerServiceService} from "../../services/rightclick-handler-service.service";
 import {FddpApiService} from "../../services/fddp-api.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
-import {HttpClient} from "@angular/common/http";
-import {
-  catchError,
-  debounceTime,
-  distinctUntilChanged,
-  map,
-  Observable,
-  of,
-  OperatorFunction,
-  switchMap,
-  tap
-} from 'rxjs';
-import * as Scry from "scryfall-sdk";
-import { shakeX } from 'ng-animate';
+import {MatDialog} from "@angular/material/dialog";
+import {shakeX} from 'ng-animate';
 import {ActivatedRoute, Router} from "@angular/router";
 import {TokenStorageService} from "../../services/token-storage.service";
 import {FddpWebsocketService} from "../../services/fddp-websocket.service";
-import {Scrollbar} from "ngx-scrollbar/lib/scrollbar/scrollbar";
-import {NgScrollbar, NgScrollbarModule} from "ngx-scrollbar";
+import {NgScrollbar} from "ngx-scrollbar";
 import {
+  CounterSetDialog,
+  DeckSelectDialog,
+  EndGameDialog,
+  NoteDialog,
+  SelectColorsDialog,
   TokenInsertDialog,
   TokenSelectDialog,
-  NoteDialog,
-  DeckSelectDialog,
-  CounterSetDialog,
-  TwoHeadedTeamsDialog,
-  EndGameDialog,
-  SelectColorsDialog
+  TwoHeadedTeamsDialog
 } from "./game-handler-addons.component";
-import {Howl, Howler} from 'howler'
+import {Howl} from 'howler'
 
 @Component({
   selector: 'app-game-handler',
@@ -310,7 +294,7 @@ export class GameHandlerComponent implements OnInit {
         this.game_timer = setInterval(() => {
           this.game_start_string = this.secondsToString(this.game_started);
           this.last_turn_string = this.secondsToString(this.last_turn);
-        }, 1000);
+        }, 5000);
       });
     }
   }
@@ -825,95 +809,99 @@ export class GameHandlerComponent implements OnInit {
     return null;
   }
 
-  initializePlayerDeck(name: string, id: number, deckid: number): Promise<void> {
+  setupUserForPlay(deck: any) {
+    deck.owner = this.current_user.id;
+    let temp_sideboard: any[] = [];
+    deck.cards.forEach((card: any) => { //Take the cards with multiples and split
+      if (card.count > 1) {
+        for (let i = 1; i < card.count; i++) {
+          temp_sideboard.push(JSON.parse(JSON.stringify(card)));
+        }
+      }
+    });
+    temp_sideboard.forEach((temp_card) => { //change the id so they don't appear equivalent
+      temp_card.id *= Math.random();
+      deck.cards.push(temp_card);
+    });
+    deck.cards.forEach((card: any) => {
+      card.count = 1;
+    });
+
+    let out_player: any = {};
+    out_player.star_color = null;
+    out_player.teammate_id = null;
+    out_player.playmat_image = this.current_user.playmat;
+    out_player.deck = deck;
+    out_player.deck.commander = {name: 'commander', cards: [], saved: [], owner: out_player.deck.owner};
+    out_player.name = name;
+    out_player.id = this.current_user.id;
+    out_player.life = 40;
+    out_player.infect = 0;
+    out_player.playmat = []
+    out_player.turn = -1;
+    out_player.command_tax_1 = 0;
+    out_player.command_tax_2 = 0;
+    out_player.spectating = false;
+    out_player.top_flipped = false;
+    out_player.card_preview = { position : {x: 1502, y: 430}}
+    out_player.play_counters = [];
+    for (let i = 0; i < 36; i++) {
+      out_player.playmat.push({ name: 'play', id: i, owner: 1, cards: [] })
+    }
+    out_player.hand = {owner: out_player.deck.owner, name: 'hand', cards: []};
+    out_player.hand_preview = [out_player.id];
+    out_player.grave = {owner: out_player.deck.owner, name: 'grave', cards: []};;
+    out_player.exile = {owner: out_player.deck.owner, name: 'exile', cards: []};;
+    out_player.temp_zone = {owner: out_player.deck.owner, name: 'temp_zone', cards: []};;
+    out_player.deck.cards.forEach((card: any) => {
+      card.counter_1 = false;
+      card.counter_2 = false;
+      card.counter_3 = false;
+      card.multiplier = false;
+      card.counter_1_value = 0;
+      card.counter_2_value = 0;
+      card.counter_3_value = 0;
+      card.multiplier_value = 0;
+      card.owner = out_player.deck.owner;
+      card.power_mod = 0;
+      card.toughness_mod = 0;
+      card.loyalty_mod = 0;
+      card.locked = false;
+      card.primed = false;
+      card.triggered = false;
+      card.is_token = false;
+      card.tapped = 'untapped';
+      card.visible = [];
+      card.sidenav_visible = false;
+      card.alt = false;
+      card.facedown = false;
+      card.shaken = false;
+      card.inverted = false;
+      card.notes = '';
+      if (card.iscommander) {
+        out_player.deck.commander.cards.push(card);
+      }
+    })
+    out_player.deck.commander.cards.forEach((card: any) => {
+      out_player.deck.commander.saved.push(card);
+      out_player.deck.cards.splice(deck.cards.indexOf(card), 1);
+    })
+    this.shuffleDeck(out_player.deck.cards, {nolog: true, noupdate: true});
+    for (let i = 0; i < this.game_data.players.length; i++) {
+      if (this.game_data.players[i].id == this.current_user.id) {
+        this.game_data.players[i] = out_player;
+        this.user = this.game_data.players[i];
+        break;
+      }
+    }
+    this.updateSocketPlayer();
+  }
+
+  initializePlayerDeck(deckid: number): Promise<void> {
     return new Promise<void>((resolve) => {
       this.fddp_data.getDeckForPlay(deckid).then((deck_data: any) => {
         if (deck_data) {
-          let deck: any = deck_data;
-          let temp_sideboard: any[] = [];
-          deck.cards.forEach((card: any) => { //Take the cards with multiples and split
-            if (card.count > 1) {
-              for (let i = 1; i < card.count; i++) {
-                temp_sideboard.push(JSON.parse(JSON.stringify(card)));
-              }
-            }
-          });
-          temp_sideboard.forEach((temp_card) => { //change the id so they don't appear equivalent
-            temp_card.id *= Math.random();
-            deck.cards.push(temp_card);
-          });
-          deck.cards.forEach((card: any) => {
-            card.count = 1;
-          });
-
-          let out_player: any = {};
-          out_player.star_color = null;
-          out_player.teammate_id = null;
-          out_player.playmat_image = this.current_user.playmat;
-          out_player.deck = deck;
-          out_player.deck.commander = {name: 'commander', cards: [], saved: [], owner: out_player.deck.owner};
-          out_player.name = name;
-          out_player.id = id;
-          out_player.life = 40;
-          out_player.infect = 0;
-          out_player.playmat = []
-          out_player.turn = -1;
-          out_player.command_tax_1 = 0;
-          out_player.command_tax_2 = 0;
-          out_player.spectating = false;
-          out_player.top_flipped = false;
-          out_player.card_preview = { position : {x: 1502, y: 430}}
-          out_player.play_counters = [];
-          for (let i = 0; i < 36; i++) {
-            out_player.playmat.push({ name: 'play', id: i, owner: 1, cards: [] })
-          }
-          out_player.hand = {owner: out_player.deck.owner, name: 'hand', cards: []};
-          out_player.hand_preview = [out_player.id];
-          out_player.grave = {owner: out_player.deck.owner, name: 'grave', cards: []};;
-          out_player.exile = {owner: out_player.deck.owner, name: 'exile', cards: []};;
-          out_player.temp_zone = {owner: out_player.deck.owner, name: 'temp_zone', cards: []};;
-          out_player.deck.cards.forEach((card: any) => {
-            card.counter_1 = false;
-            card.counter_2 = false;
-            card.counter_3 = false;
-            card.multiplier = false;
-            card.counter_1_value = 0;
-            card.counter_2_value = 0;
-            card.counter_3_value = 0;
-            card.multiplier_value = 0;
-            card.owner = out_player.deck.owner;
-            card.power_mod = 0;
-            card.toughness_mod = 0;
-            card.loyalty_mod = 0;
-            card.locked = false;
-            card.primed = false;
-            card.triggered = false;
-            card.is_token = false;
-            card.tapped = 'untapped';
-            card.visible = [];
-            card.sidenav_visible = false;
-            card.alt = false;
-            card.facedown = false;
-            card.shaken = false;
-            card.inverted = false;
-            card.notes = '';
-            if (card.iscommander) {
-              out_player.deck.commander.cards.push(card);
-            }
-          })
-          out_player.deck.commander.cards.forEach((card: any) => {
-            out_player.deck.commander.saved.push(card);
-            out_player.deck.cards.splice(deck.cards.indexOf(card), 1);
-          })
-          this.shuffleDeck(out_player.deck.cards, {nolog: true, noupdate: true});
-          for (let i = 0; i < this.game_data.players.length; i++) {
-            if (this.game_data.players[i].id == this.current_user.id) {
-              this.game_data.players[i] = out_player;
-              this.user = this.game_data.players[i];
-              break;
-            }
-          }
-          this.updateSocketPlayer();
+          this.setupUserForPlay(deck_data);
           resolve();
         } else {
           resolve();
@@ -997,7 +985,7 @@ export class GameHandlerComponent implements OnInit {
     if (this.dialog.openDialogs.length == 0) {
       const deckDialogRef = this.dialog.open(DeckSelectDialog, {
         width: '1600px',
-        data: {user: this.current_user.id}
+        data: {user: this.current_user.id, game_type: this.game_data.type}
       });
 
       deckDialogRef.afterClosed().subscribe(result => {
@@ -1009,7 +997,12 @@ export class GameHandlerComponent implements OnInit {
   }
 
   selectDeck(deck: any) {
-    this.initializePlayerDeck(this.current_user.name, this.current_user.id, deck.id);
+    if (this.game_data.type != 4) {
+      this.initializePlayerDeck(deck.id);
+    }
+    else {
+      this.setupUserForPlay(deck);
+    }
   }
 
   scoopDeck(): void {
@@ -1053,7 +1046,7 @@ export class GameHandlerComponent implements OnInit {
   }
 
   endTurn() {
-    if (this.game_data.type == 1 || this.game_data.type == 3) {
+    if (this.game_data.type == 1 || this.game_data.type == 3 || this.game_data.type == 4) {
       if (this.game_data.current_turn == this.user.turn) {
         this.messageSocket({
           game_id: this.game_id,
