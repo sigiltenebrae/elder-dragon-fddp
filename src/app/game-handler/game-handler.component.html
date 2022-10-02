@@ -36,7 +36,6 @@
           </mat-form-field>
           <button mat-menu-item [matMenuTriggerFor]="play_counter" *ngIf="user == currentPlayer()">Insert Counter</button>
           <button *ngIf="user != null && user == currentPlayer() && game_data != null && user.turn == game_data.current_turn" mat-menu-item (click)="endTurn()">End Turn</button>
-          <button mat-menu-item *ngIf="user != null && user.id == 1" (click)="endTurn()">End Turn Debug</button>
           <button *ngIf="user != null && user == currentPlayer() && game_data != null && game_data.type == 2 && game_data.current_turn == getTeam(this.user.id).turn" mat-menu-item (click)="endTurn()">End Turn</button>
         </div>
 
@@ -251,7 +250,7 @@
   <button mat-menu-item (click)="drawToX(this.user.temp_zone)">Temp Zone</button>
 </mat-menu>
 
-<mat-sidenav-container cdkDropListGroup fxFlexFill hasBackdrop="false" *ngIf="game_data != null" style="overflow: hidden; position: fixed; top: 0; left: 0; z-index: 500">
+<mat-sidenav-container cdkDropListGroup fxFlexFill hasBackdrop="false" *ngIf="game_data != null && user != null" style="overflow: hidden; position: fixed; top: 0; left: 0; z-index: 500">
   <mat-sidenav #fddp_sidenav disableClose style="overflow: hidden">
     <mat-toolbar color="primary">
       <div fxFlex="100" fxLayout="row" fxLayoutAlign="space-between center">
@@ -454,7 +453,7 @@
 
     <!-- Timer -->
     <div class="game-timer-total">
-      <h3>Game Time: {{secondsToString(game_data.started)}} &nbsp;&nbsp;&nbsp; Turn Time: {{secondsToString(game_data.last_turn)}}</h3>
+      <h3>Game Time: {{secondsToString(game_started)}} &nbsp;&nbsp;&nbsp; Turn Time: {{secondsToString(last_turn)}}</h3>
     </div>
 
     <!-- Opponent Playmats -->

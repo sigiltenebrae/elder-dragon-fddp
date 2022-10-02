@@ -79,6 +79,8 @@ export class GameHandlerComponent implements OnInit {
   users_list: any[] = []; //The list of all users in the db
   current_user: any = null; //The currently logged-in user
   user: any = null; //The game data for the currently logged-in user
+  game_started: any = 0;
+  last_turn: any = 0;
 
   //Board Interaction
   magnified_card: any = null; //Pointer to the card object
@@ -143,6 +145,7 @@ export class GameHandlerComponent implements OnInit {
             if (json_data.get.game_data) {
               if (json_data.get.game_data.id) {
                 this.game_data = json_data.get.game_data;
+                this.game_started = this.game_data.started;
                 if (this.game_data.players) {
                   for (let player of this.game_data.players) {
                     if (player.id == this.current_user.id) {
@@ -261,6 +264,7 @@ export class GameHandlerComponent implements OnInit {
             if (json_data.get.turn_update != null) {
               this.game_data.current_turn = json_data.get.turn_update;
               this.game_data.last_turn = new Date().getTime();
+              this.last_turn = new Date().getTime();
               if (this.user.turn != null && this.game_data.current_turn == this.user.turn) {
                 this.notification_sound.play();
               }
@@ -1036,7 +1040,7 @@ export class GameHandlerComponent implements OnInit {
 
   endTurn() {
     if (this.game_data.type == 1 || this.game_data.type == 3) {
-      if (this.game_data.current_turn == this.user.turn || this.user.id == 1) {
+      if (this.game_data.current_turn == this.user.turn) {
         this.messageSocket({
           game_id: this.game_id,
           put: {
