@@ -79,8 +79,10 @@ export class GameHandlerComponent implements OnInit {
   users_list: any[] = []; //The list of all users in the db
   current_user: any = null; //The currently logged-in user
   user: any = null; //The game data for the currently logged-in user
-  game_started: any = 0;
-  last_turn: any = 0;
+  game_started: any = null;
+  last_turn: any = null;
+  game_start_string = '';
+  last_turn_string = '';
 
   //Board Interaction
   magnified_card: any = null; //Pointer to the card object
@@ -106,6 +108,7 @@ export class GameHandlerComponent implements OnInit {
   team_counter = false;
 
   ping: any;
+  game_timer: any;
 
   ngOnInit(): void {
     if (this.tokenStorage.getUser() == null || this.tokenStorage.getUser() == {} ||
@@ -146,6 +149,7 @@ export class GameHandlerComponent implements OnInit {
               if (json_data.get.game_data.id) {
                 this.game_data = json_data.get.game_data;
                 this.game_started = this.game_data.started;
+                this.last_turn = this.game_data.last_turn;
                 if (this.game_data.players) {
                   for (let player of this.game_data.players) {
                     if (player.id == this.current_user.id) {
@@ -284,6 +288,9 @@ export class GameHandlerComponent implements OnInit {
               })
             }
           }
+          if (json_data.pong) {
+            console.log('pong');
+          }
         });
 
         this.sleep(1500).then(() => {
@@ -299,7 +306,11 @@ export class GameHandlerComponent implements OnInit {
             game_id: this.game_id,
             ping: true
           });
-        }, 30000)
+        }, 30000);
+        this.game_timer = setInterval(() => {
+          this.game_start_string = this.secondsToString(this.game_started);
+          this.last_turn_string = this.secondsToString(this.last_turn);
+        }, 1000);
       });
     }
   }
@@ -307,6 +318,9 @@ export class GameHandlerComponent implements OnInit {
   ngOnDestroy() {
     if (this.ping) {
       clearInterval(this.ping);
+    }
+    if (this.game_timer) {
+      clearInterval(this.game_timer);
     }
   }
 
@@ -1121,6 +1135,10 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  tauntPlayer(player: any) {
+
+  }
+
   isOpponent(player: any) {
     if (this.game_data.type == 2) {
       if (player.id == this.current_user.id) {
@@ -1451,7 +1469,10 @@ export class GameHandlerComponent implements OnInit {
       });
     }
     else {
-      //dialog saying could not quick create
+      this.snackbar.open('token not found in deck.', 'close', {
+        horizontalPosition: 'end',
+        verticalPosition: 'top'
+      })
     }
   }
 

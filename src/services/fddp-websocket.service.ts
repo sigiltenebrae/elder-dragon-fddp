@@ -36,8 +36,14 @@ export class FddpWebsocketService {
     let ws = new WebSocket(url);
     let observable = new Observable((obs: Observer<MessageEvent>) => {
       ws.onmessage = obs.next.bind(obs);
-      ws.onerror = obs.error.bind(obs);
-      ws.onclose = obs.complete.bind(obs);
+      ws.onerror = () => {
+        console.log('websocket error');
+        obs.error.bind(obs);
+      }
+      ws.onclose = () => {
+        console.log('closing socket');
+        obs.complete.bind(obs);
+      }
       return ws.close.bind(ws);
     });
     let observer = {
@@ -49,13 +55,7 @@ export class FddpWebsocketService {
           ws.send(JSON.stringify(data));
         }
         else {
-          this.messages = <Subject<any>>this.connect(environment.fddp_websocket_url).pipe(
-            map(
-              (response: MessageEvent): any => {
-                return JSON.parse(response.data);
-              }
-            )
-          );
+          console.log()
         }
       }
     };

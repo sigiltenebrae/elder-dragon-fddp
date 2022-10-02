@@ -44,7 +44,7 @@
         </div>
 
         <div *ngIf="rightclicked_item.type === 'opponent_playmat'">
-          <button *ngIf="user != null && user == currentPlayer()" mat-menu-item>Taunt</button>
+          <button *ngIf="user != null && user == currentPlayer()" mat-menu-item (click)="tauntPlayer(rightclicked_item.player)">Taunt</button>
         </div>
 
         <div *ngIf="rightclicked_item.type === 'commander' && user != null && user == currentPlayer()">
@@ -475,7 +475,7 @@
               [ngClass]="{'playmat-opponent-selected': player == selected_player, 'playmat-opponent-turn': player.turn == game_data.current_turn}">
                 <div *ngFor="let spot of player.playmat"
                      class="playmat-user-spot-container-mini"
-                     (contextmenu)="onRightClick($event, {type: 'opponent_playmat'})">
+                     (contextmenu)="onRightClick($event, {type: 'opponent_playmat', player: player})">
                   <div *ngFor="let card of spot.cards; let i = index">
                     <div [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2, 'invert': card.inverted}"
                          (pointerenter)="magnified_card=card" (pointerleave)="magnified_card=null"

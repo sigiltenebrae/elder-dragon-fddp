@@ -249,4 +249,5 @@ export class FddpApiService {
       this.http.delete(environment.fddp_api_url + '/custom_cards/' + cardid).subscribe(() => { resolve(); })
     });
   }
+
 }
