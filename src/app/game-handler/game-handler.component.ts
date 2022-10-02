@@ -833,7 +833,7 @@ export class GameHandlerComponent implements OnInit {
     out_player.playmat_image = this.current_user.playmat;
     out_player.deck = deck;
     out_player.deck.commander = {name: 'commander', cards: [], saved: [], owner: out_player.deck.owner};
-    out_player.name = name;
+    out_player.name = this.current_user.name;
     out_player.id = this.current_user.id;
     out_player.life = 40;
     out_player.infect = 0;
