@@ -46,8 +46,10 @@ export class GameManagerComponent implements OnInit {
           type: type ? Number(type): 1
         }
       }
-
     );
+    setTimeout(() => {
+      this.refresh();
+    }, 1000)
   }
 
   refresh() {
@@ -72,7 +74,7 @@ export class GameManagerComponent implements OnInit {
           this.games = json_data.get.game_data.games;
         }
       });
-      this.sleep(1500).then(() => {
+      this.sleep(500).then(() => {
         this.refresh();
       })
     }
