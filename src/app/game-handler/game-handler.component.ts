@@ -911,7 +911,7 @@ export class GameHandlerComponent implements OnInit {
   }
 
   startGame() {
-    if (this.game_data.type == 1) {
+    if (this.game_data.type == 1 || this.game_data.type == 4) {
       this.game_data.turn_count = 1;
       this.messageSocket(
         {
