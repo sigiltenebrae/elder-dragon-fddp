@@ -989,6 +989,26 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   margin: 0;
 }
 
+.playmat-user-card-container .playmat-user-card-loyalty {
+  font-family: Beleren, "Helvetica Neue", sans-serif !important;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  margin: 0;
+}
+
+.playmat-user-card-container-mini .playmat-user-card-loyalty {
+  font-family: Beleren, "Helvetica Neue", sans-serif !important;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  margin: 0;
+}
+
 .playmat-user-card-modifier-up {
   color: $mtg-green !important;
 }

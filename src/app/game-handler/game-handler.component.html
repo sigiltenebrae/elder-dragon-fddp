@@ -497,7 +497,7 @@
                       <h4 *ngIf="card.power != null && card.toughness != null && card.visible.includes(user.id)" class="playmat-user-card-pow-tough shadow-text">
                         <a class="simple-a" [ngClass]="{'playmat-user-card-modifier-up': card.power_mod > 0, 'playmat-user-card-modifier-down': card.power_mod < 0}">{{card.power + card.power_mod}}</a>/
                         <a class="simple-a" [ngClass]="{'playmat-user-card-modifier-up': card.toughness_mod > 0, 'playmat-user-card-modifier-down': card.toughness_mod < 0}">{{card.toughness + card.toughness_mod}}</a></h4>
-                      <h4 *ngIf="card.loyalty != null && card.visible.includes(user.id)" class="mtg-card-loyalty shadow-text">
+                      <h4 *ngIf="card.loyalty != null && card.visible.includes(user.id)" class="playmat-user-card-loyalty shadow-text">
                         <a class="simple-a" [ngClass]="{'playmat-user-card-modifier-up': card.loyalty_mod > 0, 'playmat-user-card-modifier-down': card.loyalty_mod < 0}">{{card.loyalty + card.loyalty_mod}}</a></h4>
                     </div>
                   </div>
@@ -712,7 +712,7 @@
                 <h4 *ngIf="card.power != null && card.toughness != null && card.visible.includes(user.id)" class="playmat-user-card-pow-tough shadow-text">
                   <a class="simple-a" [ngClass]="{'playmat-user-card-modifier-up': card.power_mod > 0, 'playmat-user-card-modifier-down': card.power_mod < 0}" (click)="card.power_mod = card.power_mod + 1; updateCounter('Power', card.power_mod + card.power, {card: card});" (contextmenu)="onRightClick($event, {type: 'power', card: card})">{{card.power + card.power_mod}}</a>/
                   <a class="simple-a" [ngClass]="{'playmat-user-card-modifier-up': card.toughness_mod > 0, 'playmat-user-card-modifier-down': card.toughness_mod < 0}" (click)="card.toughness_mod = card.toughness_mod + 1; updateCounter('Toughness', card.toughness_mod + card.toughness, {card: card});" (contextmenu)="onRightClick($event, {type: 'toughness', card: card})">{{card.toughness + card.toughness_mod}}</a></h4>
-                <h4 *ngIf="card.loyalty != null && card.visible.includes(user.id)" class="mtg-card-loyalty shadow-text">
+                <h4 *ngIf="card.loyalty != null && card.visible.includes(user.id)" class="playmat-user-card-loyalty shadow-text">
                   <a class="simple-a" [ngClass]="{'playmat-user-card-modifier-up': card.loyalty_mod > 0, 'playmat-user-card-modifier-down': card.loyalty_mod < 0}" (click)="card.loyalty_mod = card.loyalty_mod + 1; updateCounter('Loyalty', card.loyalty_mod + card.loyalty, {card: card});" (contextmenu)="onRightClick($event, {type: 'loyalty', card: card})">{{card.loyalty + card.loyalty_mod}}</a></h4>
               </div>
             </div>
