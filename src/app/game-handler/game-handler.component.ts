@@ -1864,6 +1864,7 @@ export class GameHandlerComponent implements OnInit {
           this.untapAll();
           break;
         case "m":
+          this.mulliganHand(7);
           break;
       }
     }
