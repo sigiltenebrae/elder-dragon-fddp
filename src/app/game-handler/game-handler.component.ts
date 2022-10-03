@@ -139,6 +139,20 @@ export class GameHandlerComponent implements OnInit {
                   for (let player of this.game_data.players) {
                     if (player.id == this.current_user.id) {
                       this.user = player;
+                      if (this.user.turn != null && this.game_data.current_turn == this.user.turn) {
+                        if (this.game_data.type == 5) {
+                          if (new Date().getTime() - this.last_turn < 60000) {
+                            this.notification_sound.play();
+                            this.fast_game_counter = setInterval(() => {
+                              console.log('burn!')
+                              this.fastGameEndTurn();
+                            }, 60000 - (new Date().getTime() - this.last_turn));
+                          }
+                          else {
+                            this.fastGameEndTurn();
+                          }
+                        }
+                      }
                       if (this.user.deck) {
                         console.log('user loaded: ' + this.user.name);
                       }
@@ -256,9 +270,12 @@ export class GameHandlerComponent implements OnInit {
               this.last_turn = new Date().getTime();
               if (this.user.turn != null && this.game_data.current_turn == this.user.turn) {
                 this.notification_sound.play();
-                this.fast_game_counter = setInterval(() => {
-                  this.fastGameEndTurn();
-                }, 60000);
+                if (this.game_data.type == 5) {
+                  this.fast_game_counter = setInterval(() => {
+                    console.log('burn!')
+                    this.fastGameEndTurn();
+                  }, 60000);
+                }
               }
             }
             if (json_data.get.shake_data != null) {
@@ -298,7 +315,7 @@ export class GameHandlerComponent implements OnInit {
         this.game_timer = setInterval(() => {
           this.game_start_string = this.secondsToString(this.game_started);
           this.last_turn_string = this.secondsToString(this.last_turn);
-        }, 5000);
+        }, 1000);
       });
     }
   }
@@ -1050,9 +1067,8 @@ export class GameHandlerComponent implements OnInit {
   }
 
   fastGameEndTurn() {
-    for (let i = 0; i < 5; i++) {
-      this.lifeClick(null, this.user);
-    }
+    this.user.life -= 5;
+    this.updateCounter('Life', this.user.life);
     this.endTurn();
   }
 
