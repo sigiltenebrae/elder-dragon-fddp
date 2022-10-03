@@ -1081,6 +1081,7 @@ export class GameHandlerComponent implements OnInit {
             action:'end_turn',
           }
         });
+        this.logAction('end_turn', {});
       }
       if (this.game_data.type == 5) {
         clearInterval(this.fast_game_counter);
