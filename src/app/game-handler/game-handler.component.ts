@@ -93,6 +93,7 @@ export class GameHandlerComponent implements OnInit {
 
   ping: any;
   game_timer: any;
+  fast_game_counter: any;
 
   ngOnInit(): void {
     if (this.tokenStorage.getUser() == null || this.tokenStorage.getUser() == {} ||
@@ -255,6 +256,9 @@ export class GameHandlerComponent implements OnInit {
               this.last_turn = new Date().getTime();
               if (this.user.turn != null && this.game_data.current_turn == this.user.turn) {
                 this.notification_sound.play();
+                this.fast_game_counter = setInterval(() => {
+                  this.fastGameEndTurn();
+                }, 60000);
               }
             }
             if (json_data.get.shake_data != null) {
@@ -911,7 +915,7 @@ export class GameHandlerComponent implements OnInit {
   }
 
   startGame() {
-    if (this.game_data.type == 1 || this.game_data.type == 4) {
+    if (this.game_data.type == 1 || this.game_data.type == 4 || this.game_data.type == 5) {
       this.game_data.turn_count = 1;
       this.messageSocket(
         {
@@ -1045,8 +1049,15 @@ export class GameHandlerComponent implements OnInit {
     });
   }
 
+  fastGameEndTurn() {
+    for (let i = 0; i < 5; i++) {
+      this.lifeClick(null, this.user);
+    }
+    this.endTurn();
+  }
+
   endTurn() {
-    if (this.game_data.type == 1 || this.game_data.type == 3 || this.game_data.type == 4) {
+    if (this.game_data.type == 1 || this.game_data.type == 3 || this.game_data.type == 4 || this.game_data.type == 5) {
       if (this.game_data.current_turn == this.user.turn) {
         this.messageSocket({
           game_id: this.game_id,
@@ -1054,6 +1065,9 @@ export class GameHandlerComponent implements OnInit {
             action:'end_turn',
           }
         });
+      }
+      if (this.game_data.type == 5) {
+        clearInterval(this.fast_game_counter);
       }
     }
     else if (this.game_data.type == 2) {

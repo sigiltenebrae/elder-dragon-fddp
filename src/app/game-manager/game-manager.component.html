@@ -24,6 +24,7 @@
                     <mat-option value="2">Two-Headed Giant</mat-option>
                     <mat-option value="3">Star</mat-option>
                     <mat-option value="4">Randomander</mat-option>
+                    <mat-option value="5">Fast Game!</mat-option>
                   </mat-select>
                 </mat-form-field>
               </div>
@@ -44,7 +45,7 @@
           <div fxFlex fxLayout="row" fxLayoutAlign="center center">
             <div fxLayout="column" fxLayoutAlign="center center">
               <h2>{{game.name}}</h2>
-              <h3>{{game.type == 1? 'Commander': game.type == 2? 'Two Headed': game.type == 3? 'Star': 'Randomander'}}</h3>
+              <h3>{{game.type == 1? 'Commander': game.type == 2? 'Two Headed': game.type == 3? 'Star': game.type == 4? 'Randomander': 'Fast Game!'}}</h3>
               <h5>Players: {{game.players.length}} of {{game.max_players}}</h5>
               <h5>Connected: {{game.connected.length}}</h5>
               <h5>Running Time: {{secondsToString(game)}}</h5>
