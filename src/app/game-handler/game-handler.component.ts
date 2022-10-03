@@ -864,7 +864,6 @@ export class GameHandlerComponent implements OnInit {
     out_player.command_tax_2 = 0;
     out_player.spectating = false;
     out_player.top_flipped = false;
-    out_player.card_preview = { position : {x: 1502, y: 430}}
     out_player.play_counters = [];
     for (let i = 0; i < 36; i++) {
       out_player.playmat.push({ name: 'play', id: i, owner: 1, cards: [] })
@@ -1820,7 +1819,7 @@ export class GameHandlerComponent implements OnInit {
     if (event.target.nodeName !== "INPUT" &&
       event.target.nodeName !== 'TEXTAREA' &&
       !this.matMenuTrigger.menuOpen &&
-      this.dialog.openDialogs.length == 0) {
+      this.dialog.openDialogs.length == 0 && this.user == this.currentPlayer()) {
       return true;
     }
     return false;
@@ -1840,10 +1839,13 @@ export class GameHandlerComponent implements OnInit {
         case "e":
           this.endTurn();
           break;
+        case "r":
+          this.openSideNav(this.user.exile);
+          break;
+        case "t":
+          this.openTokenDialog();
+          break;
         case "o":
-          if(this.user != null) {
-            this.user.card_preview.position = {x: 0, y: 0};
-          }
           break;
         case "s":
           this.shuffleDeck(this.user.deck.cards);
@@ -1853,6 +1855,10 @@ export class GameHandlerComponent implements OnInit {
           this.drawToX(this.user.hand);
           break;
         case "f":
+          this.openSideNav(this.user.deck);
+          break;
+        case "g":
+          this.openSideNav(this.user.grave);
           break;
         case "x":
           this.untapAll();
