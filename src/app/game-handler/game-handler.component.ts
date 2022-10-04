@@ -263,6 +263,13 @@ export class GameHandlerComponent implements OnInit {
                 this.game_data.players.splice(ind, 1);
               }
               this.game_data.spectators.push(json_data.get.scoop_data);
+              if (json_data.get.scoop_data.id == this.user.id) {
+                this.user = json_data.scoop_data;
+                this.logAction('scoop', null);
+              }
+              if (this.game_data.type == 2) {
+                this.getTeam(json_data.get.scoop_data.id).scooped = false;
+              }
             }
             if (json_data.get.turn_update != null) {
               this.game_data.current_turn = json_data.get.turn_update;
@@ -1042,6 +1049,18 @@ export class GameHandlerComponent implements OnInit {
         player_data: this.user
       }
     });
+    if (this.game_data.type == 2) {
+      let teammate = this.getTeammate();
+      let spectator2 = {
+        id: teammate.id,
+        name: teammate.name,
+        spectating: true,
+        play_counters: []
+      }
+      this.game_data.players.splice(this.game_data.players.indexOf(teammate), 1);
+      this.game_data.spectators.push(spectator2);
+      this.getTeam(this.user.id).scooped = true;
+    }
     this.logAction('scoop', null);
   }
 
@@ -1088,6 +1107,13 @@ export class GameHandlerComponent implements OnInit {
     }
     else if (this.game_data.type == 2) {
       if (this.game_data.current_turn == this.getTeam(this.user.id).turn) {
+        this.messageSocket({
+          game_id: this.game_id,
+          put: {
+            action:'end_turn',
+          }
+        });
+        this.logAction('end_turn', {});
       }
     }
   }
