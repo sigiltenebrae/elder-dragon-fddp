@@ -741,7 +741,7 @@
       <div class="deck-user-wrapper" *ngIf="currentPlayer() != null"
            (dblclick)="draw_count=1; drawToX(currentPlayer().hand)"
            [cdkDropListData]="currentPlayer().deck.cards"
-           (cdkDropListDropped)="dragCard(currently_dragging, user.deck, $event)"
+           (cdkDropListDropped)="dragCard(currently_dragging, user.deck, $event, {top: true})"
            cdkDropListOrientation="horizontal"
            cdkDropList>
         <h3 class="deck-user-quantity-text shadow-text">{{currentPlayer().deck.cards.length}}</h3>
@@ -764,7 +764,7 @@
            *ngIf="currentPlayer() != null"
            (contextmenu)="onRightClick($event, {type: 'zone', zone: this.user.grave})"
            [cdkDropListData]="currentPlayer().grave.cards"
-           (cdkDropListDropped)="dragCard(currently_dragging, user.grave, $event)"
+           (cdkDropListDropped)="dragCard(currently_dragging, user.grave, $event, {top: true})"
            cdkDropListOrientation="horizontal"
            cdkDropList>
         <h3 class="grave-user-quantity-text shadow-text">{{currentPlayer().grave.cards.length}}</h3>
@@ -785,7 +785,7 @@
            *ngIf="currentPlayer() != null"
            (contextmenu)="onRightClick($event, {type: 'zone', zone: this.user.exile})"
            [cdkDropListData]="currentPlayer().exile.cards"
-           (cdkDropListDropped)="dragCard(currently_dragging, user.exile, $event)"
+           (cdkDropListDropped)="dragCard(currently_dragging, user.exile, $event, {top: true})"
            cdkDropListOrientation="horizontal"
            cdkDropList>
         <h3 class="exile-user-quantity-text shadow-text">{{currentPlayer().exile.cards.length}}</h3>
@@ -806,7 +806,7 @@
            *ngIf="currentPlayer() != null"
            (contextmenu)="onRightClick($event, {type: 'commander'});"
            [cdkDropListData]="currentPlayer().deck.commander.cards"
-           (cdkDropListDropped)="dragCard(currently_dragging, user.deck.commander, $event)"
+           (cdkDropListDropped)="dragCard(currently_dragging, user.deck.commander, $event, {top: true})"
            cdkDropListOrientation="horizontal"
            cdkDropList>
         <button mat-fab class="command-tax-button-1" (click)="user.command_tax_1 = user.command_tax_1 + 1; updateCounter('Command Tax', user.command_tax_1);" (contextmenu)="onRightClick($event, {type: 'command_tax_1'})"><h1>{{currentPlayer().command_tax_1}}</h1></button>
@@ -838,7 +838,7 @@
            *ngIf="currentPlayer() != null"
            (contextmenu)="onRightClick($event, {type: 'zone', zone: this.user.temp_zone})"
            [cdkDropListData]="currentPlayer().temp_zone.cards"
-           (cdkDropListDropped)="dragCard(currently_dragging, user.temp_zone, $event)"
+           (cdkDropListDropped)="dragCard(currently_dragging, user.temp_zone, $event, {top: true})"
            cdkDropListOrientation="horizontal"
            cdkDropList>
         <h3 class="temp-zone-user-quantity-text shadow-text">{{currentPlayer().temp_zone.cards.length}}</h3>

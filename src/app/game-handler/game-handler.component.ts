@@ -1259,7 +1259,6 @@ export class GameHandlerComponent implements OnInit {
     card.tapped = 'untapped';
     card.power_mod = 0;
     card.toughness_mod = 0;
-    card.loyalty = 0;
     card.loyalty_mod = 0;
     card.counter_1 = false;
     card.counter_1_value = 0;
@@ -2335,6 +2334,10 @@ export class GameHandlerComponent implements OnInit {
    * @param event the drag event.
    */
   dragCard(card: any, dest: any, event: any, options?: any) {
+    if (options && options.top) {
+      this.sendCardToZone(card, this.getContainer(event.previousContainer.data), dest,
+        this.getSidenavList().indexOf(card), 0, options);
+    }
     if (event.previousContainer.data == this.getSidenavList()) {
       this.sendCardToZone(card, this.getContainer(event.previousContainer.data), dest,
         this.getSidenavList().indexOf(card), event.currentIndex, options);
