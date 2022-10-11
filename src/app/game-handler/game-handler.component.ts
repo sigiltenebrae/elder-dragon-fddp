@@ -213,6 +213,7 @@ export class GameHandlerComponent implements OnInit {
                   if (json_data.get.spectator_data.id == this.current_user.id) {
                     this.user = json_data.get.spectator_data.id;
                   }
+                  this.fixVisibility();
                 }
               }
             }
@@ -2324,6 +2325,28 @@ export class GameHandlerComponent implements OnInit {
           }
         }
         break;
+    }
+  }
+
+  fixVisibility() {
+    for (let player of this.game_data.players) {
+      for (let card of player.grave.cards) {
+        this.setVisibility(card, 'grave');
+      }
+      for (let card of player.exile.cards) {
+        this.setVisibility(card, 'exile');
+      }
+      for (let card of player.temp_zone.cards) {
+        this.setVisibility(card, 'temp_zone');
+      }
+      for (let card of player.commander.cards) {
+        this.setVisibility(card, 'commander');
+      }
+      for (let spot of player.playmat) {
+        for (let card of spot.cards) {
+          this.setVisibility(card, 'play');
+        }
+      }
     }
   }
 
