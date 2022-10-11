@@ -209,7 +209,7 @@ export class GameHandlerComponent implements OnInit {
                   }
                 }
                 if (!includes) {
-                  this.game_data.push(json_data.get.spectator_data);
+                  this.game_data.spectators.push(json_data.get.spectator_data);
                   if (json_data.get.spectator_data.id == this.current_user.id) {
                     this.user = json_data.get.spectator_data.id;
                   }
