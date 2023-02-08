@@ -34,7 +34,7 @@
     &nbsp;
   </div>
 
-  <div *ngIf="!loading_others && !loaded_others" fxFlex="100" fxLayout="row" fxLayoutAlign="center">
+  <div *ngIf="!loading_others && !loaded_others && !loading && user" fxFlex="100" fxLayout="row" fxLayoutAlign="center">
     <button mat-raised-button color="primary" (click)="getOthers()" style="max-height: 48px">Load Other Users</button>
   </div>
   <div *ngIf="loading_others" fxLayout="row" fxFlex="100" fxLayoutAlign="center center" style="margin: 20px;">

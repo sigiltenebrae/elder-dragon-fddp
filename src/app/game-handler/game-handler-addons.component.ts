@@ -354,9 +354,46 @@ export class SelectColorsDialog {
     this.dialogRef.close(null);
   }
 
+  randomColors() {
+    console.log('yay')
+    let w = false;
+    let u = false;
+    let b = false;
+    let r = false;
+    let g = false;
+    for (let player of this.players) {
+      player.star_color = null;
+    }
+    for (let player of this.players) {
+      while (true) {
+        for (let i = 0; i < Math.floor(Math.random() * 10); i++) {
+          this.nextColor(player);
+        }
+        if (player.star_color === 'W' && !w) {
+          w = true;
+          break;
+        }
+        if (player.star_color === 'U' && !u) {
+          u = true;
+          break;
+        }
+        if (player.star_color === 'B' && !b) {
+          b = true;
+          break;
+        }
+        if (player.star_color === 'R' && !r) {
+          r = true;
+          break;
+        }
+        if (player.star_color === 'G' && !g) {
+          g = true;
+          break;
+        }
+      }
+    }
+  }
+
   nextColor(player: any) {
-    console.log('clicked');
-    console.log(player.star_color)
     if (player.star_color == null) {
       player.star_color = 'W';
     }
