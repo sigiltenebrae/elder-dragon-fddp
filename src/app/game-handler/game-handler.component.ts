@@ -2359,9 +2359,9 @@ export class GameHandlerComponent implements OnInit {
   dragCard(card: any, dest: any, event: any, options?: any) {
     if (options && options.top) {
       this.sendCardToZone(card, this.getContainer(event.previousContainer.data), dest,
-        this.getSidenavList().indexOf(card), 0, options);
+        event.previousIndex, 0, options);
     }
-    if (event.previousContainer.data == this.getSidenavList()) {
+    else if (event.previousContainer.data == this.getSidenavList()) {
       this.sendCardToZone(card, this.getContainer(event.previousContainer.data), dest,
         this.getSidenavList().indexOf(card), event.currentIndex, options);
     }
@@ -2385,6 +2385,7 @@ export class GameHandlerComponent implements OnInit {
   sendCardToZone(card: any, source: any, dest: any, previousIndex: number, currentIndex: number, options?: any){
     //need to write an insert predicate for sidenav cdkdroplist that prevents dragging in once list is sorted.
     //Also prevents dragging in while scrying
+
     if (source == dest) {
       if (options && options.sidenav) {
         if (this.sidenavPredicate()) {
