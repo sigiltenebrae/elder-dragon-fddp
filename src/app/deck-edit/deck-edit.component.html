@@ -1,7 +1,7 @@
 <div *ngIf="loading" fxLayout="row" fxFlex="100" fxLayoutAlign="center center" style="margin: 20px;">
   <mat-spinner></mat-spinner>
 </div>
-<div *ngIf="!loading && deck" fxFlexFill style="margin: 20px;" fxLayoutAlign="center center">
+<div *ngIf="!loading && deck && deck.owner == current_user.id" fxFlexFill style="margin: 20px;" fxLayoutAlign="center center">
   <mat-card fxFlex="80" fxLayout="row wrap" fxLayoutGap="20">
     <div class="deck-edit-input-holder" style="min-height: 640px; max-height: 640px;" fxLayout="column">
       <mat-form-field appearance="fill" style="margin-top: 10px;">
@@ -158,3 +158,20 @@
     </div>
   </mat-card>
 </div>
+<dix fxLayout="column" *ngIf="!loading && deck && deck.owner != current_user.id">
+  <div fxFlex="100" fxLayout="row" fxLayoutAlign="center">
+    <h1>{{deck.name}}</h1>
+  </div>
+  <div fxFlex="100" fxLayout="row" fxLayoutAlign="center">
+    <div class="custom-image-card-holder" *ngFor="let card of commanders">
+      <img class="custom-image-card" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
+      <h3 class="custom-image-card-name">{{card.name}}</h3>
+    </div>
+  </div>
+  <div *ngIf="!loading && deck && deck.owner != current_user.id" fxFlexFill fxLayout="row wrap" fxLayoutGap="10px" fxLayoutAlign="center">
+    <div class="custom-image-card-holder" *ngFor="let card of notcommanders">
+      <img class="custom-image-card" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
+      <h3 class="custom-image-card-name">{{card.name}}</h3>
+    </div>
+  </div>
+</dix>

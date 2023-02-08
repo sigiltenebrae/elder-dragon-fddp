@@ -32,6 +32,9 @@ export class DeckEditComponent implements OnInit {
   deleting = false;
   card_type = 'cards';
 
+  commanders = [];
+  notcommanders = [];
+
   constructor(private fddp_data: FddpApiService, private route: ActivatedRoute, private router: Router, private tokenStorage: TokenStorageService, public dialog: MatDialog) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
@@ -56,7 +59,6 @@ export class DeckEditComponent implements OnInit {
         this.deck.sleeves = 'https://c1.scryfall.com/file/scryfall-card-backs/large/59/597b79b3-7d77-4261-871a-60dd17403388.jpg?1561757129';
         this.deck.link = '';
         this.deck.rating = 3;
-        this.deck.owner = 0;
         this.deck.cards = [];
         this.deck.tokens = [];
         this.deck.owner = this.current_user.id;
@@ -74,6 +76,7 @@ export class DeckEditComponent implements OnInit {
           this.deck.token_delete = [];
           this.deck.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
           this.deck.tokens.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+          this.getCommanders();
         });
       }
     }
@@ -99,6 +102,19 @@ export class DeckEditComponent implements OnInit {
       tap(() => {
         this.searching = false;
       }));
+
+  getCommanders() {
+    this.commanders = [];
+    this.notcommanders = [];
+    for (let card of this.deck.cards) {
+      if (card.iscommander) {
+        this.commanders.push(card);
+      }
+      else {
+        this.notcommanders.push(card);
+      }
+    }
+  }
 
   syncWithArchidekt() {
     if (this.deck.link) {

@@ -13,6 +13,11 @@ export class DeckManagerComponent implements OnInit {
   loading = false;
   decks: any[] = [];
 
+  users: any = null;
+  loading_others = false;
+  loaded_others = false;
+  decks_others: any = {};
+
   temp = false;
 
   constructor(private fddp_data: FddpApiService, private tokenStorage: TokenStorageService, private router: Router) { }
@@ -36,11 +41,43 @@ export class DeckManagerComponent implements OnInit {
             for (let deck of this.decks) {
               deck.hovered = false;
             }
-            this.loading = false;
+            this.fddp_data.getUsers().then((user_list: any) => {
+              this.users = user_list;
+              this.loading = false;
+            });
           });
         });
       }
     }
+  }
+
+  getOthers() {
+    this.loading_others = true;
+    for (let other of this.users) {
+      if (other.id != this.user.id) {
+        this.decks_others[other.id] = [];
+      }
+    }
+
+    this.fddp_data.getDecksBasic().then((decks: any) => {
+      let temp_decks = decks;
+      let deck_promises: any[] = [];
+      temp_decks.forEach((deck: any) => {
+        if (deck.owner !== this.user.id) {
+          deck_promises.push(this.getDeckData(deck.id));
+        }
+      });
+      Promise.all(deck_promises).then(() => {
+        for (let key in this.decks_others) {
+          for (let other_deck of this.decks_others[key]) {
+            other_deck.hovered = false;
+          }
+        }
+        this.loading_others = false;
+        this.loaded_others = true;
+        console.log(this.decks_others);
+      })
+    })
   }
 
   getDeckData(deckid: number): Promise<void> {
@@ -56,7 +93,12 @@ export class DeckManagerComponent implements OnInit {
           deck.cards.splice(deck.cards.indexOf(card), 1);
         });
         deck.colors = this.getDeckColors(deck);
-        this.decks.push(deck);
+        if (deck.owner == this.user.id) {
+          this.decks.push(deck);
+        }
+        else {
+          this.decks_others[deck.owner].push(deck);
+        }
         resolve();
       })
     })
