@@ -2234,6 +2234,8 @@ export class GameHandlerComponent implements OnInit {
     switch (zone) {
       case 'deck':
         return this.getPlayerFromId(id).deck;
+      case 'scry':
+        return this.getPlayerFromId(id).deck;
       case 'grave':
         return this.getPlayerFromId(id).grave;
       case 'exile':
