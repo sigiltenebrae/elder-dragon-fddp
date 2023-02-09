@@ -478,7 +478,8 @@
                      (contextmenu)="onRightClick($event, {type: 'opponent_playmat', player: player})">
                   <div *ngFor="let card of spot.cards; let i = index">
                     <div [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2, 'invert': card.inverted}"
-                         (pointerenter)="magnified_card=card" (pointerleave)="magnified_card=null"
+                         (pointerenter)="magnified_card = card.visible.includes(user.id) ? card: null"
+                         (pointerleave)="magnified_card=null"
                          class="playmat-user-card-container-mini"
                          [@userTappedState]="card.tapped"
                          [@shakeCard]="card.shaken">
@@ -692,7 +693,7 @@
             <div *ngFor="let card of spot.cards; let j = index" (dblclick)="$event.stopPropagation()" >
               <div [ngClass]="{'stack-1': j == 0, 'stack-2': j == 1, 'stack-3': j == 2, 'invert': card.inverted}"
                    class="playmat-user-card-container"
-                   (pointerenter)="magnified_card=card" (pointerleave)="magnified_card=null"
+                   (pointerenter)="magnified_card = card.visible.includes(user.id) ? card: null" (pointerleave)="magnified_card=null"
                    [@userTappedState]="card.tapped"
                    [@shakeCard]="card.shaken"
                    (cdkDragStarted)="magnified_card=null; currently_dragging = card"
@@ -849,6 +850,8 @@
         <h3 class="temp-zone-user-title-text shadow-text">Temp</h3>
         <!-- NOTE: this needs to account for face down exiles at some point -->
         <img *ngIf="currentPlayer().temp_zone.cards.length > 0" class="zone-card-image"
+             [src]="!currentPlayer().temp_zone.cards[0].facedown ? currentPlayer().temp_zone.cards[0].image:
+              currentPlayer().deck.sleeves === '' ? 'https://drive.google.com/uc?export=view&id=1-Hp4xnjvn6EU-khUQEHn4R0T7n46Pt84': currentPlayer().deck.sleeves"
              src="{{currentPlayer().temp_zone.cards[0].image}}"
              (pointerleave)="magnified_card = null"
              (cdkDragStarted)="magnified_card = null; currently_dragging=user.temp_zone.cards[0]"

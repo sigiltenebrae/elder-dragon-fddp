@@ -2388,6 +2388,10 @@ export class GameHandlerComponent implements OnInit {
     //need to write an insert predicate for sidenav cdkdroplist that prevents dragging in once list is sorted.
     //Also prevents dragging in while scrying
 
+    if (dest.name === 'hand' || dest.name === 'grave' || dest.name === 'exile') {
+      this.clearCard(card);
+    }
+
     if (source == dest) {
       if (options && options.sidenav) {
         if (this.sidenavPredicate()) {
