@@ -486,7 +486,8 @@
                       <img [ngClass]="{'playmat-user-card-selected': card.selected, 'grayscale': isClone(card) }"
                            class="playmat-user-card-mini"
                            [matTooltip]="card.notes"
-                           [src]="card.visible.includes(user.id) ? card.image: player.deck.sleeves"
+                           [src]="card.visible.includes(user.id) ? card.image:
+                                  player.deck.sleeves === '' ? 'https://drive.google.com/uc?export=view&id=1-Hp4xnjvn6EU-khUQEHn4R0T7n46Pt84': player.deck.sleeves"
                            [alt]="card.visible.includes(user.id) ? card.name: ''"
                            (contextmenu)="onRightClick($event,{type: 'opponent_play', card: card});"
                            (click)="card.selected=!card.selected" (dblclick)="toggleCardTap(card)" loading="lazy">
@@ -701,7 +702,8 @@
                 <img [ngClass]="{'playmat-user-card-selected': card.selected, 'grayscale': isClone(card) }"
                      class="playmat-user-card"
                      [matTooltip]="card.notes"
-                     [src]="card.visible.includes(user.id) ? card.image: currentPlayer().deck.sleeves"
+                     [src]="card.visible.includes(user.id) ? card.image:
+                     currentPlayer().deck.sleeves === '' ? 'https://drive.google.com/uc?export=view&id=1-Hp4xnjvn6EU-khUQEHn4R0T7n46Pt84': currentPlayer().deck.sleeves"
                      [alt]="card.visible.includes(user.id) ? card.name: ''"
                      (contextmenu)="onRightClick($event,{type: 'user_play', card: card, from: spot});"
                      (dblclick)="toggleCardTap(card)" loading="lazy">
@@ -730,7 +732,8 @@
         <h3 fxHide.lt-lg class="deck-user-owner-text shadow-text">{{selected_player.name}}</h3>
         <img loading="lazy"
              class="zone-card-image"
-             [src]="selected_player.top_flipped && selected_player.deck.cards.length > 0 ? selected_player.deck.cards[0].image: selected_player.deck.sleeves"
+             [src]="selected_player.top_flipped && selected_player.deck.cards.length > 0 ? selected_player.deck.cards[0].image:
+             selected_player.deck.sleeves === '' ? 'https://drive.google.com/uc?export=view&id=1-Hp4xnjvn6EU-khUQEHn4R0T7n46Pt84': selected_player.deck.sleeves"
              (pointerenter)="magnified_card = selected_player.top_flipped && selected_player.deck.cards.length > 0 ? selected_player.deck.cards[0]: null"
              (pointerleave)="magnified_card = null">
       </div>
@@ -748,7 +751,8 @@
         <h3 fxHide.lt-lg class="deck-user-owner-text shadow-text">{{currentPlayer().name}}</h3>
         <img loading="lazy"
              class="zone-card-image"
-             [src]="currentPlayer().top_flipped && currentPlayer().deck.cards.length > 0 ? currentPlayer().deck.cards[0].image: currentPlayer().deck.sleeves"
+             [src]="currentPlayer().top_flipped && currentPlayer().deck.cards.length > 0 ? currentPlayer().deck.cards[0].image:
+             currentPlayer().deck.sleeves === '' ? 'https://drive.google.com/uc?export=view&id=1-Hp4xnjvn6EU-khUQEHn4R0T7n46Pt84': currentPlayer().deck.sleeves"
              (contextmenu)="onRightClick($event, {type: 'deck'})"
              (pointerenter)="magnified_card = currentPlayer().top_flipped && currentPlayer().deck.cards.length > 0 ? currentPlayer().deck.cards[0]: null"
              (pointerleave)="magnified_card = null"
@@ -872,7 +876,8 @@
                  (pointerenter)="magnified_card = card.visible.includes(user.id) ? card: null"
                  (pointerleave)="magnified_card = null"
                  [@shakeCard]="card.shaken">
-              <img class="playmat-user-card-mini" [src]="card.visible.includes(user.id) ? card.image: selected_player.deck.sleeves">
+              <img class="playmat-user-card-mini" [src]="card.visible.includes(user.id) ? card.image:
+              selected_player.deck.sleeves === '' ? 'https://drive.google.com/uc?export=view&id=1-Hp4xnjvn6EU-khUQEHn4R0T7n46Pt84': selected_player.deck.sleeves">
             </div>
           </div>
         </ng-scrollbar>
@@ -906,7 +911,8 @@
                  [@shakeCard]="card.shaken"
                  [cdkDragDisabled]="user != currentPlayer()"
                  cdkDrag>
-              <img class="playmat-user-card" [src]="card.visible.includes(user.id) ? card.image: currentPlayer().deck.sleeves">
+              <img class="playmat-user-card" [src]="card.visible.includes(user.id) ? card.image:
+              currentPlayer().deck.sleeves === '' ? 'https://drive.google.com/uc?export=view&id=1-Hp4xnjvn6EU-khUQEHn4R0T7n46Pt84': currentPlayer().deck.sleeves">
             </div>
           </div>
         </ng-scrollbar>

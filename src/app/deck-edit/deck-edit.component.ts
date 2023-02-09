@@ -56,7 +56,7 @@ export class DeckEditComponent implements OnInit {
         this.deck.id = this.deckid;
         this.deck.name = '';
         this.deck.image = '';
-        this.deck.sleeves = 'https://c1.scryfall.com/file/scryfall-card-backs/large/59/597b79b3-7d77-4261-871a-60dd17403388.jpg?1561757129';
+        this.deck.sleeves = '';
         this.deck.link = '';
         this.deck.rating = 3;
         this.deck.cards = [];

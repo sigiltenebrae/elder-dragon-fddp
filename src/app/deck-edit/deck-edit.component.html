@@ -14,7 +14,7 @@
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Deck Sleeves</mat-label>
-        <input matInput [type]="'text'" name="decksleeves" [(ngModel)]="deck.sleeves" required minlength="1">
+        <input matInput [type]="'text'" name="decksleeves" [(ngModel)]="deck.sleeves">
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Deck Link</mat-label>
@@ -51,7 +51,8 @@
           <h2>Deck Image</h2>
         </div>
         <div fxLayout="column" fxLayoutAlign="center center">
-          <img class="deck-edit-preview" src="{{deck.sleeves}}" loading="lazy">
+          <img *ngIf="deck.sleeves !== ''" class="deck-edit-preview" src="{{deck.sleeves}}" loading="lazy">
+          <img *ngIf="deck.sleeves === ''" class="deck-edit-preview" src="https://drive.google.com/uc?export=view&id=1-Hp4xnjvn6EU-khUQEHn4R0T7n46Pt84" loading="lazy">
           <h2>Deck Sleeves</h2>
         </div>
       </div>
