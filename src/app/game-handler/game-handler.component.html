@@ -49,6 +49,7 @@
 
         <div *ngIf="rightclicked_item.type === 'commander' && user != null && user == currentPlayer()">
           <button mat-menu-item (click)="openDeckSelectDialog()">Change Deck</button>
+          <button mat-menu-item *ngIf="game_data && game_data.turn_count == 0" (click)="startGame()">Start Game</button>
           <button mat-menu-item (click)="scoopDeck()">Scoop Deck</button>
           <button mat-menu-item [matMenuTriggerFor]="kickPlayer" *ngIf="user != null && user == currentPlayer()">Kick</button>
           <button mat-menu-item (click)="endGame()">End Game</button>
@@ -83,8 +84,6 @@
         </div>
 
         <div *ngIf="rightclicked_item.type === 'deck'">
-          <button mat-menu-item *ngIf="game_data && game_data.turn_count == 0" (click)="startGame()">Start Game</button>
-          <button mat-menu-item *ngIf="game_data && game_data.turn_count < 0" (click)="endGame()">End Game</button>
           <button mat-menu-item (click)="openSideNav(this.user.deck)">Search</button>
           <button mat-menu-item (click)="shuffleDeck(user.deck.cards)">Shuffle</button>
           <button mat-menu-item (click)="flipTop()">Flip Top</button>
