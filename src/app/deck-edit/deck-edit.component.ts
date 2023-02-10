@@ -35,6 +35,8 @@ export class DeckEditComponent implements OnInit {
   commanders = [];
   notcommanders = [];
 
+  image_sort = ""
+
   constructor(private fddp_data: FddpApiService, private route: ActivatedRoute, private router: Router, private tokenStorage: TokenStorageService, public dialog: MatDialog) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
@@ -266,6 +268,17 @@ export class DeckEditComponent implements OnInit {
       let image_data: any = await this.fddp_data.getImagesForCard(card.name);
       this.image_options = image_data.images;
       this.back_image_options = image_data.back_images;
+    }
+  }
+
+  sortImages() {
+    if (this.image_sort === "dateasc") {
+      this.image_options.sort((a: any, b: any) => (a.date > b.date) ? 1: -1);
+      this.back_image_options.sort((a: any, b: any) => (a.date > b.date) ? 1: -1);
+    }
+    else if (this.image_sort === "datedesc") {
+      this.image_options.sort((a: any, b: any) => (a.date < b.date) ? 1: -1);
+      this.back_image_options.sort((a: any, b: any) => (a.date < b.date) ? 1: -1);
     }
   }
 

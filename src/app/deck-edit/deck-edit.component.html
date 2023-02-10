@@ -147,12 +147,21 @@
       </div>
     </div>
     <div *ngIf="selected_card && (changing_image || changing_back_image) && card_type === 'cards'" fxLayout="column" fxFlex fxLayoutAlign="center center">
+      <div fxLayout="row" fxLayoutAlign="start" style="margin-top: 10px">
+        <mat-form-field appearance="fill">
+          <mat-label>Sort</mat-label>
+          <mat-select [(ngModel)]="image_sort" (ngModelChange)="sortImages()">
+            <mat-option value="dateasc">Date Asc</mat-option>
+            <mat-option value="datedesc">Date Desc</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
       <div fxFlex fxLayout="row wrap" fxLayoutAlign="center" style="overflow-y: scroll; min-height: 640px; max-height: 640px; margin-top: 10px;">
         <div *ngIf="changing_image">
-          <img *ngFor="let card_image of image_options" class="deck-edit-card-select" src="{{card_image}}" (click)="selected_card.image=card_image; changing_image=false;" loading="lazy">
+          <img *ngFor="let card_image of image_options" class="deck-edit-card-select" src="{{card_image.image}}" (click)="selected_card.image=card_image.image; changing_image=false;" loading="lazy">
         </div>
         <div *ngIf="changing_back_image">
-          <img *ngFor="let card_image of back_image_options" class="deck-edit-card-select" src="{{card_image}}" (click)="selected_card.back_image=card_image; changing_back_image=false;" loading="lazy">
+          <img *ngFor="let card_image of back_image_options" class="deck-edit-card-select" src="{{card_image.image}}" (click)="selected_card.back_image=card_image.image; changing_back_image=false;" loading="lazy">
         </div>
       </div>
       <button mat-raised-button color="warn" (click)="changing_image=false; changing_back_image=false;" style="margin-top: 10px;">Cancel</button>
