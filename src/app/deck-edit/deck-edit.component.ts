@@ -156,6 +156,7 @@ export class DeckEditComponent implements OnInit {
           remove_cards.forEach((card: any) => {
             this.deck.cards.splice(this.deck.cards.indexOf(card), 1);
           });
+          this.deck.delete = remove_cards;
         }
         this.deck.cards.forEach((card: any) => {
           if (card.image === '' || card.image == null) {
@@ -236,8 +237,8 @@ export class DeckEditComponent implements OnInit {
       this.fddp_data.getImagesForCard(card.name).then((card_image_data: any) => {
         let card_images = card_image_data.images;
         let card_back_images = card_image_data.back_images
-        card.image = card_images && card_images.length > 0? card_images[0]: '';
-        card.back_image = card_back_images && card_back_images.length > 0? card_back_images[0]: '';
+        card.image = card_images && card_images.length > 0? card_images[card_images.length - 1].image: '';
+        card.back_image = card_back_images && card_back_images.length > 0? card_back_images[card_back_images.length - 1].image: '';
         resolve();
       });
     });
