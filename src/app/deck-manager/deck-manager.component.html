@@ -2,7 +2,7 @@
   <div *ngIf="loading" fxLayout="row" fxFlex="100" fxLayoutAlign="center center" style="margin: 20px;">
     <mat-spinner></mat-spinner>
   </div>
-  <div *ngIf="!loading && user" fxFlex="100" fxLayout="row wrap" fxLayoutAlign="center center" style="margin: 20px">
+  <div *ngIf="!loading && user" fxLayout="row wrap" fxLayoutAlign="center" style="margin: 20px">
     <div *ngFor="let deck of decks" fxLayout="column" style="margin: 10px;">
       <div class="deck-manager-commander-viewer" matRipple [matRippleCentered]="false" [matRippleDisabled]="!deck.hovered">
         <div [ngClass]="{'deck-manager-background-card-closed': deck.hovered, 'deck-manager-background-card-open': !deck.hovered}">
@@ -34,11 +34,11 @@
     &nbsp;
   </div>
 
-  <div *ngIf="!loading_others && !loaded_others && !loading && user" fxFlex="100" fxLayout="row" fxLayoutAlign="center">
-    <button mat-raised-button color="primary" (click)="getOthers()" style="max-height: 48px">Load Other Users</button>
+  <div *ngIf="!loading_others && !loaded_others && !loading && user" fxFlex fxLayout="row" fxLayoutAlign="center">
+    <button mat-raised-button color="primary" (click)="getOthers()" style="max-height: 48px; margin: 20px;">Load Other Users</button>
   </div>
-  <div *ngIf="loading_others" fxLayout="row" fxFlex="100" fxLayoutAlign="center center" style="margin: 20px;">
-    <mat-spinner></mat-spinner>
+  <div *ngIf="loading_others" fxLayout="row" fxFlex fxLayoutAlign="center center" style="margin: 20px;">
+    <mat-spinner style="margin: 20px;"></mat-spinner>
   </div>
 
   <div *ngIf="loaded_others" style="margin: 20px;">
@@ -46,7 +46,7 @@
       <div *ngIf="other_user.id !== user.id" fxLayout="row" fxLayoutAlign="center center" fxFlex="100">
         <h1>{{other_user.name}}</h1>
       </div>
-      <div fxFlex="100" fxLayout="row wrap" fxLayoutAlign="center center">
+      <div fxFlexFill fxLayout="row wrap" fxLayoutAlign="center center">
         <div *ngFor="let deck of decks_others[other_user.id]" fxLayout="column" style="margin: 10px;">
           <div class="deck-manager-commander-viewer" matRipple [matRippleCentered]="false" [matRippleDisabled]="!deck.hovered">
             <div [ngClass]="{'deck-manager-background-card-closed': deck.hovered, 'deck-manager-background-card-open': !deck.hovered}">
