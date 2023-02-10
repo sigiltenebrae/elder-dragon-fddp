@@ -35,7 +35,9 @@ export class DeckEditComponent implements OnInit {
   commanders = [];
   notcommanders = [];
 
-  image_sort = ""
+  image_sort = "";
+  available_sets = [];
+  selected_set = "";
 
   constructor(private fddp_data: FddpApiService, private route: ActivatedRoute, private router: Router, private tokenStorage: TokenStorageService, public dialog: MatDialog) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
@@ -254,12 +256,18 @@ export class DeckEditComponent implements OnInit {
 
 
   async getCardImages(card: any) {
+    this.available_sets = [];
+    this.selected_set = "";
     if (this.card_type === 'tokens') {
       this.token_options = [];
       let token_data = await this.fddp_data.getAllOfToken(card.name);
       for (let token of token_data) {
         if (this.tokensEqual(card, token)) {
+          token.visible = true;
           this.token_options.push(token);
+          if (!this.available_sets.includes(token.set_name)) {
+            this.available_sets.push(token.set_name);
+          }
         }
       }
     }
@@ -268,6 +276,16 @@ export class DeckEditComponent implements OnInit {
       let image_data: any = await this.fddp_data.getImagesForCard(card.name);
       this.image_options = image_data.images;
       this.back_image_options = image_data.back_images;
+
+      for (let card of this.image_options) {
+        card.visible = true;
+        if (!this.available_sets.includes(card.set_name)) {
+          this.available_sets.push(card.set_name);
+        }
+      }
+      for (let card of this.back_image_options) {
+        card.visible = true;
+      }
     }
   }
 
@@ -281,6 +299,18 @@ export class DeckEditComponent implements OnInit {
       this.image_options.sort((a: any, b: any) => (a.date < b.date) ? 1: -1);
       this.back_image_options.sort((a: any, b: any) => (a.date < b.date) ? 1: -1);
       this.token_options.sort((a: any, b: any) => (a.date < b.date) ? 1: -1);
+    }
+  }
+
+  selectSet() {
+    for (let card of this.image_options) {
+      card.visible = card.set_name === this.selected_set || this.selected_set === 'all';
+    }
+    for (let card of this.back_image_options) {
+      card.visible = card.set_name === this.selected_set || this.selected_set === 'all';
+    }
+    for (let card of this.token_options) {
+      card.visible = card.set_name === this.selected_set || this.selected_set === 'all';
     }
   }
 
