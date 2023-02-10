@@ -252,6 +252,12 @@ export class GameHandlerComponent implements OnInit {
                 }
               }
             }
+            if (json_data.get.kick_vote != null) { //only occurs when vote starts, not when someone votes
+              this.game_data.kick_vote = json_data.get.kick_vote;
+            }
+            if (json_data.get.cancel_kick) {
+              this.game_data.kick_vote = null;
+            }
             if (json_data.get.scoop_data != null) {
               let ind = -1;
               for (let i = 0; i < this.game_data.players.length; i++) {
@@ -292,6 +298,7 @@ export class GameHandlerComponent implements OnInit {
             if (json_data.get.plane_data != null) {
               this.game_data.current_plane = json_data.get.plane_data;
             }
+            console.log(this.game_data.kick_vote);
           }
           if (json_data.log) {
             this.game_data.action_log.push(json_data.log);
@@ -302,7 +309,7 @@ export class GameHandlerComponent implements OnInit {
             }
           }
           if (json_data.pong) {
-            console.log('pong');
+            //console.log('pong');
           }
         });
 
@@ -598,6 +605,29 @@ export class GameHandlerComponent implements OnInit {
           {text: '', type: 'search'},
           {text: 'their library', type: 'regular'}
         ]
+        break;
+      case 'kick_vote':
+        log_action = [
+          {text: this.user.name, type: 'player'},
+          {text: 'has requested to kick', type: 'regular'},
+          {text: data.player.name, type: 'player'}
+        ]
+        break;
+      case 'vote_kick':
+        if (data.vote) {
+          log_action = [
+            {text: this.user.name, type: 'player'},
+            {text: 'has voted to kick', type: 'regular'},
+            {text: data.kickee.name, type: 'player'}
+          ]
+        }
+        else {
+          log_action = [
+            {text: this.user.name, type: 'player'},
+            {text: 'has voted not to kick', type: 'regular'},
+            {text: data.kickee.name, type: 'player'}
+          ]
+        }
         break;
       case 'scoop':
         log_action = [
@@ -1038,7 +1068,8 @@ export class GameHandlerComponent implements OnInit {
       id: this.user.id,
       name: this.user.name,
       spectating: true,
-      play_counters: []
+      play_counters: [],
+      turn: this.user.turn
     }
     this.game_data.players.splice(this.game_data.players.indexOf(this.user), 1);
     this.user = spectator;
@@ -1063,6 +1094,71 @@ export class GameHandlerComponent implements OnInit {
       this.getTeam(this.user.id).scooped = true;
     }
     this.logAction('scoop', null);
+  }
+
+  kickVote(player: any) {
+    if (this.game_data.kick_vote == null) {
+      this.game_data.kick_vote = {
+        kicker: this.user,
+        kickee: player,
+        votes: [
+          {
+            player: this.user,
+            kick: true
+          }
+        ]
+      }
+      this.messageSocket({
+        game_id: this.game_id,
+        put: {
+          action: 'kick_vote',
+          kicker: this.user,
+          kickee: player,
+          votes: [
+            {
+              player: this.user,
+              kick: true
+            }
+          ]
+        }
+      });
+      this.logAction('kick_vote', {player: player});
+    }
+  }
+
+  voteKick(vote: boolean) {
+
+    if (this.game_data.kick_vote) {
+      let kickee = this.game_data.kick_vote.kickee;
+      if (vote) {
+        this.game_data.kick_vote.votes.push({player: this.user, kick: vote});
+      }
+      else {
+        this.game_data.kick_vote = null;
+      }
+      this.messageSocket({
+        game_id: this.game_id,
+        put: {
+          action: 'vote_kick',
+          vote: {player: this.user, kick: vote}
+        }
+      });
+      this.logAction('vote_kick', {vote: vote, kickee: kickee});
+    }
+  }
+
+  hasKickVoted() {
+    if (this.game_data.kick_vote != null && this.game_data.kick_vote.votes) {
+      if (this.game_data.kick_vote.kickee.name === this.user.name) {
+        return true;
+      }
+      for (let vote of this.game_data.kick_vote.votes) {
+        if (vote.player.name === this.user.name) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   endGame() {
@@ -1166,14 +1262,21 @@ export class GameHandlerComponent implements OnInit {
     return null;
   }
 
-  getOtherPlayers() {
-    let out_players: any[] = [];
-    for (let player of this.game_data.players) {
-      if (this.currentPlayer() == null || player != this.currentPlayer()) {
-        out_players.push(player);
+  /**
+   * Returns a list of players that are not the user.
+   */
+  getOtherPlayers(): any[] {
+    if (this.game_data != null && this.game_data.players != null && this.user != null) {
+      let out_players: any[] = [];
+      for (let player of this.game_data.players) {
+        if (this.currentPlayer() == null || player != this.currentPlayer()) {
+          out_players.push(player);
+        }
       }
+      return out_players;
     }
-    return out_players;
+    return [];
+
   }
 
   selectPlayer(selector: any) {
@@ -2330,6 +2433,9 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Fix the visibility of the card as it changes zones (cards in grave cannot be facedown, so they are flipped)
+   */
   fixVisibility() {
     for (let player of this.game_data.players) {
       for (let card of player.grave.cards) {

@@ -49,8 +49,13 @@ export class FddpWebsocketService {
     let observer = {
       error: null,
       complete: null,
-      next: (data: Object) => {
-        console.log('Message sent to websocket: ', data);
+      next: (data: any) => {
+        if (data.content != null && data.content.ping) {
+
+        }
+        else {
+          console.log('Message sent to websocket: ', data);
+        }
         if (ws.readyState === WebSocket.OPEN) {
           ws.send(JSON.stringify(data));
         }

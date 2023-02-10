@@ -558,6 +558,10 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   background: mat.get-color-from-palette($fddp-palette-primary-dark, 500);
 }
 
+.game-data-player-list-item-kick {
+  background: mat.get-color-from-palette(mat.$red-palette, 500);
+}
+
 .game-data-player-list-name {
   width: 132px;
   overflow-x: hidden !important;

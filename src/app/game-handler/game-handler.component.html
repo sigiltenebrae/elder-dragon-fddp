@@ -50,6 +50,7 @@
         <div *ngIf="rightclicked_item.type === 'commander' && user != null && user == currentPlayer()">
           <button mat-menu-item (click)="openDeckSelectDialog()">Change Deck</button>
           <button mat-menu-item (click)="scoopDeck()">Scoop Deck</button>
+          <button mat-menu-item [matMenuTriggerFor]="kickPlayer" *ngIf="user != null && user == currentPlayer()">Kick</button>
           <button mat-menu-item (click)="endGame()">End Game</button>
         </div>
 
@@ -248,6 +249,10 @@
   <button mat-menu-item (click)="drawToX(this.user.grave)">Graveyard</button>
   <button mat-menu-item (click)="drawToX(this.user.exile)">Exile</button>
   <button mat-menu-item (click)="drawToX(this.user.temp_zone)">Temp Zone</button>
+</mat-menu>
+
+<mat-menu #kickPlayer="matMenu">
+  <button mat-menu-item *ngFor="let player of getOtherPlayers()" (click)="kickVote(player)">{{player.name}}</button>
 </mat-menu>
 
 <mat-sidenav-container cdkDropListGroup fxFlexFill hasBackdrop="false" *ngIf="game_data != null && user != null" style="overflow: hidden; position: fixed; top: 0; left: 0; z-index: 500">
@@ -518,9 +523,12 @@
           <ng-scrollbar track="vertical" visibility="hover" pointerEventsMethod="scrollbar" [style.height.px]="200">
             <mat-list *ngIf="game_data.type != 2" style="margin-top: -10px">
               <div *ngFor="let player of game_data.players">
-                <mat-list-item class="game-data-player-list-item" fxLayout="row" fxLayoutAlign="start center" [ngClass]="{'game-data-player-list-item-turn': player.turn == game_data.current_turn,
-                'game-data-player-list-item-selected': player == selected_player,
-                'star-player-text-outline-W': player.star_color === 'W',
+                <mat-list-item class="game-data-player-list-item" fxLayout="row" fxLayoutAlign="start center"
+                               [ngClass]="{
+                          'game-data-player-list-item-kick': game_data.kick_vote != null && game_data.kick_vote.kickee.name === player.name,
+                          'game-data-player-list-item-turn': player.turn == game_data.current_turn,
+                          'game-data-player-list-item-selected': player == selected_player,
+                          'star-player-text-outline-W': player.star_color === 'W',
                           'star-player-text-outline-U': player.star_color === 'U',
                           'star-player-text-outline-B': player.star_color === 'B',
                           'star-player-text-outline-R': player.star_color === 'R',
@@ -529,6 +537,7 @@
                           mat-button class="game-data-player-list-name"
                           >{{player.name}}</button>
                   <button mat-button class="game-data-player-list-counter"
+                          *ngIf="game_data.kick_vote == null || game_data.kick_vote.kickee.name !== player.name"
                           (pointerenter)="magnified_card = player.deck.commander.saved.length == 2? player.deck.commander.saved[1]: null"
                           (pointerleave)="magnified_card = null"
                           (click)="lifeClick($event, player)" [disabled]="player != user"
@@ -536,10 +545,15 @@
                     {{player.life}}
                   </button>
                   <button mat-button class="game-data-player-list-counter"
+                          *ngIf="game_data.kick_vote == null || game_data.kick_vote.kickee.name !== player.name"
                           (click)="infectClick($event, player)" [disabled]="player != user"
                           (contextmenu)="onRightClick($event, {type: 'infect', player: player})">
                     {{player.infect}}
                   </button>
+                  <button mat-button class="game-data-player-list-counter"
+                          *ngIf="game_data.kick_vote != null && game_data.kick_vote.kickee.name === player.name && !hasKickVoted()" (click)="voteKick(true)">Yay</button>
+                  <button mat-button class="game-data-player-list-counter"
+                          *ngIf="game_data.kick_vote != null && game_data.kick_vote.kickee.name === player.name && !hasKickVoted()" (click)="voteKick(false)">Nay</button>
                 </mat-list-item>
               </div>
             </mat-list>
