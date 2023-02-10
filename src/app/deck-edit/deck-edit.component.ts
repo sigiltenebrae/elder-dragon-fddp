@@ -275,10 +275,12 @@ export class DeckEditComponent implements OnInit {
     if (this.image_sort === "dateasc") {
       this.image_options.sort((a: any, b: any) => (a.date > b.date) ? 1: -1);
       this.back_image_options.sort((a: any, b: any) => (a.date > b.date) ? 1: -1);
+      this.token_options.sort((a: any, b: any) => (a.date > b.date) ? 1: -1);
     }
     else if (this.image_sort === "datedesc") {
       this.image_options.sort((a: any, b: any) => (a.date < b.date) ? 1: -1);
       this.back_image_options.sort((a: any, b: any) => (a.date < b.date) ? 1: -1);
+      this.token_options.sort((a: any, b: any) => (a.date < b.date) ? 1: -1);
     }
   }
 
