@@ -95,6 +95,9 @@ export class CustomImagesComponent implements OnInit {
       if (this.image_google.includes('/file/d/') && this.image_google.includes('/view?usp=sharing')) {
         this.image = "https://drive.google.com/uc?export=view&id=" + this.image_google.substring(this.image_google.indexOf('/file/d/') + 8, this.image_google.indexOf('/view?usp=sharing'));
       }
+      if (this.image_google.includes('/file/d/') && this.image_google.includes('/view?usp=share_link')) {
+        this.image = "https://drive.google.com/uc?export=view&id=" + this.image_google.substring(this.image_google.indexOf('/file/d/') + 8, this.image_google.indexOf('/view?usp=share_link'));
+      }
     }
   }
 
