@@ -287,6 +287,7 @@ export class DeckEditComponent implements OnInit {
         card.visible = true;
       }
     }
+    this.available_sets.sort((a: any, b: any) => (a > b) ? 1: -1);
   }
 
   sortImages() {
