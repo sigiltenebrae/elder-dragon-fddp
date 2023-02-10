@@ -5,6 +5,11 @@
   <mat-card fxFlex="80" fxLayout="row wrap" fxLayoutGap="20">
     <div class="deck-edit-input-holder" style="min-height: 640px; max-height: 640px;" fxLayout="column">
       <mat-form-field appearance="fill" style="margin-top: 10px;">
+        <mat-label>Deck Link (optional)</mat-label>
+        <input (keydown.enter)="syncWithArchidekt()" matInput [type]="'text'" name="decklink" [(ngModel)]="deck.link">
+        <button mat-icon-button matSuffix type="button" (click)="syncWithArchidekt()"><mat-icon>cached</mat-icon></button>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
         <mat-label>Deck Name</mat-label>
         <input matInput [type]="'text'" name="deckname" [(ngModel)]="deck.name" required minlength="1">
       </mat-form-field>
@@ -15,11 +20,6 @@
       <mat-form-field appearance="fill">
         <mat-label>Deck Sleeves</mat-label>
         <input matInput [type]="'text'" name="decksleeves" [(ngModel)]="deck.sleeves">
-      </mat-form-field>
-      <mat-form-field appearance="fill">
-        <mat-label>Deck Link</mat-label>
-        <input (keydown.enter)="syncWithArchidekt()" matInput [type]="'text'" name="decklink" [(ngModel)]="deck.link">
-        <button mat-icon-button matSuffix type="button" (click)="syncWithArchidekt()"><mat-icon>cached</mat-icon></button>
       </mat-form-field>
       <!--<mat-form-field appearance="fill">
         <mat-label>Owner</mat-label>
