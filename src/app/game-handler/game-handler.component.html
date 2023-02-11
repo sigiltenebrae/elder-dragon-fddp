@@ -156,7 +156,7 @@
 
 <mat-menu #token_menu="matMenu">
   <div *ngIf="rightclicked_item && rightclicked_item.card && rightclicked_item.card.tokens">
-    <button *ngFor="let token of rightclicked_item.card.tokens" mat-menu-item (click)="createToken(token)">Create {{token.name}} Token</button>
+    <button *ngFor="let token of getTokenList(rightclicked_item.card)" mat-menu-item (click)="createToken(token)">Create {{token.name}} Token</button>
   </div>
 </mat-menu>
 

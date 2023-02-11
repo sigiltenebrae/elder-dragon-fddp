@@ -1612,6 +1612,23 @@ export class GameHandlerComponent implements OnInit {
     this.logAction('clone', {card: card_clone});
   }
 
+  getTokenList(card): any[] {
+    let out_tokens = [];
+    for (let token of card.tokens) {
+      let have = false;
+      for (let old_tok of out_tokens) {
+        if (token.name === old_tok.name) {
+          have = true;
+          break;
+        }
+      }
+      if (!have) {
+        out_tokens.push(token);
+      }
+    }
+    return out_tokens;
+  }
+
   isEqualToken(card1: any, card2: any) {
     return card1.name.toLowerCase() === card2.name.toLowerCase() &&
       card1.power === card2.power &&
