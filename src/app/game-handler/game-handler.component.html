@@ -12,6 +12,7 @@
         <div *ngIf="rightclicked_item.type === 'user_play'">
           <button *ngIf="user != null && user == currentPlayer()" mat-menu-item (click)="rightclicked_item.card.locked=!rightclicked_item.card.locked">(Un)Lock Tap</button>
           <button *ngIf="user != null" mat-menu-item (click)="shakeCard(rightclicked_item.card, rightclicked_item.card.owner, 'play')">Shake</button>
+          <button *ngIf="user != null" mat-menu-item (click)="primeCard(rightclicked_item.card)">Set Alarm</button>
           <button *ngIf="user != null && user == currentPlayer()" mat-menu-item (click)="cloneCard(rightclicked_item.card)">Clone</button>
           <button *ngIf="user != null && user == currentPlayer()" mat-menu-item (click)="editNotes(rightclicked_item.card)">Edit Notes</button>
           <button *ngIf="user != null && user == currentPlayer()" mat-menu-item [matMenuTriggerFor]="counters">Counters</button>
@@ -707,8 +708,11 @@
               <div [ngClass]="{'stack-1': j == 0, 'stack-2': j == 1, 'stack-3': j == 2, 'invert': card.inverted}"
                    class="playmat-user-card-container"
                    (pointerenter)="magnified_card = card.visible.includes(user.id) ? card: null" (pointerleave)="magnified_card=null"
+                   (click)="card.triggered = false"
                    [@userTappedState]="card.tapped"
                    [@shakeCard]="card.shaken"
+                   [@alarmCard]="card.triggering"
+                   (@alarmCard.done)="onAlarmDone(card)"
                    (cdkDragStarted)="magnified_card=null; currently_dragging = card"
                    [cdkDragDisabled]="user != currentPlayer()"
                    cdkDrag>

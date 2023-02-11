@@ -6,7 +6,7 @@ import {RightclickHandlerServiceService} from "../../services/rightclick-handler
 import {FddpApiService} from "../../services/fddp-api.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MatDialog} from "@angular/material/dialog";
-import {shakeX} from 'ng-animate';
+import {shakeX, flash} from 'ng-animate';
 import {ActivatedRoute, Router} from "@angular/router";
 import {TokenStorageService} from "../../services/token-storage.service";
 import {FddpWebsocketService} from "../../services/fddp-websocket.service";
@@ -41,7 +41,8 @@ import {Howl} from 'howler'
       transition('tapped => untapped', animate('250ms ease-out')),
       transition('untapped => tapped', animate('250ms ease-in'))
     ]),
-    trigger('shakeCard', [transition('false => true', useAnimation(shakeX))])
+    trigger('shakeCard', [transition('false => true', useAnimation(shakeX))]),
+    trigger('alarmCard', [transition('false => true', useAnimation(flash)), transition('true => false', [])])
   ],
 })
 export class GameHandlerComponent implements OnInit {
@@ -284,6 +285,7 @@ export class GameHandlerComponent implements OnInit {
               this.last_turn = new Date().getTime();
               if (this.user.turn != null && this.game_data.current_turn == this.user.turn) {
                 this.notification_sound.play();
+                this.activateAlarms();
                 if (this.game_data.type == 5) {
                   this.fast_game_counter = setInterval(() => {
                     console.log('burn!')
@@ -927,6 +929,7 @@ export class GameHandlerComponent implements OnInit {
       card.locked = false;
       card.primed = false;
       card.triggered = false;
+      card.triggering = false;
       card.is_token = false;
       card.tapped = 'untapped';
       card.visible = [];
@@ -1375,6 +1378,7 @@ export class GameHandlerComponent implements OnInit {
     card.locked = false;
     card.primed = false;
     card.triggered = false;
+    card.triggering = false;
     card.facedown = false;
     card.shaken = false;
     card.inverted = false;
@@ -1564,6 +1568,36 @@ export class GameHandlerComponent implements OnInit {
         default:
           break;
       }
+    }
+  }
+
+  primeCard(card: any) {
+    card.primed = !card.primed;
+    this.updateSocketPlayer();
+  }
+
+  activateAlarms() {
+    if (this.user != null) {
+      for (let spot of this.user.playmat) {
+        for (let card of spot.cards) {
+          if (card.primed) {
+            this.setAlarm(card, true);
+          }
+        }
+      }
+    }
+  }
+
+  setAlarm(card: any, alarm: boolean) {
+    card.triggered = alarm;
+    if (card.triggered) {
+      card.triggering = !card.triggering;
+    }
+  }
+
+  onAlarmDone(card) {
+    if (card.triggered) {
+      card.triggering = !card.triggering;
     }
   }
 
