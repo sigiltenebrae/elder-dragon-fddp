@@ -741,7 +741,7 @@
 
     <!-- Selected Player Deck -->
     <div fxHide.lt-xl class="deck-selected-player-container">
-      <div class="deck-user-wrapper" *ngIf="selected_player != null">
+      <div class="deck-user-wrapper" *ngIf="selected_player != null && selected_player != currentPlayer()">
         <h3 class="deck-user-quantity-text shadow-text">{{selected_player.deck.cards.length}}</h3>
         <h3 fxHide.lt-lg class="deck-user-owner-text shadow-text">{{selected_player.name}}</h3>
         <img loading="lazy"
