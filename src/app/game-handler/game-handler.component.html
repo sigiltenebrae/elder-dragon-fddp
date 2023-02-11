@@ -12,7 +12,7 @@
         <div *ngIf="rightclicked_item.type === 'user_play'">
           <button *ngIf="user != null && user == currentPlayer()" mat-menu-item (click)="rightclicked_item.card.locked=!rightclicked_item.card.locked">(Un)Lock Tap</button>
           <button *ngIf="user != null" mat-menu-item (click)="shakeCard(rightclicked_item.card, rightclicked_item.card.owner, 'play')">Shake</button>
-          <button *ngIf="user != null" mat-menu-item (click)="primeCard(rightclicked_item.card)">Set Alarm</button>
+          <button *ngIf="user != null" mat-menu-item (click)="primeCard(rightclicked_item.card)">Toggle Alarm</button>
           <button *ngIf="user != null && user == currentPlayer()" mat-menu-item (click)="cloneCard(rightclicked_item.card)">Clone</button>
           <button *ngIf="user != null && user == currentPlayer()" mat-menu-item (click)="editNotes(rightclicked_item.card)">Edit Notes</button>
           <button *ngIf="user != null && user == currentPlayer()" mat-menu-item [matMenuTriggerFor]="counters">Counters</button>
