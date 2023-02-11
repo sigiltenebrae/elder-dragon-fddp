@@ -189,7 +189,7 @@
             <img *ngIf="card_image.visible" class="deck-edit-card-select" src="{{card_image.image}}" (click)="selected_card.image=card_image.image; changing_image=false;" loading="lazy">
           </div>
         </div>
-        <div *ngIf="changing_back_image">
+        <div *ngIf="changing_back_image" fxLayout="row wrap" fxLayoutAlign="center">
           <div *ngFor="let card_image of back_image_options" fxLayout="column">
             <img *ngIf="card_image.visible" class="deck-edit-card-select" src="{{card_image.image}}" (click)="selected_card.back_image=card_image.image; changing_back_image=false;" loading="lazy">
           </div>
