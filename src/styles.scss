@@ -33,13 +33,21 @@
     color: white;
     cursor: pointer;
   }
+
+  .deck-manager-commander-viewer {
+    background: #333;
+  }
 }
 
 .light-theme {
-  @include mat.all-component-themes($fddp-theme-light)
+  @include mat.all-component-themes($fddp-theme-light);
+
+  .deck-manager-commander-viewer {
+    background: #ddd;
+  }
 }
 
-@include mat.all-component-themes($fddp-theme-dark);
+//@include mat.all-component-themes($fddp-theme-dark);
 
 /*
 ------------ Variables ------------
@@ -252,7 +260,6 @@ p, h1, h2, h3, h4, h5, h6 {
   text-align: center;
   height: 372px;
   border: none;
-  background: #333;
   @include mat.elevation(4);
 }
 
