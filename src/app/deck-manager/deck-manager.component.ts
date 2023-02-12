@@ -38,8 +38,13 @@ export class DeckManagerComponent implements OnInit {
             deck_promises.push(this.getDeckData(deck.id));
           });
           Promise.all(deck_promises).then(() => {
+            let legality_promises = [];
             for (let deck of this.decks) {
               deck.hovered = false;
+              legality_promises.push(this.getDeckLegality(deck));
+              Promise.all(legality_promises).then(() => {
+                console.log('Decks loaded for user: ' + this.user.username);
+              })
             }
             this.fddp_data.getUsers().then((user_list: any) => {
               this.users = user_list;
@@ -80,6 +85,10 @@ export class DeckManagerComponent implements OnInit {
     })
   }
 
+  /**
+   * Get the necessary data to display the deck.
+   * @param deckid
+   */
   getDeckData(deckid: number): Promise<void> {
     return new Promise<void>((resolve) => {
       this.fddp_data.getDeckForPlay(deckid).then((deck) => {
@@ -104,6 +113,10 @@ export class DeckManagerComponent implements OnInit {
     })
   }
 
+  /**
+   * Get the color identity for a deck
+   * @param deck
+   */
   getDeckColors(deck: any) {
     let colors: any = null;
     for (let commander of deck.commander) {
@@ -121,4 +134,18 @@ export class DeckManagerComponent implements OnInit {
     return colors;
   }
 
+
+  getDeckLegality(deck: any) {
+    return new Promise<void>((resolve) => {
+      if (deck.cards == null || deck.cards.length == 0) {
+        deck.legality = 'unknown';
+        deck.issues = [];
+      }
+      else {
+        deck.legality = 'unknown';
+        deck.issues = [];
+      }
+      resolve();
+    })
+  }
 }

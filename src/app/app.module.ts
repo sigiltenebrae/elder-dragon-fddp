@@ -57,6 +57,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import {HashLocationStrategy, LocationStrategy} from "@angular/common";
 import { environment } from '../environments/environment';
+import {BanListComponent} from "./ban-list/ban-list.component";
 
 
 
@@ -83,6 +84,7 @@ import { environment } from '../environments/environment';
     RegisterComponent,
     ChangePasswordComponent,
     ProfileComponent,
+    BanListComponent,
   ],
   imports: [
     BrowserModule,
@@ -122,7 +124,8 @@ import { environment } from '../environments/environment';
       {path: 'games/:gameid', component: GameHandlerComponent},
       {path: 'decks/:deckid', component: DeckEditComponent},
       {path: 'upload', component: CustomImagesComponent},
-      {path: 'custom', component: CustomImageManagerComponent}
+      {path: 'custom', component: CustomImageManagerComponent},
+      {path: 'bans', component: BanListComponent}
     ]),
     FlexLayoutModule,
     DragDropModule,

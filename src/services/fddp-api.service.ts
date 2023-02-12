@@ -266,8 +266,28 @@ export class FddpApiService {
         resolve(cards);
       }, () => {
         resolve([]);
-      })
-    })
+      });
+    });
+  }
+
+  public getBanList(): Promise<any> {
+    return new Promise<any>((resolve) => {
+      this.http.get(environment.fddp_api_url + '/bans/list').subscribe((cards: any) => {
+        resolve(cards);
+      }, () => {
+        resolve([]);
+      });
+    });
+  }
+
+  public getBanTypes(): Promise<any> {
+    return new Promise<any>((resolve) => {
+      this.http.get(environment.fddp_api_url + '/bans/types').subscribe((types: any) => {
+        resolve(types);
+      }, () => {
+        resolve([]);
+      });
+    });
   }
 
   public deleteCustomCard(cardid: number): Promise<void> {
