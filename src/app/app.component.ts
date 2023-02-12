@@ -26,6 +26,11 @@ export class AppComponent {
     }
   }
 
+  signOut() {
+    this.tokenStorage.signOut();
+    this.reloadPage();
+  }
+
   reloadPage(): void {
     window.location.reload();
   }
