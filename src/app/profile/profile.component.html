@@ -26,7 +26,7 @@
 
         <mat-form-field appearance="outline" fxLayout="row" fxFlex>
           <mat-label>Theme</mat-label>
-          <mat-select [value]="user.theme">
+          <mat-select [(value)]="user.theme">
             <mat-option [value]="'dark'">Dark</mat-option>
             <mat-option [value]="'light'">Light</mat-option>
           </mat-select>
