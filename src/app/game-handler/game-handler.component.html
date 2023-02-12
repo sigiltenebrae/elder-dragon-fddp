@@ -524,7 +524,7 @@
       <div class="game-data-wrapper">
         <div class="game-data-player-list-container" [style.height.px]="game_data.players.length > 3? 200: game_data.players.length * 50">
           <ng-scrollbar track="vertical" visibility="hover" pointerEventsMethod="scrollbar" [style.height.px]="200">
-            <mat-list *ngIf="game_data.type != 2" style="margin-top: -10px">
+            <mat-list *ngIf="game_data.type != 2">
               <div *ngFor="let player of game_data.players">
                 <mat-list-item class="game-data-player-list-item" fxLayout="row" fxLayoutAlign="start center"
                                [ngClass]="{

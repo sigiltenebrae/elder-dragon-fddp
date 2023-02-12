@@ -27,6 +27,11 @@
               "src/manifest.webmanifest",
               "src/manifest.webmanifest"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "./node_modules"
+              ]
+            },
             "styles": [
               "src/styles.scss"
             ],

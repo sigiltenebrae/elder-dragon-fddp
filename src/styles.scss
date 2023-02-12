@@ -4,7 +4,7 @@
 @include mat.core();
 
 /* Importing Bootstrap SCSS file. */
-@import '~bootstrap/scss/bootstrap';
+@import 'bootstrap/scss/bootstrap';
 @import 'src/dark-theme';
 @import 'src/light-theme';
 
@@ -37,12 +37,43 @@
   .deck-manager-commander-viewer {
     background: #333;
   }
+
+  .game-data-wrapper .game-data-player-list-container {
+    background: rgba(white, 0.05);
+  }
+
+  .game-data-wrapper .game-data-log-container {
+    background: rgba(black, 0.2);
+  }
 }
 
 .light-theme {
   @include mat.all-component-themes($fddp-theme-light);
 
+  .shadow-text {
+    color: black;
+    text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+    background: rgba(150, 150, 150, 0.40);
+    padding: 0 5px 0 5px;
+    border-radius: 30%;
+    text-align: center;
+  }
+
+  .simple-a {
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+  }
+
   .deck-manager-commander-viewer {
+    background: #ddd;
+  }
+
+  .game-data-wrapper .game-data-player-list-container {
+    background: #ddd;
+  }
+
+  .game-data-wrapper .game-data-log-container {
     background: #ddd;
   }
 }
@@ -508,7 +539,7 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
 //Player List And Log (Game Data)
 .game-data-container {
   position: fixed;
-  bottom: 215px;
+  bottom: 210px;
   left: 10px;
   height: 409px;
   //width: calc((100vw - (1284px + 50px)) / 2);
@@ -554,9 +585,6 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   left: 0;
   width: 100%;
   height: 200px;
-  border-top-left-radius: 10px;
-  border-top-right-radius: 10px;
-  background: rgba(white, 0.05);
   border: solid 2px #666;
   z-index: 3;
   overflow: hidden
@@ -607,14 +635,12 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   left: 0;
   height: 200px;
   width: 100%;
-  background: rgba(black, 0.2);
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
   border: solid 2px #444;
   z-index: 3;
 }
 
 .game-data-log-list-item {
+  margin-top: 5px;
   border-bottom: solid 2px #444;
   height: auto !important;
   width: 100%;

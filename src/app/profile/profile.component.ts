@@ -32,7 +32,7 @@ export class ProfileComponent implements OnInit {
       }
       else {
         this.tokenStorage.saveUser(this.user);
-        this.router.navigate(['/']);
+        window.location.reload();
       }
     });
   }
