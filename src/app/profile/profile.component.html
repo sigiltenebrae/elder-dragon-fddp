@@ -4,12 +4,12 @@
       <div fxLayout="column" fxFlex="100">
         <mat-form-field appearance="outline" fxLayout="row" fxFlex>
           <mat-label>Username</mat-label>
-          <input matInput type="text" [(ngModel)]="user.username">
+          <input required matInput type="text" [(ngModel)]="user.username">
         </mat-form-field>
 
         <mat-form-field appearance="outline" fxLayout="row" fxFlex>
           <mat-label>Display Name</mat-label>
-          <input matInput type="text" [(ngModel)]="user.name">
+          <input required matInput type="text" [(ngModel)]="user.name">
         </mat-form-field>
 
         <mat-form-field appearance="outline" fxLayout="row" fxFlex>
@@ -37,7 +37,7 @@
 
         <div fxLayout="row" fxFlex fxLayoutAlign="space-between">
           <button mat-raised-button color="accent" [routerLink]="'/password'">Password</button>
-          <button mat-raised-button color="primary" >Submit</button>
+          <button mat-raised-button color="primary" (click)="saveProfile()">Submit</button>
         </div>
       </div>
       <div fxLayout="column" fxLayoutAlign="start center" fxFlexFill fxLayoutGap="20px">

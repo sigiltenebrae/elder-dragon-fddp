@@ -30,6 +30,22 @@ export class FddpApiService {
     });
   }
 
+  public updateProfile(user) {
+    return new Promise<void>((resolve) => {
+      this.http.put<any>(environment.fddp_api_url + '/users/' + user.id, JSON.stringify({user: user}),
+        {headers : new HttpHeaders({'Content-Type': 'application/json'})}).subscribe((profile_response: any) => {
+        if (profile_response.errors) {
+          if (profile_response.errors.length > 0) {
+            profile_response.errors.length.forEach((error: any) => {
+              console.log(error);
+            });
+          }
+          resolve(profile_response.errors);
+        }
+      });
+    });
+  }
+
   public getPlanes(): Promise<any> {
     return new Promise<any>((resolve) => {
       this.http.get(environment.fddp_api_url + '/planes').subscribe((planes: any) => {
