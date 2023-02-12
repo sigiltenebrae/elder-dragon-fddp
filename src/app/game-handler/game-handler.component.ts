@@ -52,6 +52,8 @@ export class GameHandlerComponent implements OnInit {
               private tokenStorage: TokenStorageService, private WebsocketService: FddpWebsocketService,
               private router: Router) { }
 
+  default_card_back = 'https://drive.google.com/uc?export=view&id=1-Hp4xnjvn6EU-khUQEHn4R0T7n46Pt84';
+
   //Page Interaction
   rightclicked_item: any = null; //Set to the object that triggers the right click event.
   menuTopLeftPosition =  {x: '0', y: '0'} //The top left position of the 'right click' menu
@@ -892,6 +894,7 @@ export class GameHandlerComponent implements OnInit {
     out_player.star_color = null;
     out_player.teammate_id = null;
     out_player.playmat_image = this.current_user.playmat;
+    out_player.default_sleeves = this.current_user.default_sleeves;
     out_player.deck = deck;
     out_player.deck.commander = {name: 'commander', cards: [], saved: [], owner: out_player.deck.owner};
     out_player.name = this.current_user.name;

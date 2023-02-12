@@ -494,7 +494,9 @@
                            class="playmat-user-card-mini"
                            [matTooltip]="card.notes"
                            [src]="card.visible.includes(user.id) ? card.image:
-                                  player.deck.sleeves === '' ? 'https://drive.google.com/uc?export=view&id=1-Hp4xnjvn6EU-khUQEHn4R0T7n46Pt84': player.deck.sleeves"
+                                  player.deck.sleeves !== '' ? player.deck.sleeves:
+                                   player.default_sleeves !== '' && player.default_sleeves !== ' ' && player.default_sleeves != null
+                                   ? player.default_sleeves: default_card_back"
                            [alt]="card.visible.includes(user.id) ? card.name: ''"
                            (contextmenu)="onRightClick($event,{type: 'opponent_play', card: card});"
                            (click)="card.selected=!card.selected" (dblclick)="toggleCardTap(card)" loading="lazy">
@@ -722,7 +724,9 @@
                      class="playmat-user-card"
                      [matTooltip]="card.notes"
                      [src]="card.visible.includes(user.id) ? card.image:
-                     currentPlayer().deck.sleeves === '' ? 'https://drive.google.com/uc?export=view&id=1-Hp4xnjvn6EU-khUQEHn4R0T7n46Pt84': currentPlayer().deck.sleeves"
+                     currentPlayer().deck.sleeves !== '' ? currentPlayer().deck.sleeves:
+                      currentPlayer().default_sleeves !== '' && currentPlayer().default_sleeves !== ' ' && currentPlayer().default_sleeves != null
+                      ? currentPlayer().default_sleeves: default_card_back"
                      [alt]="card.visible.includes(user.id) ? card.name: ''"
                      (contextmenu)="onRightClick($event,{type: 'user_play', card: card, from: spot});"
                      (dblclick)="toggleCardTap(card)" loading="lazy">
@@ -752,7 +756,9 @@
         <img loading="lazy"
              class="zone-card-image"
              [src]="selected_player.top_flipped && selected_player.deck.cards.length > 0 ? selected_player.deck.cards[0].image:
-             selected_player.deck.sleeves === '' ? 'https://drive.google.com/uc?export=view&id=1-Hp4xnjvn6EU-khUQEHn4R0T7n46Pt84': selected_player.deck.sleeves"
+             selected_player.deck.sleeves !== '' ? selected_player.deck.sleeves:
+             selected_player.default_sleeves !== '' && selected_player.default_sleeves !== ' ' && selected_player.default_sleeves != null
+             ? selected_player.default_sleeves: default_card_back"
              (pointerenter)="magnified_card = selected_player.top_flipped && selected_player.deck.cards.length > 0 ? selected_player.deck.cards[0]: null"
              (pointerleave)="magnified_card = null">
       </div>
@@ -771,7 +777,9 @@
         <img loading="lazy"
              class="zone-card-image"
              [src]="currentPlayer().top_flipped && currentPlayer().deck.cards.length > 0 ? currentPlayer().deck.cards[0].image:
-             currentPlayer().deck.sleeves === '' ? 'https://drive.google.com/uc?export=view&id=1-Hp4xnjvn6EU-khUQEHn4R0T7n46Pt84': currentPlayer().deck.sleeves"
+             currentPlayer().deck.sleeves !== '' ? currentPlayer().deck.sleeves:
+              currentPlayer().default_sleeves !== '' && currentPlayer().default_sleeves !== ' ' && currentPlayer().default_sleeves != null ?
+              currentPlayer().default_sleeves : default_card_back"
              (contextmenu)="onRightClick($event, {type: 'deck'})"
              (pointerenter)="magnified_card = currentPlayer().top_flipped && currentPlayer().deck.cards.length > 0 ? currentPlayer().deck.cards[0]: null"
              (pointerleave)="magnified_card = null"
@@ -869,7 +877,9 @@
         <!-- NOTE: this needs to account for face down exiles at some point -->
         <img *ngIf="currentPlayer().temp_zone.cards.length > 0" class="zone-card-image"
              [src]="!currentPlayer().temp_zone.cards[0].facedown ? currentPlayer().temp_zone.cards[0].image:
-              currentPlayer().deck.sleeves === '' ? 'https://drive.google.com/uc?export=view&id=1-Hp4xnjvn6EU-khUQEHn4R0T7n46Pt84': currentPlayer().deck.sleeves"
+              currentPlayer().deck.sleeves !== '' ? currentPlayer().deck.sleeves:
+              currentPlayer().default_sleeves !== '' && currentPlayer().default_sleeves !== ' ' && currentPlayer().default_sleeves != null
+              ? currentPlayer().default_sleeves: default_card_back"
              src="{{currentPlayer().temp_zone.cards[0].image}}"
              (pointerleave)="magnified_card = null"
              (cdkDragStarted)="magnified_card = null; currently_dragging=user.temp_zone.cards[0]"
@@ -898,7 +908,9 @@
                  (pointerleave)="magnified_card = null"
                  [@shakeCard]="card.shaken">
               <img class="playmat-user-card-mini" [src]="card.visible.includes(user.id) ? card.image:
-              selected_player.deck.sleeves === '' ? 'https://drive.google.com/uc?export=view&id=1-Hp4xnjvn6EU-khUQEHn4R0T7n46Pt84': selected_player.deck.sleeves">
+              selected_player.deck.sleeves !== '' ? selected_player.deck.sleeves:
+              selected_player.default_sleeves !== '' && selected_player.default_sleeves !== ' ' && selected_player.default_sleeves != null
+              ? selected_player.default_sleeves:  default_card_back">
             </div>
           </div>
         </ng-scrollbar>
@@ -933,7 +945,9 @@
                  [cdkDragDisabled]="user != currentPlayer()"
                  cdkDrag>
               <img class="playmat-user-card" [src]="card.visible.includes(user.id) ? card.image:
-              currentPlayer().deck.sleeves === '' ? 'https://drive.google.com/uc?export=view&id=1-Hp4xnjvn6EU-khUQEHn4R0T7n46Pt84': currentPlayer().deck.sleeves">
+              currentPlayer().deck.sleeves !== '' ? currentPlayer().deck.sleeves:
+              currentPlayer().default_sleeves !== '' && currentPlayer().default_sleeves !== ' ' && currentPlayer().default_sleeves != null
+              ? currentPlayer().default_sleeves : default_card_back">
             </div>
           </div>
         </ng-scrollbar>
