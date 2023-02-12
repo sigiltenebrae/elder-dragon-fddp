@@ -1,8 +1,15 @@
-<div fxFlexFill fxLayout="row wrap" fxLayoutGap="10px" fxLayoutAlign="center" style="padding: 20px">
-  <div class="custom-image-card-holder" *ngFor="let card of cards">
-    <button *ngIf="!card.deleting && isAdmin()" (click)="card.deleting=true" mat-raised-button color="warn" class="custom-image-card-delete">Delete</button>
-    <button *ngIf="card.deleting" mat-raised-button color="warn" class="custom-image-card-delete">Confirm</button>
-    <img (mouseleave)="card.deleting=false;" class="custom-image-card" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
-    <h3 class="custom-image-card-name">{{card.name}}</h3>
+<div fxFlexFill fxLayout="column" style="padding: 20px">
+  <div *ngFor="let ban_type of types.reverse()">
+    <div fxLayout="row" fxLayoutAlign="center">
+      <h2 style="text-decoration: underline; text-transform: capitalize">{{ban_type.type}}</h2>
+    </div>
+    <div fxLayout="row wrap" fxLayoutGap="10px" fxLayoutAlign="center">
+      <div class="custom-image-card-holder" *ngFor="let card of ban_list[ban_type.id - 1]">
+        <button *ngIf="!card.deleting && isAdmin()" (click)="card.deleting=true" mat-raised-button color="warn" class="custom-image-card-delete">Delete</button>
+        <button *ngIf="card.deleting" mat-raised-button color="warn" class="custom-image-card-delete">Confirm</button>
+        <img (mouseleave)="card.deleting=false;" class="custom-image-card" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
+        <h3 class="custom-image-card-name">{{card.name}}</h3>
+      </div>
+    </div>
   </div>
 </div>

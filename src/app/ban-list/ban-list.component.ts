@@ -12,6 +12,7 @@ export class BanListComponent implements OnInit {
 
   cards: any[] = [];
   types: any[] = [];
+  ban_list: any[] = [];
 
   constructor(private fddp_data: FddpApiService,  private tokenStorage: TokenStorageService, private router: Router) { }
 
@@ -31,6 +32,10 @@ export class BanListComponent implements OnInit {
         this.fddp_data.getBanTypes().then((types: any) => {
           this.types = types;
           Promise.all(card_promises).then(() => {
+            this.ban_list = [[], [], [], []];
+            this.cards.forEach((card: any) => {
+              this.ban_list[card.ban_type - 1].push(card);
+            });
             console.log('ban list loaded');
           });
         });
