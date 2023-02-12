@@ -10,6 +10,13 @@
                  required minlength="3" maxlength="30"
                  #username="ngModel">
         </mat-form-field>
+        <mat-form-field appearance="outline" style="width: 100%">
+          <mat-label>Display Name</mat-label>
+          <input matInput [type]="'text'"
+                 name="name" [(ngModel)]="form.name"
+                 required minlength="3" maxlength="30"
+                 #name="ngModel">
+        </mat-form-field>
         <div
           class="alert alert-danger"
           role="alert"

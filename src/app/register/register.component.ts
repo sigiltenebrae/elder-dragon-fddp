@@ -12,11 +12,11 @@ export class RegisterComponent implements OnInit {
 
   constructor(private authService: AuthService) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   form: any = {
     username: null,
+    name: null,
     password: null,
     repeat_password: null,
   };
@@ -28,8 +28,8 @@ export class RegisterComponent implements OnInit {
   hide_repeat_password = true;
 
   onSubmit(): void {
-    const { username, password } = this.form;
-    this.authService.register(username, password).subscribe({
+    const { username, name, password } = this.form;
+    this.authService.register(username, name, password).subscribe({
       next: data => {
         console.log(data);
         this.isSuccessful = true;
