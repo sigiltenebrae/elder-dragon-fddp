@@ -20,6 +20,7 @@ export class ProfileComponent implements OnInit {
     }
     else {
       this.user = this.tokenStorage.getUser();
+      console.log(this.user);
     }
   }
 

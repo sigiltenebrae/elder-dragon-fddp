@@ -1,8 +1,7 @@
 <div fxFlexFill style="margin: 20px;" fxLayoutAlign="center center">
-  <mat-card fxFlex="450px" fxLayout="column" fxLayoutAlign="center center">
-    <h2>{{user.name}}</h2>
-    <div fxFlex="100">
-      <div fxLayout="column">
+  <mat-card fxFlex="850px" fxLayout="column" fxLayoutAlign="center start">
+    <div fxFlexFill fxLayout="row" fxLayoutGap="30px">
+      <div fxLayout="column" fxFlex="100">
         <mat-form-field appearance="outline" fxLayout="row" fxFlex>
           <mat-label>Username</mat-label>
           <input matInput type="text" [(ngModel)]="user.username">
@@ -20,6 +19,12 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline" fxLayout="row" fxFlex>
+          <mat-label>Default Sleeves</mat-label>
+          <input matInput type="text"
+                 [(ngModel)]="user.default_sleeves">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" fxLayout="row" fxFlex>
           <mat-label>Theme</mat-label>
           <mat-select [value]="user.theme">
             <mat-option [value]="'dark'">Dark</mat-option>
@@ -31,13 +36,19 @@
         &nbsp;
 
         <div fxLayout="row" fxFlex fxLayoutAlign="space-between">
-          <button mat-raised-button color="accent">Password</button>
-          <button mat-raised-button color="primary">Submit</button>
+          <button mat-raised-button color="accent" [routerLink]="'/password'">Password</button>
+          <button mat-raised-button color="primary" >Submit</button>
+        </div>
+      </div>
+      <div fxLayout="column" fxLayoutAlign="start center" fxFlexFill fxLayoutGap="20px">
+        <div fxLayout="row" fxFlexFill>
+          <img *ngIf="user.playmat !== ''" class="playmat-preview-image" src="{{user.playmat}}">
+        </div>
+        <div fxLayout="row" fxFlexFill>
+          <img *ngIf="user.default_sleeves !== ''" class="deck-edit-preview" src="{{user.default_sleeves}}" loading="lazy">
+          <img *ngIf="user.default_sleeves === ''" class="deck-edit-preview" src="https://drive.google.com/uc?export=view&id=1-Hp4xnjvn6EU-khUQEHn4R0T7n46Pt84" loading="lazy">
         </div>
       </div>
     </div>
   </mat-card>
 </div>
-
-
-
