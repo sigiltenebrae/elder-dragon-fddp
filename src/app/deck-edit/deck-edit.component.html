@@ -199,7 +199,7 @@
     </div>
   </mat-card>
 </div>
-<dix fxLayout="column" *ngIf="!loading && deck && deck.owner != current_user.id">
+<div fxLayout="column" *ngIf="!loading && deck && deck.owner != current_user.id">
   <div fxFlex="100" fxLayout="row" fxLayoutAlign="center">
     <h1>{{deck.name}}</h1>
   </div>
@@ -215,4 +215,4 @@
       <h3 class="custom-image-card-name">{{card.name}}</h3>
     </div>
   </div>
-</dix>
+</div>

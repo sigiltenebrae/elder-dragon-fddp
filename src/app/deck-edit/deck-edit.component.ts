@@ -73,9 +73,6 @@ export class DeckEditComponent implements OnInit {
       else {
         this.fddp_data.getDeckForPlay(this.deckid).then((deck) => {
           this.deck = deck;
-          if (this.deck.owner !== this.tokenStorage.getUser().id &&  !this.tokenStorage.getUser().isAdmin) {
-            this.router.navigate(['/']);
-          }
           this.deck.delete = [];
           this.deck.token_delete = [];
           this.deck.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);

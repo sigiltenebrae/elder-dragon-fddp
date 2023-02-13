@@ -60,6 +60,7 @@ import { environment } from '../environments/environment';
 import {BanListComponent} from "./ban-list/ban-list.component";
 import { GameHistoryComponent } from './game-history/game-history.component';
 import {MatTableModule} from "@angular/material/table";
+import { GameHistoryManagerComponent } from './game-history-manager/game-history-manager.component';
 
 
 
@@ -88,6 +89,7 @@ import {MatTableModule} from "@angular/material/table";
     ProfileComponent,
     BanListComponent,
     GameHistoryComponent,
+    GameHistoryManagerComponent,
   ],
   imports: [
     BrowserModule,
@@ -129,7 +131,8 @@ import {MatTableModule} from "@angular/material/table";
       {path: 'upload', component: CustomImagesComponent},
       {path: 'custom', component: CustomImageManagerComponent},
       {path: 'bans', component: BanListComponent},
-      {path: 'history', component: GameHistoryComponent}
+      {path: 'history', component: GameHistoryComponent},
+      {path: 'history/:gameid', component: GameHistoryManagerComponent}
     ]),
     FlexLayoutModule,
     DragDropModule,

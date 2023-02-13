@@ -206,6 +206,16 @@ export class FddpApiService {
     })
   }
 
+  public getDeckList(): Promise<any> {
+    return new Promise<any>((resolve) => {
+      this.http.get(environment.fddp_api_url + '/decklist').subscribe((deck_list) => {
+        resolve(deck_list);
+      }, () => {
+        resolve([]);
+      })
+    })
+  }
+
   public getRandomDeck(): Promise<any> {
     return new Promise<any>((resolve) => {
       this.http.get(environment.fddp_api_url + '/cheap/randomdeck').subscribe((deck_data) => {
