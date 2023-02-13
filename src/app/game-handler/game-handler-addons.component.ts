@@ -62,7 +62,7 @@ export class TokenSelectDialog {
 export class DeckSelectDialog {
 
   decks: any[] = [];
-  other_decks: any = {};
+  decks_others: any = {};
   loading = false;
   loading_others = false;
   loaded_others = false;
@@ -76,101 +76,39 @@ export class DeckSelectDialog {
   {
     this.loading = true;
     if (this.data.game_type != 4) {
-      this.fddp_data.getDecksBasic(this.data.user).then((decks: any) => {
-        let temp_decks = decks;
-        let deck_promises: any[] = [];
-        temp_decks.forEach((deck: any) => {
-          deck_promises.push(this.getDeckData(deck.id));
-        });
-        Promise.all(deck_promises).then(() => {
-          for (let deck of this.decks) {
-            deck.hovered = false;
+
+      this.fddp_data.getUsers().then((user_list: any) => {
+        this.users = user_list;
+
+        this.fddp_data.getDecksBasic(this.data.user).then((decks: any) => {
+          this.decks = decks;
+          this.loading = false
+          this.loading_others = true;
+          for (let other of this.users) {
+            if (other.id != this.data.user) {
+              this.decks_others[other.id] = [];
+            }
           }
-          this.loading = false;
+          this.fddp_data.getDecksBasic().then((decks: any) => {
+            decks.forEach((deck: any) => {
+              if (deck.owner !== this.data.user) {
+                this.decks_others[deck.owner].push(deck);
+              }
+            });
+            this.loading_others = false;
+            this.loaded_others = true;
+          });
         });
       });
     }
     else {
       this.fddp_data.getRandomDeck().then((deck) => {
         if (deck != null) {
-          console.log(deck);
           this.loading = false;
           this.dialogRef.close(deck);
         }
       });
     }
-  }
-
-  getDeckData(deckid: number): Promise<void> {
-    return new Promise<void>((resolve) => {
-      this.fddp_data.getDeckForPlay(deckid).then((deck) => {
-        deck.commander = [];
-        deck.cards.forEach((card: any) => {
-          if (card.iscommander) {
-            deck.commander.push(card);
-          }
-        });
-        deck.commander.forEach((card: any) => {
-          deck.cards.splice(deck.cards.indexOf(card), 1);
-        });
-        deck.colors = this.getDeckColors(deck);
-        if (deck.owner == this.data.user) {
-          this.decks.push(deck);
-        }
-        else {
-          this.other_decks[deck.owner].push(deck);
-        }
-        resolve();
-      })
-    })
-  }
-
-  getDeckColors(deck: any) {
-    let colors: any = null;
-    for (let commander of deck.commander) {
-      if (commander.color_identity) {
-        if (colors == null) {
-          colors = [];
-        }
-        for (let mana of commander.color_identity) {
-          if (mana === 'W' || mana === 'U' || mana === 'B' || mana === 'R' || mana === 'G'){
-            colors.push(mana);
-          }
-        }
-      }
-    }
-    return colors;
-  }
-
-  loadOthers() {
-    this.loading_others = true;
-    this.loaded_others = false;
-    this.fddp_data.getUsers().then((users: any) => {
-      this.users = users;
-      for (let other of users) {
-        if (other.id != this.data.user) {
-          this.other_decks[other.id] = [];
-        }
-      }
-      this.fddp_data.getDecksBasic().then((decks: any) => {
-        let temp_decks = decks;
-        let deck_promises: any[] = [];
-        temp_decks.forEach((deck: any) => {
-          if (deck.owner !== this.data.user) {
-            deck_promises.push(this.getDeckData(deck.id));
-          }
-        });
-        Promise.all(deck_promises).then(() => {
-          for (let key in this.other_decks) {
-            for (let other_deck of this.other_decks[key]) {
-              other_deck.hovered = false;
-            }
-            this.loading_others = false;
-            this.loaded_others = true;
-          }
-        })
-      });
-    });
   }
 
   selectDeck(deck: any) {
