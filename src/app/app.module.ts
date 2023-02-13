@@ -59,6 +59,7 @@ import {HashLocationStrategy, LocationStrategy} from "@angular/common";
 import { environment } from '../environments/environment';
 import {BanListComponent} from "./ban-list/ban-list.component";
 import { GameHistoryComponent } from './game-history/game-history.component';
+import {MatTableModule} from "@angular/material/table";
 
 
 
@@ -141,7 +142,8 @@ import { GameHistoryComponent } from './game-history/game-history.component';
       // Register the ServiceWorker as soon as the application is stable
       // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
-    })
+    }),
+    MatTableModule
   ],
   providers: [
     {provide: LocationStrategy, useClass: HashLocationStrategy}

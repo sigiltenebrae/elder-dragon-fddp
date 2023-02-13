@@ -306,4 +306,14 @@ export class FddpApiService {
     });
   }
 
+  public getGames(): Promise<any> {
+    return new Promise<any>((resolve) => {
+      this.http.get(environment.fddp_api_url + '/games').subscribe((games: any) => {
+        resolve(games)
+      }, () => {
+        resolve([]);
+      })
+    })
+  }
+
 }
