@@ -294,10 +294,9 @@ export class EndGameDialog {
   }
 
   submit_winners() {
-    /*this.dialogRef.close({
-      winner1: this.winner1.length > 0 ? this.winner1[0].id: null,
-      winner2: this.winner2.length > 0 ? this.winner2[0].id: null
-    });*/
+    this.dialogRef.close({
+      winners: this.winners
+    });
   }
 
   drop(event: CdkDragDrop<string[]>) {

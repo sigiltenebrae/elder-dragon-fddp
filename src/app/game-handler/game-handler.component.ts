@@ -1187,8 +1187,7 @@ export class GameHandlerComponent implements OnInit {
           game_id: this.game_id,
           put: {
             action:'end',
-            winner: result.winner1,
-            winner_two: result.winner2
+            winners: result.winners
           }
         });
       }
