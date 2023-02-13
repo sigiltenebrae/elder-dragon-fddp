@@ -1076,7 +1076,8 @@ export class GameHandlerComponent implements OnInit {
       name: this.user.name,
       spectating: true,
       play_counters: [],
-      turn: this.user.turn
+      turn: this.user.turn,
+      deck_id: this.user.deck.id
     }
     this.game_data.players.splice(this.game_data.players.indexOf(this.user), 1);
     this.user = spectator;
@@ -1094,7 +1095,8 @@ export class GameHandlerComponent implements OnInit {
         id: teammate.id,
         name: teammate.name,
         spectating: true,
-        play_counters: []
+        play_counters: [],
+        deck_id: teammate.deck.id
       }
       this.game_data.players.splice(this.game_data.players.indexOf(teammate), 1);
       this.game_data.spectators.push(spectator2);

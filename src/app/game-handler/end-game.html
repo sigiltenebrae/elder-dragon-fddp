@@ -33,23 +33,12 @@
         </div>
       </div>
       <div fxLayout="column"class="two-headed-container">
-        <h2>Winner 1</h2>
+        <h2>Winners</h2>
         <div cdkDropList
-             [cdkDropListData]="winner1"
+             [cdkDropListData]="winners"
              class="two-headed-list"
              (cdkDropListDropped)="drop($event)">
-          <div class="two-headed-box" *ngFor="let player of winner1" cdkDrag>
-            <div *cdkDragPlaceholder class="two-headed-box-placeholder"></div>
-            {{player.name}}</div>
-        </div>
-      </div>
-      <div fxLayout="column"class="two-headed-container">
-        <h2>Winner 2</h2>
-        <div cdkDropList
-             [cdkDropListData]="winner2"
-             class="two-headed-list"
-             (cdkDropListDropped)="drop($event)">
-          <div class="two-headed-box" *ngFor="let player of winner2" cdkDrag>
+          <div class="two-headed-box" *ngFor="let player of winners" cdkDrag>
             <div *cdkDragPlaceholder class="two-headed-box-placeholder"></div>
             {{player.name}}</div>
         </div>
@@ -57,8 +46,8 @@
     </div>
 
     <div fxLayout="row" fxLayoutAlign="end">
-      <button mat-raised-button color="warn" *ngIf="winner1.length == 0 && winner2.length == 0" (click)="submit_winners()">No Winners</button>
-      <button mat-raised-button color="accent" *ngIf="winner1.length > 0 || winner2.length > 0" (click)="submit_winners()">Submit Winners</button>
+      <button mat-raised-button color="warn" *ngIf="winners.length == 0" (click)="submit_winners()">No Winners</button>
+      <button mat-raised-button color="accent" *ngIf="winners.length > 0" (click)="submit_winners()">Submit Winners</button>
     </div>
   </div>
 </div>

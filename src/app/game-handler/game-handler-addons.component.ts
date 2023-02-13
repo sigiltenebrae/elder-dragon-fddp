@@ -335,25 +335,24 @@ export class TwoHeadedTeamsDialog {
   providers: [{ provide: CDK_DRAG_CONFIG, useValue: DragConfig }]
 })
 export class EndGameDialog {
+
+  players: any[] = [];
+  winners: any[] = [];
+
   constructor(
     public dialogRef: MatDialogRef<EndGameDialog>,
     private snackbar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
-  players: any[] = this.data.players;
-  winner1: any[] = [];
-  winner2: any[] = [];
+  ) {
+
+    this.data.players.forEach((player: any) => {
+      this.players.push(player);
+    });
+  }
+
 
   onNoClick(): void {
     this.dialogRef.close(null);
-  }
-
-  winnner1pred() {
-    return this.winner1.length == 0;
-  }
-
-  winnner2pred() {
-    return this.winner2.length == 0;
   }
 
   submit_winners() {
@@ -367,14 +366,12 @@ export class EndGameDialog {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
-      if (event.container.data.length < 2) {
         transferArrayItem(
           event.previousContainer.data,
           event.container.data,
           event.previousIndex,
           event.currentIndex,
         );
-      }
     }
   }
 }
