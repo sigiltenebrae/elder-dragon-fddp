@@ -62,7 +62,11 @@ export class TokenSelectDialog {
 export class DeckSelectDialog {
 
   decks: any[] = [];
+  other_decks: any = {};
   loading = false;
+  loading_others = false;
+  loaded_others = false;
+  users = [];
 
   constructor(
     public dialogRef: MatDialogRef<DeckSelectDialog>,
@@ -110,7 +114,12 @@ export class DeckSelectDialog {
           deck.cards.splice(deck.cards.indexOf(card), 1);
         });
         deck.colors = this.getDeckColors(deck);
-        this.decks.push(deck);
+        if (deck.owner == this.data.user) {
+          this.decks.push(deck);
+        }
+        else {
+          this.other_decks[deck.owner].push(deck);
+        }
         resolve();
       })
     })
@@ -133,6 +142,37 @@ export class DeckSelectDialog {
     return colors;
   }
 
+  loadOthers() {
+    this.loading_others = true;
+    this.loaded_others = false;
+    this.fddp_data.getUsers().then((users: any) => {
+      this.users = users;
+      for (let other of users) {
+        if (other.id != this.data.user) {
+          this.other_decks[other.id] = [];
+        }
+      }
+      this.fddp_data.getDecksBasic().then((decks: any) => {
+        let temp_decks = decks;
+        let deck_promises: any[] = [];
+        temp_decks.forEach((deck: any) => {
+          if (deck.owner !== this.data.user) {
+            deck_promises.push(this.getDeckData(deck.id));
+          }
+        });
+        Promise.all(deck_promises).then(() => {
+          for (let key in this.other_decks) {
+            for (let other_deck of this.other_decks[key]) {
+              other_deck.hovered = false;
+            }
+            this.loading_others = false;
+            this.loaded_others = true;
+          }
+        })
+      });
+    });
+  }
+
   selectDeck(deck: any) {
     this.dialogRef.close(deck);
   }
@@ -140,6 +180,8 @@ export class DeckSelectDialog {
   onNoClick(): void {
     this.dialogRef.close();
   }
+
+
 }
 
 @Component({
@@ -315,10 +357,10 @@ export class EndGameDialog {
   }
 
   submit_winners() {
-    this.dialogRef.close({
+    /*this.dialogRef.close({
       winner1: this.winner1.length > 0 ? this.winner1[0].id: null,
       winner2: this.winner2.length > 0 ? this.winner2[0].id: null
-    });
+    });*/
   }
 
   drop(event: CdkDragDrop<string[]>) {

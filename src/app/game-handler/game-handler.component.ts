@@ -949,7 +949,8 @@ export class GameHandlerComponent implements OnInit {
     out_player.deck.commander.cards.forEach((card: any) => {
       out_player.deck.commander.saved.push(card);
       out_player.deck.cards.splice(deck.cards.indexOf(card), 1);
-    })
+    });
+    console.log(out_player);
     this.shuffleDeck(out_player.deck.cards, {nolog: true, noupdate: true});
     for (let i = 0; i < this.game_data.players.length; i++) {
       if (this.game_data.players[i].id == this.current_user.id) {
