@@ -326,4 +326,13 @@ export class FddpApiService {
     })
   }
 
+  public getGameResults(gameid): Promise<any> {
+    return new Promise<any>((resolve) => {
+      this.http.get(environment.fddp_api_url + '/games/results/' + gameid).subscribe((results: any) => {
+        resolve(results);
+      }, () => {
+        resolve([]);
+      })
+    })
+  }
 }

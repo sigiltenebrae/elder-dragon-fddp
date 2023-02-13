@@ -1,1 +1,51 @@
-<p>game-history-manager works!</p>
+<style>
+  .cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0 8px 10px 1px rgba(0, 0, 0, 0.14),
+    0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  }
+
+  .cdk-drag-placeholder {
+    opacity: 1 !important;
+  }
+</style>
+
+<div fxFlexFill fxLayout="row" fxLayoutAlign="center center" style="position: relative">
+  <div fxLayout="column" fxFlex="100" fxLayoutAlign="start center" style="height: 500px;">
+    <div fxLayout="row">
+      <h1>Select Winners</h1>
+    </div>
+    <div fxLayout="row" cdkDropListGroup>
+      <div fxLayout="column" class="two-headed-container">
+        <h2>Losers</h2>
+        <div cdkDropList
+             [cdkDropListData]="losers"
+             class="two-headed-list"
+             (cdkDropListDropped)="drop($event)">
+          <div class="two-headed-box" *ngFor="let player of losers" cdkDrag>
+            <div *cdkDragPlaceholder class="two-headed-box-placeholder"></div>
+            {{getPlayerName(player.player_id) + ' - ' + getDeckName(player.deck_id, player.player_id)}}</div>
+        </div>
+      </div>
+      <div fxLayout="column"class="two-headed-container">
+        <h2>Winners</h2>
+        <div cdkDropList
+             [cdkDropListData]="winners"
+             class="two-headed-list"
+             (cdkDropListDropped)="drop($event)">
+          <div class="two-headed-box" *ngFor="let player of winners" cdkDrag>
+            <div *cdkDragPlaceholder class="two-headed-box-placeholder"></div>
+            {{getPlayerName(player.player_id) + ' - ' + getDeckName(player.deck_id, player.player_id)}}</div>
+        </div>
+      </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="end">
+      <button mat-raised-button color="warn" *ngIf="winners.length == 0" (click)="submit_winners()">No Winners</button>
+      <button mat-raised-button color="accent" *ngIf="winners.length > 0" (click)="submit_winners()">Submit Winners</button>
+    </div>
+  </div>
+</div>
+
