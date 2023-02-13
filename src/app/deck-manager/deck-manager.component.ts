@@ -33,23 +33,54 @@ export class DeckManagerComponent implements OnInit {
       this.router.navigate(['login']);
     }
     else {
-      this.user = this.tokenStorage.getUser();
+      this.user = this.tokenStorage.getUser()
+      this.decks = [];
       if(this.user && this.user.id) {
         this.fddp_data.getUsers().then((user_list: any) => {
           this.users = user_list;
+
+
           this.fddp_data.getDecksBasic(this.user.id).then((decks: any) => {
             this.decks = decks;
             this.loading = false;
-            for (let deck of this.decks) {
-              deck.hovered = false;
-              this.fddp_data.getDeckLegality(deck.id).then((issues) => {
-                deck.issues = issues;
+            this.fddp_data.getDecksBasic().then((decks: any) => {
+
+              for (let other of this.users) {
+                if (other.id != this.user.id) {
+                  this.decks_others[other.id] = [];
+                }
+              }
+              decks.forEach((deck: any) => {
+                if (deck.owner !== this.user.id) {
+                  this.decks_others[deck.owner].push(deck);
+                }
               });
-            }
+              this.loading_others = false;
+              this.loaded_others = true;
+
+              for (let deck of this.decks) {
+                deck.hovered = false;
+                this.fddp_data.getDeckLegality(deck.id).then((issues) => {
+                  deck.issues = issues;
+                });
+              }
+              for (let key in this.decks_others) {
+                for (let other_deck of this.decks_others[key]) {
+                  other_deck.hovered = false;
+                  this.fddp_data.getDeckLegality(other_deck.id).then((issues) => {
+                    other_deck.issues = issues;
+                  });
+                }
+              }
+            });
           });
         });
       }
     }
+  }
+
+  showOthers() {
+    this.show_others = true;
   }
 
   getOthers() {
@@ -68,14 +99,7 @@ export class DeckManagerComponent implements OnInit {
       this.loading_others = false;
       this.loaded_others = true;
 
-      for (let key in this.decks_others) {
-        for (let other_deck of this.decks_others[key]) {
-          other_deck.hovered = false;
-          this.fddp_data.getDeckLegality(other_deck.id).then((issues) => {
-            other_deck.issues = issues;
-          });
-        }
-      }
+
     })
   }
 }

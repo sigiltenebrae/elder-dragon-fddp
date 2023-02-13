@@ -51,14 +51,14 @@
     &nbsp;
   </div>
 
-  <div *ngIf="!loading_others && !loaded_others && !loading && user" fxFlex fxLayout="row" fxLayoutAlign="center">
-    <button mat-raised-button color="primary" (click)="getOthers()" style="max-height: 48px; margin: 20px;">Load Other Users</button>
+  <div *ngIf="!show_others" fxFlex fxLayout="row" fxLayoutAlign="center">
+    <button mat-raised-button color="primary" (click)="showOthers()" style="max-height: 48px; margin: 20px;">Load Other Users</button>
   </div>
-  <div *ngIf="loading_others" fxLayout="row" fxFlex fxLayoutAlign="center center" style="margin: 20px;">
+  <div *ngIf="loading_others && show_others" fxLayout="row" fxFlex fxLayoutAlign="center center" style="margin: 20px;">
     <mat-spinner style="margin: 20px;"></mat-spinner>
   </div>
 
-  <div *ngIf="loaded_others" style="margin: 20px;">
+  <div *ngIf="loaded_others && show_others" style="margin: 20px;">
     <div *ngFor="let other_user of this.users" fxLayout="column">
       <div *ngIf="other_user.id !== user.id" fxLayout="row" fxLayoutAlign="center center" fxFlex="100">
         <h1>{{other_user.name}}</h1>
