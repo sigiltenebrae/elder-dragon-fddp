@@ -16,7 +16,7 @@
                   <input #max_player_input matInput type="number" value="5">
                 </mat-form-field>
               </div>
-              <div fxFlex fxLayout="row" fxLayoutAlign="center">
+              <div fxFlex fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
                 <mat-form-field appearance="fill">
                   <mat-label>Game Type</mat-label>
                   <mat-select #game_type_input value="1">
@@ -27,6 +27,7 @@
                     <mat-option value="5">Fast Game!</mat-option>
                   </mat-select>
                 </mat-form-field>
+                <mat-checkbox [(ngModel)]="game_keep_active" *ngIf="isAdmin()" value="false"> Keep Active</mat-checkbox>
               </div>
               <button (click)="createGame(game_name_input.value, max_player_input.value, game_type_input.value)" mat-raised-button color="primary" style="max-width: 80px">Create</button>
             </div>

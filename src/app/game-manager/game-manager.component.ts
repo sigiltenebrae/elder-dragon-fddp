@@ -12,6 +12,7 @@ export class GameManagerComponent implements OnInit {
 
   games: any[] = [];
   received: any[] = [];
+  game_keep_active = false;
 
   constructor(private WebsocketService: FddpWebsocketService, private tokenStorage: TokenStorageService, private router: Router) {
   }
@@ -43,6 +44,7 @@ export class GameManagerComponent implements OnInit {
         create: {
           name: name,
           max_players: Number(max_players),
+          keep_active: this.game_keep_active,
           type: type ? Number(type): 1
         }
       }
@@ -84,5 +86,9 @@ export class GameManagerComponent implements OnInit {
     return new Promise((resolve) => {
       setTimeout(resolve, ms);
     });
+  }
+
+  isAdmin() {
+    return this.tokenStorage.getUser().isAdmin;
   }
 }

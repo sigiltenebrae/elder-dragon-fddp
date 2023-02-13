@@ -25,6 +25,7 @@
 
         <div *ngIf="rightclicked_item.type === 'opponent_play'">
           <button mat-menu-item (click)="shakeCard(rightclicked_item.card, rightclicked_item.userid, 'play')">Shake</button>
+          <button *ngIf="rightclicked_item && rightclicked_item.card && rightclicked_item.card.tokens && rightclicked_item.card.tokens.length> 0 && user != null && user == currentPlayer()" mat-menu-item [matMenuTriggerFor]="token_menu">Tokens</button>
           <button mat-menu-item (click)="cloneCard(rightclicked_item.card)">Clone</button>
         </div>
 
