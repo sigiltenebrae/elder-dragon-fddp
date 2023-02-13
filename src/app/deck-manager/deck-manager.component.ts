@@ -20,6 +20,9 @@ export class DeckManagerComponent implements OnInit {
 
   temp = false;
 
+  ban_types: any[] = [];
+  ban_list: any[] = [];
+
   constructor(private fddp_data: FddpApiService, private tokenStorage: TokenStorageService, private router: Router) { }
 
   ngOnInit(): void {
@@ -38,17 +41,29 @@ export class DeckManagerComponent implements OnInit {
             deck_promises.push(this.getDeckData(deck.id));
           });
           Promise.all(deck_promises).then(() => {
-            let legality_promises = [];
-            for (let deck of this.decks) {
-              deck.hovered = false;
-              legality_promises.push(this.getDeckLegality(deck));
-              Promise.all(legality_promises).then(() => {
-                console.log('Decks loaded for user: ' + this.user.username);
-              })
-            }
-            this.fddp_data.getUsers().then((user_list: any) => {
-              this.users = user_list;
-              this.loading = false;
+
+            this.fddp_data.getBanList().then((banned_cards: any) => {
+              this.fddp_data.getBanTypes().then((ban_types) => {
+                this.ban_types = ban_types;
+                this.ban_list = [[], [], [], []];
+                banned_cards.forEach((card: any) => {
+                  this.ban_list[card.ban_type - 1].push(card);
+                });
+
+                let legality_promises = [];
+                for (let deck of this.decks) {
+                  deck.hovered = false;
+                  legality_promises.push(this.getDeckLegality(deck));
+                  Promise.all(legality_promises).then(() => {
+                    console.log('Decks loaded for user: ' + this.user.username);
+                  });
+                }
+                this.fddp_data.getUsers().then((user_list: any) => {
+                  this.users = user_list;
+                  this.loading = false;
+                });
+
+              });
             });
           });
         });
@@ -134,6 +149,13 @@ export class DeckManagerComponent implements OnInit {
     return colors;
   }
 
+  getBanId(ban_type: string){
+    for (let type of this.ban_types) {
+      if (ban_type === type.type) {
+        return type.id;
+      }
+    }
+  }
 
   getDeckLegality(deck: any) {
     return new Promise<void>((resolve) => {
@@ -142,8 +164,40 @@ export class DeckManagerComponent implements OnInit {
         deck.issues = [];
       }
       else {
-        deck.legality = 'unknown';
-        deck.issues = [];
+        let banned_cards = [];
+        deck.cards.forEach((card: any) => {
+          for (let banned_card of this.ban_list[this.getBanId("banned") - 1]) {
+            if (card.name === banned_card.name) {
+              banned_cards.push({name: card.name, gatherer: card.gatherer});
+              break;
+            }
+          }
+          if (!card.legality) {
+            let card_allowed = false;
+            if (card.iscommander) {
+              for (let unbanned_commander of this.ban_list[this.getBanId("allowed as commander") - 1]) {
+                if (card.name === unbanned_commander.name) {
+                  card_allowed = true;
+                  break;
+                }
+              }
+
+            }
+            if (!card_allowed) {
+              for (let unbanned_card of this.ban_list[this.getBanId("unbanned") - 1]) {
+                if (card.name === unbanned_card.name) {
+                  card_allowed = true;
+                  break;
+                }
+              }
+            }
+            if (!card_allowed) {
+              banned_cards.push({name: card.name, gatherer: card.gatherer});
+            }
+          }
+        });
+        deck.legality = banned_cards.length > 0 ? "illegal": "legal";
+        deck.issues = banned_cards;
       }
       resolve();
     })
