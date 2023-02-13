@@ -22,6 +22,10 @@
       <a mat-list-item [routerLink]="'/upload'">Add Custom</a>
       <a mat-list-item (click)="signOut()">Log Out</a>
     </mat-nav-list>
+    <mat-nav-list *ngIf="!loggedIn">
+      <a mat-list-item [routerLink]="'/login'">Log In</a>
+      <a mat-list-item [routerLink]="'/register'">Register</a>
+    </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
     <router-outlet></router-outlet>

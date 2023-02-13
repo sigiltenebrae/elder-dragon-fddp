@@ -63,7 +63,8 @@
           </div>
         </div>
 
-        <div class="form-group" fxLayout="row" fxLayoutAlign="end end" fxFlexFill>
+        <div class="form-group" fxLayout="row" fxLayoutAlign="space-between end" fxFlexFill>
+          <button mat-raised-button color="accent" type="button" [routerLink]="'/login'">Log In</button>
           <button mat-raised-button color="primary" type="submit">Sign Up</button>
         </div>
         <div class="alert alert-warning" *ngIf="f.submitted && isSignUpFailed">
