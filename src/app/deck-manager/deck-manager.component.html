@@ -85,7 +85,11 @@
                   <mat-spinner class="deck-manager-commander-color" [diameter]="16"></mat-spinner>
                 </div>
                 <div fxLayout="row" fxLayoutAlign="end" class="deck-manager-commander-legality">
-                  <p style="color: #63a785">Legal</p>
+                  <p *ngIf="deck.legality === 'unknown'">{{deck.legality}}</p>
+                  <p *ngIf="deck.legality === 'legal'" style="color: #63a785">{{deck.legality}}</p>
+                  <ng-template #popContent><p *ngFor="let issue of deck.issues"><a href="{{issue.gatherer}}" target="_blank">{{issue.name}}</a></p></ng-template>
+                  <p *ngIf="deck.legality === 'illegal'" style="color: #d23632; cursor: pointer"
+                     [ngbPopover]="popContent" popoverClass="issue-popover">{{deck.legality}}</p>
                 </div>
               </div>
               <div fxLayout="row" fxLayoutAlign="center" class="deck-manager-commander-ratings-holder">

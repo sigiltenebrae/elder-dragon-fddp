@@ -88,14 +88,17 @@ export class DeckManagerComponent implements OnInit {
         }
       });
       Promise.all(deck_promises).then(() => {
+        let legality_promises = [];
         for (let key in this.decks_others) {
           for (let other_deck of this.decks_others[key]) {
             other_deck.hovered = false;
+            legality_promises.push(this.getDeckLegality(other_deck));
           }
+          Promise.all(legality_promises).then(() => {
+            this.loading_others = false;
+            this.loaded_others = true;
+          });
         }
-        this.loading_others = false;
-        this.loaded_others = true;
-        console.log(this.decks_others);
       })
     })
   }
