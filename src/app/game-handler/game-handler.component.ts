@@ -1071,38 +1071,43 @@ export class GameHandlerComponent implements OnInit {
   }
 
   scoopDeck(): void {
-    let spectator = {
-      id: this.user.id,
-      name: this.user.name,
-      spectating: true,
-      play_counters: [],
-      turn: this.user.turn,
-      deck_id: this.user.deck.id
+    if (this.game_data.players.length == 1) {
+      this.endGame();
     }
-    this.game_data.players.splice(this.game_data.players.indexOf(this.user), 1);
-    this.user = spectator;
-    this.game_data.spectators.push(spectator);
-    this.messageSocket({
-      game_id: this.game_id,
-      put: {
-        action:'scoop',
-        player_data: this.user
-      }
-    });
-    if (this.game_data.type == 2) {
-      let teammate = this.getTeammate();
-      let spectator2 = {
-        id: teammate.id,
-        name: teammate.name,
+    else {
+      let spectator = {
+        id: this.user.id,
+        name: this.user.name,
         spectating: true,
         play_counters: [],
-        deck_id: teammate.deck.id
+        turn: this.user.turn,
+        deck_id: this.user.deck.id
       }
-      this.game_data.players.splice(this.game_data.players.indexOf(teammate), 1);
-      this.game_data.spectators.push(spectator2);
-      this.getTeam(this.user.id).scooped = true;
+      this.game_data.players.splice(this.game_data.players.indexOf(this.user), 1);
+      this.user = spectator;
+      this.game_data.spectators.push(spectator);
+      this.messageSocket({
+        game_id: this.game_id,
+        put: {
+          action:'scoop',
+          player_data: this.user
+        }
+      });
+      if (this.game_data.type == 2) {
+        let teammate = this.getTeammate();
+        let spectator2 = {
+          id: teammate.id,
+          name: teammate.name,
+          spectating: true,
+          play_counters: [],
+          deck_id: teammate.deck.id
+        }
+        this.game_data.players.splice(this.game_data.players.indexOf(teammate), 1);
+        this.game_data.spectators.push(spectator2);
+        this.getTeam(this.user.id).scooped = true;
+      }
+      this.logAction('scoop', null);
     }
-    this.logAction('scoop', null);
   }
 
   kickVote(player: any) {
