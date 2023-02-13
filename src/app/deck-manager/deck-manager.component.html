@@ -1,3 +1,9 @@
+<mat-menu #errorMenu="matMenu" yPosition="above" xPosition="before">
+  <div>
+    <a mat-menu-item *ngFor="let error of current_errors" href="{{error.gatherer}}" target="_blank">{{error.name}}</a>
+  </div>
+</mat-menu>
+
 <div fxLayout="column" fxFlexFill>
   <div *ngIf="loading" fxLayout="row" fxFlex="100" fxLayoutAlign="center center" style="margin: 20px;">
     <mat-spinner></mat-spinner>
@@ -31,9 +37,8 @@
             <div fxLayout="row" fxLayoutAlign="end" class="deck-manager-commander-legality">
               <p *ngIf="deck.legality === 'unknown'">{{deck.legality}}</p>
               <p *ngIf="deck.legality === 'legal'" style="color: #63a785">{{deck.legality}}</p>
-              <ng-template #popContent><p *ngFor="let issue of deck.issues"><a href="{{issue.gatherer}}" target="_blank">{{issue.name}}</a></p></ng-template>
               <p *ngIf="deck.legality === 'illegal'" style="color: #d23632; cursor: pointer"
-                 [ngbPopover]="popContent" popoverClass="issue-popover">{{deck.legality}}</p>
+                 [matMenuTriggerFor]="errorMenu" (click)="current_errors=deck.issues">{{deck.legality}}</p>
             </div>
           </div>
           <div fxLayout="row" fxLayoutAlign="center" class="deck-manager-commander-ratings-holder">
@@ -87,9 +92,8 @@
                 <div fxLayout="row" fxLayoutAlign="end" class="deck-manager-commander-legality">
                   <p *ngIf="deck.legality === 'unknown'">{{deck.legality}}</p>
                   <p *ngIf="deck.legality === 'legal'" style="color: #63a785">{{deck.legality}}</p>
-                  <ng-template #popContent><p *ngFor="let issue of deck.issues"><a href="{{issue.gatherer}}" target="_blank">{{issue.name}}</a></p></ng-template>
                   <p *ngIf="deck.legality === 'illegal'" style="color: #d23632; cursor: pointer"
-                     [ngbPopover]="popContent" popoverClass="issue-popover">{{deck.legality}}</p>
+                     [matMenuTriggerFor]="errorMenu" (click)="current_errors=deck.issues">{{deck.legality}}</p>
                 </div>
               </div>
               <div fxLayout="row" fxLayoutAlign="center" class="deck-manager-commander-ratings-holder">

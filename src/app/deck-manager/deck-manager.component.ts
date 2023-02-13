@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {FddpApiService} from "../../services/fddp-api.service";
 import {TokenStorageService} from "../../services/token-storage.service";
 import {Router} from "@angular/router";
+import {MatMenuTrigger} from "@angular/material/menu";
 
 @Component({
   selector: 'app-deck-manager',
@@ -22,6 +23,8 @@ export class DeckManagerComponent implements OnInit {
 
   ban_types: any[] = [];
   ban_list: any[] = [];
+
+  current_errors = [];
 
   constructor(private fddp_data: FddpApiService, private tokenStorage: TokenStorageService, private router: Router) { }
 
@@ -175,7 +178,7 @@ export class DeckManagerComponent implements OnInit {
               break;
             }
           }
-          if (!card.legality) {
+          if (!card.legality || card.cheapest > 25) {
             let card_allowed = false;
             if (card.iscommander) {
               for (let unbanned_commander of this.ban_list[this.getBanId("allowed as commander") - 1]) {
@@ -205,4 +208,6 @@ export class DeckManagerComponent implements OnInit {
       resolve();
     })
   }
+
+  @ViewChild(MatMenuTrigger) errorTrigger: MatMenuTrigger;
 }
