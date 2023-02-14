@@ -281,6 +281,9 @@ export class GameHandlerComponent implements OnInit {
                 this.getTeam(json_data.get.scoop_data.id).scooped = false;
               }
             }
+            if (json_data.get.end_game != null && json_data.get.end_game) {
+              this.router.navigate(['game']);
+            }
             if (json_data.get.turn_update != null) {
               this.game_data.current_turn = json_data.get.turn_update;
               this.game_data.last_turn = new Date().getTime();
