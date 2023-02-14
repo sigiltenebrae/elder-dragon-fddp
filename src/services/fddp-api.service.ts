@@ -131,9 +131,13 @@ export class FddpApiService {
                 console.log(err);
               });
             }
-
           }
-          resolve_deck(null);
+          if (deck_response.id) {
+            resolve_deck(deck_response.id);
+          }
+          else {
+            resolve_deck(null);
+          }
       }, (err) => {
           console.log('Error in deck creation: ');
           console.log(err);

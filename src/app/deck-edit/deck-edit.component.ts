@@ -48,6 +48,8 @@ export class DeckEditComponent implements OnInit {
   themes = [];
   tribes = [];
 
+  syncing = false;
+
   constructor(private fddp_data: FddpApiService, private route: ActivatedRoute, private router: Router, private tokenStorage: TokenStorageService, public dialog: MatDialog) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
@@ -65,16 +67,22 @@ export class DeckEditComponent implements OnInit {
       this.deckid = Number(routeParams.get('deckid'));
       this.current_user = this.tokenStorage.getUser();
       if (this.deckid == -1) {
-        this.deck = {};
-        this.deck.id = this.deckid;
-        this.deck.name = '';
-        this.deck.image = '';
-        this.deck.sleeves = '';
-        this.deck.link = '';
-        this.deck.rating = 3;
-        this.deck.cards = [];
-        this.deck.tokens = [];
-        this.deck.owner = this.current_user.id;
+        this.fddp_data.getThemes().then((theme_data) => {
+          this.themes = theme_data.themes;
+          this.tribes = theme_data.tribes;
+          this.deck = {};
+          this.deck.id = this.deckid;
+          this.deck.name = '';
+          this.deck.image = '';
+          this.deck.sleeves = '';
+          this.deck.link = '';
+          this.deck.rating = 3;
+          this.deck.cards = [];
+          this.deck.tokens = [];
+          this.deck.themes = [];
+          this.deck.tribes = [];
+          this.deck.owner = this.current_user.id;
+        });
       }
       else if (this.deckid < 0) {
         this.router.navigate(['/']);
@@ -134,6 +142,7 @@ export class DeckEditComponent implements OnInit {
 
   syncWithArchidekt() {
     if (this.deck.link) {
+      this.syncing = true;
       let archidekt_deckid = this.deck.link.indexOf('#') > 0 ?
         this.deck.link.substring(0, this.deck.link.indexOf('#')).substring(this.deck.link.indexOf('/decks/') + 7):
         this.deck.link.substring(this.deck.link.indexOf('/decks/') + 7);
@@ -170,24 +179,31 @@ export class DeckEditComponent implements OnInit {
           });
           this.deck.delete = remove_cards;
         }
+        let card_image_promises = [];
         this.deck.cards.forEach((card: any) => {
           if (card.image === '' || card.image == null) {
-            this.getCardImage(card).then(() => {
-              if (card.iscommander) {
-                if (this.deck.image === '' || this.deck.image == null) {
-                  this.deck.image = card.image;
+            card_image_promises.push(new Promise<void>((resolve) => {
+              this.getCardImage(card).then(() => {
+                if (card.iscommander) {
+                  if (this.deck.image === '' || this.deck.image == null) {
+                    this.deck.image = card.image;
+                  }
                 }
-              }
-            });
+                resolve();
+              });
+            }))
           }
         });
-        this.deck.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
-        let token_promises: any[] = [];
-        this.deck.cards.forEach((card: any) => {
-          token_promises.push(this.getTokens(card));
-        });
-        Promise.all(token_promises).then(() => {
-          this.deck.tokens.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+        Promise.all(card_image_promises).then(() => {
+          this.deck.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+          let token_promises: any[] = [];
+          this.deck.cards.forEach((card: any) => {
+            token_promises.push(this.getTokens(card));
+          });
+          Promise.all(token_promises).then(() => {
+            this.deck.tokens.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+            this.syncing = false;
+          });
         });
       });
     }
@@ -404,8 +420,15 @@ export class DeckEditComponent implements OnInit {
 
   saveDeck() {
     if (this.deckid == -1) { //create
-      this.fddp_data.createDeck(this.deck).then(() => {
-        this.router.navigate(['/']);
+      this.fddp_data.createDeck(this.deck).then((deckid) => {
+        if (deckid) {
+          this.fddp_data.updateDeckThemes(deckid, this.deck.themes, this.deck.tribes).then(() => {
+            this.router.navigate(['/']);
+          });
+        }
+        else {
+          this.router.navigate(['/']);
+        }
       });
     }
     else {
