@@ -53,8 +53,9 @@
             <h2>Deck Image</h2>
           </div>
           <div fxLayout="column" fxLayoutAlign="center center">
-            <img *ngIf="deck.sleeves !== ''" class="deck-edit-preview" src="{{deck.sleeves}}" loading="lazy">
-            <img *ngIf="deck.sleeves === ''" class="deck-edit-preview" src="https://drive.google.com/uc?export=view&id=1-Hp4xnjvn6EU-khUQEHn4R0T7n46Pt84" loading="lazy">
+            <img class="deck-edit-preview" [src]="deck.sleeves !== '' && deck.sleeves !== ' ' ? deck.sleeves:
+            current_user.default_sleeves !== '' && current_user.default_sleeves !== ' ' ? current_user.default_sleeves:
+            default_card_back" loading="lazy">
             <h2>Deck Sleeves</h2>
           </div>
         </div>

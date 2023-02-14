@@ -17,6 +17,7 @@ import {MatChipInputEvent} from "@angular/material/chips";
 })
 export class DeckEditComponent implements OnInit {
   readonly  seperatorKeysCodes = [ENTER, COMMA] as const;
+  default_card_back = 'https://drive.google.com/uc?export=view&id=1-Hp4xnjvn6EU-khUQEHn4R0T7n46Pt84';
 
   temp_theme: any = null;
   temp_tribe: any = null;
