@@ -17,6 +17,7 @@ export class GameHistoryManagerComponent implements OnInit {
   winners = [];
   losers = [];
 
+  gameid = -1;
 
   constructor(private tokenStorage: TokenStorageService, private router: Router,
               private route: ActivatedRoute, private fddp_data: FddpApiService) { }
@@ -28,14 +29,13 @@ export class GameHistoryManagerComponent implements OnInit {
     }
     else {
       const routeParams = this.route.snapshot.paramMap;
-      const gameid = Number(routeParams.get('gameid'));
-      if (gameid > -1) {
+      this.gameid = Number(routeParams.get('gameid'));
+      if (this.gameid > -1) {
         this.fddp_data.getUsers().then((users) => {
           this.users = users;
           this.fddp_data.getDeckList().then((deck_list) => {
             this.deck_list = deck_list.deck_list;
-            this.fddp_data.getGameResults(gameid).then((results) => {
-              console.log(results);
+            this.fddp_data.getGameResults(this.gameid).then((results) => {
               for (let player of results) {
                 if (player.winner) {
                   this.winners.push(player);
@@ -97,7 +97,20 @@ export class GameHistoryManagerComponent implements OnInit {
   }
 
   submit_winners() {
+    let results = [];
+    for (let player of this.winners) {
+      player.winner = true;
+      results.push(player);
+    }
+    for (let player of this.losers) {
+      player.winner = this.winners.length == 0 ? null: false;
+      results.push(player);
+    }
+    this.fddp_data.updateGameResults(this.gameid, results).then(() => {
+      this.router.navigate(['/history']);
+    })
 
   }
+
 
 }

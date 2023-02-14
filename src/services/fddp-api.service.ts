@@ -335,4 +335,21 @@ export class FddpApiService {
       })
     })
   }
+
+  public updateGameResults(gameid, results) {
+    return new Promise<void>((resolve) => {
+      this.http.put<any>(environment.fddp_api_url + '/games/results/' + gameid, JSON.stringify({results: results}),
+        {headers : new HttpHeaders({'Content-Type': 'application/json'})}).subscribe((results_response: any) => {
+        if (results_response.errors) {
+          if (results_response.errors.length > 0) {
+            results_response.errors.length.forEach((error: any) => {
+              console.log(error);
+            });
+          }
+          resolve(results_response.errors);
+        }
+        resolve();
+      });
+    });
+  }
 }

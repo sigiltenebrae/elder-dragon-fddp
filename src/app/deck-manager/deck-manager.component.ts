@@ -82,24 +82,4 @@ export class DeckManagerComponent implements OnInit {
   showOthers() {
     this.show_others = true;
   }
-
-  getOthers() {
-    this.loading_others = true;
-    for (let other of this.users) {
-      if (other.id != this.user.id) {
-        this.decks_others[other.id] = [];
-      }
-    }
-    this.fddp_data.getDecksBasic().then((decks: any) => {
-      decks.forEach((deck: any) => {
-        if (deck.owner !== this.user.id) {
-          this.decks_others[deck.owner].push(deck);
-        }
-      });
-      this.loading_others = false;
-      this.loaded_others = true;
-
-
-    })
-  }
 }

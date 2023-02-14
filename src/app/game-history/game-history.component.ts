@@ -61,7 +61,6 @@ export class GameHistoryComponent implements OnInit {
               });
             })
             this.table.renderRows();
-            console.log(this.games_formatted);
           });
         });
       });
