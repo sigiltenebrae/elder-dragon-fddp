@@ -198,8 +198,8 @@
         </div>
         <button mat-raised-button color="warn" (click)="changing_image=false; changing_back_image=false;" style="margin-top: 10px;">Cancel</button>
       </div>
-      <div *ngIf="selected_card == null" fxLayout="column" fxFlex fxLayoutGap="20px">
-        <mat-form-field style="width: 300px">
+      <div *ngIf="selected_card == null" fxLayout="column" fxFlex="100" fxLayoutGap="20px" style="padding-top: 10px;">
+        <mat-form-field style="width: 300px;" appearance="fill">
           <mat-label>Themes</mat-label>
           <mat-chip-list #themeList aria-label="themes">
             <mat-chip *ngFor="let theme of deck.themes" (removed)="removeTheme(theme)" [color]="'primary'" selected>
@@ -224,7 +224,7 @@
                    [editable]="false">
           </mat-chip-list>
         </mat-form-field>
-        <mat-form-field style="width: 100%">
+        <mat-form-field style="width: 100%" appearance="fill">
           <mat-label>Tribes</mat-label>
           <mat-chip-list #tribeList aria-label="tribes">
             <mat-chip *ngFor="let tribe of deck.tribes" (removed)="removeTribe(tribe)" [color]="'accent'" selected>
