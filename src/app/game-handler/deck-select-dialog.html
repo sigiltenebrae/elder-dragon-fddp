@@ -10,18 +10,19 @@
       <h1>Select Deck</h1>
     </div>
     <div fxLayout="row wrap" fxLayoutAlign="center" style="max-height: 200px;">
-      <div *ngFor="let deck of decks" fxLayout="column" style="margin: 10px; cursor: pointer" (click)="selectDeck(deck)">
-        <div class="deck-manager-commander-viewer" matRipple [matRippleCentered]="false" [matRippleDisabled]="!deck.hovered">
+      <div *ngFor="let deck of decks" fxLayout="column" style="margin: 10px;" class="deck-manager-commander-viewer-holder" [@flipState]="deck.flipped">
+        <div class="deck-manager-commander-viewer deck-manager-commander-viewer__front" matRipple [matRippleCentered]="false" [matRippleDisabled]="!deck.hovered">
           <div [ngClass]="{'deck-manager-background-card-closed': deck.hovered, 'deck-manager-background-card-open': !deck.hovered}">
             <div style="position: relative; width: 300px; height: 200px; clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);" >
-            <img src="{{deck.image}}" alt="{{deck.name}}" class="deck-manager-commander-crop-no-filter" loading="lazy">
+              <img src="{{deck.image}}" alt="{{deck.name}}" class="deck-manager-commander-crop" loading="lazy">
             </div>
           </div>
-          <mat-card-content class="deck-manager-content">
+          <mat-card-content class="deck-manager-content" >
             <div class="deck-manager-content-holder">
-              <h2 *ngIf="deck.link != null && deck.link !== ''"><a>{{deck.name}}</a></h2>
+              <h2 *ngIf="deck.link != null && deck.link !== ''"><a href="{{deck.link}}" target="_blank" style="text-decoration: none">{{deck.name}}</a></h2>
               <h2 *ngIf="deck.link == null || deck.url === ''">{{deck.name}}</h2>
               <h4 *ngFor="let commander of deck.commander" class="deck-manager-commander-name">{{commander.name}}</h4>
+              <p style="margin-top: -10px">Win: {{deck.wins != null ? deck.wins: 0}} Loss: {{deck.losses != null ? deck.losses: 0}}</p>
               <div *ngIf="deck.colors && deck.colors != null" fxLayout="row" fxLayoutAlign="center" class="deck-manager-commander-colors">
                 <img *ngIf="deck.colors.includes('W');" class="deck-manager-commander-color" src="assets/color_symbols/W.png" loading="lazy">
                 <img *ngIf="deck.colors.includes('U');" class="deck-manager-commander-color" src="assets/color_symbols/U.png" loading="lazy">
@@ -34,8 +35,13 @@
                 <mat-spinner class="deck-manager-commander-color" [diameter]="16"></mat-spinner>
               </div>
             </div>
+            <div fxLayout="row" fxLayoutAlign="center" class="deck-manager-commander-ratings-holder">
+              <mat-icon [color]="'primary'" *ngFor="let i of [].constructor(deck.rating)" class="deck-manager-commander-rating">star</mat-icon>
+              <mat-icon [color]="'primary'" style="filter: brightness(60%);" *ngFor="let i of [].constructor(5 - deck.rating)" class="deck-manager-commander-rating">star</mat-icon>
+            </div>
           </mat-card-content>
         </div>
+        <div class="deck-manager-commander-viewer deck-manager-commander-viewer__back"></div>
       </div>
     </div>
     <div *ngIf="loading_others" fxLayout="row" fxFlex fxLayoutAlign="center center" style="margin: 20px;">
@@ -47,18 +53,19 @@
           <h1>{{other_user.name}}</h1>
         </div>
         <div fxFlexFill fxLayout="row wrap" fxLayoutAlign="center center">
-          <div *ngFor="let deck of decks_others[other_user.id]" fxLayout="column" style="margin: 10px; cursor: pointer" (click)="selectDeck(deck)">
-            <div class="deck-manager-commander-viewer" matRipple [matRippleCentered]="false" [matRippleDisabled]="!deck.hovered">
+          <div *ngFor="let deck of decks_others[other_user.id]" fxLayout="column" style="margin: 10px;" class="deck-manager-commander-viewer-holder" [@flipState]="deck.flipped">
+            <div class="deck-manager-commander-viewer deck-manager-commander-viewer__front" matRipple [matRippleCentered]="false" [matRippleDisabled]="!deck.hovered">
               <div [ngClass]="{'deck-manager-background-card-closed': deck.hovered, 'deck-manager-background-card-open': !deck.hovered}">
                 <div style="position: relative; width: 300px; height: 200px; clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);" >
-                  <img src="{{deck.image}}" alt="{{deck.name}}" class="deck-manager-commander-crop-no-filter" loading="lazy">
+                  <img src="{{deck.image}}" alt="{{deck.name}}" class="deck-manager-commander-crop" loading="lazy">
                 </div>
               </div>
               <mat-card-content class="deck-manager-content">
                 <div class="deck-manager-content-holder">
-                  <h2 *ngIf="deck.link != null && deck.link !== ''"><a>{{deck.name}}</a></h2>
+                  <h2 *ngIf="deck.link != null && deck.link !== ''"><a href="{{deck.link}}" target="_blank" style="text-decoration: none">{{deck.name}}</a></h2>
                   <h2 *ngIf="deck.link == null || deck.url === ''">{{deck.name}}</h2>
                   <h4 *ngFor="let commander of deck.commander" class="deck-manager-commander-name">{{commander.name}}</h4>
+                  <p style="margin-top: -10px">Win: {{deck.wins != null ? deck.wins: 0}} Loss: {{deck.losses != null ? deck.losses: 0}}</p>
                   <div *ngIf="deck.colors && deck.colors != null" fxLayout="row" fxLayoutAlign="center" class="deck-manager-commander-colors">
                     <img *ngIf="deck.colors.includes('W');" class="deck-manager-commander-color" src="assets/color_symbols/W.png" loading="lazy">
                     <img *ngIf="deck.colors.includes('U');" class="deck-manager-commander-color" src="assets/color_symbols/U.png" loading="lazy">
@@ -71,8 +78,13 @@
                     <mat-spinner class="deck-manager-commander-color" [diameter]="16"></mat-spinner>
                   </div>
                 </div>
+                <div fxLayout="row" fxLayoutAlign="center" class="deck-manager-commander-ratings-holder">
+                  <mat-icon [color]="'primary'" *ngFor="let i of [].constructor(deck.rating)" class="deck-manager-commander-rating">star</mat-icon>
+                  <mat-icon [color]="'primary'" style="filter: brightness(60%);" *ngFor="let i of [].constructor(5 - deck.rating)" class="deck-manager-commander-rating">star</mat-icon>
+                </div>
               </mat-card-content>
             </div>
+            <div class="deck-manager-commander-viewer deck-manager-commander-viewer__back"></div>
           </div>
         </div>
       </div>
