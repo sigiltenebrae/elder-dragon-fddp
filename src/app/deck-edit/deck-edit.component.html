@@ -1,270 +1,274 @@
-<div *ngIf="loading" fxLayout="row" fxFlex="100" fxLayoutAlign="center center" style="margin: 20px;">
-  <mat-spinner></mat-spinner>
-</div>
-<div *ngIf="!loading && deck && deck.owner == current_user.id" fxFlexFill style="margin: 20px;" fxLayoutAlign="center center">
-  <mat-card fxFlex="80" fxLayout="row wrap" fxLayoutGap="20">
-    <div class="deck-edit-input-holder" style="min-height: 640px; max-height: 640px;" fxLayout="column">
-      <mat-form-field appearance="fill" style="margin-top: 10px;">
-        <mat-label>Deck Link (optional)</mat-label>
-        <input (keydown.enter)="syncWithArchidekt()" matInput [type]="'text'" name="decklink" [(ngModel)]="deck.link">
-        <button mat-icon-button matSuffix type="button" (click)="syncWithArchidekt()"><mat-icon>cached</mat-icon></button>
-      </mat-form-field>
-      <mat-form-field appearance="fill">
-        <mat-label>Deck Name</mat-label>
-        <input matInput [type]="'text'" name="deckname" [(ngModel)]="deck.name" required minlength="1">
-      </mat-form-field>
-      <mat-form-field appearance="fill">
-        <mat-label>Deck Image</mat-label>
-        <input matInput [type]="'text'" name="deckimage" [(ngModel)]="deck.image" required minlength="1">
-      </mat-form-field>
-      <mat-form-field appearance="fill">
-        <mat-label>Deck Sleeves</mat-label>
-        <input matInput [type]="'text'" name="decksleeves" [(ngModel)]="deck.sleeves">
-      </mat-form-field>
-      <!--<mat-form-field appearance="fill">
-        <mat-label>Owner</mat-label>
-        <mat-select [(ngModel)]="deck.owner">
-          <mat-option *ngFor="let user of users" [value]="user.id">
-            {{user.name}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>-->
-      <div fxLayout="row" fxLayoutAlign="space-between center">
-        <div fxLayout="column">
-          <ngb-rating [(rate)]="deck.rating" [max]="5">
-            <ng-template let-fill="fill">
-              <span class="star" [class.filled]="fill === 100">&#9733;</span>
+<div fxFlexFill style="margin: 20px;">
+  <div *ngIf="loading" fxLayout="row" fxFlex="100" fxLayoutAlign="center center">
+    <mat-spinner></mat-spinner>
+  </div>
+  <div *ngIf="!loading && deck && deck.owner == current_user.id" fxFlex="100" fxLayout="column" fxLayoutAlign="center center">
+    <mat-card fxFlex="80" fxLayout="row" fxLayoutGap="20" style="overflow-y: scroll">
+      <div class="deck-edit-input-holder" style="min-height: 640px; max-height: 640px;" fxLayout="column">
+        <mat-form-field appearance="fill" style="margin-top: 10px;">
+          <mat-label>Deck Link (optional)</mat-label>
+          <input (keydown.enter)="syncWithArchidekt()" matInput [type]="'text'" name="decklink" [(ngModel)]="deck.link">
+          <button mat-icon-button matSuffix type="button" (click)="syncWithArchidekt()"><mat-icon>cached</mat-icon></button>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Deck Name</mat-label>
+          <input matInput [type]="'text'" name="deckname" [(ngModel)]="deck.name" required minlength="1">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Deck Image</mat-label>
+          <input matInput [type]="'text'" name="deckimage" [(ngModel)]="deck.image" required minlength="1">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>Deck Sleeves</mat-label>
+          <input matInput [type]="'text'" name="decksleeves" [(ngModel)]="deck.sleeves">
+        </mat-form-field>
+        <!--<mat-form-field appearance="fill">
+          <mat-label>Owner</mat-label>
+          <mat-select [(ngModel)]="deck.owner">
+            <mat-option *ngFor="let user of users" [value]="user.id">
+              {{user.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>-->
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+          <div fxLayout="column">
+            <ngb-rating [(rate)]="deck.rating" [max]="5">
+              <ng-template let-fill="fill">
+                <span class="star" [class.filled]="fill === 100">&#9733;</span>
+              </ng-template>
+            </ngb-rating>
+          </div>
+          <div fxLayout="column">
+            <div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10">
+              <button *ngIf="deckid > -1 && !deleting" mat-raised-button color="warn" (click)="deleting=!deleting">Delete</button>
+              <button *ngIf="deleting" mat-raised-button color="warn" (click)="deleteDeck()">Confirm</button>
+              <button mat-raised-button color="primary" (click)="saveDeck()">Submit</button>
+            </div>
+          </div>
+        </div>
+        <div fxFlex fxLayout="row" fxLayoutAlign="space-evenly center">
+          <div fxLayout="column" fxLayoutAlign="center center">
+            <img class="deck-edit-preview" src="{{deck.image}}" loading="lazy">
+            <h2>Deck Image</h2>
+          </div>
+          <div fxLayout="column" fxLayoutAlign="center center">
+            <img *ngIf="deck.sleeves !== ''" class="deck-edit-preview" src="{{deck.sleeves}}" loading="lazy">
+            <img *ngIf="deck.sleeves === ''" class="deck-edit-preview" src="https://drive.google.com/uc?export=view&id=1-Hp4xnjvn6EU-khUQEHn4R0T7n46Pt84" loading="lazy">
+            <h2>Deck Sleeves</h2>
+          </div>
+        </div>
+      </div>
+      <div fxLayout="column" style="min-height: 640px; max-height: 640px;">
+        <mat-form-field appearance="fill" style="margin-top: 10px;">
+          <mat-label>Type</mat-label>
+          <mat-select [(value)]="card_type">
+            <mat-option value="cards">Cards</mat-option>
+            <mat-option value="tokens">Tokens</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="fill" *ngIf="card_type === 'cards'">
+          <mat-label>Add Card</mat-label>
+          <input (keydown.enter)="addCardToDeck()" type="text" placeholder="Enter Card" matInput
+                 [ngbTypeahead]="card_search" [(ngModel)]="new_card_temp" [editable]="false">
+          <button mat-icon-button matSuffix type="button" (click)="addCardToDeck()"><mat-icon>add</mat-icon></button>
+        </mat-form-field>
+        <h4 *ngIf="card_type === 'cards'">Cards: {{getTotal(deck.cards)}}/{{deck.cards.length}}</h4>
+        <div *ngIf="card_type === 'cards'" class="deck-edit-card-list">
+          <mat-list>
+            <div *ngFor="let card of deck.cards; let i = index" class="deck-edit-card-display">
+              <mat-list-item [ngClass]="{'deck-edit-card-list-commander': card.iscommander}">
+                <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
+                  <div fxLayout="column" fxFlex="100">
+                    <button mat-button style="text-align: start"
+                            (click)="selected_card=card; changing_image=false; changing_back_image=false; image_options=[]; token_options=[]">{{card.name}}</button>
+                  </div>
+                  <div fxLayout="column" fxFlex>
+                    <button mat-button (click)="card.count = card.count + 1;"
+                            (contextmenu)="onRightClick($event, {type: 'card_count', card: card})">{{card.count}}</button>
+                  </div>
+                </div>
+              </mat-list-item>
+              <mat-divider *ngIf="i != deck.cards.length - 1"></mat-divider>
+            </div>
+          </mat-list>
+        </div>
+
+
+        <mat-form-field appearance="fill" *ngIf="card_type === 'tokens'">
+          <mat-label>Add Token</mat-label>
+          <input (keydown.enter)="addTokenToDeck()" type="text" placeholder="Enter Token" matInput
+                 [(ngModel)]="new_token_temp">
+          <button mat-icon-button matSuffix type="button" (click)="addTokenToDeck()"><mat-icon>search</mat-icon></button>
+        </mat-form-field>
+        <h4 *ngIf="card_type === 'tokens'">Cards: {{deck.tokens.length}}</h4>
+        <div *ngIf="card_type === 'tokens'" class="deck-edit-card-list">
+          <mat-list>
+            <div *ngFor="let card of deck.tokens; let i = index" class="deck-edit-card-display">
+              <mat-list-item>
+                <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
+                  <div fxLayout="column" fxFlex="100">
+                    <button mat-button style="text-align: start"
+                            (click)="selected_card=card; changing_image=false; changing_back_image=false; image_options=[]; token_options=[];">{{card.name}}</button>
+                  </div>
+                  <div fxLayout="column" fxFlex>
+                    <button mat-button (click)="deleteToken(card)"><mat-icon>close</mat-icon></button>
+                  </div>
+                </div>
+              </mat-list-item>
+              <mat-divider *ngIf="i != deck.tokens.length - 1"></mat-divider>
+            </div>
+          </mat-list>
+        </div>
+      </div>
+      <div *ngIf="selected_card && !changing_image && !changing_back_image" fxLayout="column" fxFlex fxLayoutAlign="center center" fxLayoutGap="20">
+        <div fxLayout="row" fxLayoutGap="10px">
+          <img src="{{selected_card.image}}" class="deck-edit-image" loading="eager">
+          <img *ngIf="selected_card.back_image" src="{{selected_card.back_image}}" class="deck-edit-image" loading="eager">
+        </div>
+        <div fxLayout="row" fxLayoutGap="10px">
+          <button *ngIf="selected_card.iscommander" mat-raised-button color="accent" (click)="selected_card.iscommander=false">Unset Commander</button>
+          <button *ngIf="!selected_card.iscommander" mat-raised-button color="accent" (click)="selected_card.iscommander=true; deck.image=deck.image===''? selected_card.image: deck.image">Set Commander</button>
+          <button mat-raised-button color="primary" (click)="changing_image=true; getCardImages(selected_card)">Change Image</button>
+          <button *ngIf="selected_card.back_image" mat-raised-button color="primary" (click)="changing_back_image=true; getCardImages(selected_card)">Change Back Image</button>
+          <button mat-raised-button color="warn" (click)="resetCard(selected_card)"><mat-icon>refresh</mat-icon></button>
+        </div>
+        <div fxLayout="row" fxLayoutGap="10px">
+          <mat-form-field appearance="fill">
+            <mat-label>Input Manually</mat-label>
+            <input type="text" matInput [(ngModel)]="selected_card.image">
+          </mat-form-field>
+        </div>
+        <div fxLayout="row">
+          <button mat-raised-button color="accent" (click)="deck.image=selected_card.image">Set As Deck Image</button>
+        </div>
+      </div>
+      <div *ngIf="selected_card && changing_image && card_type === 'tokens'" fxLayout="column" fxFlex fxLayoutAlign="center center">
+        <div fxLayout="row" fxLayoutAlign="start" style="margin-top: 10px" fxLayoutGap="10px">
+          <mat-form-field appearance="fill">
+            <mat-label>Sort</mat-label>
+            <mat-select [(ngModel)]="image_sort" (ngModelChange)="sortImages()">
+              <mat-option value="dateasc">Date Asc</mat-option>
+              <mat-option value="datedesc">Date Desc</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Set</mat-label>
+            <mat-select [(ngModel)]="selected_set" (ngModelChange)="selectSet()">
+              <mat-option value="all">All</mat-option>
+              <mat-option *ngFor="let set of available_sets" [value]="set">{{set}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div fxFlex fxLayout="column" style="overflow-y: scroll; min-height: 640px; max-height: 640px; margin-top: 10px;">
+          <div fxLayout="row wrap" fxLayoutAlign="center">
+            <div *ngFor="let token of token_options" fxLayout="column">
+              <img *ngIf="token.visible" class="deck-edit-card-select" src="{{token.image}}" (click)="copyToSelected(token); changing_image=false" loading="lazy">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="selected_card && (changing_image || changing_back_image) && card_type === 'cards'" fxLayout="column" fxFlex fxLayoutAlign="center center">
+        <div fxLayout="row" fxLayoutAlign="start" style="margin-top: 10px" fxLayoutGap="10px">
+          <mat-form-field appearance="fill">
+            <mat-label>Sort</mat-label>
+            <mat-select  [(ngModel)]="image_sort" (ngModelChange)="sortImages()">
+              <mat-option value="dateasc">Date Asc</mat-option>
+              <mat-option value="datedesc">Date Desc</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="fill">
+            <mat-label>Set</mat-label>
+            <mat-select [(ngModel)]="selected_set" (ngModelChange)="selectSet()">
+              <mat-option value="all">All</mat-option>
+              <mat-option *ngFor="let set of available_sets" [value]="set">{{set}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div fxFlex fxLayout="column" style="overflow-y: scroll; min-height: 640px; max-height: 640px; margin-top: 10px;">
+          <div *ngIf="changing_image" fxLayout="row wrap" fxLayoutAlign="center">
+            <div *ngFor="let card_image of image_options" fxLayout="column">
+              <img *ngIf="card_image.visible" class="deck-edit-card-select" src="{{card_image.image}}" (click)="selected_card.image=card_image.image; changing_image=false;" loading="lazy">
+            </div>
+          </div>
+          <div *ngIf="changing_back_image" fxLayout="row wrap" fxLayoutAlign="center">
+            <div *ngFor="let card_image of back_image_options" fxLayout="column">
+              <img *ngIf="card_image.visible" class="deck-edit-card-select" src="{{card_image.image}}" (click)="selected_card.back_image=card_image.image; changing_back_image=false;" loading="lazy">
+            </div>
+          </div>
+        </div>
+        <button mat-raised-button color="warn" (click)="changing_image=false; changing_back_image=false;" style="margin-top: 10px;">Cancel</button>
+      </div>
+      <div *ngIf="selected_card == null" fxLayout="column" fxFlex fxLayoutGap="20px">
+        <mat-form-field style="width: 300px">
+          <mat-label>Themes</mat-label>
+          <mat-chip-list #themeList aria-label="themes">
+            <mat-chip *ngFor="let theme of deck.themes" (removed)="removeTheme(theme)" [color]="'primary'" selected>
+              {{getTheme(theme.theme_id).name}}
+              <button matChipRemove type="button">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip>
+            <ng-template #themert let-r="result" let-t="term">
+              <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
             </ng-template>
-          </ngb-rating>
-        </div>
-        <div fxLayout="column">
-          <div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10">
-            <button *ngIf="deckid > -1 && !deleting" mat-raised-button color="warn" (click)="deleting=!deleting">Delete</button>
-            <button *ngIf="deleting" mat-raised-button color="warn" (click)="deleteDeck()">Confirm</button>
-            <button mat-raised-button color="primary" (click)="saveDeck()">Submit</button>
-          </div>
-        </div>
-      </div>
-      <div fxFlex fxLayout="row" fxLayoutAlign="space-evenly center">
-        <div fxLayout="column" fxLayoutAlign="center center">
-          <img class="deck-edit-preview" src="{{deck.image}}" loading="lazy">
-          <h2>Deck Image</h2>
-        </div>
-        <div fxLayout="column" fxLayoutAlign="center center">
-          <img *ngIf="deck.sleeves !== ''" class="deck-edit-preview" src="{{deck.sleeves}}" loading="lazy">
-          <img *ngIf="deck.sleeves === ''" class="deck-edit-preview" src="https://drive.google.com/uc?export=view&id=1-Hp4xnjvn6EU-khUQEHn4R0T7n46Pt84" loading="lazy">
-          <h2>Deck Sleeves</h2>
-        </div>
-      </div>
-    </div>
-    <div fxLayout="column" style="min-height: 640px; max-height: 640px;">
-      <mat-form-field appearance="fill" style="margin-top: 10px;">
-        <mat-label>Type</mat-label>
-        <mat-select [(value)]="card_type">
-          <mat-option value="cards">Cards</mat-option>
-          <mat-option value="tokens">Tokens</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field appearance="fill" *ngIf="card_type === 'cards'">
-        <mat-label>Add Card</mat-label>
-        <input (keydown.enter)="addCardToDeck()" type="text" placeholder="Enter Card" matInput
-               [ngbTypeahead]="card_search" [(ngModel)]="new_card_temp" [editable]="false">
-        <button mat-icon-button matSuffix type="button" (click)="addCardToDeck()"><mat-icon>add</mat-icon></button>
-      </mat-form-field>
-      <h4 *ngIf="card_type === 'cards'">Cards: {{getTotal(deck.cards)}}/{{deck.cards.length}}</h4>
-      <div *ngIf="card_type === 'cards'" class="deck-edit-card-list">
-        <mat-list>
-          <div *ngFor="let card of deck.cards; let i = index" class="deck-edit-card-display">
-            <mat-list-item [ngClass]="{'deck-edit-card-list-commander': card.iscommander}">
-              <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
-                <div fxLayout="column" fxFlex="100">
-                  <button mat-button style="text-align: start"
-                          (click)="selected_card=card; changing_image=false; changing_back_image=false; image_options=[]; token_options=[]">{{card.name}}</button>
-                </div>
-                <div fxLayout="column" fxFlex>
-                  <button mat-button (click)="card.count = card.count + 1;"
-                          (contextmenu)="onRightClick($event, {type: 'card_count', card: card})">{{card.count}}</button>
-                </div>
-              </div>
-            </mat-list-item>
-            <mat-divider *ngIf="i != deck.cards.length - 1"></mat-divider>
-          </div>
-        </mat-list>
-      </div>
-
-
-      <mat-form-field appearance="fill" *ngIf="card_type === 'tokens'">
-        <mat-label>Add Token</mat-label>
-        <input (keydown.enter)="addTokenToDeck()" type="text" placeholder="Enter Token" matInput
-               [(ngModel)]="new_token_temp">
-        <button mat-icon-button matSuffix type="button" (click)="addTokenToDeck()"><mat-icon>search</mat-icon></button>
-      </mat-form-field>
-      <h4 *ngIf="card_type === 'tokens'">Cards: {{deck.tokens.length}}</h4>
-      <div *ngIf="card_type === 'tokens'" class="deck-edit-card-list">
-        <mat-list>
-          <div *ngFor="let card of deck.tokens; let i = index" class="deck-edit-card-display">
-            <mat-list-item>
-              <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
-                <div fxLayout="column" fxFlex="100">
-                  <button mat-button style="text-align: start"
-                          (click)="selected_card=card; changing_image=false; changing_back_image=false; image_options=[]; token_options=[];">{{card.name}}</button>
-                </div>
-                <div fxLayout="column" fxFlex>
-                  <button mat-button (click)="deleteToken(card)"><mat-icon>close</mat-icon></button>
-                </div>
-              </div>
-            </mat-list-item>
-            <mat-divider *ngIf="i != deck.tokens.length - 1"></mat-divider>
-          </div>
-        </mat-list>
-      </div>
-    </div>
-    <div *ngIf="selected_card && !changing_image && !changing_back_image" fxLayout="column" fxFlex fxLayoutAlign="center center" fxLayoutGap="20">
-      <div fxLayout="row" fxLayoutGap="10px">
-        <img src="{{selected_card.image}}" class="deck-edit-image" loading="eager">
-        <img *ngIf="selected_card.back_image" src="{{selected_card.back_image}}" class="deck-edit-image" loading="eager">
-      </div>
-      <div fxLayout="row" fxLayoutGap="10px">
-        <button *ngIf="selected_card.iscommander" mat-raised-button color="accent" (click)="selected_card.iscommander=false">Unset Commander</button>
-        <button *ngIf="!selected_card.iscommander" mat-raised-button color="accent" (click)="selected_card.iscommander=true; deck.image=deck.image===''? selected_card.image: deck.image">Set Commander</button>
-        <button mat-raised-button color="primary" (click)="changing_image=true; getCardImages(selected_card)">Change Image</button>
-        <button *ngIf="selected_card.back_image" mat-raised-button color="primary" (click)="changing_back_image=true; getCardImages(selected_card)">Change Back Image</button>
-        <button mat-raised-button color="warn" (click)="resetCard(selected_card)"><mat-icon>refresh</mat-icon></button>
-      </div>
-      <div fxLayout="row" fxLayoutGap="10px">
-        <mat-form-field appearance="fill">
-          <mat-label>Input Manually</mat-label>
-          <input type="text" matInput [(ngModel)]="selected_card.image">
+            <input placeholder="New Theme..."
+                   name="theme_input"
+                   [matChipInputFor]="themeList"
+                   [matChipInputSeparatorKeyCodes]="seperatorKeysCodes"
+                   [matChipInputAddOnBlur]="true"
+                   (matChipInputTokenEnd)="addTheme($event)"
+                   [(ngModel)]="temp_theme"
+                   [ngbTypeahead]="theme_search"
+                   [inputFormatter]="theme_formatter"
+                   [resultTemplate]="themert"
+                   [editable]="false">
+          </mat-chip-list>
+        </mat-form-field>
+        <mat-form-field style="width: 100%">
+          <mat-label>Tribes</mat-label>
+          <mat-chip-list #tribeList aria-label="tribes">
+            <mat-chip *ngFor="let tribe of deck.tribes" (removed)="removeTribe(tribe)" [color]="'accent'" selected>
+              {{getTribe(tribe.tribe_id).name}}
+              <button matChipRemove type="button">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip>
+            <ng-template #tribert let-r="result" let-t="term">
+              <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+            </ng-template>
+            <input placeholder="New Theme..."
+                   name="theme_input"
+                   [matChipInputFor]="tribeList"
+                   [matChipInputSeparatorKeyCodes]="seperatorKeysCodes"
+                   [matChipInputAddOnBlur]="true"
+                   (matChipInputTokenEnd)="addTribe($event)"
+                   [(ngModel)]="temp_tribe"
+                   [ngbTypeahead]="tribe_search"
+                   [inputFormatter]="tribe_formatter"
+                   [resultTemplate]="tribert"
+                   [editable]="false">
+          </mat-chip-list>
         </mat-form-field>
       </div>
-      <div fxLayout="row">
-        <button mat-raised-button color="accent" (click)="deck.image=selected_card.image">Set As Deck Image</button>
-      </div>
-    </div>
-    <div *ngIf="selected_card && changing_image && card_type === 'tokens'" fxLayout="column" fxFlex fxLayoutAlign="center center">
-      <div fxLayout="row" fxLayoutAlign="start" style="margin-top: 10px" fxLayoutGap="10px">
-        <mat-form-field appearance="fill">
-          <mat-label>Sort</mat-label>
-          <mat-select [(ngModel)]="image_sort" (ngModelChange)="sortImages()">
-            <mat-option value="dateasc">Date Asc</mat-option>
-            <mat-option value="datedesc">Date Desc</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field appearance="fill">
-          <mat-label>Set</mat-label>
-          <mat-select [(ngModel)]="selected_set" (ngModelChange)="selectSet()">
-            <mat-option value="all">All</mat-option>
-            <mat-option *ngFor="let set of available_sets" [value]="set">{{set}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div fxFlex fxLayout="column" style="overflow-y: scroll; min-height: 640px; max-height: 640px; margin-top: 10px;">
-        <div fxLayout="row wrap" fxLayoutAlign="center">
-          <div *ngFor="let token of token_options" fxLayout="column">
-            <img *ngIf="token.visible" class="deck-edit-card-select" src="{{token.image}}" (click)="copyToSelected(token); changing_image=false" loading="lazy">
-          </div>
-        </div>
-      </div>
-    </div>
-    <div *ngIf="selected_card && (changing_image || changing_back_image) && card_type === 'cards'" fxLayout="column" fxFlex fxLayoutAlign="center center">
-      <div fxLayout="row" fxLayoutAlign="start" style="margin-top: 10px" fxLayoutGap="10px">
-        <mat-form-field appearance="fill">
-          <mat-label>Sort</mat-label>
-          <mat-select  [(ngModel)]="image_sort" (ngModelChange)="sortImages()">
-            <mat-option value="dateasc">Date Asc</mat-option>
-            <mat-option value="datedesc">Date Desc</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field appearance="fill">
-          <mat-label>Set</mat-label>
-          <mat-select [(ngModel)]="selected_set" (ngModelChange)="selectSet()">
-            <mat-option value="all">All</mat-option>
-            <mat-option *ngFor="let set of available_sets" [value]="set">{{set}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div fxFlex fxLayout="column" style="overflow-y: scroll; min-height: 640px; max-height: 640px; margin-top: 10px;">
-        <div *ngIf="changing_image" fxLayout="row wrap" fxLayoutAlign="center">
-          <div *ngFor="let card_image of image_options" fxLayout="column">
-            <img *ngIf="card_image.visible" class="deck-edit-card-select" src="{{card_image.image}}" (click)="selected_card.image=card_image.image; changing_image=false;" loading="lazy">
-          </div>
-        </div>
-        <div *ngIf="changing_back_image" fxLayout="row wrap" fxLayoutAlign="center">
-          <div *ngFor="let card_image of back_image_options" fxLayout="column">
-            <img *ngIf="card_image.visible" class="deck-edit-card-select" src="{{card_image.image}}" (click)="selected_card.back_image=card_image.image; changing_back_image=false;" loading="lazy">
-          </div>
-        </div>
-      </div>
-      <button mat-raised-button color="warn" (click)="changing_image=false; changing_back_image=false;" style="margin-top: 10px;">Cancel</button>
-    </div>
-    <div *ngIf="selected_card == null" fxLayout="column" fxFlex fxLayoutGap="20px">
-      <mat-form-field style="width: 100%">
-        <mat-label>Themes</mat-label>
-        <mat-chip-list #themeList aria-label="themes">
-          <mat-chip *ngFor="let theme of deck.themes" (removed)="removeTheme(theme)" [color]="'primary'" selected>
-            {{getTheme(theme.theme_id).name}}
-            <button matChipRemove type="button">
-              <mat-icon>cancel</mat-icon>
-            </button>
-          </mat-chip>
-          <ng-template #themert let-r="result" let-t="term">
-            <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
-          </ng-template>
-          <input placeholder="New Theme..."
-                 name="theme_input"
-                 [matChipInputFor]="themeList"
-                 [matChipInputSeparatorKeyCodes]="seperatorKeysCodes"
-                 [matChipInputAddOnBlur]="true"
-                 (matChipInputTokenEnd)="addTheme($event)"
-                 [(ngModel)]="temp_theme"
-                 [ngbTypeahead]="theme_search"
-                 [inputFormatter]="theme_formatter"
-                 [resultTemplate]="themert"
-                 [editable]="false">
-        </mat-chip-list>
-      </mat-form-field>
-      <mat-form-field style="width: 100%">
-        <mat-label>Tribes</mat-label>
-        <mat-chip-list #tribeList aria-label="tribes">
-          <mat-chip *ngFor="let tribe of deck.tribes" (removed)="removeTribe(tribe)" [color]="'accent'" selected>
-            {{getTribe(tribe.tribe_id).name}}
-            <button matChipRemove type="button">
-              <mat-icon>cancel</mat-icon>
-            </button>
-          </mat-chip>
-          <ng-template #tribert let-r="result" let-t="term">
-            <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
-          </ng-template>
-          <input placeholder="New Theme..."
-                 name="theme_input"
-                 [matChipInputFor]="tribeList"
-                 [matChipInputSeparatorKeyCodes]="seperatorKeysCodes"
-                 [matChipInputAddOnBlur]="true"
-                 (matChipInputTokenEnd)="addTribe($event)"
-                 [(ngModel)]="temp_tribe"
-                 [ngbTypeahead]="tribe_search"
-                 [inputFormatter]="tribe_formatter"
-                 [resultTemplate]="tribert"
-                 [editable]="false">
-        </mat-chip-list>
-      </mat-form-field>
-    </div>
-  </mat-card>
-</div>
-<div fxLayout="column" *ngIf="!loading && deck && deck.owner != current_user.id">
-  <div fxFlex="100" fxLayout="row" fxLayoutAlign="center">
-    <h1>{{deck.name}}</h1>
+    </mat-card>
   </div>
-  <div fxFlex="100" fxLayout="row" fxLayoutAlign="center">
-    <div class="custom-image-card-holder" *ngFor="let card of commanders">
-      <img class="custom-image-card" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
-      <h3 class="custom-image-card-name">{{card.name}}</h3>
-    </div>
-  </div>
-  <div *ngIf="!loading && deck && deck.owner != current_user.id" fxFlexFill fxLayout="row wrap" fxLayoutGap="10px" fxLayoutAlign="center">
-    <div class="custom-image-card-holder" *ngFor="let card of notcommanders">
-      <img class="custom-image-card" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
-      <h3 class="custom-image-card-name">{{card.name}}</h3>
+  <div *ngIf="!loading && deck && deck.owner != current_user.id" fxLayout="row" fxLayoutAlign="start">
+    <div fxLayout="column" fxLayoutAlign="start" fxFlex="100">
+      <div fxFlex="100" fxLayout="row" fxLayoutAlign="center">
+        <h1>{{deck.name}}</h1>
+      </div>
+      <div fxFlex="100" fxLayout="row" fxLayoutAlign="center">
+        <div class="custom-image-card-holder" *ngFor="let card of commanders">
+          <img class="custom-image-card" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
+          <h3 class="custom-image-card-name">{{card.name}}</h3>
+        </div>
+      </div>
+      <div fxFlex="100" fxLayout="row wrap" fxLayoutGap="10px" fxLayoutAlign="center">
+        <div class="custom-image-card-holder" *ngFor="let card of notcommanders">
+          <img class="custom-image-card" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
+          <h3 class="custom-image-card-name">{{card.name}}</h3>
+        </div>
+      </div>
     </div>
   </div>
 </div>
