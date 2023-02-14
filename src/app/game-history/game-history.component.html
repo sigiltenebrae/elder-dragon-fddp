@@ -34,7 +34,7 @@
         <ng-container matColumnDef="edit">
           <th mat-header-cell *matHeaderCellDef aria-label="edit">&nbsp;</th>
           <td mat-cell *matCellDef="let element">
-            <button mat-raised-button color="primary" [routerLink]="['/history', element.id]">Edit</button>
+            <button *ngIf="element.status === 'complete'" mat-raised-button color="primary" [routerLink]="['/history', element.id]">Edit</button>
           </td>
         </ng-container>
 
