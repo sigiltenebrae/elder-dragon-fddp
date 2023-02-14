@@ -83,21 +83,11 @@ export class DeckSelectDialog {
         this.fddp_data.getDecksBasic(this.data.user).then((decks: any) => {
           this.decks = decks;
           this.loading = false
-          this.loading_others = true;
           for (let other of this.users) {
             if (other.id != this.data.user) {
               this.decks_others[other.id] = [];
             }
           }
-          this.fddp_data.getDecksBasic().then((decks: any) => {
-            decks.forEach((deck: any) => {
-              if (deck.owner !== this.data.user) {
-                this.decks_others[deck.owner].push(deck);
-              }
-            });
-            this.loading_others = false;
-            this.loaded_others = true;
-          });
         });
       });
     }
@@ -109,6 +99,19 @@ export class DeckSelectDialog {
         }
       });
     }
+  }
+
+  loadOthers() {
+    this.loading_others = true;
+    this.fddp_data.getDecksBasic().then((decks: any) => {
+      decks.forEach((deck: any) => {
+        if (deck.owner !== this.data.user) {
+          this.decks_others[deck.owner].push(deck);
+        }
+      });
+      this.loading_others = false;
+      this.loaded_others = true;
+    });
   }
 
   selectDeck(deck: any) {

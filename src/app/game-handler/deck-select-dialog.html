@@ -44,6 +44,9 @@
         <div class="deck-manager-commander-viewer deck-manager-commander-viewer__back"></div>
       </div>
     </div>
+    <div *ngIf="!loading_others && !loaded_others" fxLayout="row" fxFlex fxLayoutAlign="center center" style="margin: 20px;">
+      <button (click)="loadOthers()" mat-raised-button color="warn">Load Others</button>
+    </div>
     <div *ngIf="loading_others" fxLayout="row" fxFlex fxLayoutAlign="center center" style="margin: 20px;">
       <mat-spinner style="margin: 20px;" color="accent"></mat-spinner>
     </div>
