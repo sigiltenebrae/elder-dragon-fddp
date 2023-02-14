@@ -35,7 +35,7 @@
               <mat-spinner class="deck-manager-commander-color" [diameter]="16"></mat-spinner>
             </div>
             <div fxLayout="row" fxLayoutAlign="end" class="deck-manager-commander-legality">
-              <mat-spinner *ngIf="deck.issues == null" class="deck-manager-commander-color" [diameter]="16"></mat-spinner>
+              <mat-spinner *ngIf="deck.issues == null && calculate" class="deck-manager-commander-color" [diameter]="16"></mat-spinner>
               <p *ngIf="deck.issues != null && deck.issues.length == 0" style="color: #63a785">legal</p>
               <p *ngIf="deck.issues != null && deck.issues.length > 0" style="color: #d23632; cursor: pointer"
                  [matMenuTriggerFor]="errorMenu" (click)="current_errors=deck.issues">illegal</p>
@@ -51,8 +51,10 @@
     &nbsp;
   </div>
 
-  <div *ngIf="!show_others" fxFlex fxLayout="row" fxLayoutAlign="center">
-    <button mat-raised-button color="primary" (click)="showOthers()" style="max-height: 48px; margin: 20px;">Load Other Users</button>
+  <div fxFlex fxLayout="row" fxLayoutAlign="center">
+    <button *ngIf="!show_others" mat-raised-button color="primary" (click)="showOthers()" style="max-height: 48px; margin: 20px;">Load Other Users</button>
+    <button *ngIf="loaded_others && show_others" mat-raised-button color="warn" (click)="calculateLegalityOthers()" style="max-height: 48px; margin: 20px;">Check Others</button>
+    <button mat-raised-button color="accent" (click)="calculateLegality()" style="max-height: 48px; margin: 20px;">Check Mine</button>
   </div>
   <div *ngIf="loading_others && show_others" fxLayout="row" fxFlex fxLayoutAlign="center center" style="margin: 20px;">
     <mat-spinner style="margin: 20px;"></mat-spinner>
@@ -90,7 +92,7 @@
                   <mat-spinner class="deck-manager-commander-color" [diameter]="16"></mat-spinner>
                 </div>
                 <div fxLayout="row" fxLayoutAlign="end" class="deck-manager-commander-legality">
-                  <mat-spinner *ngIf="deck.issues == null" class="deck-manager-commander-color" [diameter]="16"></mat-spinner>
+                  <mat-spinner *ngIf="deck.issues == null && calculate_others" class="deck-manager-commander-color" [diameter]="16"></mat-spinner>
                   <p *ngIf="deck.issues != null && deck.issues.length == 0" style="color: #63a785">legal</p>
                   <p *ngIf="deck.issues != null && deck.issues.length > 0" style="color: #d23632; cursor: pointer"
                      [matMenuTriggerFor]="errorMenu" (click)="current_errors=deck.issues">illegal</p>

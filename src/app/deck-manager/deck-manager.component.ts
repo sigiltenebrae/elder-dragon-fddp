@@ -24,6 +24,9 @@ export class DeckManagerComponent implements OnInit {
 
   current_errors = [];
 
+  calculate = false;
+  calculate_others = false;
+
   constructor(private fddp_data: FddpApiService, private tokenStorage: TokenStorageService, private router: Router) { }
 
   ngOnInit(): void {
@@ -60,16 +63,10 @@ export class DeckManagerComponent implements OnInit {
 
               for (let deck of this.decks) {
                 deck.hovered = false;
-                this.fddp_data.getDeckLegality(deck.id).then((issues) => {
-                  deck.issues = issues;
-                });
               }
               for (let key in this.decks_others) {
                 for (let other_deck of this.decks_others[key]) {
                   other_deck.hovered = false;
-                  this.fddp_data.getDeckLegality(other_deck.id).then((issues) => {
-                    other_deck.issues = issues;
-                  });
                 }
               }
             });
@@ -81,5 +78,27 @@ export class DeckManagerComponent implements OnInit {
 
   showOthers() {
     this.show_others = true;
+  }
+
+  calculateLegality() {
+    this.calculate = true;
+    for (let deck of this.decks) {
+      deck.hovered = false;
+      this.fddp_data.getDeckLegality(deck.id).then((issues) => {
+        deck.issues = issues;
+      });
+    }
+  }
+
+  calculateLegalityOthers() {
+    this.calculate_others = true;
+    for (let key in this.decks_others) {
+      for (let other_deck of this.decks_others[key]) {
+        other_deck.hovered = false;
+        this.fddp_data.getDeckLegality(other_deck.id).then((issues) => {
+          other_deck.issues = issues;
+        });
+      }
+    }
   }
 }
