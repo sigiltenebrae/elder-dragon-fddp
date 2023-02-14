@@ -282,15 +282,36 @@ p, h1, h2, h3, h4, h5, h6 {
          Deck-Manager-Component
  *****************************************/
 
-.deck-manager-commander-viewer {
-  font-family: Beleren, "Helvetica Neue", sans-serif;
+.deck-manager-commander-viewer-holder {
+  -webkit-transform-style: preserve-3d;
+  transform-style: preserve-3d;
   position: relative;
-  float: left;
-  overflow: hidden;
   width: 300px;
   text-align: center;
   height: 372px;
+}
+
+.deck-manager-commander-viewer__front {
+  transform: rotateY(0deg);
+}
+
+.deck-manager-commander-viewer__back {
+  transform: rotateY(-180deg);
+}
+
+
+.deck-manager-commander-viewer-holder .deck-manager-commander-viewer {
+  font-family: Beleren, "Helvetica Neue", sans-serif;
+  float: left;
+  overflow: hidden;
+  text-align: center;
   border: none;
+
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  position: absolute;
+  height: 100%;
+  width: 100%;
   @include mat.elevation(4);
 }
 

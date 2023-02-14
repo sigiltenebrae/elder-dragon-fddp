@@ -9,8 +9,8 @@
     <mat-spinner></mat-spinner>
   </div>
   <div *ngIf="!loading && user" fxLayout="row wrap" fxLayoutAlign="center" style="margin: 20px">
-    <div *ngFor="let deck of decks" fxLayout="column" style="margin: 10px;">
-      <div class="deck-manager-commander-viewer" matRipple [matRippleCentered]="false" [matRippleDisabled]="!deck.hovered">
+    <div *ngFor="let deck of decks" fxLayout="column" style="margin: 10px;" class="deck-manager-commander-viewer-holder" [@flipState]="deck.flipped" (dblclick)="toggleFlip(deck)">
+      <div class="deck-manager-commander-viewer deck-manager-commander-viewer__front" matRipple [matRippleCentered]="false" [matRippleDisabled]="!deck.hovered">
         <div [ngClass]="{'deck-manager-background-card-closed': deck.hovered, 'deck-manager-background-card-open': !deck.hovered}">
           <div style="position: relative; width: 300px; height: 200px; clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);" >
             <img src="{{deck.image}}" alt="{{deck.name}}" class="deck-manager-commander-crop" loading="lazy">
@@ -47,6 +47,7 @@
           </div>
         </mat-card-content>
       </div>
+      <div class="deck-manager-commander-viewer deck-manager-commander-viewer__back"></div>
     </div>
     &nbsp;
   </div>
@@ -66,8 +67,8 @@
         <h1>{{other_user.name}}</h1>
       </div>
       <div fxFlexFill fxLayout="row wrap" fxLayoutAlign="center center">
-        <div *ngFor="let deck of decks_others[other_user.id]" fxLayout="column" style="margin: 10px;">
-          <div class="deck-manager-commander-viewer" matRipple [matRippleCentered]="false" [matRippleDisabled]="!deck.hovered">
+        <div *ngFor="let deck of decks_others[other_user.id]" fxLayout="column" style="margin: 10px;" class="deck-manager-commander-viewer-holder" [@flipState]="deck.flipped" (dblclick)="toggleFlip(deck)">
+          <div class="deck-manager-commander-viewer deck-manager-commander-viewer__front" matRipple [matRippleCentered]="false" [matRippleDisabled]="!deck.hovered">
             <div [ngClass]="{'deck-manager-background-card-closed': deck.hovered, 'deck-manager-background-card-open': !deck.hovered}">
               <div style="position: relative; width: 300px; height: 200px; clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);" >
                 <img src="{{deck.image}}" alt="{{deck.name}}" class="deck-manager-commander-crop" loading="lazy">
@@ -104,6 +105,7 @@
               </div>
             </mat-card-content>
           </div>
+          <div class="deck-manager-commander-viewer deck-manager-commander-viewer__back"></div>
         </div>
       </div>
       &nbsp;

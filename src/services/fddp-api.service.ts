@@ -346,9 +346,36 @@ export class FddpApiService {
               console.log(error);
             });
           }
-          resolve(results_response.errors);
+          resolve();
         }
         resolve();
+      }, () => {
+          resolve();
+      });
+    });
+  }
+
+  public getThemes(): Promise<any> {
+    return new Promise<any>((resolve) => {
+      this.http.get(environment.fddp_api_url + '/themes').subscribe((theme_data: any) => {
+        resolve(theme_data);
+      }, () => {
+        resolve({themes: [], tribes: []});
+      })
+    })
+  }
+
+  public updateDeckThemes(deckid, themes, tribes): Promise<void> {
+    return new Promise<void>((resolve) => {
+      this.http.put<any>(environment.fddp_api_url + '/themes/decks/' + deckid, JSON.stringify({themes: themes, tribes: tribes}),
+        {headers : new HttpHeaders({'Content-Type': 'application/json'})}).subscribe((resp: any) => {
+          if (resp.errors) {
+            console.log(resp.errors);
+          }
+          console.log(resp);
+          resolve();
+      }, () => {
+          resolve();
       });
     });
   }

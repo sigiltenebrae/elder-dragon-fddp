@@ -2,12 +2,24 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {FddpApiService} from "../../services/fddp-api.service";
 import {TokenStorageService} from "../../services/token-storage.service";
 import {Router} from "@angular/router";
-import {MatMenuTrigger} from "@angular/material/menu";
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-deck-manager',
   templateUrl: './deck-manager.component.html',
-  styleUrls: ['./deck-manager.component.scss']
+  styleUrls: ['./deck-manager.component.scss'],
+  animations: [
+    trigger('flipState', [
+      state('true', style({
+        transform: 'rotateY(179deg)'
+      })),
+      state('false', style({
+        transform: 'rotateY(0)'
+      })),
+      transition('true => false', animate('500ms ease-out')),
+      transition('false => true', animate('500ms ease-in'))
+    ])
+  ]
 })
 export class DeckManagerComponent implements OnInit {
   user: any = null;
@@ -63,10 +75,12 @@ export class DeckManagerComponent implements OnInit {
 
               for (let deck of this.decks) {
                 deck.hovered = false;
+                deck.flipped = false;
               }
               for (let key in this.decks_others) {
                 for (let other_deck of this.decks_others[key]) {
                   other_deck.hovered = false;
+                  other_deck.flipped = false;
                 }
               }
             });
@@ -100,5 +114,9 @@ export class DeckManagerComponent implements OnInit {
         });
       }
     }
+  }
+
+  toggleFlip(deck) {
+    deck.flipped = !deck.flipped;
   }
 }

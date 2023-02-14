@@ -1,3 +1,4 @@
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {Component, Inject, OnInit} from '@angular/core';
 import { debounceTime, distinctUntilChanged, map, Observable, OperatorFunction, startWith, switchMap, tap } from "rxjs";
 import { FormControl } from "@angular/forms";
@@ -7,6 +8,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {TokenStorageService} from "../../services/token-storage.service";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {CustomTokenDialog} from "../custom-images/custom-images.component";
+import {MatChipInputEvent} from "@angular/material/chips";
 
 @Component({
   selector: 'app-deck-edit',
@@ -14,6 +16,10 @@ import {CustomTokenDialog} from "../custom-images/custom-images.component";
   styleUrls: ['./deck-edit.component.scss']
 })
 export class DeckEditComponent implements OnInit {
+  readonly  seperatorKeysCodes = [ENTER, COMMA] as const;
+
+  temp_theme: any = null;
+  temp_tribe: any = null;
 
   loading = false;
   users: any = []
@@ -38,6 +44,9 @@ export class DeckEditComponent implements OnInit {
   image_sort = "";
   available_sets = [];
   selected_set = "";
+
+  themes = [];
+  tribes = [];
 
   constructor(private fddp_data: FddpApiService, private route: ActivatedRoute, private router: Router, private tokenStorage: TokenStorageService, public dialog: MatDialog) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
@@ -71,13 +80,18 @@ export class DeckEditComponent implements OnInit {
         this.router.navigate(['/']);
       }
       else {
-        this.fddp_data.getDeckForPlay(this.deckid).then((deck) => {
-          this.deck = deck;
-          this.deck.delete = [];
-          this.deck.token_delete = [];
-          this.deck.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
-          this.deck.tokens.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
-          this.getCommanders();
+        this.fddp_data.getThemes().then((theme_data) => {
+          this.themes = theme_data.themes;
+          this.tribes = theme_data.tribes;
+          this.fddp_data.getDeckForPlay(this.deckid).then((deck) => {
+            this.deck = deck;
+            console.log(deck);
+            this.deck.delete = [];
+            this.deck.token_delete = [];
+            this.deck.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+            this.deck.tokens.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+            this.getCommanders();
+          });
         });
       }
     }
@@ -395,7 +409,9 @@ export class DeckEditComponent implements OnInit {
     }
     else {
       this.fddp_data.updateDeck(this.deck).then(() => {
-        this.router.navigate(['/']);
+        this.fddp_data.updateDeckThemes(this.deckid, this.deck.themes, this.deck.tribes).then(() => {
+          this.router.navigate(['/']);
+        });
       });
     }
   }
@@ -418,7 +434,97 @@ export class DeckEditComponent implements OnInit {
       }
     }
   }
+
+  /**
+   * OperatorFunction for theme autocomplete on a typeahead
+   * @param text$ string to autocomplete
+   */
+  public theme_search: OperatorFunction<string, readonly {id: number, name: string}[]> = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(200),
+      map(term => term === '' ? this.themes
+        : this.themes.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
+    );
+
+  public theme_formatter = (x: {name: string}) => x.name;
+
+
+  /**
+   * OperatorFunction for tribe autocomplete on a typeahead
+   * @param text$ string to autocomplete
+   */
+  public tribe_search: OperatorFunction<string, readonly {id: number, name: string}[]> = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(200),
+      map(term => term === '' ? this.tribes
+        : this.tribes.filter(v => v.name.toLowerCase().indexOf(term.toLowerCase()) > -1).slice(0, 10))
+    );
+
+  public tribe_formatter = (x: {name: string}) => x.name;
+
+  getTheme(id) {
+    for (let theme of this.themes) {
+      if (theme.id === id) {
+        return theme;
+      }
+    }
+    return null;
+  }
+
+  getTribe(id) {
+    for (let tribe of this.tribes) {
+      if (tribe.id === id) {
+        return tribe;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Adds theme to the deck's theme list
+   * @param event detects a chip create event to add it to the list
+   */
+  public addTheme(event: MatChipInputEvent): void {
+    if (this.temp_theme) {
+      const value = (event.value || '').trim();
+      if (value) {
+        this.deck.themes.push({name: value, theme_id: this.temp_theme.id, url: this.temp_theme.url});
+      }
+      event.chipInput!.clear();
+    }
+  }
+
+  /**
+   * Adds theme to the deck's tribe list
+   * @param event detects a chip create event to add it to the list
+   */
+  public addTribe(event: MatChipInputEvent): void {
+    if (this.temp_tribe) {
+      const value = (event.value || '').trim();
+      if (value) {
+        this.deck.tribes.push({name: value, tribe_id: this.temp_tribe.id, url: this.temp_tribe.url});
+      }
+      event.chipInput!.clear();
+    }
+  }
+
+  public removeTheme(theme: any): void {
+    const index = this.deck.themes.indexOf(theme);
+    if (index > -1) {
+      this.deck.themes.splice(index, 1);
+    }
+  }
+
+  public removeTribe(theme: any): void {
+    const index = this.deck.tribes.indexOf(theme);
+    if (index > -1) {
+      this.deck.tribes.splice(index, 1);
+    }
+  }
+
 }
+
+
 
 @Component({
   selector: 'token-finder-dialog',

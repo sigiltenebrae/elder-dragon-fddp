@@ -197,6 +197,58 @@
       </div>
       <button mat-raised-button color="warn" (click)="changing_image=false; changing_back_image=false;" style="margin-top: 10px;">Cancel</button>
     </div>
+    <div *ngIf="selected_card == null" fxLayout="column" fxFlex fxLayoutGap="20px">
+      <mat-form-field style="width: 100%">
+        <mat-label>Themes</mat-label>
+        <mat-chip-list #themeList aria-label="themes">
+          <mat-chip *ngFor="let theme of deck.themes" (removed)="removeTheme(theme)" [color]="'primary'" selected>
+            {{getTheme(theme.theme_id).name}}
+            <button matChipRemove type="button">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip>
+          <ng-template #themert let-r="result" let-t="term">
+            <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+          </ng-template>
+          <input placeholder="New Theme..."
+                 name="theme_input"
+                 [matChipInputFor]="themeList"
+                 [matChipInputSeparatorKeyCodes]="seperatorKeysCodes"
+                 [matChipInputAddOnBlur]="true"
+                 (matChipInputTokenEnd)="addTheme($event)"
+                 [(ngModel)]="temp_theme"
+                 [ngbTypeahead]="theme_search"
+                 [inputFormatter]="theme_formatter"
+                 [resultTemplate]="themert"
+                 [editable]="false">
+        </mat-chip-list>
+      </mat-form-field>
+      <mat-form-field style="width: 100%">
+        <mat-label>Tribes</mat-label>
+        <mat-chip-list #tribeList aria-label="tribes">
+          <mat-chip *ngFor="let tribe of deck.tribes" (removed)="removeTribe(tribe)" [color]="'accent'" selected>
+            {{getTribe(tribe.tribe_id).name}}
+            <button matChipRemove type="button">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip>
+          <ng-template #tribert let-r="result" let-t="term">
+            <ngb-highlight [result]="r.name" [term]="t"></ngb-highlight>
+          </ng-template>
+          <input placeholder="New Theme..."
+                 name="theme_input"
+                 [matChipInputFor]="tribeList"
+                 [matChipInputSeparatorKeyCodes]="seperatorKeysCodes"
+                 [matChipInputAddOnBlur]="true"
+                 (matChipInputTokenEnd)="addTribe($event)"
+                 [(ngModel)]="temp_tribe"
+                 [ngbTypeahead]="tribe_search"
+                 [inputFormatter]="tribe_formatter"
+                 [resultTemplate]="tribert"
+                 [editable]="false">
+        </mat-chip-list>
+      </mat-form-field>
+    </div>
   </mat-card>
 </div>
 <div fxLayout="column" *ngIf="!loading && deck && deck.owner != current_user.id">
