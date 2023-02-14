@@ -119,4 +119,8 @@ export class DeckManagerComponent implements OnInit {
   toggleFlip(deck) {
     deck.flipped = !deck.flipped;
   }
+
+  isAdmin() {
+    return this.tokenStorage.getUser().isAdmin;
+  }
 }

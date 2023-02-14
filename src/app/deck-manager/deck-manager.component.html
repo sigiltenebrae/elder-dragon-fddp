@@ -54,7 +54,7 @@
 
   <div fxFlex fxLayout="row" fxLayoutAlign="center">
     <button *ngIf="!show_others" mat-raised-button color="primary" (click)="showOthers()" style="max-height: 48px; margin: 20px;">Load Other Users</button>
-    <button *ngIf="loaded_others && show_others" mat-raised-button color="warn" (click)="calculateLegalityOthers()" style="max-height: 48px; margin: 20px;">Check Others</button>
+    <button *ngIf="loaded_others && show_others && isAdmin()" mat-raised-button color="warn" (click)="calculateLegalityOthers()" style="max-height: 48px; margin: 20px;">Check Others</button>
     <button mat-raised-button color="accent" (click)="calculateLegality()" style="max-height: 48px; margin: 20px;">Check Mine</button>
   </div>
   <div *ngIf="loading_others && show_others" fxLayout="row" fxFlex fxLayoutAlign="center center" style="margin: 20px;">
