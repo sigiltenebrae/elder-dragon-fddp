@@ -19,7 +19,7 @@
           </div>
           <button class="deck-manager-commander-edit" mat-icon-button [routerLink]="['/decks', deck.id]"><mat-icon>edit</mat-icon></button>
         </div>
-        <mat-card-content class="deck-manager-content" >
+        <mat-card-content class="deck-manager-content">
           <div class="deck-manager-content-holder">
             <h2 *ngIf="deck.link != null && deck.link !== '' && deck.active"><a href="{{deck.link}}" target="_blank" style="text-decoration: none">{{deck.name}}</a></h2>
             <s *ngIf="deck.link != null && deck.link !== '' && !deck.active"><h2><a href="{{deck.link}}" target="_blank" style="text-decoration: none">{{deck.name}}</a></h2></s>
@@ -57,12 +57,16 @@
         <div style="margin: 10px">
           <mat-chip-list>
             <mat-chip *ngFor="let theme of deck.themes" color="primary" selected>
-              {{getTheme(theme.theme_id).name}}
+              <a class="simple-a" href="https://edhrec.com{{getTheme(theme.theme_id).url}}" target="_blank">
+                {{getTheme(theme.theme_id).name}}
+              </a>
             </mat-chip>
           </mat-chip-list>
           <mat-chip-list>
             <mat-chip *ngFor="let tribe of deck.tribes" color="accent" selected>
-              {{getTribe(tribe.tribe_id).name}}
+              <a class="simple-a" href="https://edhrec.com{{getTribe(tribe.tribe_id).url}}" target="_blank">
+                {{getTribe(tribe.tribe_id).name}}
+              </a>
             </mat-chip>
           </mat-chip-list>
         </div>
@@ -124,7 +128,24 @@
               </div>
             </mat-card-content>
           </div>
-          <div class="deck-manager-commander-viewer deck-manager-commander-viewer__back"></div>
+          <div class="deck-manager-commander-viewer deck-manager-commander-viewer__back">
+            <div style="margin: 10px">
+              <mat-chip-list>
+                <mat-chip *ngFor="let theme of deck.themes" color="primary" selected>
+                  <a class="simple-a" href="https://edhrec.com{{getTheme(theme.theme_id).url}}" target="_blank">
+                    {{getTheme(theme.theme_id).name}}
+                  </a>
+                </mat-chip>
+              </mat-chip-list>
+              <mat-chip-list>
+                <mat-chip *ngFor="let tribe of deck.tribes" color="accent" selected>
+                  <a class="simple-a" href="https://edhrec.com{{getTribe(tribe.tribe_id).url}}" target="_blank">
+                    {{getTribe(tribe.tribe_id).name}}
+                  </a>
+                </mat-chip>
+              </mat-chip-list>
+            </div>
+          </div>
         </div>
       </div>
       &nbsp;
