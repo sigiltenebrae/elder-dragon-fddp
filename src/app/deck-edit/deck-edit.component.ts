@@ -72,6 +72,7 @@ export class DeckEditComponent implements OnInit {
           this.themes = theme_data.themes;
           this.tribes = theme_data.tribes;
           this.deck = {};
+          this.deck.active = true;
           this.deck.id = this.deckid;
           this.deck.name = '';
           this.deck.image = '';

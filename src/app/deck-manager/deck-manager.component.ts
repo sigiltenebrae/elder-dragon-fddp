@@ -72,7 +72,7 @@ export class DeckManagerComponent implements OnInit {
                   }
                 }
                 decks.forEach((deck: any) => {
-                  if (deck.owner !== this.user.id) {
+                  if (deck.owner !== this.user.id && deck.active) {
                     this.decks_others[deck.owner].push(deck);
                   }
                 });

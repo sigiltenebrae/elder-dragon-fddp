@@ -82,6 +82,11 @@ export class DeckSelectDialog {
 
         this.fddp_data.getDecksBasic(this.data.user).then((decks: any) => {
           this.decks = decks;
+          for (let deck of this.decks) {
+            if (!deck.active) {
+              this.decks.splice(this.decks.indexOf(deck), 1);
+            }
+          }
           this.loading = false
           for (let other of this.users) {
             if (other.id != this.data.user) {
@@ -105,7 +110,7 @@ export class DeckSelectDialog {
     this.loading_others = true;
     this.fddp_data.getDecksBasic().then((decks: any) => {
       decks.forEach((deck: any) => {
-        if (deck.owner !== this.data.user) {
+        if (deck.owner !== this.data.user && deck.active) {
           this.decks_others[deck.owner].push(deck);
         }
       });
