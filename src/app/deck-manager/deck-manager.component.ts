@@ -39,6 +39,9 @@ export class DeckManagerComponent implements OnInit {
   calculate = false;
   calculate_others = false;
 
+  themes = [];
+  tribes = [];
+
   constructor(private fddp_data: FddpApiService, private tokenStorage: TokenStorageService, private router: Router) { }
 
   ngOnInit(): void {
@@ -51,38 +54,42 @@ export class DeckManagerComponent implements OnInit {
       this.user = this.tokenStorage.getUser()
       this.decks = [];
       if(this.user && this.user.id) {
-        this.fddp_data.getUsers().then((user_list: any) => {
-          this.users = user_list;
+        this.fddp_data.getThemes().then((theme_data) => {
+          this.themes = theme_data.themes;
+          this.tribes = theme_data.tribes;
+          this.fddp_data.getUsers().then((user_list: any) => {
+            this.users = user_list;
 
 
-          this.fddp_data.getDecksBasic(this.user.id).then((decks: any) => {
-            this.decks = decks;
-            this.loading = false;
-            this.fddp_data.getDecksBasic().then((decks: any) => {
+            this.fddp_data.getDecksBasic(this.user.id).then((decks: any) => {
+              this.decks = decks;
+              this.loading = false;
+              this.fddp_data.getDecksBasic().then((decks: any) => {
 
-              for (let other of this.users) {
-                if (other.id != this.user.id) {
-                  this.decks_others[other.id] = [];
+                for (let other of this.users) {
+                  if (other.id != this.user.id) {
+                    this.decks_others[other.id] = [];
+                  }
                 }
-              }
-              decks.forEach((deck: any) => {
-                if (deck.owner !== this.user.id) {
-                  this.decks_others[deck.owner].push(deck);
+                decks.forEach((deck: any) => {
+                  if (deck.owner !== this.user.id) {
+                    this.decks_others[deck.owner].push(deck);
+                  }
+                });
+                this.loading_others = false;
+                this.loaded_others = true;
+
+                for (let deck of this.decks) {
+                  deck.hovered = false;
+                  deck.flipped = false;
+                }
+                for (let key in this.decks_others) {
+                  for (let other_deck of this.decks_others[key]) {
+                    other_deck.hovered = false;
+                    other_deck.flipped = false;
+                  }
                 }
               });
-              this.loading_others = false;
-              this.loaded_others = true;
-
-              for (let deck of this.decks) {
-                deck.hovered = false;
-                deck.flipped = false;
-              }
-              for (let key in this.decks_others) {
-                for (let other_deck of this.decks_others[key]) {
-                  other_deck.hovered = false;
-                  other_deck.flipped = false;
-                }
-              }
             });
           });
         });
@@ -114,6 +121,24 @@ export class DeckManagerComponent implements OnInit {
         });
       }
     }
+  }
+
+  getTheme(id) {
+    for (let theme of this.themes) {
+      if (theme.id === id) {
+        return theme;
+      }
+    }
+    return null;
+  }
+
+  getTribe(id) {
+    for (let tribe of this.tribes) {
+      if (tribe.id === id) {
+        return tribe;
+      }
+    }
+    return null;
   }
 
   toggleFlip(deck) {
