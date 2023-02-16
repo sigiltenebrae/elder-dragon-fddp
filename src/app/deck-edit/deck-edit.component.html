@@ -142,8 +142,9 @@
             <input type="text" matInput [(ngModel)]="selected_card.image">
           </mat-form-field>
         </div>
-        <div fxLayout="row">
+        <div fxLayout="row" fxLayoutGap="10px">
           <button mat-raised-button color="accent" (click)="deck.image=selected_card.image">Set As Deck Image</button>
+          <button *ngIf="selected_card.back_image" mat-raised-button color="accent" (click)="deck.image=selected_card.back_image">Set Back As Deck Image</button>
         </div>
       </div>
       <div *ngIf="selected_card && changing_image && card_type === 'tokens'" fxLayout="column" fxFlex fxLayoutAlign="center center">
