@@ -418,7 +418,7 @@
 
 
     <!-- Counters -->
-    <div *ngIf="user != null">
+    <div *ngIf="user != null && currentPlayer() != null">
       <div *ngFor="let counter of currentPlayer().play_counters" class="counter-creator">
         <mat-card *ngIf="counter.type === 'type'" class="commander-dashboard-custom-counter"
                   (contextmenu)="onRightClick($event, {type: 'type_counter', counter: counter})"
