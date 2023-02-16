@@ -330,6 +330,16 @@ export class FddpApiService {
     })
   }
 
+  public getGamesNoTests(): Promise<any> {
+    return new Promise<any>((resolve) => {
+      this.http.get(environment.fddp_api_url + '/gamesnt').subscribe((games: any) => {
+        resolve(games)
+      }, () => {
+        resolve([]);
+      })
+    })
+  }
+
   public getGameResults(gameid): Promise<any> {
     return new Promise<any>((resolve) => {
       this.http.get(environment.fddp_api_url + '/games/results/' + gameid).subscribe((results: any) => {

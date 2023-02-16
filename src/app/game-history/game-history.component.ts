@@ -31,7 +31,7 @@ export class GameHistoryComponent implements OnInit {
         this.users = users;
         this.fddp_data.getDeckList().then((deck_list) => {
           this.deck_list = deck_list.deck_list;
-          this.fddp_data.getGames().then((games) => {
+          this.fddp_data.getGamesNoTests().then((games) => {
             this.games = games;
             this.games.forEach((game) => {
               let winners = [];
