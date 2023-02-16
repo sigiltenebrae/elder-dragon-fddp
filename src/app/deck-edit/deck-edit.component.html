@@ -2,8 +2,8 @@
   <div *ngIf="loading" fxLayout="row" fxFlex="100" fxLayoutAlign="center center">
     <mat-spinner></mat-spinner>
   </div>
-  <div *ngIf="!loading && deck && deck.owner == current_user.id" fxFlex="100" fxLayout="column" fxLayoutAlign="center center">
-    <mat-card fxFlex="80" fxLayout="row" fxLayoutGap="20" style="overflow-y: scroll">
+  <div *ngIf="!loading && deck && deck.owner == current_user.id" fxFlexFill fxLayout="column" fxLayoutAlign="center center">
+    <div fxFlexFill fxLayout="row" fxLayoutGap="20" style="overflow-y: scroll; padding: 20px">
       <div class="deck-edit-input-holder" style="min-height: 640px; max-height: 640px;" fxLayout="column">
         <mat-form-field appearance="fill" style="margin-top: 10px;">
           <mat-label>Deck Link (optional)</mat-label>
@@ -62,7 +62,7 @@
           </div>
         </div>
       </div>
-      <div fxLayout="column" style="min-height: 640px; max-height: 640px;">
+      <div fxLayout="column">
         <mat-form-field appearance="fill" style="margin-top: 10px;">
           <mat-label>Type</mat-label>
           <mat-select [(value)]="card_type">
@@ -165,7 +165,7 @@
         </div>
         <div fxFlex fxLayout="column" style="overflow-y: scroll; min-height: 640px; max-height: 640px; margin-top: 10px;">
           <div fxLayout="row wrap" fxLayoutAlign="center">
-            <div *ngFor="let token of token_options" fxLayout="column">
+            <div *ngFor="let token of token_options" fxLayout="column" style="margin: 5px;">
               <img *ngIf="token.visible" class="deck-edit-card-select" src="{{token.image}}" (click)="copyToSelected(token); changing_image=false" loading="lazy">
             </div>
           </div>
@@ -190,12 +190,12 @@
         </div>
         <div fxFlex fxLayout="column" style="overflow-y: scroll; min-height: 640px; max-height: 640px; margin-top: 10px;">
           <div *ngIf="changing_image" fxLayout="row wrap" fxLayoutAlign="center">
-            <div *ngFor="let card_image of image_options" fxLayout="column">
+            <div *ngFor="let card_image of image_options" fxLayout="column" style="margin: 5px;">
               <img *ngIf="card_image.visible" class="deck-edit-card-select" src="{{card_image.image}}" (click)="selected_card.image=card_image.image; changing_image=false;" loading="lazy">
             </div>
           </div>
           <div *ngIf="changing_back_image" fxLayout="row wrap" fxLayoutAlign="center">
-            <div *ngFor="let card_image of back_image_options" fxLayout="column">
+            <div *ngFor="let card_image of back_image_options" fxLayout="column" style="margin: 5px;">
               <img *ngIf="card_image.visible" class="deck-edit-card-select" src="{{card_image.image}}" (click)="selected_card.back_image=card_image.image; changing_back_image=false;" loading="lazy">
             </div>
           </div>
@@ -203,7 +203,7 @@
         <button mat-raised-button color="warn" (click)="changing_image=false; changing_back_image=false;" style="margin-top: 10px;">Cancel</button>
       </div>
       <div *ngIf="selected_card == null" fxLayout="column" fxFlex="100" fxLayoutGap="20px" style="padding-top: 10px;">
-        <mat-form-field style="width: 300px;" appearance="fill">
+        <mat-form-field style="width: 100%; margin-right: 20px" appearance="fill">
           <mat-label>Themes</mat-label>
           <mat-chip-list #themeList aria-label="themes">
             <mat-chip *ngFor="let theme of deck.themes" (removed)="removeTheme(theme)" [color]="'primary'" selected>
@@ -228,7 +228,7 @@
                    [editable]="false">
           </mat-chip-list>
         </mat-form-field>
-        <mat-form-field style="width: 100%" appearance="fill">
+        <mat-form-field style="width: 100%; margin-right: 20px;" appearance="fill">
           <mat-label>Tribes</mat-label>
           <mat-chip-list #tribeList aria-label="tribes">
             <mat-chip *ngFor="let tribe of deck.tribes" (removed)="removeTribe(tribe)" [color]="'accent'" selected>
@@ -254,7 +254,7 @@
           </mat-chip-list>
         </mat-form-field>
       </div>
-    </mat-card>
+    </div>
   </div>
   <div *ngIf="!loading && deck && deck.owner != current_user.id" fxLayout="row" fxLayoutAlign="start">
     <div fxLayout="column" fxLayoutAlign="start" fxFlex="100">
