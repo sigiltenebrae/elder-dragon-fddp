@@ -20,6 +20,7 @@
                 <mat-form-field appearance="fill">
                   <mat-label>Game Type</mat-label>
                   <mat-select #game_type_input value="1">
+                    <mat-option value="6">Deck Test</mat-option>
                     <mat-option value="1">Commander</mat-option>
                     <mat-option value="2">Two-Headed Giant</mat-option>
                     <mat-option value="3">Star</mat-option>
@@ -46,7 +47,13 @@
           <div fxFlex fxLayout="row" fxLayoutAlign="center center">
             <div fxLayout="column" fxLayoutAlign="center center">
               <h2>{{game.name}}</h2>
-              <h3>{{game.type == 1? 'Commander': game.type == 2? 'Two Headed': game.type == 3? 'Star': game.type == 4? 'Randomander': 'Fast Game!'}}</h3>
+              <h3>{{
+                game.type == 1? 'Commander':
+                  game.type == 2? 'Two Headed':
+                    game.type == 3? 'Star':
+                      game.type == 4? 'Randomander':
+                        game.type == 5? 'Fast Game!':
+                          game.type == 6? 'Deck Test': '' }}</h3>
               <h5>Players: {{game.players.length}} of {{game.max_players}}</h5>
               <h5>Connected: {{game.connected.length}}</h5>
               <h5>Running Time: {{secondsToString(game)}}</h5>

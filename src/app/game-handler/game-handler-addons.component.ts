@@ -3,6 +3,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {FddpApiService} from "../../services/fddp-api.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {CDK_DRAG_CONFIG, CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
+import {animate, state, style, transition, trigger} from "@angular/animations";
 
 
 
@@ -58,6 +59,18 @@ export class TokenSelectDialog {
 @Component({
   selector: 'deck-select-dialog',
   templateUrl: 'deck-select-dialog.html',
+  animations: [
+    trigger('flipState', [
+      state('true', style({
+        transform: 'rotateY(179deg)'
+      })),
+      state('false', style({
+        transform: 'rotateY(0)'
+      })),
+      transition('true => false', animate('500ms ease-out')),
+      transition('false => true', animate('500ms ease-in'))
+    ])
+  ]
 })
 export class DeckSelectDialog {
 
@@ -67,6 +80,8 @@ export class DeckSelectDialog {
   loading_others = false;
   loaded_others = false;
   users = [];
+
+  selected_decks = []; //used for deck test
 
   constructor(
     public dialogRef: MatDialogRef<DeckSelectDialog>,
@@ -85,6 +100,9 @@ export class DeckSelectDialog {
           for (let deck of this.decks) {
             if (!deck.active) {
               this.decks.splice(this.decks.indexOf(deck), 1);
+            }
+            else {
+              deck.selected = false;
             }
           }
           this.loading = false
@@ -111,6 +129,7 @@ export class DeckSelectDialog {
     this.fddp_data.getDecksBasic().then((decks: any) => {
       decks.forEach((deck: any) => {
         if (deck.owner !== this.data.user && deck.active) {
+          deck.selected = false;
           this.decks_others[deck.owner].push(deck);
         }
       });
@@ -119,13 +138,32 @@ export class DeckSelectDialog {
     });
   }
 
+  selectMultiple() {
+    this.dialogRef.close(this.selected_decks);
+  }
+
   selectDeck(deck: any) {
-    this.dialogRef.close(deck);
+    if (this.data.game_type == 6) {
+      if (deck.selected) {
+        this.selected_decks.splice(this.selected_decks.indexOf(deck), 1)
+        deck.selected = !deck.selected;
+      }
+      else {
+        if (this.selected_decks.length < this.data.max_players) {
+          this.selected_decks.push(deck);
+          deck.selected = !deck.selected;
+        }
+      }
+    }
+    else {
+      this.dialogRef.close(deck);
+    }
   }
 
   onNoClick(): void {
     this.dialogRef.close();
   }
+
 
 
 }

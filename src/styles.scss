@@ -579,7 +579,6 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
 }
 
 
-
 //Player List And Log (Game Data)
 .game-data-container {
   position: fixed;
@@ -795,6 +794,26 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
 
 .playmat-user-actions-wrapper {
   pointer-events: all;
+}
+
+.playmat-user-actions-wrapper .playmat-user-actions-white {
+  background: $mtg-white !important;
+}
+
+.playmat-user-actions-wrapper .playmat-user-actions-blue {
+  background: $mtg-blue !important;
+}
+
+.playmat-user-actions-wrapper .playmat-user-actions-black {
+  background: $mtg-black !important;
+}
+
+.playmat-user-actions-wrapper .playmat-user-actions-red {
+  background: $mtg-red !important;
+}
+
+.playmat-user-actions-wrapper .playmat-user-actions-green {
+  background: $mtg-green !important;
 }
 
 .playmat-user-devotion-wrapper .playmat-user-devotion-W {
@@ -1747,6 +1766,10 @@ commander-dashboard-select-zone {
   background: $mtg-green;
 }
 
+.game-handler-deck-select-highlight {
+  border: solid 4px mat.get-color-from-palette($fddp-palette-accent-dark, 200);
+  opacity: 70%;
+}
 /*****************************************
           Game-Manager-Component
  *****************************************/
