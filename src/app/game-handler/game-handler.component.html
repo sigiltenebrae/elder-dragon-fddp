@@ -169,11 +169,11 @@
 </mat-menu>
 
 <mat-menu #sendTo="matMenu">
-  <button *ngIf="user != null && rightclicked_item && rightclicked_item.from !== currentPlayer().hand" mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.from, this.currentPlayer().hand, rightclicked_item.from.cards.indexOf(rightclicked_item.card), 0)">Hand</button>
-  <button *ngIf="user != null && rightclicked_item && rightclicked_item.from !== currentPlayer().grave" mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.from, this.currentPlayer().grave, rightclicked_item.from.cards.indexOf(rightclicked_item.card), 0)">Graveyard</button>
-  <button *ngIf="user != null && rightclicked_item && rightclicked_item.from !== currentPlayer().exile" mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.from, this.currentPlayer().exile, rightclicked_item.from.cards.indexOf(rightclicked_item.card), 0)">Exile</button>
+  <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && rightclicked_item && rightclicked_item.from !== currentPlayer().hand" mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.from, this.currentPlayer().hand, rightclicked_item.from.cards.indexOf(rightclicked_item.card), 0)">Hand</button>
+  <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && rightclicked_item && rightclicked_item.from !== currentPlayer().grave" mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.from, this.currentPlayer().grave, rightclicked_item.from.cards.indexOf(rightclicked_item.card), 0)">Graveyard</button>
+  <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && rightclicked_item && rightclicked_item.from !== currentPlayer().exile" mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.from, this.currentPlayer().exile, rightclicked_item.from.cards.indexOf(rightclicked_item.card), 0)">Exile</button>
   <button mat-menu-item [matMenuTriggerFor]="sendToDeck">Send to Deck</button>
-  <button *ngIf="user != null && rightclicked_item && rightclicked_item.from !== currentPlayer().temp_zone" mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.from, this.currentPlayer().temp_zone, rightclicked_item.from.cards.indexOf(rightclicked_item.card), 0)">Temp Zone</button>
+  <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && rightclicked_item && rightclicked_item.from !== currentPlayer().temp_zone" mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.from, this.currentPlayer().temp_zone, rightclicked_item.from.cards.indexOf(rightclicked_item.card), 0)">Temp Zone</button>
 </mat-menu>
 
 <mat-menu #sendToDeck="matMenu">
@@ -189,16 +189,16 @@
 </mat-menu>
 
 <mat-menu #sendAll="matMenu">
-  <button *ngIf="user != null && rightclicked_item && rightclicked_item.zone != currentPlayer().hand" mat-menu-item (click)="sendAllTo(rightclicked_item.zone, currentPlayer().hand)">Hand</button>
-  <button *ngIf="user != null && rightclicked_item && rightclicked_item.zone != currentPlayer().grave" mat-menu-item (click)="sendAllTo(rightclicked_item.zone, currentPlayer().grave)">Graveyard</button>
-  <button *ngIf="user != null && rightclicked_item && rightclicked_item.zone != currentPlayer().exile" mat-menu-item (click)="sendAllTo(rightclicked_item.zone, currentPlayer().exile)">Exile</button>
+  <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && rightclicked_item && rightclicked_item.zone != currentPlayer().hand" mat-menu-item (click)="sendAllTo(rightclicked_item.zone, currentPlayer().hand)">Hand</button>
+  <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && rightclicked_item && rightclicked_item.zone != currentPlayer().grave" mat-menu-item (click)="sendAllTo(rightclicked_item.zone, currentPlayer().grave)">Graveyard</button>
+  <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && rightclicked_item && rightclicked_item.zone != currentPlayer().exile" mat-menu-item (click)="sendAllTo(rightclicked_item.zone, currentPlayer().exile)">Exile</button>
   <button mat-menu-item (click)="sendAllTo(rightclicked_item.zone, currentPlayer().deck)">Deck Top</button>
   <button mat-menu-item (click)="sendAllTo(rightclicked_item.zone, currentPlayer().deck, {bottom: true})">Deck Bottom</button>
-  <button *ngIf="user != null && rightclicked_item && rightclicked_item.zone != currentPlayer().temp_zone" mat-menu-item (click)="sendAllTo(rightclicked_item.zone, currentPlayer().temp_zone)">Temp Zone</button>
+  <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && rightclicked_item && rightclicked_item.zone != currentPlayer().temp_zone" mat-menu-item (click)="sendAllTo(rightclicked_item.zone, currentPlayer().temp_zone)">Temp Zone</button>
 </mat-menu>
 
 <mat-menu #revealTo="matMenu">
-  <div *ngIf="game_data != null && user != null">
+  <div *ngIf="game_data != null && user != null && (user == currentPlayer() || game_data.type == 6)">
     <button mat-menu-item *ngFor="let player of game_data.players" (click)="toggleCardReveal(rightclicked_item.card, player.id)">
       <div *ngIf="rightclicked_item && rightclicked_item.card">
         <mat-icon *ngIf="rightclicked_item.card.visible.includes(player.id)">visibility</mat-icon>

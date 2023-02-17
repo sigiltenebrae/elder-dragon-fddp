@@ -1141,13 +1141,11 @@ export class GameHandlerComponent implements OnInit {
         }
         this.logAction('scoop', null);
         this.game_data.players.splice(this.game_data.players.indexOf(this.currentPlayer()), 1);
-        if (this.user == this.currentPlayer()) {
-          if (this.game_data.type == 6) {
-            this.deckTestNextPlayer(1);
-          }
-          else {
-            this.user = spectator;
-          }
+        if (this.game_data.type == 6) {
+          this.deckTestNextPlayer(1);
+        }
+        else {
+          this.user = spectator;
         }
         this.game_data.spectators.push(spectator);
       }
@@ -1348,7 +1346,6 @@ export class GameHandlerComponent implements OnInit {
     else if (direction < 0) {
       this.deck_test_player_index = this.deck_test_player_index == 0? this.game_data.players.length -1: this.deck_test_player_index - 1;
     }
-    console.log(this.game_data.players[this.deck_test_player_index])
   }
 
   /**
