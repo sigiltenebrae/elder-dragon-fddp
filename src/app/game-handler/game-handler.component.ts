@@ -1294,7 +1294,7 @@ export class GameHandlerComponent implements OnInit {
         let images = image_data;
         let new_plane: any = plane_data;
         new_plane.plane = true;
-        new_plane.image = images.length > 0 ? images[0]: null;
+        new_plane.image = images.length > 0 ? images[0].image: null;
         this.game_data.current_plane = plane_data;
         this.updateSocketPlane(plane_data);
         this.logAction('plane', {plane: plane_data});
