@@ -44,8 +44,8 @@
         </div>
         &nbsp;
         <div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10">
-          <button *ngIf="deckid > -1 && !deleting" mat-raised-button color="warn" (click)="deleting=!deleting">Delete</button>
-          <button *ngIf="deleting" mat-raised-button color="warn" (click)="deleteDeck()">Confirm</button>
+          <button *ngIf="!syncing && deckid > -1 && !deleting" mat-raised-button color="warn" (click)="deleting=!deleting">Delete</button>
+          <button *ngIf="!syncing && deleting" mat-raised-button color="warn" (click)="deleteDeck()">Confirm</button>
           <button *ngIf="!syncing" mat-raised-button color="primary" (click)="saveDeck()">Submit</button>
           <mat-spinner *ngIf="syncing" color="warn" diameter="32"></mat-spinner>
         </div>
