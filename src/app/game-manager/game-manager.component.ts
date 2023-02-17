@@ -68,7 +68,6 @@ export class GameManagerComponent implements OnInit {
     else {
       this.WebsocketService.messages.subscribe(msg => {
         let json_data = msg;
-        console.log(json_data);
         if (json_data) {
           if (json_data.get && json_data.get.game_data && json_data.get.game_data.games){
 
