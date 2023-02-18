@@ -24,6 +24,11 @@
                  [(ngModel)]="user.default_sleeves">
         </mat-form-field>
 
+        <div fxLayout="row" fxFlex fxLayoutAlign="center" style="margin-bottom: 10px">
+          <img *ngIf="user.default_sleeves !== ''" class="deck-edit-preview" src="{{user.default_sleeves}}" loading="lazy">
+          <img *ngIf="user.default_sleeves === ''" class="deck-edit-preview" src="https://drive.google.com/uc?export=view&id=1-Hp4xnjvn6EU-khUQEHn4R0T7n46Pt84" loading="lazy">
+        </div>
+
         <mat-form-field appearance="outline" fxLayout="row" fxFlex>
           <mat-label>Theme</mat-label>
           <mat-select [(value)]="user.theme">
@@ -40,13 +45,78 @@
           <button mat-raised-button color="primary" (click)="saveProfile()">Submit</button>
         </div>
       </div>
-      <div fxLayout="column" fxLayoutAlign="start center" fxFlexFill fxLayoutGap="20px">
-        <div fxLayout="row" fxFlexFill>
+      <div fxLayout="column" fxLayoutAlign="start center" fxFlex="100" fxLayoutGap="20px">
+        <div fxLayout="row" fxFlex>
           <img *ngIf="user.playmat !== ''" class="playmat-preview-image" src="{{user.playmat}}">
+          <div *ngIf="user.playmat === ''" class="playmat-preview-image playmat-preview-blank" style="" fxLayout="column" fxLayoutAlign="center center"><p>Default Playmat</p></div>
         </div>
-        <div fxLayout="row" fxFlexFill>
-          <img *ngIf="user.default_sleeves !== ''" class="deck-edit-preview" src="{{user.default_sleeves}}" loading="lazy">
-          <img *ngIf="user.default_sleeves === ''" class="deck-edit-preview" src="https://drive.google.com/uc?export=view&id=1-Hp4xnjvn6EU-khUQEHn4R0T7n46Pt84" loading="lazy">
+        <div fxLayout="row wrap" fxFlex="100" fxLayoutGap="10px" fxLayoutAlign="center">
+          <div fxLayout="column">
+            <mat-form-field appearance="outline" class="profile-edit-control">
+              <mat-label>Show Card Text</mat-label>
+              <input matInput type="text" (focus)="selectInput('show-card-text')" (focusout)="selectInput(null)" (keydown)="onKeyDown($event)">
+            </mat-form-field>
+          </div>
+          <div fxLayout="column">
+            <mat-form-field appearance="outline" class="profile-edit-control">
+              <mat-label>Show Alt Face</mat-label>
+              <input matInput type="text" (focus)="selectInput('show-alt-face')" (focusout)="selectInput(null)" (keydown)="onKeyDown($event)">
+            </mat-form-field>
+          </div>
+          <div fxLayout="column">
+            <mat-form-field appearance="outline" class="profile-edit-control">
+              <mat-label>End Turn</mat-label>
+              <input matInput type="text" (focus)="selectInput('end-turn')" (focusout)="selectInput(null)" (keydown)="onKeyDown($event)">
+            </mat-form-field>
+          </div>
+          <div fxLayout="column">
+            <mat-form-field appearance="outline" class="profile-edit-control">
+              <mat-label>Open Grave</mat-label>
+              <input matInput type="text" (focus)="selectInput('open-grave')" (focusout)="selectInput(null)" (keydown)="onKeyDown($event)">
+            </mat-form-field>
+          </div>
+          <div fxLayout="column">
+            <mat-form-field appearance="outline" class="profile-edit-control">
+              <mat-label>Open Exile</mat-label>
+              <input matInput type="text" (focus)="selectInput('open-exile')" (focusout)="selectInput(null)" (keydown)="onKeyDown($event)">
+            </mat-form-field>
+          </div>
+          <div fxLayout="column">
+            <mat-form-field appearance="outline" class="profile-edit-control">
+              <mat-label>Search Library</mat-label>
+              <input matInput type="text" (focus)="selectInput('open-deck')" (focusout)="selectInput(null)" (keydown)="onKeyDown($event)">
+            </mat-form-field>
+          </div>
+          <div fxLayout="column">
+            <mat-form-field appearance="outline" class="profile-edit-control">
+              <mat-label>Insert Token</mat-label>
+              <input matInput type="text" (focus)="selectInput('insert-token')" (focusout)="selectInput(null)" (keydown)="onKeyDown($event)">
+            </mat-form-field>
+          </div>
+          <div fxLayout="column">
+            <mat-form-field appearance="outline" class="profile-edit-control">
+              <mat-label>Shuffle Deck</mat-label>
+              <input matInput type="text" (focus)="selectInput('shuffle-deck')" (focusout)="selectInput(null)" (keydown)="onKeyDown($event)">
+            </mat-form-field>
+          </div>
+          <div fxLayout="column">
+            <mat-form-field appearance="outline" class="profile-edit-control">
+              <mat-label>Draw</mat-label>
+              <input matInput type="text" (focus)="selectInput('draw')" (focusout)="selectInput(null)" (keydown)="onKeyDown($event)">
+            </mat-form-field>
+          </div>
+          <div fxLayout="column">
+            <mat-form-field appearance="outline" class="profile-edit-control">
+              <mat-label>Untap All</mat-label>
+              <input matInput type="text" (focus)="selectInput('untap-all')" (focusout)="selectInput(null)" (keydown)="onKeyDown($event)">
+            </mat-form-field>
+          </div>
+          <div fxLayout="column">
+            <mat-form-field appearance="outline" class="profile-edit-control">
+              <mat-label>Mulligan</mat-label>
+              <input matInput type="text" (focus)="selectInput('mulligan')" (focusout)="selectInput(null)" (keydown)="onKeyDown($event)">
+            </mat-form-field>
+          </div>
         </div>
       </div>
     </div>

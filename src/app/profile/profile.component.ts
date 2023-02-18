@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {TokenStorageService} from "../../services/token-storage.service";
 import {Router} from "@angular/router";
 import {FddpApiService} from "../../services/fddp-api.service";
@@ -11,6 +11,7 @@ import {FddpApiService} from "../../services/fddp-api.service";
 export class ProfileComponent implements OnInit {
 
   user: any = null;
+  current_keybind = null;
 
   constructor(private tokenStorage: TokenStorageService, private router: Router, private fddp_data: FddpApiService) { }
 
@@ -35,6 +36,17 @@ export class ProfileComponent implements OnInit {
         window.location.reload();
       }
     });
+  }
+
+  selectInput(id: any) {
+    this.current_keybind = true;
+    console.log(id);
+  }
+
+  onKeyDown(event: any) {
+    if (this.current_keybind != null) {
+      console.log(event.key);
+    }
   }
 
 }
