@@ -40,6 +40,7 @@
           <button mat-menu-item [matMenuTriggerFor]="play_counter" *ngIf="(user == currentPlayer() || game_data.type == 6)">Insert Counter</button>
           <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && game_data != null && currentPlayer().turn == game_data.current_turn" mat-menu-item (click)="endTurn()">End Turn</button>
           <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && game_data != null && game_data.type == 2 && game_data.current_turn == getTeam(this.user.id).turn" mat-menu-item (click)="endTurn()">End Turn</button>
+          <button mat-menu-item (click)="helpMenu()">Help</button>
         </div>
 
         <div *ngIf="rightclicked_item.type === 'type_counter'">
