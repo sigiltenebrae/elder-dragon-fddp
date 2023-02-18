@@ -19,7 +19,8 @@ import {
   SelectColorsDialog,
   TokenInsertDialog,
   TokenSelectDialog,
-  TwoHeadedTeamsDialog
+  TwoHeadedTeamsDialog,
+  HelpDialog
 } from "./game-handler-addons.component";
 import {Howl} from 'howler'
 
@@ -694,6 +695,15 @@ export class GameHandlerComponent implements OnInit {
         this.action_scroll.scrollTo({ bottom: 0, duration: 600});
       })
     }
+  }
+
+  helpMenu() {
+    const HelpRef = this.dialog.open(HelpDialog, {
+      data: {
+      }
+    });
+    HelpRef.afterClosed().subscribe((result) => {
+    });
   }
 
   /**
@@ -2150,6 +2160,9 @@ export class GameHandlerComponent implements OnInit {
           break;
         case "m":
           this.mulliganHand(7);
+          break;
+        case "h":
+          this.helpMenu();
           break;
       }
     }

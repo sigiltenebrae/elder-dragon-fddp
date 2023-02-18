@@ -31,14 +31,16 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import {FlexLayoutModule} from "@angular/flex-layout";
 import {DragDropModule} from "@angular/cdk/drag-drop";
 import {GameHandlerComponent} from './game-handler/game-handler.component';
-import {DeckSelectDialog,
+import {
+  DeckSelectDialog,
   TokenInsertDialog,
   TokenSelectDialog,
   NoteDialog,
   CounterSetDialog,
   TwoHeadedTeamsDialog,
   SelectColorsDialog,
-  EndGameDialog} from './game-handler/game-handler-addons.component'
+  EndGameDialog, HelpDialog
+} from './game-handler/game-handler-addons.component'
 import {MatMenuModule} from "@angular/material/menu";
 import {FormsModule} from "@angular/forms";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
@@ -82,6 +84,7 @@ import { GameHistoryManagerComponent } from './game-history-manager/game-history
     TwoHeadedTeamsDialog,
     EndGameDialog,
     SelectColorsDialog,
+    HelpDialog,
     GameManagerComponent,
     LoginComponent,
     RegisterComponent,

@@ -474,3 +474,20 @@ export class SelectColorsDialog {
 
 
 }
+
+@Component({
+  selector: 'help-dialog',
+  templateUrl: 'help-dialog.html',
+})
+export class HelpDialog {
+  constructor(
+    public dialogRef: MatDialogRef<HelpDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
+  players: any[] = this.data.players;
+  team_slots: any[] = this.data.team_array;
+
+  onNoClick(): void {
+    this.dialogRef.close(null);
+  }
+}
