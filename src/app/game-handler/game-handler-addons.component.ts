@@ -115,7 +115,7 @@ export class DeckSelectDialog {
       });
     }
     else {
-      this.fddp_data.getRandomDeck().then((deck) => {
+      this.fddp_data.getCheapRandomDeck().then((deck) => {
         if (deck != null) {
           this.loading = false;
           this.dialogRef.close(deck);

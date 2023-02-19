@@ -220,9 +220,19 @@ export class FddpApiService {
     })
   }
 
-  public getRandomDeck(): Promise<any> {
+  public getCheapRandomDeck(): Promise<any> {
     return new Promise<any>((resolve) => {
-      this.http.get(environment.fddp_api_url + '/cheap/randomdeck').subscribe((deck_data) => {
+      this.http.get(environment.fddp_api_url + '/randomdeck/cheap').subscribe((deck_data) => {
+        resolve(deck_data);
+      }, () => {
+        resolve(null);
+      })
+    })
+  }
+
+  public getRegularRandomDeck(): Promise<any> {
+    return new Promise<any>((resolve) => {
+      this.http.get(environment.fddp_api_url + '/randomdeck/regular').subscribe((deck_data) => {
         resolve(deck_data);
       }, () => {
         resolve(null);
