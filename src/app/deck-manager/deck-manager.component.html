@@ -1,10 +1,22 @@
+<div style="visibility: hidden; position: fixed"
+     [style.left]="menuTopLeftPosition.x"
+     [style.top]="menuTopLeftPosition.y"
+     [matMenuTriggerFor]="rightMenu">
+</div>
+
+<mat-menu #rightMenu="matMenu">
+  <ng-template matMenuContent>
+    <button mat-menu-item>Test</button>
+  </ng-template>
+</mat-menu>
+
 <mat-menu #errorMenu="matMenu" yPosition="above" xPosition="before">
   <div>
     <a mat-menu-item *ngFor="let error of current_errors" href="{{error.gatherer}}" target="_blank">{{error.name}}</a>
   </div>
 </mat-menu>
 
-<div fxLayout="column" fxFlexFill>
+<div fxLayout="column" fxFlexFill (contextmenu)="onRightClick($event, {})">
   <div *ngIf="loading" fxLayout="row" fxFlex="100" fxLayoutAlign="center center" style="margin: 20px;">
     <mat-spinner></mat-spinner>
   </div>
@@ -73,12 +85,6 @@
       </div>
     </div>
     &nbsp;
-  </div>
-
-  <div fxFlex fxLayout="row" fxLayoutAlign="center">
-    <button *ngIf="!show_others" mat-raised-button color="primary" (click)="showOthers()" style="max-height: 48px; margin: 20px;">Load Other Users</button>
-    <button *ngIf="loaded_others && show_others && isAdmin()" mat-raised-button color="warn" (click)="calculateLegalityOthers()" style="max-height: 48px; margin: 20px;">Check Others</button>
-    <button mat-raised-button color="accent" (click)="calculateLegality()" style="max-height: 48px; margin: 20px;">Check Mine</button>
   </div>
   <div *ngIf="loading_others && show_others" fxLayout="row" fxFlex fxLayoutAlign="center center" style="margin: 20px;">
     <mat-spinner style="margin: 20px;"></mat-spinner>
