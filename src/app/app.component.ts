@@ -3,12 +3,37 @@ import {TokenStorageService} from "../services/token-storage.service";
 import {FddpApiService} from "../services/fddp-api.service";
 import {OverlayContainer} from "@angular/cdk/overlay";
 
+export interface TabItem {
+  label: string;
+  icon: string;
+  route: string;
+}
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  tabs: TabItem[] = [
+    {
+      label: 'Dashboard',
+      icon: 'home',
+      route: 'dashboard'
+    },
+    {
+      label: 'Profile',
+      icon: 'person',
+      route: 'profile'
+    },
+    {
+      label: 'Games',
+      icon: 'menu',
+      route: 'games'
+    },
+  ]
+
+
   title = 'elder-dragon-fddp';
 
   public loggedIn = false; //Is a user logged in

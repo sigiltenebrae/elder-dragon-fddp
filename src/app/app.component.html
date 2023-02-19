@@ -1,5 +1,5 @@
 <div class="fddp-nav-button">
-  <button mat-fab *ngIf="!root_sidenav.opened" (click)="root_sidenav.open()"><mat-icon>menu</mat-icon></button>
+  <button mat-fab color="primary" *ngIf="!root_sidenav.opened" (click)="root_sidenav.open()"><mat-icon style="transform: translateX(-10px)">keyboard_arrow_left</mat-icon></button>
 </div>
 
 <mat-sidenav-container fxFlexFill style="position: fixed; top: 0; left: 0; z-index: 501">
@@ -32,3 +32,15 @@
     <router-outlet></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>
+
+<!--<div class="mat-typography mat-app-background" style="height: 100%; width: 100%; min-height: 100vh; min-width: 100vw">
+  <nav mat-tab-nav-bar style="width: 100%">
+    <a mat-tab-link *ngFor="let tabItem of tabs" [routerLink]="tabItem.route" routerLinkActive #rla="routerLinkActive" [active]="rla.isActive" style="width: 100%">
+      <mat-icon class="mr-8">{{tabItem.icon}}</mat-icon>
+      {{tabItem.label}}
+    </a>
+  </nav>
+
+  <router-outlet></router-outlet>
+</div>-->
+

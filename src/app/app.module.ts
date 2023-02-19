@@ -63,6 +63,7 @@ import {BanListComponent} from "./ban-list/ban-list.component";
 import { GameHistoryComponent } from './game-history/game-history.component';
 import {MatTableModule} from "@angular/material/table";
 import { GameHistoryManagerComponent } from './game-history-manager/game-history-manager.component';
+import {MatTabsModule} from "@angular/material/tabs";
 
 
 
@@ -94,63 +95,64 @@ import { GameHistoryManagerComponent } from './game-history-manager/game-history
     GameHistoryComponent,
     GameHistoryManagerComponent,
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    MatSidenavModule,
-    MatToolbarModule,
-    MatListModule,
-    MatIconModule,
-    MatButtonToggleModule,
-    MatSliderModule,
-    MatGridListModule,
-    MatSlideToggleModule,
-    MatCardModule,
-    MatExpansionModule,
-    MatCheckboxModule,
-    MatFormFieldModule,
-    MatButtonModule,
-    MatChipsModule,
-    MatRippleModule,
-    MatInputModule,
-    MatProgressSpinnerModule,
-    MatOptionModule,
-    MatSelectModule,
-    MatTooltipModule,
-    MatStepperModule,
-    MatSnackBarModule,
-    MatDialogModule,
-    HttpClientModule,
-    NgScrollbarModule,
-    RouterModule.forRoot([
-      {path: '', component: DeckManagerComponent},
-      {path: 'login', component: LoginComponent},
-      {path: 'register', component: RegisterComponent},
-      {path: 'password', component: ChangePasswordComponent},
-      {path: 'profile', component: ProfileComponent},
-      {path: 'game', component: GameManagerComponent},
-      {path: 'games/:gameid', component: GameHandlerComponent},
-      {path: 'decks/:deckid', component: DeckEditComponent},
-      {path: 'upload', component: CustomImagesComponent},
-      {path: 'custom', component: CustomImageManagerComponent},
-      {path: 'bans', component: BanListComponent},
-      {path: 'history', component: GameHistoryComponent},
-      {path: 'history/:gameid', component: GameHistoryManagerComponent}
-    ]),
-    FlexLayoutModule,
-    DragDropModule,
-    MatMenuModule,
-    FormsModule,
-    MatAutocompleteModule,
-    NgbModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: environment.production,
-      // Register the ServiceWorker as soon as the application is stable
-      // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
-    }),
-    MatTableModule
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        MatSidenavModule,
+        MatToolbarModule,
+        MatListModule,
+        MatIconModule,
+        MatButtonToggleModule,
+        MatSliderModule,
+        MatGridListModule,
+        MatSlideToggleModule,
+        MatCardModule,
+        MatExpansionModule,
+        MatCheckboxModule,
+        MatFormFieldModule,
+        MatButtonModule,
+        MatChipsModule,
+        MatRippleModule,
+        MatInputModule,
+        MatProgressSpinnerModule,
+        MatOptionModule,
+        MatSelectModule,
+        MatTooltipModule,
+        MatStepperModule,
+        MatSnackBarModule,
+        MatDialogModule,
+        HttpClientModule,
+        NgScrollbarModule,
+        RouterModule.forRoot([
+            {path: '', component: DeckManagerComponent},
+            {path: 'login', component: LoginComponent},
+            {path: 'register', component: RegisterComponent},
+            {path: 'password', component: ChangePasswordComponent},
+            {path: 'profile', component: ProfileComponent},
+            {path: 'games', component: GameManagerComponent},
+            {path: 'games/:gameid', component: GameHandlerComponent},
+            {path: 'decks/:deckid', component: DeckEditComponent},
+            {path: 'upload', component: CustomImagesComponent},
+            {path: 'custom', component: CustomImageManagerComponent},
+            {path: 'bans', component: BanListComponent},
+            {path: 'history', component: GameHistoryComponent},
+            {path: 'history/:gameid', component: GameHistoryManagerComponent}
+        ]),
+        FlexLayoutModule,
+        DragDropModule,
+        MatMenuModule,
+        FormsModule,
+        MatAutocompleteModule,
+        NgbModule,
+        ServiceWorkerModule.register('ngsw-worker.js', {
+            enabled: environment.production,
+            // Register the ServiceWorker as soon as the application is stable
+            // or after 30 seconds (whichever comes first).
+            registrationStrategy: 'registerWhenStable:30000'
+        }),
+        MatTableModule,
+        MatTabsModule
+    ],
   providers: [
     {provide: LocationStrategy, useClass: HashLocationStrategy}
   ],
