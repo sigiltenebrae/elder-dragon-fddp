@@ -20,7 +20,8 @@
       </div>
     </div>
 
-    <div fxLayout="row" fxLayoutAlign="end">
+    <div fxLayout="row" fxLayoutAlign="center" fxLayoutGap="10px">
+      <button mat-raised-button color="accent" *ngIf="players.length == 5" (click)="randomColors()">Randomize</button>
       <button mat-raised-button color="accent" *ngIf="colorsComplete()" (click)="submit_colors()">Submit Colors</button>
     </div>
   </div>

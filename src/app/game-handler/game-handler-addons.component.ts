@@ -377,41 +377,11 @@ export class SelectColorsDialog {
   }
 
   randomColors() {
-    console.log('yay')
-    let w = false;
-    let u = false;
-    let b = false;
-    let r = false;
-    let g = false;
+    let available_colors = ['W', 'U', 'B', 'R', 'G'];
     for (let player of this.players) {
-      player.star_color = null;
-    }
-    for (let player of this.players) {
-      while (true) {
-        for (let i = 0; i < Math.floor(Math.random() * 10); i++) {
-          this.nextColor(player);
-        }
-        if (player.star_color === 'W' && !w) {
-          w = true;
-          break;
-        }
-        if (player.star_color === 'U' && !u) {
-          u = true;
-          break;
-        }
-        if (player.star_color === 'B' && !b) {
-          b = true;
-          break;
-        }
-        if (player.star_color === 'R' && !r) {
-          r = true;
-          break;
-        }
-        if (player.star_color === 'G' && !g) {
-          g = true;
-          break;
-        }
-      }
+      let cur_color = Math.floor(Math.random() * available_colors.length);
+      player.star_color = available_colors[cur_color];
+      available_colors.splice(cur_color, 1);
     }
   }
 
