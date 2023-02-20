@@ -12,15 +12,26 @@
   <mat-sidenav #filter_sidenav (keydown.escape)="filter_sidenav.close()" position="end">
     <mat-toolbar style="background: #777777">
       <div fxFlex="100" fxLayout="row" fxLayoutAlign="space-between center">
-        <h2 fxFlex>Elder Dragon fddp</h2>
+        <h2 fxFlex>Deck Filters</h2>
         <button mat-icon-button (click)="filter_sidenav.close()">
           <mat-icon>close</mat-icon>
         </button>
       </div>
     </mat-toolbar>
-    <mat-nav-list>
-
-    </mat-nav-list>
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Players</mat-panel-title>
+        </mat-expansion-panel-header>
+        <span>
+          <ul style="list-style-type: none">
+            <li *ngFor="let user of users">
+              <mat-checkbox>{{user.name}}</mat-checkbox>
+            </li>
+          </ul>
+        </span>
+      </mat-expansion-panel>
+    </mat-accordion>
   </mat-sidenav>
   <mat-sidenav-content>
     <div fxLayout="column" fxFlexFill>
