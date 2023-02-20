@@ -314,16 +314,6 @@ export class FddpApiService {
     });
   }
 
-  public getDeckLegality(deckid): Promise<any> {
-    return new Promise<any>((resolve) => {
-      this.http.get(environment.fddp_api_url + '/decks/legality/' + deckid).subscribe((issues: any) => {
-        resolve(issues);
-      }, () => {
-        resolve([{name: "Failed to check legality", gatherer: null}]);
-      });
-    });
-  }
-
   public deleteCustomCard(cardid: number): Promise<void> {
     return new Promise<void>((resolve) => {
       this.http.delete(environment.fddp_api_url + '/custom_cards/' + cardid).subscribe(() => { resolve(); })
