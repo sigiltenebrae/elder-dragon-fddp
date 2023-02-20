@@ -3,7 +3,6 @@ import {FddpApiService} from "../../services/fddp-api.service";
 import {TokenStorageService} from "../../services/token-storage.service";
 import {Router} from "@angular/router";
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import {MatMenuTrigger} from "@angular/material/menu";
 
 @Component({
   selector: 'app-deck-manager',
@@ -149,14 +148,5 @@ export class DeckManagerComponent implements OnInit {
 
   isAdmin() {
     return this.tokenStorage.getUser().isAdmin;
-  }
-
-  @ViewChild(MatMenuTrigger, {static: true}) matMenuTrigger: any;
-  onRightClick(event: MouseEvent, item: any) {
-    event.preventDefault();
-    event.stopPropagation();
-    this.menuTopLeftPosition.x = event.clientX + 'px';
-    this.menuTopLeftPosition.y = event.clientY + 'px';
-    this.matMenuTrigger.openMenu();
   }
 }
