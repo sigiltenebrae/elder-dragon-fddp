@@ -61,6 +61,9 @@ export class DeckManagerComponent implements OnInit {
           this.tribes = theme_data.tribes;
           this.fddp_data.getUsers().then((user_list: any) => {
             this.users = user_list;
+            this.users.forEach((user: any) => {
+              user.visible = true;
+            })
             this.fddp_data.getDecksBasic(this.user.id).then((decks: any) => {
               this.decks = decks;
               this.loading = false;

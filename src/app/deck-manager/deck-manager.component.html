@@ -26,7 +26,7 @@
         <span>
           <ul style="list-style-type: none">
             <li *ngFor="let user of users">
-              <mat-checkbox>{{user.name}}</mat-checkbox>
+              <mat-checkbox [(ngModel)]="user.visible">{{user.name}}</mat-checkbox>
             </li>
           </ul>
         </span>
@@ -110,10 +110,17 @@
 
       <div *ngIf="loaded_others && show_others" style="margin: 20px;">
         <div *ngFor="let other_user of this.users" fxLayout="column">
-          <div *ngIf="other_user.id !== user.id" fxLayout="row" fxLayoutAlign="center center" fxFlex="100">
+          <div *ngIf="other_user.id !== user.id &&
+          other_user.visible &&
+          decks_others[other_user.id].length &&
+          decks_others[other_user.id].length > 0" fxLayout="row" fxLayoutAlign="center center" fxFlex="100">
             <h1>{{other_user.name}}</h1>
           </div>
-          <div fxFlexFill fxLayout="row wrap" fxLayoutAlign="center center">
+          <div *ngIf="other_user.id !== user.id &&
+          other_user.visible &&
+          decks_others[other_user.id].length &&
+          decks_others[other_user.id].length > 0" fxFlexFill fxLayout="row wrap" fxLayoutAlign="center center">
+            &nbsp;
             <div *ngFor="let deck of decks_others[other_user.id]" fxLayout="column" style="margin: 10px;" class="deck-manager-commander-viewer-holder" [@flipState]="deck.flipped" (dblclick)="toggleFlip(deck)">
               <div class="deck-manager-commander-viewer deck-manager-commander-viewer__front" matRipple [matRippleCentered]="false" [matRippleDisabled]="!deck.hovered">
                 <div [ngClass]="{'deck-manager-background-card-closed': deck.hovered, 'deck-manager-background-card-open': !deck.hovered}">
@@ -172,7 +179,6 @@
               </div>
             </div>
           </div>
-          &nbsp;
         </div>
       </div>
     </div>
