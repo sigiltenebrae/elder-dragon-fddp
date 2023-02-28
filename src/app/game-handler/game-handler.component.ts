@@ -188,7 +188,7 @@ export class GameHandlerComponent implements OnInit {
               }
               else {
                 console.log('game does not exist');
-                this.router.navigate(['/game']);
+                this.router.navigate(['/games']);
               }
             }
             if (json_data.get.player_data != null) {
@@ -284,7 +284,7 @@ export class GameHandlerComponent implements OnInit {
               }
             }
             if (json_data.get.end_game != null && json_data.get.end_game) {
-              this.router.navigate(['game']);
+              this.router.navigate(['games']);
             }
             if (json_data.get.turn_update != null) {
               this.game_data.current_turn = json_data.get.turn_update;
