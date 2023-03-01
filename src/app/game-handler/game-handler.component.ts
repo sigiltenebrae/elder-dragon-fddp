@@ -1486,7 +1486,12 @@ export class GameHandlerComponent implements OnInit {
    * @param card card object to check
    */
   isClone(card: any): boolean {
-    return card.is_token && !card.types.includes('Token') && !card.types.includes('Emblem');
+    if (card.types) {
+      return card.is_token && !card.types.includes('Token') && !card.types.includes('Emblem');
+    }
+    else {
+      return false;
+    }
   }
 
 
