@@ -914,7 +914,12 @@ export class GameHandlerComponent implements OnInit {
     });
 
     let out_player: any = {};
-    out_player.star_color = null;
+    if (this.user && this.user.star_color) {
+      out_player.star_color = this.user.star_color;
+    }
+    else {
+      out_player.star_color = null;
+    }
     out_player.teammate_id = null;
     out_player.playmat_image = this.current_user.playmat;
     out_player.default_sleeves = this.current_user.default_sleeves;
@@ -1005,8 +1010,27 @@ export class GameHandlerComponent implements OnInit {
     });
   }
 
+  selectColors() {
+    const selectColorsRef = this.dialog.open(SelectColorsDialog, {
+      data: {
+        players: this.game_data.players
+      }
+    });
+    selectColorsRef.afterClosed().subscribe((result) => {
+      if (result != null) {
+        this.messageSocket({
+          game_id: this.game_id,
+          put: {
+            action: 'colors',
+            colors: result.colors,
+          }
+        });
+      }
+    });
+  }
+
   startGame() {
-    if (this.game_data.type == 1 || this.game_data.type == 4 || this.game_data.type == 5 || this.game_data.type == 6) {
+    if (this.game_data.type != 2) {
       this.game_data.turn_count = 1;
       this.messageSocket(
         {
@@ -1016,28 +1040,8 @@ export class GameHandlerComponent implements OnInit {
           }
         });
     }
-    else if (this.game_data.type == 2) {
+    else {
       this.selectTeams();
-    }
-    else if (this.game_data.type == 3) {
-      const selectColorsRef = this.dialog.open(SelectColorsDialog, {
-        data: {
-          players: this.game_data.players
-        }
-      });
-      selectColorsRef.afterClosed().subscribe((result) => {
-        if (result != null) {
-          this.game_data.turn_count = 1;
-          this.messageSocket({
-            game_id: this.game_id,
-            put: {
-              action: 'start',
-              colors: result.colors,
-            }
-          });
-        }
-      });
-
     }
   }
 

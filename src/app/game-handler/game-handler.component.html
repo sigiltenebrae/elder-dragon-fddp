@@ -54,6 +54,7 @@
         <div *ngIf="rightclicked_item.type === 'commander' && user != null && (user == currentPlayer() || game_data.type == 6)">
           <button mat-menu-item (click)="openDeckSelectDialog()">Change Deck</button>
           <button mat-menu-item *ngIf="game_data && game_data.turn_count == 0" (click)="startGame()">Start Game</button>
+          <button mat-menu-item *ngIf="game_data && game_data.type != null && game_data.type === 3 && game_data.turn_count == 0" (click)="selectColors()">Set Colors</button>
           <button mat-menu-item (click)="scoopDeck()">Scoop Deck</button>
           <button mat-menu-item [matMenuTriggerFor]="kickPlayer" *ngIf="user != null && user == currentPlayer() && game_data.type != 6">Kick</button>
           <button mat-menu-item (click)="endGame()">End Game</button>
