@@ -23,7 +23,7 @@ export class TokenInsertDialog {
   async searchToken(token: string) {
     this.results = [];
     //const values = await Scry.Cards.search('"' + token + '"', {include_extras: true}).waitForAll();
-    this.fddp_data.getAllOfToken(token).then((token_list) => {
+    this.fddp_data.getAllOfToken(token, true).then((token_list) => {
       this.results = token_list;
     })
   }

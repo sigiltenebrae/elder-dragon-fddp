@@ -92,10 +92,10 @@ export class FddpApiService {
     });
   }
 
-  public getAllOfToken(card: string): Promise<any[]> {
+  public getAllOfToken(card: string, search?): Promise<any[]> {
     return new Promise<any[]>((resolve_card, reject) => {
       this.http.post(environment.fddp_api_url + '/tokens/all',
-        JSON.stringify({name: card}),
+        JSON.stringify({name: card, search: search != null? search: false}),
         {headers : new HttpHeaders({'Content-Type': 'application/json'})}).subscribe((token_data: any) => {
         resolve_card(token_data);
       }, () => {
