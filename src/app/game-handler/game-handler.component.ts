@@ -63,6 +63,8 @@ export class GameHandlerComponent implements OnInit {
   //Game Data
   game_id = -1; //The game id (from the url)
   planes: any[] = [];
+  monarch_data: any = null;
+  initiative_data: any = null;
   game_data: any = null; //The full game data object
   users_list: any[] = []; //The list of all users in the db
   current_user: any = null; //The currently logged-in user
@@ -124,6 +126,14 @@ export class GameHandlerComponent implements OnInit {
 
         this.fddp_data.getPlanes().then((planes: any) => {
           this.planes = planes;
+        });
+
+        this.fddp_data.getCardInfo("The Monarch").then((monarch: any) => {
+          this.monarch_data = monarch;
+        });
+
+        this.fddp_data.getCardInfo("The Initiative // Undercity").then((initiative: any) => {
+          this.initiative_data = initiative;
         });
 
         const routeParams = this.route.snapshot.paramMap;
