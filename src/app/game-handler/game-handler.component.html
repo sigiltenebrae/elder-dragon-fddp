@@ -40,7 +40,7 @@
           <button mat-menu-item [matMenuTriggerFor]="play_counter" *ngIf="(user == currentPlayer() || game_data.type == 6)">Insert Counter</button>
           <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && game_data != null && currentPlayer().turn == game_data.current_turn" mat-menu-item (click)="endTurn()">End Turn</button>
           <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && game_data != null && game_data.type == 2 && game_data.current_turn == getTeam(this.user.id).turn" mat-menu-item (click)="endTurn()">End Turn</button>
-
+          <button mat-menu-item [matMenuTriggerFor]="player_status" *ngIf="(user == currentPlayer() || game_data.type == 6)">Toggle Status</button>
           <button mat-menu-item (click)="helpMenu()">Help</button>
         </div>
 
@@ -258,6 +258,11 @@
 
 <mat-menu #kickPlayer="matMenu">
   <button mat-menu-item *ngFor="let player of getOtherPlayers()" (click)="kickVote(player)">{{player.name}}</button>
+</mat-menu>
+
+<mat-menu #player_status="matMenu">
+  <button mat-menu-item (click)="toggleMonarch()">Monarch</button>
+  <button mat-menu-item (click)="toggleInitiative()">Initiative</button>
 </mat-menu>
 
 <mat-sidenav-container cdkDropListGroup fxFlexFill hasBackdrop="false" *ngIf="game_data != null && user != null" style="overflow: hidden; position: fixed; top: 0; left: 0; z-index: 500">

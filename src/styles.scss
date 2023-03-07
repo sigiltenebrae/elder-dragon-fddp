@@ -588,7 +588,7 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   pointer-events: none;
   height: 32px;
   width: 32x;
-  filter: invert(1);
+  filter: invert(1) drop-shadow(0 0 10px #000);
 }
 
 .playmat-opponent-ally {
@@ -600,7 +600,8 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
 }
 
 .playmat-opponent-wrapper:hover .playmat-opponent-player-information,
-.playmat-opponent-wrapper:hover .playmat-opponent-alliance-information {
+.playmat-opponent-wrapper:hover .playmat-opponent-alliance-information,
+.playmat-opponent-wrapper:hover .playmat-opponent-status {
   opacity: 0.2;
 }
 
@@ -920,16 +921,16 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   position: absolute;
   pointer-events: none;
   z-index: 50;
-  bottom: 32px;
+  bottom: 5px;
   right: 5px;
-  height: 32px;
+  height: 64px;
 }
 
 .playmat-user-status {
   pointer-events: none;
   height: 64px;
   width: 64x;
-  filter: invert(1);
+  filter: invert(1) drop-shadow(0 0 20px #000);
 }
 
 .playmat-user-background-image-mini {

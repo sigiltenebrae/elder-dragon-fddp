@@ -2932,4 +2932,14 @@ export class GameHandlerComponent implements OnInit {
       this.logAction('scry', null);
     }
   }
+
+  toggleMonarch() {
+    this.user.monarch = this.user.monarch != null ? !this.user.monarch : true;
+    this.updateSocketPlayer();
+  }
+
+  toggleInitiative() {
+    this.user.initiative = this.user.initiative != null ? !this.user.initiative : true;
+    this.updateSocketPlayer();
+  }
 }
