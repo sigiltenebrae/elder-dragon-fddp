@@ -40,6 +40,7 @@
           <button mat-menu-item [matMenuTriggerFor]="play_counter" *ngIf="(user == currentPlayer() || game_data.type == 6)">Insert Counter</button>
           <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && game_data != null && currentPlayer().turn == game_data.current_turn" mat-menu-item (click)="endTurn()">End Turn</button>
           <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && game_data != null && game_data.type == 2 && game_data.current_turn == getTeam(this.user.id).turn" mat-menu-item (click)="endTurn()">End Turn</button>
+
           <button mat-menu-item (click)="helpMenu()">Help</button>
         </div>
 
@@ -475,6 +476,10 @@
                 <h3>{{player.name}}</h3>
                 <h3>Hand: {{player.hand.cards.length}}, Deck: {{player.deck.cards.length}}, Graveyard: {{player.grave.cards.length}}, Exile: {{player.exile.cards.length}}</h3>
               </div>
+              <div class="playmat-opponent-status-wrapper" fxFlex fxLayout="row">
+                <img class="playmat-opponent-status" *ngIf="player.monarch" src="/assets/status_symbols/monarch.png">
+                <img class="playmat-opponent-status" *ngIf="player.initiative" src="assets/action_symbols/d20.svg">
+              </div>
               <div *ngIf="game_data != null && game_data.type == 3" class="playmat-opponent-alliance-information">
                 <h3 *ngIf="isAlly(player)" class="playmat-opponent-ally">Ally</h3>
                 <h3 *ngIf="!isAlly(player)" class="playmat-opponent-enemy">Enemy</h3>
@@ -708,6 +713,10 @@
         <div class="playmat-user" fxLayout="row wrap" fxLayoutAlign="start start"
         [ngClass]="{'playmat-opponent-turn': currentPlayer().turn == game_data.current_turn}">
           <img class="playmat-user-background-image" *ngIf="currentPlayer() != null && currentPlayer().playmat_image != null && currentPlayer().playmat_image !== ''" src="{{currentPlayer().playmat_image}}">
+          <div class="playmat-user-status-wrapper" fxFlex fxLayout="row">
+            <img class="playmat-user-status" *ngIf="currentPlayer().monarch" src="/assets/status_symbols/monarch.png">
+            <img class="playmat-user-status" *ngIf="currentPlayer().initiative" src="assets/action_symbols/d20.svg">
+          </div>
           <div *ngFor="let spot of currentPlayer().playmat"
                class="playmat-user-spot-container" [ngClass]="{'playmat-gridlines': gridlines}"
                (contextmenu)="onRightClick($event, {type: 'user_playmat', from: spot})"

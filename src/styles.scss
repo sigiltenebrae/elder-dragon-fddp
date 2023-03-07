@@ -575,6 +575,22 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   z-index: 50;
 }
 
+.playmat-opponent-wrapper .playmat-opponent-status-wrapper {
+  position: absolute;
+  pointer-events: none;
+  z-index: 50;
+  bottom: 10px;
+  right: 10px;
+  height: 32px;
+}
+
+.playmat-opponent-status {
+  pointer-events: none;
+  height: 32px;
+  width: 32x;
+  filter: invert(1);
+}
+
 .playmat-opponent-ally {
   color: $mtg-green;
 }
@@ -898,6 +914,22 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   height: 409px;
   opacity: 0.7;
   pointer-events: none;
+}
+
+.playmat-user-status-wrapper {
+  position: absolute;
+  pointer-events: none;
+  z-index: 50;
+  bottom: 32px;
+  right: 5px;
+  height: 32px;
+}
+
+.playmat-user-status {
+  pointer-events: none;
+  height: 64px;
+  width: 64x;
+  filter: invert(1);
 }
 
 .playmat-user-background-image-mini {

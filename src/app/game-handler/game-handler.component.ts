@@ -914,12 +914,7 @@ export class GameHandlerComponent implements OnInit {
     });
 
     let out_player: any = {};
-    if (this.user && this.user.star_color) {
-      out_player.star_color = this.user.star_color;
-    }
-    else {
-      out_player.star_color = null;
-    }
+    out_player.star_color = this.user && this.user.star_color ? this.user.star_color : null;
     out_player.teammate_id = null;
     out_player.playmat_image = this.current_user.playmat;
     out_player.default_sleeves = this.current_user.default_sleeves;
@@ -936,6 +931,8 @@ export class GameHandlerComponent implements OnInit {
     out_player.spectating = false;
     out_player.top_flipped = false;
     out_player.play_counters = [];
+    out_player.monarch = false;
+    out_player.initiative = false;
     for (let i = 0; i < 36; i++) {
       out_player.playmat.push({ name: 'play', id: i, owner: 1, cards: [] })
     }
