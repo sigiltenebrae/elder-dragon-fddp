@@ -44,10 +44,10 @@
         </div>
         &nbsp;
         <div fxLayout="row" fxLayoutAlign="end" fxLayoutGap="10">
-          <button *ngIf="!syncing && deckid > -1 && !deleting" mat-raised-button color="warn" (click)="deleting=!deleting">Delete</button>
-          <button *ngIf="!syncing && deleting" mat-raised-button color="warn" (click)="deleteDeck()">Confirm</button>
-          <button *ngIf="!syncing" mat-raised-button color="primary" (click)="saveDeck()">Submit</button>
-          <mat-spinner *ngIf="syncing" color="warn" diameter="32"></mat-spinner>
+          <button *ngIf="!syncing && !saving && deckid > -1 && !deleting" mat-raised-button color="warn" (click)="deleting=!deleting">Delete</button>
+          <button *ngIf="!syncing && !saving && deleting" mat-raised-button color="warn" (click)="deleteDeck()">Confirm</button>
+          <button *ngIf="!syncing && !saving" mat-raised-button color="primary" (click)="saveDeck()">Submit</button>
+          <mat-spinner *ngIf="syncing || saving" color="warn" diameter="32"></mat-spinner>
         </div>
         <div fxFlex fxLayout="row" fxLayoutAlign="space-evenly center">
           <div fxLayout="column" fxLayoutAlign="center center">

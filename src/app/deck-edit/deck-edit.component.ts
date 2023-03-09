@@ -50,6 +50,7 @@ export class DeckEditComponent implements OnInit {
   tribes = [];
 
   syncing = false;
+  saving = false;
 
   constructor(private fddp_data: FddpApiService, private route: ActivatedRoute, private router: Router, private tokenStorage: TokenStorageService, public dialog: MatDialog) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
@@ -143,7 +144,7 @@ export class DeckEditComponent implements OnInit {
   }
 
   syncWithArchidekt() {
-    if (this.deck.link) {
+    if (this.deck.link && !this.saving) {
       this.syncing = true;
       let archidekt_deckid = this.deck.link.indexOf('#') > 0 ?
         this.deck.link.substring(0, this.deck.link.indexOf('#')).substring(this.deck.link.indexOf('/decks/') + 7):
@@ -421,11 +422,14 @@ export class DeckEditComponent implements OnInit {
   }
 
   saveDeck() {
+    this.saving = true;
     if (this.deckid == -1) { //create
       this.fddp_data.createDeck(this.deck).then((deckid) => {
         if (deckid) {
           this.fddp_data.updateDeckThemes(deckid, this.deck.themes, this.deck.tribes).then(() => {
-            this.router.navigate(['/']);
+            this.fddp_data.updateDeckLegality(deckid).then(() => {
+              this.router.navigate(['/']);
+            });
           });
         }
         else {
@@ -436,7 +440,9 @@ export class DeckEditComponent implements OnInit {
     else {
       this.fddp_data.updateDeck(this.deck).then(() => {
         this.fddp_data.updateDeckThemes(this.deckid, this.deck.themes, this.deck.tribes).then(() => {
-          this.router.navigate(['/']);
+          this.fddp_data.updateDeckLegality(this.deckid).then(() => {
+            this.router.navigate(['/']);
+          });
         });
       });
     }

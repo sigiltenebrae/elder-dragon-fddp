@@ -393,4 +393,14 @@ export class FddpApiService {
       });
     });
   }
+
+  public updateDeckLegality(deckid): Promise<void> {
+    return new Promise<void>((resolve) => {
+      this.http.get(environment.fddp_api_url + '/legality/update/' + deckid).subscribe((legality_data: any) => {
+        resolve();
+      }, () => {
+        resolve();
+      })
+    })
+  }
 }
