@@ -90,7 +90,23 @@ export class DeckSelectDialog {
   )
   {
     this.loading = true;
-    if (this.data.game_type != 4) {
+    if (this.data.game_type == 4) {
+      this.fddp_data.getCheapRandomDeck().then((deck) => {
+        if (deck != null) {
+          this.loading = false;
+          this.dialogRef.close(deck);
+        }
+      });
+    }
+    else if (this.data.game_type == 7) {
+      this.fddp_data.getRegularRandomDeck().then((deck) => {
+        if (deck != null) {
+          this.loading = false;
+          this.dialogRef.close(deck);
+        }
+      });
+    }
+    else {
 
       this.fddp_data.getUsers().then((user_list: any) => {
         this.users = user_list;
@@ -112,14 +128,6 @@ export class DeckSelectDialog {
             }
           }
         });
-      });
-    }
-    else {
-      this.fddp_data.getCheapRandomDeck().then((deck) => {
-        if (deck != null) {
-          this.loading = false;
-          this.dialogRef.close(deck);
-        }
       });
     }
   }

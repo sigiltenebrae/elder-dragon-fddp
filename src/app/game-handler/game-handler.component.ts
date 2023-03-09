@@ -1153,7 +1153,7 @@ export class GameHandlerComponent implements OnInit {
    * @param deck
    */
   selectDeck(deck: any) {
-    if (this.game_data.type == 4) { //random
+    if (this.game_data.type == 4 || this.game_data.type == 7) { //random
       this.setupUserForPlay(deck);
     }
     else if (this.game_data.type == 6) { //deck test
