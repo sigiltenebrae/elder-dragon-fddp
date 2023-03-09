@@ -18,6 +18,19 @@
         </button>
       </div>
     </mat-toolbar>
+    <mat-form-field appearance="fill">
+      <mat-label>Sort</mat-label>
+      <mat-select [(ngModel)]="current_sort" (ngModelChange)="sortDecks()">
+        <mat-option *ngFor="let option of sort_options" [value]="option">{{option}}</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill" style="width: 128px">
+      <mat-label>Direction</mat-label>
+      <mat-select [(ngModel)]="current_sort_direction" (ngModelChange)="sortDecks()">
+        <mat-option [value]="'asc'">Asc</mat-option>
+        <mat-option [value]="'desc'">Desc</mat-option>
+      </mat-select>
+    </mat-form-field>
     <mat-accordion>
       <mat-expansion-panel>
         <mat-expansion-panel-header>
@@ -109,7 +122,7 @@
       </div>
 
       <div *ngIf="loaded_others && show_others" style="margin: 20px;">
-        <div *ngFor="let other_user of this.users" fxLayout="column">
+        <div *ngFor="let other_user of users" fxLayout="column">
           <div *ngIf="other_user.id !== user.id &&
           other_user.visible &&
           decks_others[other_user.id].length &&

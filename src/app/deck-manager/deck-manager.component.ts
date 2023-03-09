@@ -24,6 +24,14 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 export class DeckManagerComponent implements OnInit {
   menuTopLeftPosition =  {x: '0', y: '0'}
 
+  current_sort = "Name";
+  current_sort_direction = "asc";
+  sort_options = [
+    "Name",
+    "Last Modified",
+  ];
+
+
   user: any = null;
   loading = false;
   decks: any[] = [];
@@ -71,8 +79,8 @@ export class DeckManagerComponent implements OnInit {
             this.fddp_data.getDecksBasic(this.user.id).then((decks: any) => {
               this.decks = decks;
               this.loading = false;
+              this.sortDecks();
               this.fddp_data.getDecksBasic().then((other_decks: any) => {
-                console.log(other_decks);
                 for (let other of this.users) {
                   if (other.id != this.user.id) {
                     this.decks_others[other.id] = [];
@@ -97,6 +105,7 @@ export class DeckManagerComponent implements OnInit {
                   }
                 }
                 this.show_others = true;
+                this.sortDecks();
               });
             });
           });
@@ -149,5 +158,37 @@ export class DeckManagerComponent implements OnInit {
    */
   toggleFlip(deck) {
     deck.flipped = !deck.flipped;
+  }
+
+  /**
+   * sort decks based on the current sort filters
+   */
+  sortDecks() {
+    switch (this.current_sort) {
+      case "Name":
+        this.decks.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+        for(let other_user of this.users) {
+          if (other_user.id != this.user.id && this.decks_others[other_user.id]) {
+            this.decks_others[other_user.id].sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+          }
+        }
+        break;
+      case "Last Modified":
+        this.decks.sort((a: any, b: any) => (a.modified > b.modified) ? -1: 1);
+        for(let other_user of this.users ) {
+          if (other_user.id != this.user.id && this.decks_others[other_user.id]) {
+            this.decks_others[other_user.id].sort((a: any, b: any) => (a.modified > b.modified) ? -1: 1);
+          }
+        }
+        break;
+    }
+    if (this.current_sort_direction === 'desc') {
+      this.decks.reverse();
+      for(let other_user of this.users) {
+        if (other_user.id != this.user.id && this.decks_others[other_user.id]) {
+          this.decks_others[other_user.id].reverse;
+        }
+      }
+    }
   }
 }
