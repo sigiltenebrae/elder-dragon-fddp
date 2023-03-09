@@ -1,14 +1,33 @@
 <div fxFlexFill fxLayout="column" style="padding: 20px">
-  <div *ngFor="let ban_type of types.reverse()">
-    <div fxLayout="row" fxLayoutAlign="center">
-      <h2 style="text-decoration: underline; text-transform: capitalize">{{ban_type.type}}</h2>
+  <div *ngIf="loading" fxLayout="row" fxFlex="100" fxLayoutAlign="center center">
+    <mat-spinner></mat-spinner>
+  </div>
+  <div *ngIf="!loading">
+    <div *ngIf="isAdmin" fxLayout="row" fxLayoutAlign="center" fxLayoutGap="10px">
+      <mat-form-field appearance="fill" style="margin-top: 10px;">
+        <mat-label>Select Card</mat-label>
+        <input type="text" placeholder="Enter Card" matInput
+               [ngbTypeahead]="card_search" [(ngModel)]="new_ban_name" [editable]="false">
+      </mat-form-field>
+      <mat-form-field appearance="fill" style="margin-top: 10px;">
+        <mat-label>Type</mat-label>
+        <mat-select [(value)]="new_ban_type">
+          <mat-option *ngFor="let ban_type of types" value="{{ban_type.id}}">{{ban_type.type}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-raised-button color="primary" style="height: 48px" (click)="submitBan()">Submit</button>
     </div>
-    <div fxLayout="row wrap" fxLayoutGap="10px" fxLayoutAlign="center">
-      <div class="custom-image-card-holder" *ngFor="let card of ban_list[ban_type.id - 1]">
-        <button *ngIf="!card.deleting && isAdmin()" (click)="card.deleting=true" mat-raised-button color="warn" class="custom-image-card-delete">Delete</button>
-        <button *ngIf="card.deleting" mat-raised-button color="warn" class="custom-image-card-delete">Confirm</button>
-        <img (mouseleave)="card.deleting=false;" class="custom-image-card" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
-        <h3 class="custom-image-card-name">{{card.name}}</h3>
+    <div *ngFor="let ban_type of types.reverse()">
+      <div fxLayout="row" fxLayoutAlign="center">
+        <h2 style="text-decoration: underline; text-transform: capitalize">{{ban_type.type}}</h2>
+      </div>
+      <div fxLayout="row wrap" fxLayoutGap="10px" fxLayoutAlign="center">
+        <div class="custom-image-card-holder" *ngFor="let card of ban_list[ban_type.id - 1]">
+          <button *ngIf="!card.deleting && isAdmin()" (click)="card.deleting=true" mat-raised-button color="warn" class="custom-image-card-delete">Delete</button>
+          <button *ngIf="card.deleting" mat-raised-button color="warn" class="custom-image-card-delete" (click)="deleteBan(card)">Confirm</button>
+          <img (mouseleave)="card.deleting=false;" class="custom-image-card" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
+          <h3 class="custom-image-card-name">{{card.name}}</h3>
+        </div>
       </div>
     </div>
   </div>

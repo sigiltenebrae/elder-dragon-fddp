@@ -403,4 +403,34 @@ export class FddpApiService {
       })
     })
   }
+
+  public banCard(card: any): Promise<void> {
+    return new Promise<void>((resolve) => {
+      this.http.post<any>(environment.fddp_api_url + '/bans/create', JSON.stringify({card: card}),
+        {headers : new HttpHeaders({'Content-Type': 'application/json'})}).subscribe((resp: any) => {
+        if (resp.errors) {
+          console.log(resp.errors);
+        }
+        console.log(resp);
+        resolve();
+      }, () => {
+        resolve();
+      });
+    })
+  }
+
+  public removeBan(card: any): Promise<void> {
+    return new Promise<void>((resolve) => {
+      this.http.post<any>(environment.fddp_api_url + '/bans/delete', JSON.stringify({card: card}),
+        {headers : new HttpHeaders({'Content-Type': 'application/json'})}).subscribe((resp: any) => {
+        if (resp.errors) {
+          console.log(resp.errors);
+        }
+        console.log(resp);
+        resolve();
+      }, () => {
+        resolve();
+      });
+    })
+  }
 }

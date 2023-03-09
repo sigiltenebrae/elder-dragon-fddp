@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {FddpApiService} from "../../services/fddp-api.service";
 import {TokenStorageService} from "../../services/token-storage.service";
 import {Router} from "@angular/router";
+import {debounceTime, distinctUntilChanged, Observable, OperatorFunction, switchMap, tap} from "rxjs";
+import * as Scry from "scryfall-sdk";
 
 @Component({
   selector: 'app-ban-list',
@@ -13,6 +15,11 @@ export class BanListComponent implements OnInit {
   cards: any[] = [];
   types: any[] = [];
   ban_list: any[] = [];
+
+  loading = false;
+
+  new_ban_name = null;
+  new_ban_type = 1;
 
   constructor(private fddp_data: FddpApiService,  private tokenStorage: TokenStorageService, private router: Router) { }
 
@@ -26,6 +33,7 @@ export class BanListComponent implements OnInit {
       this.router.navigate(['login']);
     }
     else {
+      this.loading = true;
       this.fddp_data.getBanList().then((cards: any) => {
         this.cards = cards;
         this.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
@@ -40,7 +48,7 @@ export class BanListComponent implements OnInit {
             this.cards.forEach((card: any) => {
               this.ban_list[card.ban_type - 1].push(card);
             });
-            console.log('ban list loaded');
+            this.loading = false;
           });
         });
       });
@@ -62,5 +70,40 @@ export class BanListComponent implements OnInit {
         resolve();
       });
     });
+  }
+
+  searching = false;
+  /**
+   * OperatorFunction for Scryfall autocomplete on typeahead.
+   * @param text$ string to autocomplete
+   */
+    // @ts-ignore
+  public card_search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      tap(() => this.searching = true),
+      // @ts-ignore
+      switchMap(async term => {
+        this.searching = true;
+        return await Scry.Cards.autoCompleteName(term);
+      }),
+      tap(() => {
+        this.searching = false;
+      }));
+
+  submitBan() {
+    if (this.new_ban_name != null) {
+      this.fddp_data.banCard({name: this.new_ban_name, ban_type: this.new_ban_type}).then(() => {
+        this.new_ban_name = null;
+        console.log('banned!');
+      })
+    }
+  }
+
+  deleteBan(card: any) {
+    this.fddp_data.removeBan(card).then(() => {
+      console.log('ban removed!');
+    })
   }
 }
