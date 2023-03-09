@@ -4,7 +4,7 @@
 
 <mat-menu #errorMenu="matMenu" yPosition="above" xPosition="before">
   <div>
-    <a mat-menu-item *ngFor="let error of current_errors" href="{{error.gatherer}}" target="_blank">{{error.name}}</a>
+    <a mat-menu-item *ngFor="let error of current_errors" href="{{error.gatherer}}" target="_blank" matTooltip="{{error.reason}}" matTooltipPosition="right">{{error.name}}</a>
   </div>
 </mat-menu>
 
@@ -71,10 +71,10 @@
                   <mat-spinner class="deck-manager-commander-color" [diameter]="16"></mat-spinner>
                 </div>
                 <div fxLayout="row" fxLayoutAlign="end" class="deck-manager-commander-legality">
-                  <mat-spinner *ngIf="deck.issues == null && calculate" class="deck-manager-commander-color" [diameter]="16"></mat-spinner>
-                  <p *ngIf="deck.issues != null && deck.issues.length == 0" style="color: #63a785">legal</p>
-                  <p *ngIf="deck.issues != null && deck.issues.length > 0" style="color: #d23632; cursor: pointer"
-                     [matMenuTriggerFor]="errorMenu" (click)="current_errors=deck.issues">illegal</p>
+                  <mat-spinner *ngIf="deck.legality == null" class="deck-manager-commander-color" [diameter]="16"></mat-spinner>
+                  <p *ngIf="deck.legality != null && deck.legality.length == 0" style="color: #63a785">legal</p>
+                  <p *ngIf="deck.legality != null && deck.legality.length > 0" style="color: #d23632; cursor: pointer"
+                     [matMenuTriggerFor]="errorMenu" (click)="current_errors=deck.legality">illegal</p>
                 </div>
               </div>
               <div fxLayout="row" fxLayoutAlign="center" class="deck-manager-commander-ratings-holder">
@@ -147,10 +147,10 @@
                       <mat-spinner class="deck-manager-commander-color" [diameter]="16"></mat-spinner>
                     </div>
                     <div fxLayout="row" fxLayoutAlign="end" class="deck-manager-commander-legality">
-                      <mat-spinner *ngIf="deck.issues == null && calculate_others" class="deck-manager-commander-color" [diameter]="16"></mat-spinner>
-                      <p *ngIf="deck.issues != null && deck.issues.length == 0" style="color: #63a785">legal</p>
-                      <p *ngIf="deck.issues != null && deck.issues.length > 0" style="color: #d23632; cursor: pointer"
-                         [matMenuTriggerFor]="errorMenu" (click)="current_errors=deck.issues">illegal</p>
+                      <mat-spinner *ngIf="deck.legality == null" class="deck-manager-commander-color" [diameter]="16"></mat-spinner>
+                      <p *ngIf="deck.legality != null && deck.legality.length == 0" style="color: #63a785">legal</p>
+                      <p *ngIf="deck.legality != null && deck.legality.length > 0" style="color: #d23632; cursor: pointer"
+                         [matMenuTriggerFor]="errorMenu" (click)="current_errors=deck.legality">illegal</p>
                     </div>
                   </div>
                   <div fxLayout="row" fxLayoutAlign="center" class="deck-manager-commander-ratings-holder">

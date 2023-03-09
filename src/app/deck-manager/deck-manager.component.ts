@@ -68,7 +68,7 @@ export class DeckManagerComponent implements OnInit {
               this.decks = decks;
               this.loading = false;
               this.fddp_data.getDecksBasic().then((other_decks: any) => {
-
+                console.log(other_decks);
                 for (let other of this.users) {
                   if (other.id != this.user.id) {
                     this.decks_others[other.id] = [];
