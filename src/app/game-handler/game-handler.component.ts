@@ -1601,6 +1601,16 @@ export class GameHandlerComponent implements OnInit {
   }
 
   /**
+   * Clear modifiers on token but leave multiplier displayed and set to 1
+   * @param token
+   */
+  clearToken(token: any) {
+    this.clearCard(token);
+    token.multiplier = true;
+    token.multiplier_value = 1;
+  }
+
+  /**
    * Detects if a given card is a copy of a real card.
    * @param card card object to check
    */
@@ -1886,7 +1896,7 @@ export class GameHandlerComponent implements OnInit {
       let card_clone = JSON.parse(JSON.stringify(card));
       card_clone.is_token = true;
       card_clone.owner = this.currentPlayer().id;
-      this.clearCard(card_clone);
+      this.clearToken(card_clone);
       this.setVisibility(card, 'play');
       this.currentPlayer().temp_zone.cards.push(card_clone);
       this.updateSocketPlayer();
@@ -1945,7 +1955,7 @@ export class GameHandlerComponent implements OnInit {
           out_token = JSON.parse(JSON.stringify(tok));
           out_token.is_token = true;
           out_token.owner = -1;
-          this.clearCard(out_token);
+          this.clearToken(out_token);
           this.setVisibility(out_token, 'play');
           out_tokens.push(out_token);
         }
@@ -1990,7 +2000,7 @@ export class GameHandlerComponent implements OnInit {
           out_token = JSON.parse(JSON.stringify(tok));
           out_token.is_token = true;
           out_token.owner = -1;
-          this.clearCard(out_token);
+          this.clearToken(out_token);
           this.setVisibility(out_token, 'play');
           out_tokens.push(out_token);
         }
@@ -2017,7 +2027,7 @@ export class GameHandlerComponent implements OnInit {
         let out_token = JSON.parse(JSON.stringify(token));
         out_token.is_token = true;
         out_token.owner = -1;
-        this.clearCard(out_token);
+        this.clearToken(out_token);
         this.setVisibility(out_token, 'play');
         this.currentPlayer().temp_zone.cards.unshift(out_token);
         this.updateSocketPlayer();
@@ -2043,7 +2053,7 @@ export class GameHandlerComponent implements OnInit {
           let out_token = JSON.parse(JSON.stringify(result));
           out_token.is_token = true;
           out_token.owner = -1;
-          this.clearCard(out_token);
+          this.clearToken(out_token);
           this.setVisibility(out_token, 'play');
           this.currentPlayer().temp_zone.cards.unshift(out_token);
           this.updateSocketPlayer();
