@@ -101,53 +101,14 @@ export class DeckManagerComponent implements OnInit {
     }
   }
 
-  /**
-  getDeckLegality(deck: any) {
-    return new Promise<void>((resolve) => {
-      if (deck.cards == null || deck.cards.length == 0) {
-        deck.legality = 'unknown';
-        deck.issues = [];
+  userVisible() {
+    for (let ouser of this.users) {
+      if (ouser.id == this.user.id) {
+        return ouser.visible;
       }
-      else {
-        let banned_cards = [];
-        deck.cards.forEach((card: any) => {
-          for (let banned_card of this.ban_list[this.getBanId("banned") - 1]) {
-            if (card.name === banned_card.name) {
-              banned_cards.push({name: card.name, gatherer: card.gatherer});
-              break;
-            }
-          }
-          if (!card.legality) {
-            let card_allowed = false;
-            if (card.iscommander) {
-              for (let unbanned_commander of this.ban_list[this.getBanId("allowed as commander") - 1]) {
-                if (card.name === unbanned_commander.name) {
-                  card_allowed = true;
-                  break;
-                }
-              }
-
-            }
-            if (!card_allowed) {
-              for (let unbanned_card of this.ban_list[this.getBanId("unbanned") - 1]) {
-                if (card.name === unbanned_card.name) {
-                  card_allowed = true;
-                  break;
-                }
-              }
-            }
-            if (!card_allowed) {
-              banned_cards.push({name: card.name, gatherer: card.gatherer});
-            }
-          }
-        });
-        deck.legality = banned_cards.length > 0 ? "illegal": "legal";
-        deck.issues = banned_cards;
-      }
-      resolve();
-    })
+    }
+    return true;
   }
-  */
 
   getTheme(id) {
     for (let theme of this.themes) {

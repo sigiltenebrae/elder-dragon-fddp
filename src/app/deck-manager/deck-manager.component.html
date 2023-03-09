@@ -38,7 +38,7 @@
       <div *ngIf="loading" fxLayout="row" fxFlex="100" fxLayoutAlign="center center" style="margin: 20px;">
         <mat-spinner></mat-spinner>
       </div>
-      <div *ngIf="!loading && user" fxLayout="row wrap" fxLayoutAlign="center" style="margin: 20px">
+      <div *ngIf="!loading && user && userVisible()" fxLayout="row wrap" fxLayoutAlign="center" style="margin: 20px">
         <div *ngFor="let deck of decks" fxLayout="column" style="margin: 10px;"
              class="deck-manager-commander-viewer-holder" [@flipState]="deck.flipped"
              (dblclick)="toggleFlip(deck)">
