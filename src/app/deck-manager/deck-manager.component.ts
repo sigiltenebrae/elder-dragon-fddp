@@ -46,6 +46,10 @@ export class DeckManagerComponent implements OnInit {
 
   constructor(private fddp_data: FddpApiService, private tokenStorage: TokenStorageService, private router: Router) { }
 
+  isAdmin() {
+    return this.tokenStorage.getUser().isAdmin;
+  }
+
   ngOnInit(): void {
     this.loading = true;
     if (this.tokenStorage.getUser() == null || this.tokenStorage.getUser() == {} ||
@@ -101,6 +105,9 @@ export class DeckManagerComponent implements OnInit {
     }
   }
 
+  /**
+   * Helper function to determine if the user should see their own decks
+   */
   userVisible() {
     for (let ouser of this.users) {
       if (ouser.id == this.user.id) {
@@ -110,6 +117,10 @@ export class DeckManagerComponent implements OnInit {
     return true;
   }
 
+  /**
+   * Returns the theme with the given id
+   * @param id
+   */
   getTheme(id) {
     for (let theme of this.themes) {
       if (theme.id === id) {
@@ -119,6 +130,10 @@ export class DeckManagerComponent implements OnInit {
     return null;
   }
 
+  /**
+   * Returns the tribe with the given id
+   * @param id
+   */
   getTribe(id) {
     for (let tribe of this.tribes) {
       if (tribe.id === id) {
@@ -128,11 +143,11 @@ export class DeckManagerComponent implements OnInit {
     return null;
   }
 
+  /**
+   * Helper function to flip over the deck display
+   * @param deck
+   */
   toggleFlip(deck) {
     deck.flipped = !deck.flipped;
-  }
-
-  isAdmin() {
-    return this.tokenStorage.getUser().isAdmin;
   }
 }

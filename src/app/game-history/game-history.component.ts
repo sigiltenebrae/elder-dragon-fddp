@@ -67,6 +67,10 @@ export class GameHistoryComponent implements OnInit {
     }
   }
 
+  /**
+   * Helper function to display player name given id
+   * @param player_id
+   */
   getPlayerName(player_id) {
     for (let user of this.users) {
       if (user.id === player_id) {
@@ -76,6 +80,10 @@ export class GameHistoryComponent implements OnInit {
     return '';
   }
 
+  /**
+   * Helper function to display deck name given id
+   * @param deck_id
+   */
   getDeckName(deck_id) {
     for (let deck of this.deck_list) {
       if (deck.id === deck_id) {
@@ -85,6 +93,10 @@ export class GameHistoryComponent implements OnInit {
     return '';
   }
 
+  /**
+   * Helper function to display the owner of the deck with given deck_id
+   * @param deck_id
+   */
   getDeckOwner(deck_id) {
     for (let deck of this.deck_list) {
       if (deck.id === deck_id) {

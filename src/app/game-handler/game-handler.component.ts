@@ -707,6 +707,9 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Helper function to open the help menu dialog
+   */
   helpMenu() {
     const HelpRef = this.dialog.open(HelpDialog, {
       data: {
@@ -781,6 +784,10 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Messages the socket to update data with the given player object, or the current use if player is null
+   * @param player
+   */
   updateSocketPlayer(player?: any) {
     let player_data = null;
     if (player) {
@@ -800,6 +807,9 @@ export class GameHandlerComponent implements OnInit {
     });
   }
 
+  /**
+   * Message the socket to update data with the current team object.
+   */
   updateSocketTeam() {
     this.messageSocket(
       {
@@ -811,6 +821,10 @@ export class GameHandlerComponent implements OnInit {
       });
   }
 
+  /**
+   * Message socket to update the plane
+   * @param plane
+   */
   updateSocketPlane(plane: any) {
     this.messageSocket(
       {
@@ -822,6 +836,10 @@ export class GameHandlerComponent implements OnInit {
       });
   }
 
+  /**
+   * Message socket to update data for the given zone
+   * @param zone
+   */
   updateSocketZone(zone: any) {
     this.messageSocket({
       game_id: this.game_id,
@@ -832,6 +850,10 @@ export class GameHandlerComponent implements OnInit {
     });
   }
 
+  /**
+   * Send a message to the websocket
+   * @param content
+   */
   messageSocket(content: any) {
     let message = {
       source: '',
@@ -905,6 +927,12 @@ export class GameHandlerComponent implements OnInit {
     return null;
   }
 
+  /**
+   * Initialize the user using the given deck.
+   * @param deck Deck object to use. Needs to be pre-generated.
+   * @param user_id
+   * @param user_name
+   */
   setupUserForPlay(deck: any, user_id?: any, user_name?: any) {
     deck.owner = user_id == null ? this.current_user.id: user_id;
     let temp_sideboard: any[] = [];
@@ -998,6 +1026,12 @@ export class GameHandlerComponent implements OnInit {
     this.updateSocketPlayer(out_player);
   }
 
+  /**
+   * Helper function to initialize user. Generates the deck necessary using given id.
+   * @param deckid
+   * @param user_id
+   * @param user_name
+   */
   initializePlayerDeck(deckid: number, user_id?: any, user_name?: any): Promise<void> {
     return new Promise<void>((resolve) => {
       this.fddp_data.getDeckForPlay(deckid).then((deck_data: any) => {
@@ -1017,6 +1051,9 @@ export class GameHandlerComponent implements OnInit {
     });
   }
 
+  /**
+   * Star game mode function to send the player colors to the web socket.
+   */
   selectColors() {
     const selectColorsRef = this.dialog.open(SelectColorsDialog, {
       data: {
@@ -1036,6 +1073,9 @@ export class GameHandlerComponent implements OnInit {
     });
   }
 
+  /**
+   * Message the web socket to start the game.
+   */
   startGame() {
     if (this.game_data.type != 2) {
       this.game_data.turn_count = 1;
@@ -1052,6 +1092,9 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Two Headed Giant function for selecting the teams.
+   */
   selectTeams(): void {
     let p: any[] = [];
     for (let player of this.game_data.players) {
@@ -1087,6 +1130,9 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Helper function to select the deck to play with.
+   */
   openDeckSelectDialog(): void {
     if (this.dialog.openDialogs.length == 0) {
       const deckDialogRef = this.dialog.open(DeckSelectDialog, {
@@ -1102,6 +1148,10 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Helper function to set up and initialize user with the given deck
+   * @param deck
+   */
   selectDeck(deck: any) {
     if (this.game_data.type == 4) { //random
       this.setupUserForPlay(deck);
@@ -1126,6 +1176,9 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Remove user from the game.
+   */
   scoopDeck(): void {
     if (this.user == this.currentPlayer() || this.game_data.type == 6) {
       if (this.game_data.players.length == 1) {
@@ -1173,6 +1226,10 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Start a vote to kick the given player from the game.
+   * @param player
+   */
   kickVote(player: any) {
     if (this.game_data.type != 6) {
       if (this.game_data.kick_vote == null) {
@@ -1205,6 +1262,10 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Message socket with a vote to kick a player from the game.
+   * @param vote
+   */
   voteKick(vote: boolean) {
     if (this.game_data.type != 6) {
       if (this.game_data.kick_vote) {
@@ -1227,6 +1288,9 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Checks if the user has voted on the current kick vote.
+   */
   hasKickVoted() {
     if (this.game_data.kick_vote != null && this.game_data.kick_vote.votes) {
       if (this.game_data.kick_vote.kickee.name === this.user.name) {
@@ -1241,6 +1305,9 @@ export class GameHandlerComponent implements OnInit {
     return false;
   }
 
+  /**
+   * Select winners and message the web socket to end the game.
+   */
   endGame() {
     if (this.game_data.type !== 6) {
       const endGameRef = this.dialog.open(EndGameDialog, {
@@ -1271,12 +1338,18 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * End turn helper function for fast game
+   */
   fastGameEndTurn() {
     this.user.life -= 5;
     this.updateCounter('Life', this.user.life);
     this.endTurn();
   }
 
+  /**
+   * Message the socket to end the turn for the current user
+   */
   endTurn() {
     if (this.game_data.type != 2) {
       if (this.user == this.currentPlayer() || this.game_data.type == 6) {
@@ -1307,7 +1380,9 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
-
+  /**
+   * Select a plane at random
+   */
   setPlane() {
     let new_plane = this.planes[Math.floor(Math.random() * (this.planes.length))];
     this.fddp_data.getCardInfo(new_plane).then((plane_data: any) => {
@@ -1323,11 +1398,17 @@ export class GameHandlerComponent implements OnInit {
     });
   }
 
+  /**
+   * Generate a random from 1-6
+   */
   rollD6() {
     let roll = Math.floor(Math.random() * 6) + 1;
     this.logAction('roll', {roll: roll, type: 'd6'});
   }
 
+  /**
+   * Generate a random from 1-20
+   */
   rollD20() {
     let roll = Math.floor(Math.random() * 20) + 1;
     this.logAction('roll', {roll: roll, type: 'd20'});
@@ -1386,6 +1467,10 @@ export class GameHandlerComponent implements OnInit {
 
   }
 
+  /**
+   * Helper function to highlight a player
+   * @param selector
+   */
   selectPlayer(selector: any) {
     if (this.isOpponent(selector) || this.isTeammate(selector)) {
       this.selected_player = selector;
@@ -1395,10 +1480,18 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Helper function for taunting
+   * @param player
+   */
   tauntPlayer(player: any) {
 
   }
 
+  /**
+   * Helper function to check if the given player is an opponent of the user
+   * @param player
+   */
   isOpponent(player: any) {
     if (this.game_data.type == 2) {
       if (player.id == this.current_user.id) {
@@ -1414,6 +1507,9 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Two Headed Giant helper function to return the player object of the user's teammate
+   */
   getTeammate() {
     let t = -1;
     for (let i = 0; i < this.game_data.team_data.length; i++) {
@@ -1430,6 +1526,10 @@ export class GameHandlerComponent implements OnInit {
     return null;
   }
 
+  /**
+   * Helper function for two headed giant to check if the given player is the user's teammate
+   * @param player
+   */
   isTeammate(player: any) {
     if (this.game_data.team_data) {
       if (this.user != null && player == this.getTeammate()) {
@@ -1442,6 +1542,10 @@ export class GameHandlerComponent implements OnInit {
     return false;
   }
 
+  /**
+   * Helper function for star to check if the color of the given player is an ally color with the user.
+   * @param player
+   */
   isAlly(player: any) {
     if (this.game_data.type == 3 && this.currentPlayer() != null) {
       if (this.currentPlayer().star_color === 'W') {
@@ -1466,6 +1570,10 @@ export class GameHandlerComponent implements OnInit {
     return false;
   }
 
+  /**
+   * Clear all modifiers on card.
+   * @param card
+   */
   clearCard(card: any) {
     card.tapped = 'untapped';
     card.power_mod = 0;
@@ -1519,6 +1627,10 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Returns if card is an artifact or enchantment
+   * @param card
+   */
   isUnnatural(card: any) {
     if (card.types) {
       return card.types.includes("Artifact") ||
@@ -1526,6 +1638,10 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Returns if the card is historic
+   * @param card
+   */
   isHistoric(card: any) {
     if (card.types) {
       return card.types.includes("Legendary") ||
@@ -1549,6 +1665,9 @@ export class GameHandlerComponent implements OnInit {
     this.logAction('tap', {card: card});
   }
 
+  /**
+   * Untap all unlocked cards on the user's playmat
+   */
   untapAll() {
     if (this.user == this.currentPlayer() || this.game_data.type == 6) {
       let cards = [];
@@ -1565,12 +1684,20 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Invert the card image
+   * @param card
+   */
   invertCard(card:any) {
     card.inverted = !card.inverted;
     this.updateSocketPlayer();
     this.logAction('invert', {card: card});
   }
 
+  /**
+   * Flip the card face down
+   * @param card
+   */
   flipCard(card:any) {
     if (card.facedown) {
       card.facedown = false;
@@ -1586,6 +1713,10 @@ export class GameHandlerComponent implements OnInit {
     this.logAction('flip', {card: card});
   }
 
+  /**
+   * Flip the card onto it's alt face
+   * @param card
+   */
   altFaceCard(card: any) {
     if (card.back_face) {
       let temp_image = card.image;
@@ -1618,6 +1749,10 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Edit the notes on the card
+   * @param card
+   */
   editNotes(card: any) {
     const noteDialogRef = this.dialog.open(NoteDialog, {
       width: '500px',
@@ -1631,6 +1766,12 @@ export class GameHandlerComponent implements OnInit {
     })
   }
 
+  /**
+   * Message the socket to shake the given card.
+   * @param card
+   * @param id
+   * @param location
+   */
   shakeCard(card: any, id: number, location: string) {
     card.shaken = true;
     this.messageSocket({
@@ -1648,6 +1789,12 @@ export class GameHandlerComponent implements OnInit {
     }, 3000);
   }
 
+  /**
+   * Animate the shaking of the given card.
+   * @param cardid
+   * @param userid
+   * @param location
+   */
   cardShake(cardid: number, userid: number, location: string) {
     let shake_player = this.getPlayerFromId(userid);
     if (shake_player) {
@@ -1682,11 +1829,18 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Toggle the alarm status on the card
+   * @param card
+   */
   primeCard(card: any) {
     card.primed = !card.primed;
     this.updateSocketPlayer();
   }
 
+  /**
+   * Activate alarm animation on all primed cards on the users playmat
+   */
   activateAlarms() {
     if (this.game_data.type != 6) {
       if (this.user != null) {
@@ -1701,6 +1855,11 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Helper function for displaying the alarm animation on a loop
+   * @param card
+   * @param alarm
+   */
   setAlarm(card: any, alarm: boolean) {
     card.triggered = alarm;
     if (card.triggered) {
@@ -1708,12 +1867,20 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Helper function for displaying the alarm animation on a loop
+   * @param card
+   */
   onAlarmDone(card) {
     if (card.triggered) {
       card.triggering = !card.triggering;
     }
   }
 
+  /**
+   * Create a token copy of the card.
+   * @param card
+   */
   cloneCard(card: any) {
     if (this.user == this.currentPlayer() || this.game_data.type == 6) {
       let card_clone = JSON.parse(JSON.stringify(card));
@@ -1727,6 +1894,10 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Helper function to get the list of all tokens associated with the given card.
+   * @param card
+   */
   getTokenList(card): any[] {
     let out_tokens = [];
     for (let token of card.tokens) {
@@ -1744,6 +1915,11 @@ export class GameHandlerComponent implements OnInit {
     return out_tokens;
   }
 
+  /**
+   * Comparison function to check if 2 token objects are equal.
+   * @param card1
+   * @param card2
+   */
   isEqualToken(card1: any, card2: any) {
     return card1.name.toLowerCase() === card2.name.toLowerCase() &&
       card1.power === card2.power &&
@@ -1755,6 +1931,11 @@ export class GameHandlerComponent implements OnInit {
       card1.colors.includes("G") == card2.colors.includes("G")
   }
 
+  /**
+   * Attempts to insert a token with the given string name from the tokens already in the user's deck. If the
+   * token is not in the deck, does nothing.
+   * @param token
+   */
   quickCreateToken(token: string) {
     if (this.user == this.currentPlayer() || this.game_data.type == 6) {
       let out_tokens = [];
@@ -1796,6 +1977,10 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Open the token creation dialog and insert a token.
+   * @param token
+   */
   createToken(token: any) {
     if (this.user == this.currentPlayer() || this.game_data.type == 6) {
       let out_tokens: any[] = [];
@@ -1841,6 +2026,9 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Helper function to open the token create dialog
+   */
   openTokenDialog(): void {
     if (this.user == this.currentPlayer() || this.game_data.type == 6) {
       const tokDialogRef = this.dialog.open(TokenInsertDialog, {
@@ -1865,6 +2053,10 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Get all available images for the given card name.
+   * @param name
+   */
   getCardImages(name: string): Promise<any> {
     return new Promise<any>((resolve) => {
       this.fddp_data.getImagesForCard(name).then((image_data: any) => {
@@ -1873,6 +2065,9 @@ export class GameHandlerComponent implements OnInit {
     })
   }
 
+  /**
+   * Flip the top card of the library face up.
+   */
   flipTop() {
     if (this.user == this.currentPlayer() || this.game_data.type == 6) {
       this.currentPlayer().top_flipped = !this.currentPlayer().top_flipped;
@@ -1881,6 +2076,11 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Shuffle the given array of cards.
+   * @param cards
+   * @param options
+   */
   shuffleDeck(cards: any[], options?: any) {
     for (let i = 0; i < cards.length; i++) {
       let r = i + Math.floor(Math.random() * (cards.length - i));
@@ -1898,6 +2098,12 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Visibility helper function for changing view permissions on a card.
+   * @param card
+   * @param whomst
+   * @param options
+   */
   toggleCardReveal(card: any, whomst: number, options?: any) {
     let showed = false;
     if (whomst == -6969) {
@@ -1938,6 +2144,10 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Visibility helper function for revealing entire hand to players.
+   * @param whomst
+   */
   revealHandToggle(whomst: number) {
     if (this.user == this.currentPlayer() || this.game_data.type == 6) {
       let showed = false;
@@ -2001,6 +2211,11 @@ export class GameHandlerComponent implements OnInit {
     return count;
   }
 
+  /**
+   * Checks to see if the card has the given type in its type line
+   * @param card
+   * @param type
+   */
   hasType(card: any, type: string) {
     if (card.types) {
       for (let card_type of card.types) {
@@ -2066,6 +2281,10 @@ export class GameHandlerComponent implements OnInit {
     return count;
   }
 
+  /**
+   * Create a randomly colored counter
+   * @param type
+   */
   createCounter(type: string) {
     if (this.user == this.currentPlayer() || this.game_data.type == 6) {
       this.currentPlayer().play_counters.push({
@@ -2081,6 +2300,10 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Remove the given counter from play
+   * @param counter
+   */
   deleteCounter(counter: any) {
     if (this.user == this.currentPlayer() || this.game_data.type == 6) {
       this.currentPlayer().play_counters.splice(this.currentPlayer().play_counters.indexOf(counter), 1);
@@ -2088,6 +2311,9 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Clear out all counters.
+   */
   deleteAllCounters() {
     if (this.user == this.currentPlayer() || this.game_data.type == 6) {
       this.currentPlayer().play_counters = [];
@@ -2107,6 +2333,10 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Select a card at random from the given zone
+   * @param zone
+   */
   selectRandom(zone: any) {
     let rand_card: any = {};
     if (zone.cards.length == 1) {
@@ -2126,6 +2356,10 @@ export class GameHandlerComponent implements OnInit {
    *    Input Detection/Replacement Functions       *
    ------------------------------------------------**/
 
+  /**
+   * Helper function to determine if keyboard shortcuts are currently allowed
+   * @param event
+   */
   keyAllowed(event: any): boolean {
     if (event.target.nodeName !== "INPUT" &&
       event.target.nodeName !== 'TEXTAREA' &&
@@ -2286,6 +2520,11 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Helper function for incrementing counters
+   * @param event
+   * @param counter
+   */
   counterClick(event: any, counter: any) {
     if (event.ctrlKey) {
       const counterDialogRef = this.dialog.open(CounterSetDialog, {
@@ -2307,6 +2546,11 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Helper function for incrementing life
+   * @param event
+   * @param player
+   */
   lifeClick(event: any, player: any) {
     if (event.ctrlKey) {
       const counterDialogRef = this.dialog.open(CounterSetDialog, {
@@ -2339,6 +2583,11 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Helper function to increment infect counters
+   * @param event
+   * @param player
+   */
   infectClick(event: any, player: any) {
     if (event.ctrlKey) {
       const counterDialogRef = this.dialog.open(CounterSetDialog, {
@@ -2411,6 +2660,9 @@ export class GameHandlerComponent implements OnInit {
     this.sidenav_sort = '';
   }
 
+  /**
+   * Sort and filter the sidenav with the selected options.
+   */
   getSidenavSort() {
     let items: any[] = this.getSidenavList();
 
@@ -2454,6 +2706,9 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Get the zone data and load it into the sidenav
+   */
   getSidenavList() {
     let items: any[] = []
     switch(this.sidenav_type) {
@@ -2769,6 +3024,12 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Send all cards from one zone into another
+   * @param source
+   * @param dest
+   * @param options
+   */
   sendAllTo(source: any, dest: any, options?: any) {
     let cards = [];
     while (source.cards.length > 0) {
@@ -2790,6 +3051,15 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Move a card to a specific deck position
+   * @param card
+   * @param source
+   * @param dest
+   * @param previousIndex
+   * @param currentIndex
+   * @param options
+   */
   sendCardToDeckPos(card: any, source: any, dest: any, previousIndex: number, currentIndex: any, options?: any){
     let cur_ind = Number(currentIndex);
     if (cur_ind < 0) {
@@ -2829,6 +3099,10 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Execute a mulligan and then draw count cards.
+   * @param count
+   */
   mulliganHand(count: any) {
     if (this.user == this.currentPlayer() || this.game_data.type == 6) {
       this.draw_count = Number(count);
@@ -2935,6 +3209,10 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  /**
+   * Loads count cards into the sidenav display
+   * @param count
+   */
   scryX(count: any) {
     if (this.user == this.currentPlayer() || this.game_data.type == 6) {
       this.sidenav_scry_count = Number(count);

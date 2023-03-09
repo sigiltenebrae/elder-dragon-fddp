@@ -56,6 +56,9 @@ export class CustomImagesComponent implements OnInit {
         this.searching = false;
       }));
 
+  /**
+   * Creates the custom card and clears out the form
+   */
   createCustomCard() {
     if (this.name && this.image !== '') {
       this.fddp_data.createCustomCard(this.name, this.image, this.tokenStorage.getUser().id).then(() => {
@@ -66,6 +69,9 @@ export class CustomImagesComponent implements OnInit {
     }
   }
 
+  /**
+   * Creates a custom token and clears out the form.
+   */
   createCustomToken() {
     if(this.name && this.image) {
       let out_token: any = {
@@ -90,6 +96,10 @@ export class CustomImagesComponent implements OnInit {
     }
   }
 
+  /**
+   * Helper function to take a google drive share link and format it for correct use.
+   * @param type format type to use. Currently, only accepts google.
+   */
   formatLink(type: string) {
     if (type === 'google') {
       if (this.image_google.includes('/file/d/') && this.image_google.includes('/view?usp=sharing')) {
@@ -101,6 +111,9 @@ export class CustomImagesComponent implements OnInit {
     }
   }
 
+  /**
+   * Open the token select dialog
+   */
   openTokenDialog() {
     if (this.name != null && this.name !== '' && this.card_type === 'tokens') {
       this.fddp_data.getAllOfCard(this.name).then((token_list) => {
@@ -129,7 +142,6 @@ export class CustomImagesComponent implements OnInit {
       })
     }
   }
-
 }
 
 

@@ -14,6 +14,10 @@ export class CustomImageManagerComponent implements OnInit {
 
   constructor(private fddp_data: FddpApiService,  private tokenStorage: TokenStorageService, private router: Router) { }
 
+  isAdmin() {
+    return this.tokenStorage.getUser().isAdmin;
+  }
+
   ngOnInit(): void {
     if (this.tokenStorage.getUser() == null || this.tokenStorage.getUser() == {} ||
       this.tokenStorage.getUser().id == null || this.tokenStorage.getUser().id < 0) {
@@ -26,10 +30,6 @@ export class CustomImageManagerComponent implements OnInit {
         this.cards.forEach((card: any) => { card.deleting = false });
       });
     }
-  }
-
-  isAdmin() {
-    return this.tokenStorage.getUser().isAdmin;
   }
 
   deleteCustomCard(card: any) {

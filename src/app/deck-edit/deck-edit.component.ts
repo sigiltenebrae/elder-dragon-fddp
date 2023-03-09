@@ -130,6 +130,9 @@ export class DeckEditComponent implements OnInit {
         this.searching = false;
       }));
 
+  /**
+   * Helper function for viewing the deck if you aren't the owner. Pulls out the commanders to display at the top.
+   */
   getCommanders() {
     this.commanders = [];
     this.notcommanders = [];
@@ -143,6 +146,10 @@ export class DeckEditComponent implements OnInit {
     }
   }
 
+
+  /**
+   * Syncs the deck using the provided archidekt link.
+   */
   syncWithArchidekt() {
     if (this.deck.link && !this.saving) {
       this.syncing = true;
@@ -212,6 +219,10 @@ export class DeckEditComponent implements OnInit {
     }
   }
 
+  /**
+   * Checks to see if a card has tokens associated with it, and if so, adds them to the deck.
+   * @param card card object to search with.
+   */
   getTokens(card: any): Promise<void> {
     return new Promise<void>((resolve) => {
       this.fddp_data.getCardInfo(card.name).then((card_info: any) => {
@@ -227,6 +238,10 @@ export class DeckEditComponent implements OnInit {
     })
   }
 
+  /**
+   * Checks to see if the token object is already in the deck
+   * @param token token object to compare
+   */
   hasToken(token: any) {
     for (let tok of this.deck.tokens) {
       if (this.tokensEqual(tok, token)) {
@@ -236,6 +251,10 @@ export class DeckEditComponent implements OnInit {
     return false;
   }
 
+  /**
+   * Checks to see if the card is already in the deck
+   * @param name string name of card to search
+   */
   hasCard(name: string): boolean {
     for (let card of this.deck.cards) {
       if (card.name === name) {
@@ -245,6 +264,10 @@ export class DeckEditComponent implements OnInit {
     return false;
   }
 
+  /**
+   * Return the card object from the deck, or null if dne
+   * @param name string name of card to search
+   */
   getCard(name: string) {
     for (let card of this.deck.cards) {
       if (card.name === name) {
@@ -254,6 +277,11 @@ export class DeckEditComponent implements OnInit {
     return null;
   }
 
+  /**
+   * Remove the card with the given name from the given card array
+   * @param name string name to search
+   * @param cards card object array
+   */
   removeCard(name: string, cards: any[]): boolean {
     for (let card of cards) {
       if (card.card.oracleCard.name === name) {
@@ -263,6 +291,10 @@ export class DeckEditComponent implements OnInit {
     return true;
   }
 
+  /**
+   * Sets the image for the given card to the oldest available image.
+   * @param card card object to use.
+   */
   getCardImage(card: any): Promise<void> {
     return new Promise<void>((resolve) => {
       this.fddp_data.getImagesForCard(card.name).then((card_image_data: any) => {
@@ -275,6 +307,11 @@ export class DeckEditComponent implements OnInit {
     });
   }
 
+  /**
+   * Token object comparison function
+   * @param card1
+   * @param card2
+   */
   tokensEqual(card1: any, card2: any): boolean {
     return card1.name.toLowerCase() === card2.name.toLowerCase() &&
       card1.oracle_text === card2.oracle_text &&
@@ -287,7 +324,10 @@ export class DeckEditComponent implements OnInit {
       card1.colors.includes("G") == card2.colors.includes("G")
   }
 
-
+  /**
+   * Gets all available images for a given card
+   * @param card card object to search
+   */
   async getCardImages(card: any) {
     this.available_sets = [];
     this.selected_set = "";
@@ -323,6 +363,9 @@ export class DeckEditComponent implements OnInit {
     this.available_sets.sort((a: any, b: any) => (a > b) ? 1: -1);
   }
 
+  /**
+   * Sort function for displaying all card images
+   */
   sortImages() {
     if (this.image_sort === "dateasc") {
       this.image_options.sort((a: any, b: any) => (a.date > b.date) ? 1: -1);
@@ -336,6 +379,9 @@ export class DeckEditComponent implements OnInit {
     }
   }
 
+  /**
+   * Filter helper function for displaying images for a given set
+   */
   selectSet() {
     for (let card of this.image_options) {
       card.visible = card.set_name === this.selected_set || this.selected_set === 'all';
@@ -348,6 +394,10 @@ export class DeckEditComponent implements OnInit {
     }
   }
 
+  /**
+   * Copies the input card data into selected_card object
+   * @param card
+   */
   copyToSelected(card: any) {
     this.selected_card.name = card.name;
     this.selected_card.image = card.image;
@@ -356,9 +406,12 @@ export class DeckEditComponent implements OnInit {
     this.selected_card.toughness = card.toughness;
     this.selected_card.oracle_text = card.oracle_text;
     this.selected_card.colors = card.colors;
-    console.log(this.selected_card);
   }
 
+  /**
+   * Sets card image to default
+   * @param card
+   */
   resetCard(card:any) {
     card.image = null;
     card.back_image = null;
@@ -366,6 +419,9 @@ export class DeckEditComponent implements OnInit {
     });
   }
 
+  /**
+   * Inserts the new card into the deck, or increases count if already exists.
+   */
   addCardToDeck() {
     if (this.new_card_temp) {
       for (let card of this.deck.cards) {
@@ -390,6 +446,9 @@ export class DeckEditComponent implements OnInit {
     }
   }
 
+  /**
+   * Inserts the token into the deck.
+   */
   addTokenToDeck() {
     if (this.new_token_temp !== '') {
       this.fddp_data.getAllOfToken(this.new_token_temp).then((token_list) => {
@@ -408,11 +467,19 @@ export class DeckEditComponent implements OnInit {
     }
   }
 
+  /**
+   * Remove the given token from the deck
+   * @param token
+   */
   deleteToken(token: any) {
     this.deck.token_delete.push(token);
     this.deck.tokens.splice(this.deck.tokens.indexOf(token), 1);
   }
 
+  /**
+   * Returns the total number of cards in the input card array
+   * @param cards
+   */
   getTotal(cards: any) {
     let count = 0;
     for (let card of cards) {
@@ -421,6 +488,9 @@ export class DeckEditComponent implements OnInit {
     return count;
   }
 
+  /**
+   * Save the deck to the db and recheck its legality.
+   */
   saveDeck() {
     this.saving = true;
     if (this.deckid == -1) { //create
@@ -448,12 +518,20 @@ export class DeckEditComponent implements OnInit {
     }
   }
 
+  /**
+   * Delete the deck from the db.
+   */
   deleteDeck() {
     this.fddp_data.deleteDeck(this.deck.id).then(() => {
       this.router.navigate(['/']);
     });
   }
 
+  /**
+   * Right click helper function to handle decrementing card counts.
+   * @param event
+   * @param item
+   */
   onRightClick(event: MouseEvent, item: any) {
     event.preventDefault();
     if (item.type && item.type !== 'none') {
@@ -494,6 +572,10 @@ export class DeckEditComponent implements OnInit {
 
   public tribe_formatter = (x: {name: string}) => x.name;
 
+  /**
+   * Returns the theme object with the given id
+   * @param id
+   */
   getTheme(id) {
     for (let theme of this.themes) {
       if (theme.id === id) {
@@ -503,6 +585,10 @@ export class DeckEditComponent implements OnInit {
     return null;
   }
 
+  /**
+   * Returns the tribe object with the given id
+   * @param id
+   */
   getTribe(id) {
     for (let tribe of this.tribes) {
       if (tribe.id === id) {
@@ -540,6 +626,10 @@ export class DeckEditComponent implements OnInit {
     }
   }
 
+  /**
+   * Removes the theme from the deck
+   * @param theme
+   */
   public removeTheme(theme: any): void {
     const index = this.deck.themes.indexOf(theme);
     if (index > -1) {
@@ -547,6 +637,10 @@ export class DeckEditComponent implements OnInit {
     }
   }
 
+  /**
+   * Removes the tribe from the deck.
+   * @param theme
+   */
   public removeTribe(theme: any): void {
     const index = this.deck.tribes.indexOf(theme);
     if (index > -1) {

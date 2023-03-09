@@ -16,6 +16,10 @@ export class BanListComponent implements OnInit {
 
   constructor(private fddp_data: FddpApiService,  private tokenStorage: TokenStorageService, private router: Router) { }
 
+  isAdmin() {
+    return this.tokenStorage.getUser().isAdmin;
+  }
+
   ngOnInit(): void {
     if (this.tokenStorage.getUser() == null || this.tokenStorage.getUser() == {} ||
       this.tokenStorage.getUser().id == null || this.tokenStorage.getUser().id < 0) {
@@ -43,6 +47,10 @@ export class BanListComponent implements OnInit {
     }
   }
 
+  /**
+   * Loads in an image for the card (attempts to use the most recent)
+   * @param card card object to load in
+   */
   getCardImage(card: any): Promise<void> {
     return new Promise<void>((resolve) => {
       this.fddp_data.getImagesForCard(card.name).then((card_image_data: any) => {
@@ -55,9 +63,4 @@ export class BanListComponent implements OnInit {
       });
     });
   }
-
-  isAdmin() {
-    return this.tokenStorage.getUser().isAdmin;
-  }
-
 }

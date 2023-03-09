@@ -17,6 +17,10 @@ export class GameManagerComponent implements OnInit {
   constructor(private WebsocketService: FddpWebsocketService, private tokenStorage: TokenStorageService, private router: Router) {
   }
 
+  isAdmin() {
+    return this.tokenStorage.getUser().isAdmin;
+  }
+
   sendMsg(content: any) {
     let message = {
       source: '',
@@ -85,9 +89,5 @@ export class GameManagerComponent implements OnInit {
     return new Promise((resolve) => {
       setTimeout(resolve, ms);
     });
-  }
-
-  isAdmin() {
-    return this.tokenStorage.getUser().isAdmin;
   }
 }
