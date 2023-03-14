@@ -186,6 +186,16 @@ p, h1, h2, h3, h4, h5, h6 {
   display: none;
 }
 
+.custom-image-card-holder .custom-image-card-image-button {
+  position: absolute;
+  bottom: 25%;
+  left: 50%;
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  z-index: 2;
+  display: none;
+}
+
 .custom-image-card-holder .custom-image-card {
   position: absolute;
   top: 0;
@@ -204,7 +214,8 @@ p, h1, h2, h3, h4, h5, h6 {
   opacity: 0.5;
 }
 
-.custom-image-card-holder:hover .custom-image-card-delete {
+.custom-image-card-holder:hover .custom-image-card-delete,
+.custom-image-card-holder:hover .custom-image-card-image-button {
   display: block;
 }
 

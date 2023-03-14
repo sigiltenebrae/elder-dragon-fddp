@@ -118,4 +118,8 @@ export class BanListComponent implements OnInit {
       console.log('ban removed!');
     })
   }
+
+  changeImage(card: any) {
+
+  }
 }

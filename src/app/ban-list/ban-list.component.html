@@ -25,6 +25,7 @@
         <div class="custom-image-card-holder" *ngFor="let card of ban_list[ban_type.id - 1]">
           <button *ngIf="!card.deleting && isAdmin()" (click)="card.deleting=true" mat-raised-button color="warn" class="custom-image-card-delete">Delete</button>
           <button *ngIf="card.deleting" mat-raised-button color="warn" class="custom-image-card-delete" (click)="deleteBan(card)">Confirm</button>
+          <button *ngIf="isAdmin()" mat-raised-button color="primary" (click)="changeImage(card)" class="custom-image-card-image-button">Image</button>
           <img (mouseleave)="card.deleting=false;" class="custom-image-card" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
           <h3 class="custom-image-card-name">{{card.name}}</h3>
         </div>
