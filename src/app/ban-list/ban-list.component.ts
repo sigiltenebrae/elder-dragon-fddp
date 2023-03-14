@@ -43,6 +43,7 @@ export class BanListComponent implements OnInit {
         });
         this.fddp_data.getBanTypes().then((types: any) => {
           this.types = types;
+          this.types.reverse();
           Promise.all(card_promises).then(() => {
             this.ban_list = [[], [], [], []];
             this.cards.forEach((card: any) => {
