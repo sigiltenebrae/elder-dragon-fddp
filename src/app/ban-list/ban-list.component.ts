@@ -63,7 +63,6 @@ export class BanListComponent implements OnInit {
   getCardImage(card: any): Promise<void> {
     return new Promise<void>((resolve) => {
       if (card.image != null && card.image !== '') {
-        console.log('image for ' + card.name + ' exists!');
         resolve();
       }
       else {
