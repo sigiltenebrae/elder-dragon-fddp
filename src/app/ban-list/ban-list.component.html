@@ -14,7 +14,7 @@
       </mat-form-field>
       <button mat-raised-button color="primary" style="height: 48px" (click)="submitBan()">Submit</button>
     </div>
-    <div *ngFor="let ban_type of types.reverse()">
+    <div *ngFor="let ban_type of types">
       <div fxLayout="row" fxLayoutAlign="center">
         <h2 style="text-decoration: underline; text-transform: capitalize">{{ban_type.type}}</h2>
       </div>
