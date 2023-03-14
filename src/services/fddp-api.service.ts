@@ -433,4 +433,13 @@ export class FddpApiService {
       });
     })
   }
+
+  public setBanImage(card: any): Promise<void> {
+    return new Promise<void>((resolve) => {
+      this.http.post<any>(environment.fddp_api_url + '/bans/image', JSON.stringify({card: card}),
+        {headers : new HttpHeaders({'Content-Type': 'application/json'})}).subscribe((resp: any) => {
+          resolve();
+      })
+    })
+  }
 }

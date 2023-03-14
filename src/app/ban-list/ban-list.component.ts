@@ -61,14 +61,25 @@ export class BanListComponent implements OnInit {
    */
   getCardImage(card: any): Promise<void> {
     return new Promise<void>((resolve) => {
-      this.fddp_data.getImagesForCard(card.name).then((card_image_data: any) => {
-        let card_images = card_image_data.images;
-        card.image = card_images && card_images.length > 0? card_images[card_images.length - 1].image: '';
-        if (card_images.length == 0){
-          console.log('failed to find ' + card.name);
-        }
+      if (card.image != null && card.image !== '') {
         resolve();
-      });
+      }
+      else {
+        this.fddp_data.getImagesForCard(card.name).then((card_image_data: any) => {
+          console.log('image for card: ' + card.name + ' not in db, grabbing');
+          let card_images = card_image_data.images;
+          card.image = card_images && card_images.length > 0? card_images[card_images.length - 1].image: '';
+          if (card_images.length == 0){
+            console.log('failed to find ' + card.name);
+            resolve();
+          }
+          else {
+            this.fddp_data.setBanImage(card).then(() => {
+              resolve();
+            });
+          }
+        });
+      }
     });
   }
 
