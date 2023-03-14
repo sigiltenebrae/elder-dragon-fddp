@@ -1,8 +1,5 @@
 <div fxFlexFill fxLayout="column" style="padding: 20px">
-  <div *ngIf="loading" fxLayout="row" fxFlex="100" fxLayoutAlign="center center">
-    <mat-spinner></mat-spinner>
-  </div>
-  <div *ngIf="!loading">
+  <div>
     <div *ngIf="isAdmin" fxLayout="row" fxLayoutAlign="center" fxLayoutGap="10px">
       <mat-form-field appearance="fill" style="margin-top: 10px;">
         <mat-label>Select Card</mat-label>
