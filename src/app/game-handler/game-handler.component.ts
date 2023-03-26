@@ -2259,17 +2259,19 @@ export class GameHandlerComponent implements OnInit {
       }
       for (let play of players) {
         if (zone === 'play') {
-          for (let spot of play.playmat) {
-            for (let card of spot.cards) {
-              if ((type.toLowerCase() === 'permanent' && this.isPermanent(card)) ||
-                (type.toLowerCase() === 'unnatural' && this.isUnnatural(card)) ||
-                (type.toLowerCase() === 'historic'  && this.isHistoric(card)) ||
-                (this.hasType(card, type))) {
-                if (card.multiplier) {
-                  count += card.multiplier_value;
-                }
-                else {
-                  count++;
+          if (play.playmat) {
+            for (let spot of play.playmat) {
+              for (let card of spot.cards) {
+                if ((type.toLowerCase() === 'permanent' && this.isPermanent(card)) ||
+                  (type.toLowerCase() === 'unnatural' && this.isUnnatural(card)) ||
+                  (type.toLowerCase() === 'historic'  && this.isHistoric(card)) ||
+                  (this.hasType(card, type))) {
+                  if (card.multiplier) {
+                    count += card.multiplier_value;
+                  }
+                  else {
+                    count++;
+                  }
                 }
               }
             }
@@ -2277,12 +2279,14 @@ export class GameHandlerComponent implements OnInit {
         }
         else {
           let cur_zone: any = this.getPlayerZone(play.id, zone);
-          for (let card of cur_zone.cards) {
-            if ((type.toLowerCase() === 'permanent' && this.isPermanent(card)) ||
-              (type.toLowerCase() === 'unnatural' && this.isUnnatural(card)) ||
-              (type.toLowerCase() === 'historic'  && this.isHistoric(card)) ||
-              (this.hasType(card, type))) {
-              count ++;
+          if (cur_zone != null) {
+            for (let card of cur_zone.cards) {
+              if ((type.toLowerCase() === 'permanent' && this.isPermanent(card)) ||
+                (type.toLowerCase() === 'unnatural' && this.isUnnatural(card)) ||
+                (type.toLowerCase() === 'historic'  && this.isHistoric(card)) ||
+                (this.hasType(card, type))) {
+                count ++;
+              }
             }
           }
         }
@@ -2792,25 +2796,30 @@ export class GameHandlerComponent implements OnInit {
    * @param zone name of the zone to get
    */
   getPlayerZone(id: number, zone: string) {
-    switch (zone) {
-      case 'deck':
-        return this.getPlayerFromId(id).deck;
-      case 'scry':
-        return this.getPlayerFromId(id).deck;
-      case 'grave':
-        return this.getPlayerFromId(id).grave;
-      case 'exile':
-        return this.getPlayerFromId(id).exile;
-      case 'commander':
-        return this.getPlayerFromId(id).deck.commander;
-      case 'hand':
-        return this.getPlayerFromId(id).hand;
-      case 'temp_zone':
-        return this.getPlayerFromId(id).temp_zone;
-      case 'play':
-        return this.getPlayerFromId(id).playmat;
-      case this.getPlayerFromId(id).deck.name:
-        return this.getPlayerFromId(id).deck;
+    if (this.getPlayerFromId(id)) {
+      switch (zone) {
+        case 'deck':
+          return this.getPlayerFromId(id).deck;
+        case 'scry':
+          return this.getPlayerFromId(id).deck;
+        case 'grave':
+          return this.getPlayerFromId(id).grave;
+        case 'exile':
+          return this.getPlayerFromId(id).exile;
+        case 'commander':
+          return this.getPlayerFromId(id).deck.commander;
+        case 'hand':
+          return this.getPlayerFromId(id).hand;
+        case 'temp_zone':
+          return this.getPlayerFromId(id).temp_zone;
+        case 'play':
+          return this.getPlayerFromId(id).playmat;
+        case this.getPlayerFromId(id).deck.name:
+          return this.getPlayerFromId(id).deck;
+      }
+    }
+    else {
+      return null;
     }
   }
 
