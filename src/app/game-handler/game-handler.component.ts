@@ -1953,13 +1953,14 @@ export class GameHandlerComponent implements OnInit {
    * Create a token copy of the card.
    * @param card
    */
-  cloneCard(card: any) {
+  cloneCard(card: any, options?: any) {
     if (this.user == this.currentPlayer() || this.game_data.type == 6) {
       let card_clone = JSON.parse(JSON.stringify(card));
       card_clone.is_token = true;
       card_clone.owner = this.currentPlayer().id;
       this.clearToken(card_clone);
-      this.setVisibility(card, 'play');
+      this.setVisibility(card_clone, 'play');
+      card_clone.notes = options != null && options.notes != null? options.notes: '';
       this.currentPlayer().temp_zone.cards.push(card_clone);
       this.updateSocketPlayer();
       this.logAction('clone', {card: card_clone});
@@ -3183,10 +3184,13 @@ export class GameHandlerComponent implements OnInit {
     while (source.cards.length > 0) {
       cards.push(source.cards[0]);
       if (options && options.bottom) {
-        this.sendCardToZone(source.cards[0], source, dest, 0, dest.cards.length, {nolog: true, noupdate: true});
+        this.sendCardToZone(source.cards[0], source, dest, 0, dest.cards.length, {nolog: true, noupdate: true,
+          exiled_for: options != null && options.exiled_for != null? options.exiled_for: null});
+
       }
       else {
-        this.sendCardToZone(source.cards[0], source, dest, 0, 0, {nolog: true, noupdate: true});
+        this.sendCardToZone(source.cards[0], source, dest, 0, 0, {nolog: true, noupdate: true,
+          exiled_for: options != null && options.exiled_for != null? options.exiled_for: null});
       }
     }
     if (options && options.nolog) {}
@@ -3234,7 +3238,8 @@ export class GameHandlerComponent implements OnInit {
     for (let i = 0; i < num_count; i++) {
       if (this.currentPlayer().deck.cards.length > 0) {
         cards.push(this.currentPlayer().deck.cards[0]);
-        this.sendCardToZone(this.currentPlayer().deck.cards[0], this.currentPlayer().deck, dest, 0, 0, {nolog: true, noupdate: true});
+        this.sendCardToZone(this.currentPlayer().deck.cards[0], this.currentPlayer().deck, dest, 0, 0, {nolog: true, noupdate: true,
+          exiled_for: options != null && options.exiled_for != null? options.exiled_for: null});
       }
     }
     if (options && options.noupdate){}

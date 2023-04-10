@@ -87,6 +87,7 @@
           <button mat-menu-item [matMenuTriggerFor]="changeExile" *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && (currentPlayer().id == rightclicked_item.card.owner) && (rightclicked_item.from != null && rightclicked_item.from.name === 'exile')">Exile To</button>
           <button *ngIf="rightclicked_item.card.back_face && user != null && (user == currentPlayer() || game_data.type == 6)" mat-menu-item (click)="altFaceCard(rightclicked_item.card)">Alt Face</button>
           <button *ngIf="(rightclicked_item.zone === 'exile' || rightclicked_item.zone === 'temp_zone') && user != null && (user == currentPlayer() || game_data.type == 6)" mat-menu-item (click)="flipCard(rightclicked_item.card)">Flip Face</button>
+          <button mat-menu-item (click)="cloneCard(rightclicked_item.card)">Clone</button>
           <button mat-menu-item (click)="shakeCard(rightclicked_item.card, sidenav_selected_player.id, rightclicked_item.zone)">Shake</button>
         </div>
 
@@ -222,9 +223,22 @@
   <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && rightclicked_item && rightclicked_item.zone != currentPlayer().hand" mat-menu-item (click)="sendAllTo(rightclicked_item.zone, currentPlayer().hand)">Hand</button>
   <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && rightclicked_item && rightclicked_item.zone != currentPlayer().grave" mat-menu-item (click)="sendAllTo(rightclicked_item.zone, currentPlayer().grave)">Graveyard</button>
   <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && rightclicked_item && rightclicked_item.zone != currentPlayer().exile" mat-menu-item (click)="sendAllTo(rightclicked_item.zone, currentPlayer().exile)">Exile</button>
+  <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && rightclicked_item && rightclicked_item.zone != currentPlayer().exile" mat-menu-item (click)="sendAllTo(rightclicked_item.zone, currentPlayer().exile)" [matMenuTriggerFor]="sendAllToExile">Exile For</button>
   <button mat-menu-item (click)="sendAllTo(rightclicked_item.zone, currentPlayer().deck)">Deck Top</button>
   <button mat-menu-item (click)="sendAllTo(rightclicked_item.zone, currentPlayer().deck, {bottom: true})">Deck Bottom</button>
   <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && rightclicked_item && rightclicked_item.zone != currentPlayer().temp_zone" mat-menu-item (click)="sendAllTo(rightclicked_item.zone, currentPlayer().temp_zone)">Temp Zone</button>
+</mat-menu>
+
+<mat-menu #sendAllToExile="matMenu">
+  <div *ngIf="game_data != null && user != null && (user == currentPlayer() || game_data.type == 6)">
+    <div *ngFor="let player of game_data.players">
+      <button mat-menu-item *ngIf="player != user"
+              (click)="sendAllTo(rightclicked_item.zone, currentPlayer().exile, {exiled_for: player.id})">
+        <span>{{player.name}}</span>
+      </button>
+    </div>
+    <button mat-menu-item (click)="sendAllTo(rightclicked_item.zone, currentPlayer().exile, {exiled_for: -1})">All</button>
+  </div>
 </mat-menu>
 
 <mat-menu #revealTo="matMenu">
@@ -280,7 +294,20 @@
 <mat-menu #drawTo="matMenu">
   <button mat-menu-item (click)="drawToX(this.currentPlayer().grave)">Graveyard</button>
   <button mat-menu-item (click)="drawToX(this.currentPlayer().exile)">Exile</button>
+  <button mat-menu-item [matMenuTriggerFor]="drawToExile">Exile For</button>
   <button mat-menu-item (click)="drawToX(this.currentPlayer().temp_zone)">Temp Zone</button>
+</mat-menu>
+
+<mat-menu #drawToExile="matMenu">
+  <div *ngIf="game_data != null && user != null && (user == currentPlayer() || game_data.type == 6)">
+    <div *ngFor="let player of game_data.players">
+      <button mat-menu-item *ngIf="player != user"
+              (click)="drawToX(currentPlayer().exile, {exiled_for: player.id})">
+        <span>{{player.name}}</span>
+      </button>
+    </div>
+    <button mat-menu-item (click)="drawToX(currentPlayer().exile, {exiled_for: -1})">All</button>
+  </div>
 </mat-menu>
 
 <mat-menu #kickPlayer="matMenu">
@@ -356,6 +383,7 @@
                    (contextmenu)="onRightClick($event, {type: 'zone_card', card: card, from: getSidenavContainer()})"
                    cdkDrag [cdkDragDisabled]="((user.id != card.owner && game_data.type != 6) && !card.is_token)">
                 {{card.name}}
+                <span *ngIf="card.sidenav_visible && sidenav_selected_player != null && card.exiled_for != null">({{getPlayerFromId(card.exiled_for).name}})</span>
                 <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="playmat-user-card" loading="lazy">
                 <img *cdkDragPlaceholder class="playmat-user-card" [src]="card.image" [alt]="card.name" loading="lazy">
               </div>
