@@ -1706,6 +1706,12 @@ export class GameHandlerComponent implements OnInit {
     return false;
   }
 
+  isNonPermanent(card: any) {
+    if (card.types) {
+      return (card.types.includes("Instant") || card.types.includes("Sorcery"));
+    }
+  }
+
   /**
    * Toggles the tap state of an input card
    * @param card
@@ -2312,6 +2318,7 @@ export class GameHandlerComponent implements OnInit {
                   (type.toLowerCase() === 'unnatural' && this.isUnnatural(card)) ||
                   (type.toLowerCase() === 'historic'  && this.isHistoric(card)) ||
                   (type.toLowerCase() === 'nlpermanent'  && this.isNonlandPermanent(card)) ||
+                  (type.toLowerCase() === 'nonpermanent'  && this.isNonPermanent(card)) ||
                   (this.hasType(card, type))) {
                   if (card.multiplier) {
                     count += card.multiplier_value;
@@ -2332,6 +2339,7 @@ export class GameHandlerComponent implements OnInit {
                 (type.toLowerCase() === 'unnatural' && this.isUnnatural(card)) ||
                 (type.toLowerCase() === 'historic'  && this.isHistoric(card)) ||
                 (type.toLowerCase() === 'nlpermanent'  && this.isNonlandPermanent(card)) ||
+                (type.toLowerCase() === 'nonpermanent'  && this.isNonPermanent(card)) ||
                 (this.hasType(card, type))) {
                 count ++;
               }
@@ -3256,6 +3264,11 @@ export class GameHandlerComponent implements OnInit {
             }
             if (type.toLowerCase() === 'nlpermanent') {
               if (this.isNonlandPermanent(cur_card)) {
+                break;
+              }
+            }
+            if (type.toLowerCase() === 'nonpermanent') {
+              if (this.isNonPermanent(cur_card)) {
                 break;
               }
             }
