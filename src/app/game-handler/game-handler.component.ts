@@ -1692,6 +1692,20 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  isNonland(card: any) {
+    if (card.types) {
+      return !card.types.includes("Land");
+    }
+    return false;
+  }
+
+  isNonlandPermanent(card: any) {
+    if (card.types) {
+      return !(card.types.includes("Instant") || card.types.includes("Sorcery") || card.types.includes("Land"));
+    }
+    return false;
+  }
+
   /**
    * Toggles the tap state of an input card
    * @param card
@@ -2274,7 +2288,7 @@ export class GameHandlerComponent implements OnInit {
    * Returns the count of a given type in a specified zone.
    * @param player Player to search, or 'All'
    * @param zone zone to read
-   * @param type type to look for, or 'historic', 'unnatural', 'permanent'
+   * @param type type to look for, or 'historic', 'unnatural', 'permanent', 'nlpermanent'
    */
   typeCount(player: any, zone: string, type: string) {
     let count = 0;
@@ -2297,6 +2311,7 @@ export class GameHandlerComponent implements OnInit {
                 if ((type.toLowerCase() === 'permanent' && this.isPermanent(card)) ||
                   (type.toLowerCase() === 'unnatural' && this.isUnnatural(card)) ||
                   (type.toLowerCase() === 'historic'  && this.isHistoric(card)) ||
+                  (type.toLowerCase() === 'nlpermanent'  && this.isNonlandPermanent(card)) ||
                   (this.hasType(card, type))) {
                   if (card.multiplier) {
                     count += card.multiplier_value;
@@ -2316,6 +2331,7 @@ export class GameHandlerComponent implements OnInit {
               if ((type.toLowerCase() === 'permanent' && this.isPermanent(card)) ||
                 (type.toLowerCase() === 'unnatural' && this.isUnnatural(card)) ||
                 (type.toLowerCase() === 'historic'  && this.isHistoric(card)) ||
+                (type.toLowerCase() === 'nlpermanent'  && this.isNonlandPermanent(card)) ||
                 (this.hasType(card, type))) {
                 count ++;
               }
@@ -3237,7 +3253,13 @@ export class GameHandlerComponent implements OnInit {
               if (this.isHistoric(cur_card)) {
                 break;
               }
-            } else {
+            }
+            if (type.toLowerCase() === 'nlpermanent') {
+              if (this.isNonlandPermanent(cur_card)) {
+                break;
+              }
+            }
+            else {
               let f = false;
               for (let cur_type of cur_card.types) {
                 if (cur_type.toLowerCase() === type.toLowerCase()) {
