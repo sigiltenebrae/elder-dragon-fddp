@@ -762,6 +762,9 @@ export class GameHandlerComponent implements OnInit {
   }
 
 
+  /**
+   * Runs a check on the list of updated counters to see if any counters have been idle long enough to send to socket.
+   */
   checkCounters() {
     for (let counter of this.counterupdates) {
       if ((Math.abs(Date.now() - counter.last_modified) / 1000) > 3) {
@@ -1036,6 +1039,7 @@ export class GameHandlerComponent implements OnInit {
       card.shaken = false;
       card.inverted = false;
       card.notes = '';
+      card.exiled_for = null;
       if (card.iscommander) {
         out_player.deck.commander.cards.push(card);
       }
@@ -1619,6 +1623,7 @@ export class GameHandlerComponent implements OnInit {
     card.counter_3_value = 0;
     card.multiplier = false;
     card.multiplier_value = 0;
+    card.exiled_for = null;
     card.locked = false;
     card.primed = false;
     card.triggered = false;
@@ -2739,9 +2744,13 @@ export class GameHandlerComponent implements OnInit {
    */
   getSidenavSort() {
     let items: any[] = this.getSidenavList();
+    let items2: any[] = this.getSharedExile();
 
     if (this.sidenav_sort && this.sidenav_sort !== '') {
       for (let item of items) {
+        item.sidenav_visible = item.name.toLowerCase().includes(this.sidenav_sort.toLowerCase());
+      }
+      for (let item of items2) {
         item.sidenav_visible = item.name.toLowerCase().includes(this.sidenav_sort.toLowerCase());
       }
     }
@@ -2749,9 +2758,29 @@ export class GameHandlerComponent implements OnInit {
       for (let item of items) {
         item.sidenav_visible = true;
       }
+      for (let item of items2) {
+        item.sidenav_visible = true;
+      }
     }
     if (this.sidenav_sort_type && this.sidenav_sort_type != '') {
       for (let item of items) {
+        if (item.types) {
+          let found = false;
+          for (let card_type of item.types) {
+            if (this.sidenav_sort_type.toLowerCase() === card_type.toLowerCase()) {
+              found = true;
+              break;
+            }
+          }
+          if (item.sidenav_visible) {
+            item.sidenav_visible = found;
+          }
+        }
+        else {
+          item.sidenav_visible = false;
+        }
+      }
+      for (let item of items2) {
         if (item.types) {
           let found = false;
           for (let card_type of item.types) {
@@ -2781,6 +2810,20 @@ export class GameHandlerComponent implements OnInit {
   }
 
   /**
+   *
+   */
+  getSidenavSearchList() {
+    if (this.sidenav_type !== 'exile') {
+      return this.getSidenavList();
+    }
+    else {
+      let items = this.getSidenavList();
+      return items.concat(this.getSharedExile());
+    }
+  }
+
+
+  /**
    * Get the zone data and load it into the sidenav
    */
   getSidenavList() {
@@ -2800,6 +2843,26 @@ export class GameHandlerComponent implements OnInit {
         break;
       case 'scry':
         items = this.sidenav_selected_player.deck.cards;
+    }
+    return items;
+  }
+
+  /**
+   * Gets exiled cards from other players to display on sidenav
+   */
+  getSharedExile() {
+    let items: any[] = [];
+    if (this.sidenav_type !== 'exile') {
+      return [];
+    }
+    for (let player of this.game_data.players) {
+      if (player.id !== this.currentPlayer().id) {
+        for (let card of this.getPlayerZone(player.id, 'exile').cards) {
+          if (card.exiled_for === this.currentPlayer().id || card.exiled_for == -1) {
+            items.push(card);
+          }
+        }
+      }
     }
     return items;
   }
@@ -3023,6 +3086,10 @@ export class GameHandlerComponent implements OnInit {
 
     if (dest.name === 'hand' || dest.name === 'grave' || dest.name === 'exile') {
       this.clearCard(card);
+    }
+
+    if (dest.name === 'exile' && options != null && options.exiled_for != null) {
+      card.exiled_for = options.exiled_for;
     }
 
     if (source == dest) {

@@ -175,6 +175,7 @@
   <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && rightclicked_item && rightclicked_item.from !== currentPlayer().hand" mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.from, this.currentPlayer().hand, rightclicked_item.from.cards.indexOf(rightclicked_item.card), 0)">Hand</button>
   <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && rightclicked_item && rightclicked_item.from !== currentPlayer().grave" mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.from, this.currentPlayer().grave, rightclicked_item.from.cards.indexOf(rightclicked_item.card), 0)">Graveyard</button>
   <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && rightclicked_item && rightclicked_item.from !== currentPlayer().exile" mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.from, this.currentPlayer().exile, rightclicked_item.from.cards.indexOf(rightclicked_item.card), 0)">Exile</button>
+  <button mat-menu-item [matMenuTriggerFor]="sendToExile">Exile For</button>
   <button mat-menu-item [matMenuTriggerFor]="sendToDeck">Send to Deck</button>
   <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && rightclicked_item && rightclicked_item.from !== currentPlayer().temp_zone" mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.from, this.currentPlayer().temp_zone, rightclicked_item.from.cards.indexOf(rightclicked_item.card), 0)">Temp Zone</button>
 </mat-menu>
@@ -188,6 +189,18 @@
       <input (keydown.enter)="sendCardToDeckPos(rightclicked_item.card, rightclicked_item.from, currentPlayer().deck, rightclicked_item.from.cards.indexOf(rightclicked_item.card), deckpos.value)" #deckpos type="text" matInput (click)="$event.stopPropagation()" value="0">
       <button (click)="sendCardToDeckPos(rightclicked_item.card, rightclicked_item.from, currentPlayer().deck, rightclicked_item.from.cards.indexOf(rightclicked_item.card), deckpos.value)" matSuffix mat-icon-button aria-label="send to pos"><mat-icon>play_arrow</mat-icon></button>
     </mat-form-field>
+  </div>
+</mat-menu>
+
+<mat-menu #sendToExile="matMenu">
+  <div *ngIf="game_data != null && user != null && (user == currentPlayer() || game_data.type == 6)">
+    <div *ngFor="let player of game_data.players">
+      <button mat-menu-item *ngIf="player != user"
+              (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.from, this.currentPlayer().exile, rightclicked_item.from.cards.indexOf(rightclicked_item.card), 0, {exiled_for: player.id})">
+        <span>{{player.name}}</span>
+      </button>
+    </div>
+    <button mat-menu-item (click)="rightclicked_item.card.exiled_for = -1">All</button>
   </div>
 </mat-menu>
 
@@ -298,7 +311,7 @@
                    matInput [matAutocomplete]="card_name"
                    [(ngModel)]="sidenav_sort" (ngModelChange)="getSidenavSort()">
             <mat-autocomplete #card_name>
-              <mat-option *ngFor="let card of getSidenavList()" [value]="card.name">
+              <mat-option *ngFor="let card of getSidenavSearchList()" [value]="card.name">
                 {{card.name}}
               </mat-option>
             </mat-autocomplete>
@@ -316,7 +329,16 @@
         <ng-scrollbar visibility="hover"
                       track="vertical"
                       pointerEventsMethod="scrollbar"
-                      style="height: calc(100vh - 261px); width: 500px; margin-top: 5px;"><!--(cdkDropListDropped)="moveCardToZone($event, sidenav_type, true)"-->
+                      style="height: calc(100vh - 261px); width: 500px; margin-top: 5px;">
+          <div *ngIf="sidenav_type === 'exile' && sidenav_selected_player === currentPlayer()" class="sidenav-list">
+            <div *ngFor="let card of getSharedExile()">
+              <div *ngIf="card.sidenav_visible && (card.visible.includes(currentPlayer().id) || (game_data.type == 6 && card.visible.includes(currentPlayer().id)))" class="sidenav-list-item sidenav-list-item-shared"
+                   (pointerenter)="magnified_card=card"
+                   (contextmenu)="onRightClick($event, {type: 'null', card: card, from: getSidenavContainer()})">
+                {{card.name}} ({{getPlayerFromId(card.owner).name}})
+              </div>
+            </div>
+          </div>
           <div class="sidenav-list" cdkDropList
                (cdkDropListDropped)="dragCard(currently_dragging, getSidenavContainer(), $event, {sidenav: true})"
                [cdkDropListData]="getSidenavList()"

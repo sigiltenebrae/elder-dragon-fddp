@@ -1686,6 +1686,11 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   font-size: 14px;
 }
 
+.sidenav-list-item-shared {
+  background: #777777;
+  cursor: default;
+}
+
 .sidenav-list-item.cdk-drag-disabled {
   background: #222;
   cursor: default;
