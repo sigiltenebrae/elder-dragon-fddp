@@ -984,7 +984,7 @@ export class GameHandlerComponent implements OnInit {
 
     let out_player: any = {};
     out_player.star_color = this.user && this.user.star_color ? this.user.star_color : null;
-    out_player.teammate_id = null;
+    out_player.teammate_id = this.user && this.user.teammate_id ? this.user.teammate_id: null;
     out_player.playmat_image = this.current_user.playmat;
     out_player.default_sleeves = this.current_user.default_sleeves;
     out_player.deck = deck;
@@ -994,7 +994,7 @@ export class GameHandlerComponent implements OnInit {
     out_player.life = 40;
     out_player.infect = 0;
     out_player.playmat = []
-    out_player.turn = -1;
+    out_player.turn = this.user && this.user.turn && this.user.turn ? this.user.turn: -1;
     out_player.command_tax_1 = 0;
     out_player.command_tax_2 = 0;
     out_player.spectating = false;
