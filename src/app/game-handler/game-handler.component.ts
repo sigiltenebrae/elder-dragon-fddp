@@ -1736,8 +1736,10 @@ export class GameHandlerComponent implements OnInit {
       for (let spot of this.currentPlayer().playmat) {
         for (let card of spot.cards) {
           if (!card.locked) {
-            cards.push(card);
-            card.tapped = 'untapped';
+            if (card.tapped !== 'untapped') {
+              cards.push(card);
+              card.tapped = 'untapped';
+            }
           }
         }
       }
