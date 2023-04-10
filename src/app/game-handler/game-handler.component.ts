@@ -924,6 +924,9 @@ export class GameHandlerComponent implements OnInit {
    * @param id number representing the id of the player
    */
   getPlayerFromId(id: number) {
+    if (id == -1) {
+      return {name: 'All'}
+    }
     for (let player of this.game_data.players) {
       if (player.id == id) {
         return player;
@@ -2813,13 +2816,7 @@ export class GameHandlerComponent implements OnInit {
    *
    */
   getSidenavSearchList() {
-    if (this.sidenav_type !== 'exile') {
-      return this.getSidenavList();
-    }
-    else {
-      let items = this.getSidenavList();
-      return items.concat(this.getSharedExile());
-    }
+    return this.getSidenavList();
   }
 
 
@@ -2833,7 +2830,12 @@ export class GameHandlerComponent implements OnInit {
         items = this.sidenav_selected_player.grave.cards;
         break;
       case 'exile':
-        items = this.sidenav_selected_player.exile.cards;
+        if (this.sidenav_selected_player == null) {
+          items = this.getSharedExile();
+        }
+        else {
+          items = this.sidenav_selected_player.exile.cards;
+        }
         break;
       case 'temp_zone':
         items = this.sidenav_selected_player.temp_zone.cards;
