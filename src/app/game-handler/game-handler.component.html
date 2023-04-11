@@ -786,6 +786,7 @@
           <div *ngFor="let spot of currentPlayer().playmat"
                class="playmat-user-spot-container" [ngClass]="{'playmat-gridlines': gridlines}"
                (contextmenu)="onRightClick($event, {type: 'user_playmat', from: spot})"
+               (wheel)="stackRotate(spot.cards, false)"
                [cdkDropListData]="spot.cards"
                (cdkDropListDropped)="dragCard(currently_dragging, spot, $event)"
                cdkDropList>

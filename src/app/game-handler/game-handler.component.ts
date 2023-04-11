@@ -1949,6 +1949,12 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
+  stackRotate(arr, reverse) {
+    if (reverse) arr.unshift(arr.pop());
+    else arr.push(arr.shift());
+    this.updateSocketPlayer();
+  }
+
   /**
    * Create a token copy of the card.
    * @param card
