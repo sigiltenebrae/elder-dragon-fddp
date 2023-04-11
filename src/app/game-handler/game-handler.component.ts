@@ -354,7 +354,7 @@ export class GameHandlerComponent implements OnInit {
 
         this.counter_timer = setInterval(() => {
           this.checkCounters();
-        }, 3000);
+        }, 1000);
       });
     }
   }
