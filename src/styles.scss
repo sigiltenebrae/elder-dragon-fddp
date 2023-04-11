@@ -984,6 +984,12 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   z-index: 22;
 }
 
+.playmat-user-spot-container .stack-4 {
+  position: absolute;
+  display: hidden;
+  pointer-events: none;
+}
+
 .playmat-user-spot-container-mini {
   position: relative;
   float: left;
@@ -1013,6 +1019,12 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   top: 14px;
   left: 10px;
   z-index: 22;
+}
+
+.playmat-user-spot-container-mini .stack-4 {
+  position: absolute;
+  display: hidden;
+  pointer-events: none;
 }
 
 .stack-1:hover,

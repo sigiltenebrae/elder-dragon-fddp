@@ -1009,7 +1009,7 @@ export class GameHandlerComponent implements OnInit {
     out_player.monarch = false;
     out_player.initiative = false;
     for (let i = 0; i < 36; i++) {
-      out_player.playmat.push({ name: 'play', id: i, owner: 1, cards: [] })
+      out_player.playmat.push({ name: 'play', id: i, owner: 1, cards: [], stack: false });
     }
     out_player.hand = {owner: out_player.deck.owner, name: 'hand', cards: []};
     out_player.hand_preview = [out_player.id];
@@ -1949,10 +1949,20 @@ export class GameHandlerComponent implements OnInit {
     }
   }
 
-  stackRotate(arr, reverse) {
-    if (reverse) arr.unshift(arr.pop());
+  stackRotate(arr, event:any, options?: any) {
+    if (event.wheelDelta < 0) arr.unshift(arr.pop());
     else arr.push(arr.shift());
-    this.updateSocketPlayer();
+    if (options != null && options.noupdate) {
+
+    }
+    else {
+      this.updateSocketPlayer();
+    }
+  }
+
+  toggleStack(spot) {
+    spot.stack = true;
+    console.log(spot);
   }
 
   /**
@@ -3066,7 +3076,7 @@ export class GameHandlerComponent implements OnInit {
   dragCard(card: any, dest: any, event: any, options?: any) {
     if (options && options.top) {
       this.sendCardToZone(card, this.getContainer(event.previousContainer.data), dest,
-        event.previousIndex, 0, options);
+        event.previousContainer.data.indexOf(card), 0, options);
     }
     else if (event.previousContainer.data == this.getSidenavList()) {
       this.sendCardToZone(card, this.getContainer(event.previousContainer.data), dest,
@@ -3074,7 +3084,7 @@ export class GameHandlerComponent implements OnInit {
     }
     else {
       this.sendCardToZone(card, this.getContainer(event.previousContainer.data), dest,
-        event.previousIndex, event.currentIndex, options);
+        event.previousContainer.data.indexOf(card), event.currentIndex, options);
     }
   }
 
@@ -3150,7 +3160,8 @@ export class GameHandlerComponent implements OnInit {
       else if (dest.name === 'play' || dest.name === 'temp_zone') {
         //It should never be possible to send/drag to someone else's playmat
         if (dest.name === 'play') {
-          if (dest.cards.length < 3) {
+          //if (dest.cards.length < 3) {
+          if (dest.cards.length < 100) {
             this.setVisibility(card, dest.name); //wait to set visibility until move is confirmed
             transferArrayItem(source.cards, dest.cards, previousIndex, currentIndex);
             if (options && options.nolog) {}
