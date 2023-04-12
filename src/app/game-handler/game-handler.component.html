@@ -792,6 +792,9 @@
                [cdkDropListData]="spot.cards"
                (cdkDropListDropped)="dragCard(currently_dragging, spot, $event)"
                cdkDropList>
+              <div class="spot-counter" *ngIf="spot.cards.length > 3">
+                <h4 class="shadow-text-darker"><a class="simple-a">{{spot.cards.length}}</a></h4>
+              </div>
               <div *ngFor="let card of spot.cards; let j = index" (dblclick)="$event.stopPropagation()" >
                 <div [ngClass]="{'stack-1': j == 0, 'stack-2': j == 1, 'stack-3': j == 2, 'stack-4': j > 2, 'invert': card.inverted}"
                      class="playmat-user-card-container"

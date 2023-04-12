@@ -767,7 +767,7 @@ export class GameHandlerComponent implements OnInit {
    */
   checkCounters() {
     for (let counter of this.counterupdates) {
-      if ((Math.abs(Date.now() - counter.last_modified) / 1000) > 3) {
+      if ((Math.abs(Date.now() - counter.last_modified) / 1000) > 2) {
         if (this.game_data.type == 2) {
           this.updateSocketTeam();
         }
@@ -1956,7 +1956,9 @@ export class GameHandlerComponent implements OnInit {
 
     }
     else {
-      this.updateSocketPlayer();
+      if (this.user == this.currentPlayer() || this.game_data.type == 6) {
+        this.updateSocketPlayer();
+      }
     }
   }
 

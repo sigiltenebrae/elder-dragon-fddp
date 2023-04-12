@@ -28,6 +28,15 @@
     text-align: center;
   }
 
+  .shadow-text-darker {
+    color: white;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    background: rgba(0, 0, 0, 0.80);
+    padding: 0 5px 0 5px;
+    border-radius: 30%;
+    text-align: center;
+  }
+
   .simple-a {
     text-decoration: none;
     color: white;
@@ -54,6 +63,15 @@
     color: black;
     text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
     background: rgba(150, 150, 150, 0.40);
+    padding: 0 5px 0 5px;
+    border-radius: 30%;
+    text-align: center;
+  }
+
+  .shadow-text-darker {
+    color: black;
+    text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+    background: rgba(150, 150, 150, 0.80);
     padding: 0 5px 0 5px;
     border-radius: 30%;
     text-align: center;
@@ -988,6 +1006,13 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   position: absolute;
   display: hidden;
   pointer-events: none;
+}
+
+.playmat-user-spot-container .spot-counter {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  z-index: 32;
 }
 
 .playmat-user-spot-container-mini {
