@@ -94,6 +94,7 @@ export class GameHandlerComponent implements OnInit {
   sidenav_sort_type: string = '';
   sidenav_sort = '';
   sidenav_scry_count = 0;
+  sidenav_spot: any[] = [];
 
   //Messaging
   counter_buffer: any = false; //True if a counter update is in the message queue. Prevents counter updates from spamming
@@ -2729,6 +2730,7 @@ export class GameHandlerComponent implements OnInit {
     if (this.user == this.currentPlayer() || this.game_data.type == 6) {
       this.sidenav_selected_player = this.currentPlayer();
       this.sidenav_type = zone.name === this.currentPlayer().deck.name ? 'deck': zone.name;
+
       if (options && options.scry) {
         this.sidenav_type = 'scry';
         let items = this.getSidenavList();
@@ -2740,6 +2742,13 @@ export class GameHandlerComponent implements OnInit {
             items[i].sidenav_visible = true;
           }
         }
+      }
+      else if (options && options.spot != null) {
+        let items = options.spot;
+        for (let i = 0; i < items.length; i++) {
+          items[i].sidenav_visible = true;
+        }
+        this.sidenav_spot = items;
       }
       else {
         this.sidenav_sort = '';
@@ -2759,6 +2768,7 @@ export class GameHandlerComponent implements OnInit {
     this.sidenav_type = null;
     this.fddp_sidenav.close();
     this.sidenav_sort = '';
+    this.sidenav_spot = [];
   }
 
   /**
@@ -2842,7 +2852,7 @@ export class GameHandlerComponent implements OnInit {
   /**
    * Get the zone data and load it into the sidenav
    */
-  getSidenavList() {
+  getSidenavList(options?: any) {
     let items: any[] = []
     switch(this.sidenav_type) {
       case 'grave':
@@ -2864,6 +2874,10 @@ export class GameHandlerComponent implements OnInit {
         break;
       case 'scry':
         items = this.sidenav_selected_player.deck.cards;
+        break;
+      case 'stack':
+        items = this.sidenav_spot;
+        break;
     }
     return items;
   }
@@ -2960,6 +2974,8 @@ export class GameHandlerComponent implements OnInit {
           return this.getPlayerFromId(id).playmat;
         case this.getPlayerFromId(id).deck.name:
           return this.getPlayerFromId(id).deck;
+        case 'stack':
+          return this.sidenav_spot;
       }
     }
     else {

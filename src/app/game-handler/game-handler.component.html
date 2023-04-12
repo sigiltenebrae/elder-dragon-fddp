@@ -329,6 +329,7 @@
         <h2 fxFlex *ngIf="sidenav_type==='temp_zone'">Temp Zones</h2>
         <h2 fxFlex *ngIf="sidenav_type==='deck'">Searching Deck</h2>
         <h2 fxFlex *ngIf="sidenav_type==='scry'">Scrying</h2>
+        <h2 fxFlex *ngIf="sidenav_type==='stack'">Stack</h2>
         <button mat-icon-button (click)="closeSideNav()">
           <mat-icon>close</mat-icon>
         </button>
@@ -337,7 +338,7 @@
     <div>
       <div fxLayout="column">
         <div fxLayout="row" style="height: 64px">
-          <mat-form-field appearance="outline" fxFlex style="margin: 5px;" *ngIf="sidenav_type !== 'deck' && sidenav_type !== 'scry'">
+          <mat-form-field appearance="outline" fxFlex style="margin: 5px;" *ngIf="sidenav_type !== 'deck' && sidenav_type !== 'scry' && sidenav_type !== 'stack'">
             <mat-label>Player</mat-label>
             <mat-select [(ngModel)]="sidenav_selected_player" name="player_select_sidenav" (ngModelChange)="getSidenavSort()">
               <div *ngFor="let player of game_data.players">
@@ -793,7 +794,7 @@
                (cdkDropListDropped)="dragCard(currently_dragging, spot, $event)"
                cdkDropList>
               <div class="spot-counter" *ngIf="spot.cards.length > 3">
-                <h4 class="shadow-text-darker"><a class="simple-a">{{spot.cards.length}}</a></h4>
+                <h4 class="shadow-text-darker"><a class="simple-a" (click)="openSideNav({name: 'stack'}, {spot: spot.cards})">{{spot.cards.length}}</a></h4>
               </div>
               <div *ngFor="let card of spot.cards; let j = index" (dblclick)="$event.stopPropagation()" >
                 <div [ngClass]="{'stack-1': j == 0, 'stack-2': j == 1, 'stack-3': j == 2, 'stack-4': j > 2, 'invert': card.inverted}"
