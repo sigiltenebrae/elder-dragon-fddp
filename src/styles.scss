@@ -1052,6 +1052,13 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   pointer-events: none;
 }
 
+.playmat-user-spot-container-mini .spot-counter {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  z-index: 32;
+}
+
 .stack-1:hover,
 .stack-2:hover,
 .stack-3:hover {
