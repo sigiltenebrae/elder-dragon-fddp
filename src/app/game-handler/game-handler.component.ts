@@ -1726,6 +1726,7 @@ export class GameHandlerComponent implements OnInit {
    * @param card
    */
   toggleCardTap(card: any) {
+    console.log(this.rightclicked_item);
     if (card.tapped === 'tapped') {
       card.tapped = 'untapped';
     }
