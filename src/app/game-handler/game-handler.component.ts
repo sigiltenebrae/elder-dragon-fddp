@@ -94,7 +94,7 @@ export class GameHandlerComponent implements OnInit {
   sidenav_sort_type: string = '';
   sidenav_sort = '';
   sidenav_scry_count = 0;
-  sidenav_spot: any[] = [];
+  sidenav_spot: any = null;
 
   //Messaging
   counter_buffer: any = false; //True if a counter update is in the message queue. Prevents counter updates from spamming
@@ -1965,7 +1965,6 @@ export class GameHandlerComponent implements OnInit {
 
   toggleStack(spot) {
     spot.stack = true;
-    console.log(spot);
   }
 
   /**
@@ -2744,11 +2743,13 @@ export class GameHandlerComponent implements OnInit {
         }
       }
       else if (options && options.spot != null) {
-        let items = options.spot;
+        let items = options.spot.cards;
         for (let i = 0; i < items.length; i++) {
           items[i].sidenav_visible = true;
         }
-        this.sidenav_spot = items;
+        this.sidenav_sort = '';
+        this.sidenav_sort_type = '';
+        this.sidenav_spot = options.spot;
       }
       else {
         this.sidenav_sort = '';
@@ -2764,11 +2765,11 @@ export class GameHandlerComponent implements OnInit {
 
   closeSideNav() {
     this.sidenav_sort = '';
+    this.sidenav_sort_type = '';
     this.sidenav_selected_player = null;
     this.sidenav_type = null;
     this.fddp_sidenav.close();
-    this.sidenav_sort = '';
-    this.sidenav_spot = [];
+    this.sidenav_spot = null;
   }
 
   /**
@@ -2776,13 +2777,9 @@ export class GameHandlerComponent implements OnInit {
    */
   getSidenavSort() {
     let items: any[] = this.getSidenavList();
-    let items2: any[] = this.getSharedExile();
 
     if (this.sidenav_sort && this.sidenav_sort !== '') {
       for (let item of items) {
-        item.sidenav_visible = item.name.toLowerCase().includes(this.sidenav_sort.toLowerCase());
-      }
-      for (let item of items2) {
         item.sidenav_visible = item.name.toLowerCase().includes(this.sidenav_sort.toLowerCase());
       }
     }
@@ -2790,29 +2787,9 @@ export class GameHandlerComponent implements OnInit {
       for (let item of items) {
         item.sidenav_visible = true;
       }
-      for (let item of items2) {
-        item.sidenav_visible = true;
-      }
     }
     if (this.sidenav_sort_type && this.sidenav_sort_type != '') {
       for (let item of items) {
-        if (item.types) {
-          let found = false;
-          for (let card_type of item.types) {
-            if (this.sidenav_sort_type.toLowerCase() === card_type.toLowerCase()) {
-              found = true;
-              break;
-            }
-          }
-          if (item.sidenav_visible) {
-            item.sidenav_visible = found;
-          }
-        }
-        else {
-          item.sidenav_visible = false;
-        }
-      }
-      for (let item of items2) {
         if (item.types) {
           let found = false;
           for (let card_type of item.types) {
@@ -2876,7 +2853,7 @@ export class GameHandlerComponent implements OnInit {
         items = this.sidenav_selected_player.deck.cards;
         break;
       case 'stack':
-        items = this.sidenav_spot;
+        items = this.sidenav_spot.cards;
         break;
     }
     return items;
@@ -2907,7 +2884,7 @@ export class GameHandlerComponent implements OnInit {
   }
 
   sidenavPredicate() {
-    return this.sidenav_sort === '' && this.sidenav_sort_type === '';
+    return (this.sidenav_sort === '' || this.sidenav_sort === undefined) && (this.sidenav_sort_type === '' || this.sidenav_sort === undefined);
   }
 
   /**------------------------------------------------
@@ -3099,6 +3076,7 @@ export class GameHandlerComponent implements OnInit {
     else if (event.previousContainer.data == this.getSidenavList()) {
       this.sendCardToZone(card, this.getContainer(event.previousContainer.data), dest,
         this.getSidenavList().indexOf(card), event.currentIndex, options);
+      this.getSidenavSort();
     }
     else {
       this.sendCardToZone(card, this.getContainer(event.previousContainer.data), dest,
