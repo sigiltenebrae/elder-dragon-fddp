@@ -1635,7 +1635,7 @@ export class GameHandlerComponent implements OnInit {
     card.facedown = false;
     card.shaken = false;
     card.inverted = false;
-    card.notes = '';
+    //card.notes = '';
     if (card.alt) {
       this.altFaceCard(card);
     }
@@ -1838,6 +1838,11 @@ export class GameHandlerComponent implements OnInit {
         this.updateSocketPlayer();
       }
     })
+  }
+
+  clearNotes(card: any) {
+    card.notes = '';
+    this.updateSocketPlayer();
   }
 
   /**

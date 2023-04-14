@@ -15,8 +15,7 @@
           <button *ngIf="user != null && !rightclicked_item.card.primed && game_data.type != 6" mat-menu-item (click)="primeCard(rightclicked_item.card)">Set Alarm</button>
           <button *ngIf="user != null && rightclicked_item.card.primed" mat-menu-item (click)="primeCard(rightclicked_item.card)">Remove Alarm</button>
           <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6)" mat-menu-item (click)="cloneCard(rightclicked_item.card)">Clone</button>
-          <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6)" mat-menu-item (click)="editNotes(rightclicked_item.card)">Edit Notes</button>
-          <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6)" mat-menu-item [matMenuTriggerFor]="counters">Counters</button>
+          <button [matMenuTriggerFor]="notesOptions" *ngIf="user != null && (user == currentPlayer() || game_data.type == 6)" mat-menu-item>Notes</button>          <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6)" mat-menu-item [matMenuTriggerFor]="counters">Counters</button>
           <button *ngIf="rightclicked_item && rightclicked_item.card && rightclicked_item.card.tokens && rightclicked_item.card.tokens.length> 0 && user != null && (user == currentPlayer() || game_data.type == 6)" mat-menu-item [matMenuTriggerFor]="token_menu">Tokens</button>
           <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6)" mat-menu-item [matMenuTriggerFor]="orient">Orient</button>
           <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6)" mat-menu-item [matMenuTriggerFor]="sendTo">Send To</button>
@@ -91,6 +90,7 @@
           <button mat-menu-item (click)="cloneCard(rightclicked_item.card)">Clone</button>
           <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && rightclicked_item.from.name === 'play' && rightclicked_item.card.tapped === 'untapped'" mat-menu-item (click)="toggleCardTap(rightclicked_item.card)">Tap</button>
           <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && rightclicked_item.from.name === 'play' && rightclicked_item.card.tapped === 'tapped'" mat-menu-item (click)="toggleCardTap(rightclicked_item.card)">Untap</button>
+          <button [matMenuTriggerFor]="notesOptions" *ngIf="user != null && (user == currentPlayer() || game_data.type == 6)" mat-menu-item>Notes</button>
           <button mat-menu-item (click)="shakeCard(rightclicked_item.card, sidenav_selected_player.id, rightclicked_item.zone)">Shake</button>
         </div>
 
@@ -322,6 +322,11 @@
   <button mat-menu-item (click)="toggleInitiative()">Initiative</button>
 </mat-menu>
 
+<mat-menu #notesOptions="matMenu">
+  <button mat-menu-item (click)="editNotes(rightclicked_item.card)">Edit Notes</button>
+  <button mat-menu-item (click)="clearNotes(rightclicked_item.card)">Clear Notes</button>
+</mat-menu>
+
 <mat-sidenav-container cdkDropListGroup fxFlexFill hasBackdrop="false" *ngIf="game_data != null && user != null" style="overflow: hidden; position: fixed; top: 0; left: 0; z-index: 500">
   <mat-sidenav #fddp_sidenav disableClose style="overflow: hidden">
     <mat-toolbar color="primary">
@@ -387,6 +392,7 @@
                    (contextmenu)="onRightClick($event, {type: 'zone_card', card: card, from: getSidenavContainer()})"
                    cdkDrag [cdkDragDisabled]="((user.id != card.owner && game_data.type != 6) && !card.is_token)">
                 {{card.name}}
+                <span *ngIf="card.notes != null && card.notes !== ''">({{card.notes}})</span>
                 <img *ngIf="card.tapped === 'tapped'" class="game-data-log-list-icon" src="assets/action_symbols/tap.png">
                 <span *ngIf="card.sidenav_visible && sidenav_selected_player != null && card.exiled_for != null">({{getPlayerFromId(card.exiled_for).name}})</span>
                 <img *cdkDragPreview [src]="card.image" [alt]="card.name" class="playmat-user-card" loading="lazy">
@@ -396,11 +402,13 @@
                    (pointerenter)="magnified_card=card"
                    (contextmenu)="onRightClick($event, {type: 'zone_card', card: card})">
                 {{card.name}} ({{getPlayerFromId(card.owner).name}})
+                <span *ngIf="card.notes != null && card.notes !== ''">({{card.notes}})</span>
               </div>
               <div *ngIf="card.sidenav_visible && !card.visible.includes(currentPlayer().id) && sidenav_type !== 'deck' && sidenav_type!=='scry'" class="sidenav-list-item"
                    [cdkDragDisabled]="true" (contextmenu)="onRightClick($event, {type: 'zone_card', card: card, from: getSidenavContainer()})"
                    cdkDrag>
                 -------- Hidden --------
+                <span *ngIf="card.notes != null && card.notes !== ''">({{card.notes}})</span>
                 <img *ngIf="card.tapped === 'tapped'" class="game-data-log-list-icon" src="assets/action_symbols/tap.png">
               </div>
             </div>
