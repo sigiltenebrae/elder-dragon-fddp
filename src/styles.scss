@@ -37,6 +37,14 @@
     text-align: center;
   }
 
+  .shadow-text-no-border {
+    color: white;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    background: rgba(0, 0, 0, 0.40);
+    padding: 0 5px 0 5px;
+    text-align: center;
+  }
+
   .simple-a {
     text-decoration: none;
     color: white;
@@ -74,6 +82,14 @@
     background: rgba(150, 150, 150, 0.80);
     padding: 0 5px 0 5px;
     border-radius: 30%;
+    text-align: center;
+  }
+
+  .shadow-text-no-border {
+    color: black;
+    text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff;
+    background: rgba(150, 150, 150, 0.40);
+    padding: 0 5px 0 5px;
     text-align: center;
   }
 
@@ -1268,6 +1284,15 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   max-height: 100%;
   max-width: 100%;
   border-radius: 10px;
+}
+
+.magnifier-data-wrapper .magnifier-data-card-notes {
+  position: absolute;
+  top: 48px;
+  left: 0;
+  height: 180px;
+  width: 293px;
+  overflow: hidden;
 }
 
 .magnifier-data-commander-counter {

@@ -457,6 +457,9 @@
         </div>
       </div>
       <div *ngIf="!magnified_card.plane" class="magnifier-data-wrapper">
+        <div fxflex fxLayout="row" fxLayoutAlign="center center" *ngIf="magnified_card.notes != null && magnified_card.notes !== '' && !magnifier_data.shift_pressed" class="magnifier-data-card-notes">
+          <h4 class="shadow-text-no-border"><a class="simple-a">{{magnified_card.notes}}</a></h4>
+        </div>
         <img *ngIf="!magnifier_data.shift_pressed &&
               (!magnifier_data.control_pressed || !magnified_card.back_face)"
              class="magnifier-data-card-image"
@@ -601,7 +604,6 @@
                       <div *ngIf="card.locked" class="playmat-user-card-lock"><mat-icon>lock</mat-icon></div>
                       <img [ngClass]="{'playmat-user-card-selected': card.selected, 'grayscale': isClone(card) }"
                            class="playmat-user-card-mini"
-                           [matTooltip]="card.notes"
                            [src]="card.visible.includes(user.id) || (game_data.type == 6 && card.visible.includes(currentPlayer().id)) ? card.image:
                                   player.deck.sleeves !== '' ? player.deck.sleeves:
                                    player.default_sleeves !== '' && player.default_sleeves !== ' ' && player.default_sleeves != null
@@ -848,7 +850,6 @@
                   <div *ngIf="card.locked" class="playmat-user-card-lock"><mat-icon>lock</mat-icon></div>
                   <img [ngClass]="{'playmat-user-card-selected': card.selected, 'grayscale': isClone(card) }"
                        class="playmat-user-card"
-                       [matTooltip]="card.notes"
                        [src]="(card.visible.includes(user.id) || (game_data.type == 6 && card.visible.includes(currentPlayer().id))) ? card.image:
                      currentPlayer().deck.sleeves !== '' ? currentPlayer().deck.sleeves:
                       currentPlayer().default_sleeves !== '' && currentPlayer().default_sleeves !== ' ' && currentPlayer().default_sleeves != null
