@@ -506,6 +506,13 @@ export class GameHandlerComponent implements OnInit {
           ]
         }
         break;
+      case 'note':
+        log_action = [
+          {text: user.name, type: 'player'},
+          {text: 'updated note on', type: 'regular'},
+          {text: data.card.name, type: 'card', card: JSON.parse(JSON.stringify(data.card))}
+        ]
+        break;
       case 'shake':
         if (data.card) {
           log_action = [
@@ -1836,12 +1843,14 @@ export class GameHandlerComponent implements OnInit {
       if (result) {
         card.notes = result;
         this.updateSocketPlayer();
+        this.logAction('note', {card:card});
       }
     })
   }
 
   clearNotes(card: any) {
     card.notes = '';
+    this.logAction('note', {card:card});
     this.updateSocketPlayer();
   }
 
