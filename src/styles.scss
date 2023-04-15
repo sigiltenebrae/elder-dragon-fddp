@@ -1286,6 +1286,26 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   border-radius: 10px;
 }
 
+.magnifier-data-wrapper .magnifier-data-card-image-partner-1 {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 369px;
+  width: 253px;
+  border-radius: 10px;
+  z-index: 20;
+}
+
+.magnifier-data-wrapper .magnifier-data-card-image-partner-2 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 369px;
+  width: 253px;
+  border-radius: 10px;
+  z-index: 10;
+}
+
 .magnifier-data-wrapper .magnifier-data-card-notes {
   position: absolute;
   top: 48px;
@@ -1293,6 +1313,7 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   height: 180px;
   width: 293px;
   overflow: hidden;
+  z-index: 30;
 }
 
 .magnifier-data-commander-counter {
@@ -1301,7 +1322,8 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   left: 10px;
   width: 64px;
   height: 64px;
-  opacity: 0.5;
+  opacity: 0.7;
+  z-index: 30;
 }
 
 .magnifier-data-commander-counter-2 {
@@ -1310,7 +1332,8 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   left: 75px;
   width: 64px;
   height: 64px;
-  opacity: 0.5;
+  opacity: 0.7;
+  z-index: 30;
 }
 
 .zone-card-image {

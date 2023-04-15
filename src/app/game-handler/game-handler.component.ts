@@ -77,7 +77,7 @@ export class GameHandlerComponent implements OnInit {
 
   //Board Interaction
   magnified_card: any = null; //Pointer to the card object
-  magnifier_data: any = { shift_pressed: false, control_pressed: false }
+  magnifier_data: any = { shift_pressed: false, control_pressed: false, command_zone: false }
   currently_dragging: any = null; //The cdkDrag object that is currently being dragged
   teammate_view: boolean = false; //True if the player is viewing their partner's field (in partner game modes)
   autoscroll = true; //Whether to autoscroll the action log
