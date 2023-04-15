@@ -1103,9 +1103,11 @@
            [ngStyle]="{'max-width': currentPlayer().hand.cards.length * 75 < 1144 ? currentPlayer().hand.cards.length * 75 + 'px': '1144px', 'min-width': '75px'}">
         <mat-icon *ngIf="currentPlayer() == user || game_data.type == 6" fxHide.lt-lg class="hand-menu shadow-text" [mat-menu-trigger-for]="hand_menu" (click)="rightclicked_item={zone: currentPlayer().hand}">more_vert</mat-icon>
         <h3 class="hand-quantity-text shadow-text">{{currentPlayer().hand.cards.length}}</h3>
-        <ng-scrollbar track="horizontal"
+        <ng-scrollbar trackClass="scrollbar" thumbClass="scrollbar-thumb"
+                      track="horizontal"
                       visibility="hover"
                       pointerEventsMethod="scrollbar"
+                      [style.scrollbar-thumb-color]="'red'"
                       [ngStyle.gt-md]="{'min-width': '75px', 'width': currentPlayer().hand.cards.length * 75 < 1144 ? currentPlayer().hand.cards.length * 75 + 'px': '1144px'}">
           <div class="hand-user-droplist-wrapper"
                fxLayout="row" fxLayoutAlign="start"

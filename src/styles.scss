@@ -176,6 +176,16 @@ p, h1, h2, h3, h4, h5, h6 {
   z-index: 99999 !important;
 }
 
+
+.ng-scrollbar-thumb {
+  background-color: rgba(mat.get-color-from-palette($fddp-palette-primary-dark, 500), 0.9) !important;
+}
+
+.ng-scrollbar-track {
+  background-color: rgba(black, 0.6) !important;
+}
+
+
 /*****************************************
       Profile-Component
  *****************************************/
