@@ -405,6 +405,7 @@
             <div *ngFor="let card of getSidenavList()">
               <div *ngIf="card.sidenav_visible && sidenav_selected_player != null && (card.visible.includes(currentPlayer().id) || (game_data.type == 6 && card.visible.includes(currentPlayer().id)) || sidenav_type === 'deck' || sidenav_type === 'scry')" class="sidenav-list-item"
                    (pointerenter)="magnified_card=card"
+                   (pointerleave)="magnified_card=null"
                    (cdkDragStarted)="currently_dragging = card"
                    (contextmenu)="onRightClick($event, {type: 'zone_card', card: card, from: getSidenavContainer()})"
                    cdkDrag [cdkDragDisabled]="((user.id != card.owner && game_data.type != 6) && !card.is_token)">
@@ -593,6 +594,7 @@
                   <div *ngFor="let card of spot.cards; let i = index">
                     <div [ngClass]="{'stack-1': i == 0, 'stack-2': i == 1, 'stack-3': i == 2, 'stack-4': i > 2, 'invert': card.inverted}"
                          (pointerenter)="magnified_card = card.visible.includes(user.id) || (game_data.type == 6 && card.visible.includes(currentPlayer().id)) ? card: magnified_card"
+                         (pointerleave)="magnified_card=null"
                          class="playmat-user-card-container-mini"
                          [@userTappedState]="card.tapped"
                          [@shakeCard]="card.shaken">
@@ -643,12 +645,13 @@
                           'star-player-text-outline-B': player.star_color === 'B',
                           'star-player-text-outline-R': player.star_color === 'R',
                           'star-player-text-outline-G': player.star_color === 'G'}">
-                  <button (click)="selectPlayer(player)" (pointerenter)="magnified_card = player.deck.commander.saved[0]"
+                  <button (click)="selectPlayer(player)" (pointerenter)="magnified_card = player.deck.commander.saved[0]" (pointerleave)="magnified_card=null"
                           mat-button class="game-data-player-list-name"
                           >{{player.name}}</button>
                   <button mat-button class="game-data-player-list-counter"
                           *ngIf="game_data.kick_vote == null || game_data.kick_vote.kickee.name !== player.name"
                           (pointerenter)="magnified_card = player.deck.commander.saved.length == 2? player.deck.commander.saved[1]: magnified_card"
+                          (pointerleave)="magnified_card=null"
                           (click)="lifeClick($event, player)" [disabled]="!((player == user && game_data.type != 6) || (player == currentPlayer() && game_data.type == 6))"
                           (contextmenu)="onRightClick($event, {type: 'life', player: player})">
                     {{player.life}}
@@ -669,8 +672,8 @@
             <mat-list *ngIf="game_data.type == 2 && game_data.team_data">
               <div *ngFor="let team of game_data.team_data">
                 <mat-list-item *ngIf="!team.scooped" class="game-data-player-list-item" fxLayout="row" fxLayoutAlign="start center" [ngClass]="{'game-data-player-list-item-turn': team.turn == game_data.current_turn}">
-                  <button (click)="selectPlayer(getPlayerFromId(team.players[0]))" (pointerenter)="magnified_card = getPlayerFromId(team.players[0]).deck.commander.saved[0]" mat-button class="game-data-player-list-name-two-headed">{{getPlayerFromId(team.players[0]).name}}</button>
-                  <button (click)="selectPlayer(getPlayerFromId(team.players[1]))" (pointerenter)="magnified_card = getPlayerFromId(team.players[1]).deck.commander.saved[0]" mat-button class="game-data-player-list-name-two-headed">{{getPlayerFromId(team.players[1]).name}}</button>
+                  <button (click)="selectPlayer(getPlayerFromId(team.players[0]))" (pointerenter)="magnified_card = getPlayerFromId(team.players[0]).deck.commander.saved[0]" (pointerleave)="magnified_card=null" mat-button class="game-data-player-list-name-two-headed">{{getPlayerFromId(team.players[0]).name}}</button>
+                  <button (click)="selectPlayer(getPlayerFromId(team.players[1]))" (pointerenter)="magnified_card = getPlayerFromId(team.players[1]).deck.commander.saved[0]" (pointerleave)="magnified_card=null" mat-button class="game-data-player-list-name-two-headed">{{getPlayerFromId(team.players[1]).name}}</button>
                   <button mat-button class="game-data-player-list-counter"
                           (click)="lifeClick($event, team)" [disabled]="!(getPlayerFromId(team.players[0]) == user || getPlayerFromId(team.players[1]) == user)"
                           (contextmenu)="onRightClick($event, {type: 'life', team: team})">
@@ -693,11 +696,11 @@
                 <p>
                 <span *ngFor="let token of action">
                   <span *ngIf="token.type === 'card' && ((token.card.visible && (token.card.visible.includes(user.id)) || game_data.type == 6))" style="color: mediumpurple"
-                        (pointerenter)="magnified_card = token.card">{{token.text}}
+                        (pointerenter)="magnified_card = token.card" (pointerleave)="magnified_card=null">{{token.text}}
                     <span *ngIf="isClone(token.card)"> (clone) </span>
                   </span>
                   <span *ngIf="token.type === 'plane'" style="color: mediumpurple"
-                        (pointerenter)="magnified_card = token.card">{{token.text}}
+                        (pointerenter)="magnified_card = token.card" (pointerleave)="magnified_card=null">{{token.text}}
                     <span *ngIf="isClone(token.card)"> (clone) </span>
                   </span>
                   <span *ngIf="token.type === 'card' && (!token.card.visible || !token.card.visible.includes(user.id)) && game_data.type != 6" style="color: mediumpurple">
@@ -716,7 +719,7 @@
                   <span *ngIf="token.type === 'card_list'">
                     <span *ngFor="let card of token.cards; let k = index" style="color: mediumpurple">
                       <span *ngIf="card.visible && (card.visible.includes(user.id) || game_data.type == 6)"
-                          (pointerenter)="magnified_card = card">{{card.name}}</span>
+                          (pointerenter)="magnified_card = card" (pointerleave)="magnified_card=null">{{card.name}}</span>
                       <span *ngIf="game_data.type != 6 && (!card.visible || !card.visible.includes(user.id))">
                         --hidden--
                       </span>
@@ -788,6 +791,7 @@
             <div class="playmat-user-actions-wrapper" fxLayout="row">
               <button mat-fab class="playmat-user-actions-blue"
                     (pointerenter)="magnified_card = game_data.current_plane != null? game_data.current_plane: magnified_card"
+                      (pointerleave)="magnified_card=null"
                     (click)="setPlane()">
               <mat-icon>gesture</mat-icon>
             </button>
@@ -832,6 +836,7 @@
                 <div [ngClass]="{'stack-1': j == 0, 'stack-2': j == 1, 'stack-3': j == 2, 'stack-4': j > 2, 'invert': card.inverted}"
                      class="playmat-user-card-container"
                      (pointerenter)="magnified_card = card.visible.includes(user.id) || (game_data.type == 6 && card.visible.includes(currentPlayer().id)) ? card: magnified_card"
+                     (pointerleave)="magnified_card=null"
                      (click)="card.triggered = false"
                      [@userTappedState]="card.tapped"
                      [@shakeCard]="card.shaken"
@@ -880,7 +885,8 @@
              selected_player.deck.sleeves !== '' ? selected_player.deck.sleeves:
              selected_player.default_sleeves !== '' && selected_player.default_sleeves !== ' ' && selected_player.default_sleeves != null
              ? selected_player.default_sleeves: default_card_back"
-             (pointerenter)="magnified_card = selected_player.top_flipped && selected_player.deck.cards.length > 0 ? selected_player.deck.cards[0]: magnified_card">
+             (pointerenter)="magnified_card = selected_player.top_flipped && selected_player.deck.cards.length > 0 ? selected_player.deck.cards[0]: magnified_card"
+             (pointerleave)="magnified_card=null">
       </div>
     </div>
 
@@ -902,6 +908,7 @@
               currentPlayer().default_sleeves : default_card_back"
              (contextmenu)="onRightClick($event, {type: 'deck'})"
              (pointerenter)="magnified_card = currentPlayer().top_flipped && currentPlayer().deck.cards.length > 0 ? currentPlayer().deck.cards[0]: magnified_card"
+             (pointerleave)="magnified_card=null"
              (cdkDragStarted)="currently_dragging=currentPlayer().deck.cards[0]"
              [cdkDragDisabled]="user != currentPlayer() && game_data.type != 6"
              cdkDrag>
@@ -920,7 +927,8 @@
         <h3 class="grave-user-quantity-text shadow-text">{{currentPlayer().grave.cards.length}}</h3>
         <h3 class="grave-user-title-text shadow-text">Grave</h3>
         <img *ngIf="currentPlayer().grave.cards.length > 0"
-             (pointerenter)="magnified_card = currentPlayer().grave.cards[0]"
+             (pointerenter)="magnified_card = (currentPlayer().grave.cards[0].visible.includes(user.id) || (game_data.type == 6 && currentPlayer().grave.cards[0].visible.includes(currentPlayer().id))) ? currentPlayer().grave.cards[0]: magnified_card"
+             (pointerleave)="magnified_card=null"
              class="zone-card-image"
              src="{{currentPlayer().grave.cards[0].image}}"
              (cdkDragStarted)="currently_dragging=currentPlayer().grave.cards[0]"
@@ -942,7 +950,8 @@
         <h3 class="exile-user-title-text shadow-text">Exile</h3>
         <!-- NOTE: this needs to account for face down exiles at some point -->
         <img *ngIf="currentPlayer().exile.cards.length > 0" class="zone-card-image"
-             (pointerenter)="magnified_card = currentPlayer().exile.cards[0]"
+             (pointerenter)="magnified_card = (currentPlayer().exile.cards[0].visible.includes(user.id) || (game_data.type == 6 && currentPlayer().exile.cards[0].visible.includes(currentPlayer().id))) ? currentPlayer().exile.cards[0]: magnified_card"
+             (pointerleave)="magnified_card=null"
              [src]="!currentPlayer().exile.cards[0].facedown ? currentPlayer().exile.cards[0].image:
               currentPlayer().deck.sleeves !== '' ? currentPlayer().deck.sleeves:
               currentPlayer().default_sleeves !== '' && currentPlayer().default_sleeves !== ' ' && currentPlayer().default_sleeves != null
@@ -966,16 +975,19 @@
         <button *ngIf="currentPlayer().deck.commander.saved.length == 2" mat-fab class="command-tax-button-2" color="primary" (click)="currentPlayer().command_tax_2 = currentPlayer().command_tax_2 + 1; updateCounter('Command Tax 2', currentPlayer().command_tax_2 - 1, currentPlayer().command_tax_2);" (contextmenu)="onRightClick($event, {type: 'command_tax_2'})"><h1>{{currentPlayer().command_tax_2}}</h1></button>
         <img *ngIf="currentPlayer().deck.commander.cards.length == 1" class="commander-card-image" src="{{currentPlayer().deck.commander.cards[0].image}}"
              (pointerenter)="magnified_card = currentPlayer().deck.commander.cards[0]"
+             (pointerleave)="magnified_card=null"
              (cdkDragStarted)="currently_dragging=currentPlayer().deck.commander.cards[0]"
              [cdkDragDisabled]="user != currentPlayer() && game_data.type != 6"
              cdkDrag>
         <img *ngIf="currentPlayer().deck.commander.cards.length == 2" class="commander-card-image-partner-1" src="{{currentPlayer().deck.commander.cards[0].image}}"
              (pointerenter)="magnified_card = currentPlayer().deck.commander.cards[0]"
+             (pointerleave)="magnified_card=null"
              (cdkDragStarted)="currently_dragging=currentPlayer().deck.commander.cards[0]"
              [cdkDragDisabled]="user != currentPlayer() && game_data.type != 6"
              cdkDrag>
         <img *ngIf="currentPlayer().deck.commander.cards.length == 2" class="commander-card-image-partner-2" src="{{currentPlayer().deck.commander.cards[1].image}}"
              (pointerenter)="magnified_card = currentPlayer().deck.commander.cards[1]"
+             (pointerleave)="magnified_card=null"
              (cdkDragStarted)="currently_dragging=currentPlayer().deck.commander.cards[1]"
              [cdkDragDisabled]="user != currentPlayer() && game_data.type != 6"
              cdkDrag>
@@ -993,9 +1005,9 @@
            cdkDropList>
         <h3 class="temp-zone-user-quantity-text shadow-text">{{currentPlayer().temp_zone.cards.length}}</h3>
         <h3 class="temp-zone-user-title-text shadow-text">Temp</h3>
-        <!-- NOTE: this needs to account for face down exiles at some point -->
         <img *ngIf="currentPlayer().temp_zone.cards.length > 0" class="zone-card-image"
-             (pointerenter)="magnified_card = currentPlayer().temp_zone.cards[0]"
+             (pointerenter)="magnified_card = (currentPlayer().temp_zone.cards[0].visible.includes(user.id) || (game_data.type == 6 && currentPlayer().temp_zone.cards[0].visible.includes(currentPlayer().id))) ? currentPlayer().temp_zone.cards[0]: magnified_card"
+             (pointerleave)="magnified_card=null"
              [src]="!currentPlayer().temp_zone.cards[0].facedown ? currentPlayer().temp_zone.cards[0].image:
               currentPlayer().deck.sleeves !== '' ? currentPlayer().deck.sleeves:
               currentPlayer().default_sleeves !== '' && currentPlayer().default_sleeves !== ' ' && currentPlayer().default_sleeves != null
@@ -1023,6 +1035,7 @@
                  class="playmat-user-card-container-mini"
                  (contextmenu)="onRightClick($event, {type: 'opponent_hand', card: card, from: selected_player.hand});"
                  (pointerenter)="magnified_card = (card.visible.includes(user.id) || (game_data.type == 6 && card.visible.includes(currentPlayer().id))) ? card: magnified_card"
+                 (pointerleave)="magnified_card=null"
                  [@shakeCard]="card.shaken">
               <img class="playmat-user-card-mini" [src]="(card.visible.includes(user.id) || (game_data.type == 6 && card.visible.includes(currentPlayer().id))) ? card.image:
               selected_player.deck.sleeves !== '' ? selected_player.deck.sleeves:
@@ -1056,6 +1069,7 @@
                  class="playmat-user-card-container"
                  (contextmenu)="onRightClick($event, {type: 'user_hand', card: card, from: currentPlayer().hand});"
                  (pointerenter)="magnified_card = card"
+                 (pointerleave)="magnified_card=null"
                  (cdkDragStarted)="currently_dragging = card"
                  [@shakeCard]="card.shaken"
                  [cdkDragDisabled]="user != currentPlayer() && game_data.type != 6"
