@@ -63,10 +63,6 @@
 
         <div *ngIf="rightclicked_item.type === 'user_hand'">
           <button mat-menu-item [matMenuTriggerFor]="sendTo" *ngIf="user != null && (user == currentPlayer() || game_data.type == 6)">Send To</button>
-          <button  *ngIf="user != null && (user == currentPlayer() || game_data.type == 6)" mat-menu-item (click)="
-          rightclicked_item.card.facedown=true; rightclicked_item.card.visible = [];
-          sendCardToZone(rightclicked_item.card, this.user.hand, this.user.temp_zone,
-          this.user.hand.cards.indexOf(rightclicked_item.card),0)">Play Face Down</button>
           <button *ngIf="rightclicked_item.card.back_face && user != null && (user == currentPlayer() || game_data.type == 6)" mat-menu-item (click)="altFaceCard(rightclicked_item.card)">Alt Face</button>
           <button *ngIf="user != null" mat-menu-item (click)="shakeCard(rightclicked_item.card, rightclicked_item.card.owner, 'hand')">Shake</button>
           <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6)" mat-menu-item [matMenuTriggerFor]="revealTo">Reveal To</button>
@@ -91,6 +87,7 @@
           <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && rightclicked_item.from.name === 'play' && rightclicked_item.card.tapped === 'untapped'" mat-menu-item (click)="toggleCardTap(rightclicked_item.card)">Tap</button>
           <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && rightclicked_item.from.name === 'play' && rightclicked_item.card.tapped === 'tapped'" mat-menu-item (click)="toggleCardTap(rightclicked_item.card)">Untap</button>
           <button [matMenuTriggerFor]="notesOptions" *ngIf="user != null && (user == currentPlayer() || game_data.type == 6)" mat-menu-item>Notes</button>
+          <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6)" mat-menu-item [matMenuTriggerFor]="revealTo">Reveal To</button>
           <button mat-menu-item (click)="shakeCard(rightclicked_item.card, sidenav_selected_player.id, rightclicked_item.zone)">Shake</button>
         </div>
 
@@ -181,6 +178,7 @@
   <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && rightclicked_item && rightclicked_item.from !== currentPlayer().grave" mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.from, this.currentPlayer().grave, rightclicked_item.from.cards.indexOf(rightclicked_item.card), 0)">Graveyard</button>
   <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && rightclicked_item && rightclicked_item.from !== currentPlayer().exile" mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.from, this.currentPlayer().exile, rightclicked_item.from.cards.indexOf(rightclicked_item.card), 0)">Exile</button>
   <button mat-menu-item [matMenuTriggerFor]="sendToExile">Exile For</button>
+  <button mat-menu-item [matMenuTriggerFor]="sendFacedown">Face Down</button>
   <button mat-menu-item [matMenuTriggerFor]="sendToDeck">Send to Deck</button>
   <button *ngIf="user != null && (user == currentPlayer() || game_data.type == 6) && rightclicked_item && rightclicked_item.from !== currentPlayer().temp_zone" mat-menu-item (click)="sendCardToZone(rightclicked_item.card, rightclicked_item.from, this.currentPlayer().temp_zone, rightclicked_item.from.cards.indexOf(rightclicked_item.card), 0)">Temp Zone</button>
 </mat-menu>
@@ -244,6 +242,17 @@
   </div>
 </mat-menu>
 
+<mat-menu #sendFacedown="matMenu">
+  <button mat-menu-item (click)="
+          rightclicked_item.card.facedown=true; rightclicked_item.card.visible = [];
+          sendCardToZone(rightclicked_item.card, rightclicked_item.from, this.user.temp_zone,
+          this.user.hand.cards.indexOf(rightclicked_item.card),0, {facedown: true})">Temp Zone</button>
+  <button mat-menu-item (click)="
+          rightclicked_item.card.facedown=true; rightclicked_item.card.visible = [];
+          sendCardToZone(rightclicked_item.card, rightclicked_item.from, this.user.exile,
+          this.user.hand.cards.indexOf(rightclicked_item.card),0, {facedown: true})">Exile</button>
+</mat-menu>
+
 <mat-menu #revealTo="matMenu">
   <div *ngIf="game_data != null && user != null && (user == currentPlayer() || game_data.type == 6)">
     <button mat-menu-item *ngFor="let player of game_data.players" (click)="toggleCardReveal(rightclicked_item.card, player.id)">
@@ -299,6 +308,7 @@
   <button mat-menu-item (click)="drawToX(this.currentPlayer().exile)">Exile</button>
   <button mat-menu-item [matMenuTriggerFor]="drawToExile">Exile For</button>
   <button mat-menu-item (click)="drawToX(this.currentPlayer().temp_zone)">Temp Zone</button>
+  <button mat-menu-item [matMenuTriggerFor]="drawToFacedown">Facedown</button>
 </mat-menu>
 
 <mat-menu #drawToExile="matMenu">
@@ -310,6 +320,13 @@
       </button>
     </div>
     <button mat-menu-item (click)="drawToX(currentPlayer().exile, {exiled_for: -1})">All</button>
+  </div>
+</mat-menu>
+
+<mat-menu #drawToFacedown="matMenu">
+  <div *ngIf="game_data != null && user != null && (user == currentPlayer() || game_data.type == 6)">
+    <button mat-menu-item (click)="drawToX(currentPlayer().temp_zone, {facedown: true})">Temp Zone</button>
+    <button mat-menu-item (click)="drawToX(currentPlayer().exile, {facedown: true})">Exile</button>
   </div>
 </mat-menu>
 
@@ -903,6 +920,7 @@
         <h3 class="grave-user-quantity-text shadow-text">{{currentPlayer().grave.cards.length}}</h3>
         <h3 class="grave-user-title-text shadow-text">Grave</h3>
         <img *ngIf="currentPlayer().grave.cards.length > 0"
+             (pointerenter)="magnified_card = currentPlayer().grave.cards[0]"
              class="zone-card-image"
              src="{{currentPlayer().grave.cards[0].image}}"
              (cdkDragStarted)="currently_dragging=currentPlayer().grave.cards[0]"
@@ -923,7 +941,12 @@
         <h3 class="exile-user-quantity-text shadow-text">{{currentPlayer().exile.cards.length}}</h3>
         <h3 class="exile-user-title-text shadow-text">Exile</h3>
         <!-- NOTE: this needs to account for face down exiles at some point -->
-        <img *ngIf="currentPlayer().exile.cards.length > 0" class="zone-card-image" src="{{currentPlayer().exile.cards[0].image}}"
+        <img *ngIf="currentPlayer().exile.cards.length > 0" class="zone-card-image"
+             (pointerenter)="magnified_card = currentPlayer().exile.cards[0]"
+             [src]="!currentPlayer().exile.cards[0].facedown ? currentPlayer().exile.cards[0].image:
+              currentPlayer().deck.sleeves !== '' ? currentPlayer().deck.sleeves:
+              currentPlayer().default_sleeves !== '' && currentPlayer().default_sleeves !== ' ' && currentPlayer().default_sleeves != null
+              ? currentPlayer().default_sleeves: default_card_back"
              (cdkDragStarted)="currently_dragging=currentPlayer().exile.cards[0]"
              [cdkDragDisabled]="user != currentPlayer() && game_data.type != 6"
              cdkDrag>
@@ -972,11 +995,11 @@
         <h3 class="temp-zone-user-title-text shadow-text">Temp</h3>
         <!-- NOTE: this needs to account for face down exiles at some point -->
         <img *ngIf="currentPlayer().temp_zone.cards.length > 0" class="zone-card-image"
+             (pointerenter)="magnified_card = currentPlayer().temp_zone.cards[0]"
              [src]="!currentPlayer().temp_zone.cards[0].facedown ? currentPlayer().temp_zone.cards[0].image:
               currentPlayer().deck.sleeves !== '' ? currentPlayer().deck.sleeves:
               currentPlayer().default_sleeves !== '' && currentPlayer().default_sleeves !== ' ' && currentPlayer().default_sleeves != null
               ? currentPlayer().default_sleeves: default_card_back"
-             src="{{currentPlayer().temp_zone.cards[0].image}}"
              (cdkDragStarted)="currently_dragging=currentPlayer().temp_zone.cards[0]"
              [cdkDragDisabled]="user != currentPlayer() && game_data.type != 6"
              cdkDrag>

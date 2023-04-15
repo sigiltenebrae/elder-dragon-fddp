@@ -1614,7 +1614,7 @@ export class GameHandlerComponent implements OnInit {
    * Clear all modifiers on card.
    * @param card
    */
-  clearCard(card: any) {
+  clearCard(card: any, options?: any) {
     card.tapped = 'untapped';
     card.power_mod = 0;
     card.toughness_mod = 0;
@@ -1632,7 +1632,7 @@ export class GameHandlerComponent implements OnInit {
     card.primed = false;
     card.triggered = false;
     card.triggering = false;
-    card.facedown = false;
+    card.facedown = options != null && options.facedown != null && options.facedown == true;
     card.shaken = false;
     card.inverted = false;
     //card.notes = '';
@@ -3106,7 +3106,7 @@ export class GameHandlerComponent implements OnInit {
     //Also prevents dragging in while scrying
 
     if (dest.name === 'hand' || dest.name === 'grave' || dest.name === 'exile') {
-      this.clearCard(card);
+      this.clearCard(card, options);
     }
 
     if (dest.name === 'exile' && options != null && options.exiled_for != null) {
@@ -3257,8 +3257,13 @@ export class GameHandlerComponent implements OnInit {
     for (let i = 0; i < num_count; i++) {
       if (this.currentPlayer().deck.cards.length > 0) {
         cards.push(this.currentPlayer().deck.cards[0]);
-        this.sendCardToZone(this.currentPlayer().deck.cards[0], this.currentPlayer().deck, dest, 0, 0, {nolog: true, noupdate: true,
-          exiled_for: options != null && options.exiled_for != null? options.exiled_for: null});
+        if (options!= null && options.facedown != null && options.facedown == true) {
+          this.currentPlayer().deck.cards[0].facedown=true; this.currentPlayer().deck.cards[0].visible = [];
+        }
+        this.sendCardToZone(this.currentPlayer().deck.cards[0], this.currentPlayer().deck, dest, 0, 0,
+          {nolog: true, noupdate: true,
+          exiled_for: options != null && options.exiled_for != null? options.exiled_for: null,
+          facedown: options!= null && options.facedown != null && options.facedown == true});
       }
     }
     if (options && options.noupdate){}
