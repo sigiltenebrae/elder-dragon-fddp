@@ -303,7 +303,9 @@ export class GameHandlerComponent implements OnInit {
               this.game_data.current_turn = json_data.get.turn_update;
               this.game_data.last_turn = new Date().getTime();
               this.last_turn = new Date().getTime();
-              if (this.user.turn != null && this.game_data.current_turn == this.user.turn && !this.isDeckTest()) {
+              if (((this.user.turn != null && this.game_data.current_turn == this.user.turn) ||
+                (this.game_data.type == 2 && this.game_data.team_data != null && this.getTeam(this.user.id) != null && this.getTeam(this.user.id).turn == this.game_data.current_turn))
+                && !this.isDeckTest()) {
                 this.notification_sound.play();
                 this.activateAlarms();
                 if (this.isFastGame()) {
@@ -957,10 +959,12 @@ export class GameHandlerComponent implements OnInit {
   }
 
   getTeam(player: number) {
-    for (let team of this.game_data.team_data) {
-      for (let team_player of team.players) {
-        if (player == team_player) {
-          return team;
+    if(this.game_data.team_data) {
+      for (let team of this.game_data.team_data) {
+        for (let team_player of team.players) {
+          if (player == team_player) {
+            return team;
+          }
         }
       }
     }
@@ -1127,23 +1131,41 @@ export class GameHandlerComponent implements OnInit {
     });
   }
 
+  allowGameStart() {
+    if (this.game_data.type == 2) {
+      for (let player of this.game_data.players) {
+        if (this.getTeam(player.id) == null) {
+          return false;
+        }
+      }
+    }
+    else if (this.game_data.type == 3) {
+      if (this.game_data.players.length == 5) {
+        for (let player of this.game_data.players) {
+          if (player.star_color == null) {
+            return false;
+          }
+        }
+      }
+      else {
+        return false;
+      }
+    }
+    return true;
+  }
+
   /**
    * Message the web socket to start the game.
    */
   startGame() {
-    if (this.game_data.type != 2) {
-      this.game_data.turn_count = 1;
-      this.messageSocket(
-        {
-          game_id: this.game_data.id,
-          put: {
-            action: 'start',
-          }
-        });
-    }
-    else {
-      this.selectTeams();
-    }
+    this.game_data.turn_count = 1;
+    this.messageSocket(
+      {
+        game_id: this.game_data.id,
+        put: {
+          action: 'start',
+        }
+      });
   }
 
   /**
@@ -1171,7 +1193,7 @@ export class GameHandlerComponent implements OnInit {
             {
               game_id: this.game_data.id,
               put: {
-                action: 'start',
+                action: 'teams',
                 teams: result
               }
             });
@@ -1196,7 +1218,6 @@ export class GameHandlerComponent implements OnInit {
 
       deckDialogRef.afterClosed().subscribe(result => {
         if (result) {
-          console.log(result);
           this.selectDeck(result);
         }
       })
@@ -1752,7 +1773,6 @@ export class GameHandlerComponent implements OnInit {
    * @param card
    */
   toggleCardTap(card: any) {
-    console.log(this.rightclicked_item);
     if (card.tapped === 'tapped') {
       card.tapped = 'untapped';
     }

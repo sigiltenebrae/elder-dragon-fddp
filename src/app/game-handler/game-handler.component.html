@@ -54,8 +54,9 @@
 
         <div *ngIf="rightclicked_item.type === 'commander' && user != null && (user == currentPlayer() || isDeckTest())">
           <button mat-menu-item (click)="openDeckSelectDialog()">Change Deck</button>
-          <button mat-menu-item *ngIf="game_data && game_data.turn_count == 0" (click)="startGame()">Start Game</button>
+          <button mat-menu-item *ngIf="game_data && game_data.turn_count == 0 && allowGameStart()" (click)="startGame()">Start Game</button>
           <button mat-menu-item *ngIf="game_data && game_data.type != null && game_data.type === 3 && game_data.turn_count == 0" (click)="selectColors()">Set Colors</button>
+          <button mat-menu-item *ngIf="game_data && game_data.type != null && game_data.type === 2 && game_data.turn_count == 0" (click)="selectTeams()">Set Teams</button>
           <button mat-menu-item (click)="scoopDeck()">Scoop Deck</button>
           <button mat-menu-item [matMenuTriggerFor]="kickPlayer" *ngIf="user != null && user == currentPlayer() && !isDeckTest()">Kick</button>
           <button mat-menu-item (click)="endGame()">End Game</button>
@@ -722,8 +723,8 @@
             <mat-list *ngIf="game_data.type == 2 && game_data.team_data">
               <div *ngFor="let team of game_data.team_data">
                 <mat-list-item *ngIf="!team.scooped" class="game-data-player-list-item" fxLayout="row" fxLayoutAlign="start center" [ngClass]="{'game-data-player-list-item-turn': team.turn == game_data.current_turn}">
-                  <button (click)="selectPlayer(getPlayerFromId(team.players[0]))" (pointerenter)="magnified_card = getPlayerFromId(team.players[0]).deck.commander.saved[0]" (pointerleave)="magnified_card=null" mat-button class="game-data-player-list-name-two-headed">{{getPlayerFromId(team.players[0]).name}}</button>
-                  <button (click)="selectPlayer(getPlayerFromId(team.players[1]))" (pointerenter)="magnified_card = getPlayerFromId(team.players[1]).deck.commander.saved[0]" (pointerleave)="magnified_card=null" mat-button class="game-data-player-list-name-two-headed">{{getPlayerFromId(team.players[1]).name}}</button>
+                  <button (click)="selectPlayer(getPlayerFromId(team.players[0]))" (pointerenter)="magnifier_data.command_zone = true; magnified_card = getPlayerFromId(team.players[0]).deck.commander.saved[0]" (pointerleave)="magnifier_data.command_zone = false; magnified_card=null" mat-button class="game-data-player-list-name-two-headed">{{getPlayerFromId(team.players[0]).name}}</button>
+                  <button (click)="selectPlayer(getPlayerFromId(team.players[1]))" (pointerenter)="magnifier_data.command_zone = true; magnified_card = getPlayerFromId(team.players[1]).deck.commander.saved[0]" (pointerleave)="magnifier_data.command_zone = false; magnified_card=null" mat-button class="game-data-player-list-name-two-headed">{{getPlayerFromId(team.players[1]).name}}</button>
                   <button mat-button class="game-data-player-list-counter"
                           (click)="lifeClick($event, team)" [disabled]="!(getPlayerFromId(team.players[0]) == user || getPlayerFromId(team.players[1]) == user)"
                           (contextmenu)="onRightClick($event, {type: 'life', team: team})">
