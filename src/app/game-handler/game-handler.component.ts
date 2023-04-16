@@ -1768,8 +1768,10 @@ export class GameHandlerComponent implements OnInit {
           }
         }
       }
-      this.updateSocketPlayer();
-      this.logAction('untap_all', {cards: cards});
+      if (cards.length > 0) {
+        this.updateSocketPlayer();
+        this.logAction('untap_all', {cards: cards});
+      }
     }
   }
 
