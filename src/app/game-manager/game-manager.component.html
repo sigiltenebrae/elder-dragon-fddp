@@ -1,7 +1,7 @@
 <div fxFlexFill fxLayout="column" fxLayoutAlign="start" fxLayoutGap="20">
   <div fxFlex fxLayout="row" fxLayoutAlign="center center" style="margin: 20px">
     <div fxLayout="column" style="margin: 10px;">
-      <mat-card class="game-manager-game-viewer">
+      <mat-card class="game-manager-game-create">
         <mat-card-content class="game-manager-content" fxFlex fxLayout="column" fxLayoutAlign="center">
           <div fxFlex fxLayout="row" fxLayoutAlign="center center">
             <div fxLayout="column" fxLayoutAlign="center center">
@@ -20,17 +20,20 @@
                 <mat-form-field appearance="fill">
                   <mat-label>Game Type</mat-label>
                   <mat-select #game_type_input value="1">
-                    <mat-option value="6">Deck Test</mat-option>
+<!--                    <mat-option value="6">Deck Test</mat-option>-->
                     <mat-option value="1">Commander</mat-option>
                     <mat-option value="2">Two-Headed Giant</mat-option>
                     <mat-option value="3">Star</mat-option>
                     <mat-option value="4">Randomander</mat-option>
-                    <mat-option value="5">Fast Game!</mat-option>
+<!--                    <mat-option value="5">Fast Game!</mat-option>-->
                     <mat-option value="7">Randomander Regular</mat-option>
                   </mat-select>
                 </mat-form-field>
-                <mat-checkbox [(ngModel)]="game_keep_active" *ngIf="isAdmin()" value="false"> Keep Active</mat-checkbox>
               </div>
+              <mat-checkbox [(ngModel)]="game_keep_active" *ngIf="isAdmin()" value="false"> Keep Active</mat-checkbox>
+              <mat-checkbox [(ngModel)]="game_test" value="false"> Deck Test</mat-checkbox>
+              <mat-checkbox [(ngModel)]="game_fast" value="false"> Fast Game</mat-checkbox>
+              &nbsp;
               <button (click)="createGame(game_name_input.value, max_player_input.value, game_type_input.value)" mat-raised-button color="primary" style="max-width: 80px">Create</button>
             </div>
           </div>
@@ -53,9 +56,9 @@
                   game.type == 2? 'Two Headed':
                     game.type == 3? 'Star':
                       game.type == 4? 'Randomander':
-                        game.type == 5? 'Fast Game!':
-                          game.type == 6? 'Deck Test':
-                            game.type == 7? 'Randomander Regular': ''}}</h3>
+                        game.type == 7? 'Randomander Regular': ''}}
+                <span *ngIf="game.test">(Deck Test)</span>
+                <span *ngIf="game.fast">(Fast Game)</span></h3>
               <h5>Players: {{game.players.length}} of {{game.max_players}}</h5>
               <h5>Connected: {{game.connected.length}}</h5>
               <h5>Running Time: {{secondsToString(game)}}</h5>

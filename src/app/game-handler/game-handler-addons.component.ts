@@ -151,7 +151,7 @@ export class DeckSelectDialog {
   }
 
   selectDeck(deck: any) {
-    if (this.data.game_type == 6) {
+    if (this.data.test) {
       if (deck.selected) {
         this.selected_decks.splice(this.selected_decks.indexOf(deck), 1)
         deck.selected = !deck.selected;

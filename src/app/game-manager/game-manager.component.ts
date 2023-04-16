@@ -13,6 +13,8 @@ export class GameManagerComponent implements OnInit {
   games: any[] = [];
   received: any[] = [];
   game_keep_active = false;
+  game_test = false;
+  game_fast = false;
 
   constructor(private WebsocketService: FddpWebsocketService, private tokenStorage: TokenStorageService, private router: Router) {
   }
@@ -49,6 +51,8 @@ export class GameManagerComponent implements OnInit {
           name: name,
           max_players: Number(max_players),
           keep_active: this.game_keep_active,
+          test: this.game_test,
+          fast: this.game_fast,
           type: type ? Number(type): 1
         }
       }

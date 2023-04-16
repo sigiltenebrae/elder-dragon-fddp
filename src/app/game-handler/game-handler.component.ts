@@ -158,7 +158,7 @@ export class GameHandlerComponent implements OnInit {
                     if (player.id == this.current_user.id) {
                       this.user = player;
                       if (this.user.turn != null && this.game_data.current_turn == this.user.turn) {
-                        if (this.game_data.type == 5) {
+                        if (this.isFastGame()) {
                           if (new Date().getTime() - this.last_turn < 60000) {
                             this.notification_sound.play();
                             this.fast_game_counter = setInterval(() => {
@@ -303,10 +303,10 @@ export class GameHandlerComponent implements OnInit {
               this.game_data.current_turn = json_data.get.turn_update;
               this.game_data.last_turn = new Date().getTime();
               this.last_turn = new Date().getTime();
-              if (this.user.turn != null && this.game_data.current_turn == this.user.turn && this.game_data.type != 6) {
+              if (this.user.turn != null && this.game_data.current_turn == this.user.turn && !this.isDeckTest()) {
                 this.notification_sound.play();
                 this.activateAlarms();
-                if (this.game_data.type == 5) {
+                if (this.isFastGame()) {
                   this.fast_game_counter = setInterval(() => {
                     console.log('burn!')
                     this.fastGameEndTurn();
@@ -349,8 +349,8 @@ export class GameHandlerComponent implements OnInit {
           });
         }, 30000);
         this.game_timer = setInterval(() => {
-          this.game_start_string = this.secondsToString(this.game_started);
-          this.last_turn_string = this.secondsToString(this.last_turn);
+          //this.game_start_string = this.secondsToString(this.game_started);
+          //this.last_turn_string = this.secondsToString(this.last_turn);
         }, 1000);
 
         this.counter_timer = setInterval(() => {
@@ -394,7 +394,7 @@ export class GameHandlerComponent implements OnInit {
    */
   logAction(type: string, data: any) {
     let log_action: any = null;
-    let user = this.game_data.type == 6 ? this.currentPlayer(): this.user;
+    let user = this.isDeckTest() ? this.currentPlayer(): this.user;
     switch(type) {
       case 'move':
         if (data.source.name !== data.dest.name) {
@@ -456,25 +456,25 @@ export class GameHandlerComponent implements OnInit {
           if (data.options && data.options.card) {
             log_action = [
               {text: user.name, type: 'player'},
-              {text: 'set', type: 'regular'},
+              {text: 'changed', type: 'regular'},
               {text: data.name, type: 'counter'},
               {text: 'on', type: 'regular'},
               {text: data.options.card.name, type: 'card', card: JSON.parse(JSON.stringify(data.options.card))},
+              {text: 'from', type: 'regular'},
+              {text: data.before, type: 'value'},
               {text: 'to', type: 'regular'},
               {text: data.after, type: 'value'},
-              {text: 'from', type: 'regular'},
-              {text: data.before, type: 'value'}
             ]
           }
           else {
             log_action = [
               {text: user.name, type: 'player'},
-              {text: 'set', type: 'regular'},
+              {text: 'changed', type: 'regular'},
               {text: data.name, type: 'counter'},
-              {text: 'to', type: 'regular'},
-              {text: data.after, type: 'value'},
               {text: 'from', type: 'regular'},
-              {text: data.before, type: 'value'}
+              {text: data.before, type: 'value'},
+              {text: 'to', type: 'regular'},
+              {text: data.after, type: 'value'}
             ]
           }
         }
@@ -794,10 +794,10 @@ export class GameHandlerComponent implements OnInit {
    */
   getCounterValue(name: string, options?: any) {
     if (name === 'Life') {
-      return this.game_data.type == 2 ? this.getTeam(this.user.id).life: this.game_data.type == 6 ? this.currentPlayer().life: this.user.life;
+      return this.game_data.type == 2 ? this.getTeam(this.user.id).life: this.isDeckTest() ? this.currentPlayer().life: this.user.life;
     }
     else if (name === 'Infect') {
-      return this.game_data.type == 2 ? this.getTeam(this.user.id).infect: this.game_data.type == 6 ? this.currentPlayer().infect: this.user.infect;
+      return this.game_data.type == 2 ? this.getTeam(this.user.id).infect: this.isDeckTest() ? this.currentPlayer().infect: this.user.infect;
     }
     else {
       if (options && options.card) {
@@ -836,7 +836,7 @@ export class GameHandlerComponent implements OnInit {
       player_data = player;
     }
     else {
-      if (this.user == this.currentPlayer() || this.game_data.type == 6) {
+      if (this.user == this.currentPlayer() || this.isDeckTest()) {
         player_data = this.currentPlayer();
       }
     }
@@ -906,6 +906,14 @@ export class GameHandlerComponent implements OnInit {
     this.WebsocketService.messages.next(message);
   }
 
+  isDeckTest() {
+    return this.game_data.test;
+  }
+
+  isFastGame() {
+    return this.game_data.fast;
+  }
+
   /**------------------------------------------------
    *        Game Data Management Functions          *
    ------------------------------------------------**/
@@ -932,7 +940,7 @@ export class GameHandlerComponent implements OnInit {
    * @param id number representing the id of the player
    */
   getPlayerFromId(id: number) {
-    if (id == -1) {
+    if (id == -696969) {
       return {name: 'All'}
     }
     for (let player of this.game_data.players) {
@@ -1183,7 +1191,7 @@ export class GameHandlerComponent implements OnInit {
     if (this.dialog.openDialogs.length == 0) {
       const deckDialogRef = this.dialog.open(DeckSelectDialog, {
         width: '1600px',
-        data: {user: this.current_user.id, game_type: this.game_data.type, max_players: this.game_data.max_players}
+        data: {user: this.current_user.id, game_type: this.game_data.type, test: this.game_data.test, fast: this.game_data.fast, max_players: this.game_data.max_players}
       });
 
       deckDialogRef.afterClosed().subscribe(result => {
@@ -1202,7 +1210,7 @@ export class GameHandlerComponent implements OnInit {
     if (this.game_data.type == 4 || this.game_data.type == 7) { //random
       this.setupUserForPlay(deck);
     }
-    else if (this.game_data.type == 6) { //deck test
+    else if (this.isDeckTest()) { //deck test
       if (deck.length && deck.length == this.game_data.max_players) {
         if (this.game_data.players && this.game_data.players.length && this.game_data.players.length == this.game_data.max_players) {
           let deck_promises = [];
@@ -1226,7 +1234,7 @@ export class GameHandlerComponent implements OnInit {
    * Remove user from the game.
    */
   scoopDeck(): void {
-    if (this.user == this.currentPlayer() || this.game_data.type == 6) {
+    if (this.user == this.currentPlayer() || this.isDeckTest()) {
       if (this.game_data.players.length == 1) {
         this.endGame();
       }
@@ -1261,7 +1269,7 @@ export class GameHandlerComponent implements OnInit {
         }
         this.logAction('scoop', null);
         this.game_data.players.splice(this.game_data.players.indexOf(this.currentPlayer()), 1);
-        if (this.game_data.type == 6) {
+        if (this.isDeckTest()) {
           this.deckTestNextPlayer(1);
         }
         else {
@@ -1277,7 +1285,7 @@ export class GameHandlerComponent implements OnInit {
    * @param player
    */
   kickVote(player: any) {
-    if (this.game_data.type != 6) {
+    if (!this.isDeckTest()) {
       if (this.game_data.kick_vote == null) {
         this.game_data.kick_vote = {
           kicker: this.user,
@@ -1313,7 +1321,7 @@ export class GameHandlerComponent implements OnInit {
    * @param vote
    */
   voteKick(vote: boolean) {
-    if (this.game_data.type != 6) {
+    if (!this.isDeckTest()) {
       if (this.game_data.kick_vote) {
         let kickee = this.game_data.kick_vote.kickee;
         if (vote) {
@@ -1355,7 +1363,7 @@ export class GameHandlerComponent implements OnInit {
    * Select winners and message the web socket to end the game.
    */
   endGame() {
-    if (this.game_data.type !== 6) {
+    if (!this.isDeckTest()) {
       const endGameRef = this.dialog.open(EndGameDialog, {
         data: {
           players: this.game_data.players
@@ -1399,7 +1407,7 @@ export class GameHandlerComponent implements OnInit {
    */
   endTurn() {
     if (this.game_data.type != 2) {
-      if (this.user == this.currentPlayer() || this.game_data.type == 6) {
+      if (this.user == this.currentPlayer() || this.isDeckTest()) {
         if (this.game_data.current_turn == this.currentPlayer().turn) {
           this.messageSocket({
             game_id: this.game_id,
@@ -1409,7 +1417,7 @@ export class GameHandlerComponent implements OnInit {
           });
           this.logAction('end_turn', {});
         }
-        if (this.game_data.type == 5) {
+        if (this.isFastGame()) {
           clearInterval(this.fast_game_counter);
         }
       }
@@ -1473,7 +1481,7 @@ export class GameHandlerComponent implements OnInit {
     if (this.game_data.type == 2 && this.teamview) {
       return this.getTeammate();
     }
-    else if (this.game_data.type == 6) {
+    else if (this.isDeckTest()) {
       return this.game_data.players[this.deck_test_player_index];
     }
     else if (this.user && this.user.deck) {
@@ -1748,7 +1756,7 @@ export class GameHandlerComponent implements OnInit {
    * Untap all unlocked cards on the user's playmat
    */
   untapAll() {
-    if (this.user == this.currentPlayer() || this.game_data.type == 6) {
+    if (this.user == this.currentPlayer() || this.isDeckTest()) {
       let cards = [];
       for (let spot of this.currentPlayer().playmat) {
         for (let card of spot.cards) {
@@ -1930,7 +1938,7 @@ export class GameHandlerComponent implements OnInit {
    * Activate alarm animation on all primed cards on the users playmat
    */
   activateAlarms() {
-    if (this.game_data.type != 6) {
+    if (!this.isDeckTest()) {
       if (this.user != null) {
         for (let spot of this.user.playmat) {
           for (let card of spot.cards) {
@@ -1972,7 +1980,7 @@ export class GameHandlerComponent implements OnInit {
 
     }
     else {
-      if (this.user == this.currentPlayer() || this.game_data.type == 6) {
+      if (this.user == this.currentPlayer() || this.isDeckTest()) {
         this.updateSocketPlayer();
       }
     }
@@ -1987,7 +1995,7 @@ export class GameHandlerComponent implements OnInit {
    * @param card
    */
   cloneCard(card: any, options?: any) {
-    if (this.user == this.currentPlayer() || this.game_data.type == 6) {
+    if (this.user == this.currentPlayer() || this.isDeckTest()) {
       let card_clone = JSON.parse(JSON.stringify(card));
       card_clone.is_token = true;
       card_clone.owner = this.currentPlayer().id;
@@ -2043,7 +2051,7 @@ export class GameHandlerComponent implements OnInit {
    * @param token
    */
   quickCreateToken(token: string) {
-    if (this.user == this.currentPlayer() || this.game_data.type == 6) {
+    if (this.user == this.currentPlayer() || this.isDeckTest()) {
       let out_tokens = [];
       for (let tok of this.currentPlayer().deck.tokens) {
         if (tok.name.toLowerCase() === token.toLowerCase()) {
@@ -2088,7 +2096,7 @@ export class GameHandlerComponent implements OnInit {
    * @param token
    */
   createToken(token: any) {
-    if (this.user == this.currentPlayer() || this.game_data.type == 6) {
+    if (this.user == this.currentPlayer() || this.isDeckTest()) {
       let out_tokens: any[] = [];
       for (let tok of this.currentPlayer().deck.tokens) {
         if (this.isEqualToken(tok, token)) {
@@ -2136,7 +2144,7 @@ export class GameHandlerComponent implements OnInit {
    * Helper function to open the token create dialog
    */
   openTokenDialog(): void {
-    if (this.user == this.currentPlayer() || this.game_data.type == 6) {
+    if (this.user == this.currentPlayer() || this.isDeckTest()) {
       const tokDialogRef = this.dialog.open(TokenInsertDialog, {
         width: '800px',
         data: {
@@ -2175,7 +2183,7 @@ export class GameHandlerComponent implements OnInit {
    * Flip the top card of the library face up.
    */
   flipTop() {
-    if (this.user == this.currentPlayer() || this.game_data.type == 6) {
+    if (this.user == this.currentPlayer() || this.isDeckTest()) {
       this.currentPlayer().top_flipped = !this.currentPlayer().top_flipped;
       this.updateSocketPlayer();
       this.logAction('flipped_top', null);
@@ -2255,7 +2263,7 @@ export class GameHandlerComponent implements OnInit {
    * @param whomst
    */
   revealHandToggle(whomst: number) {
-    if (this.user == this.currentPlayer() || this.game_data.type == 6) {
+    if (this.user == this.currentPlayer() || this.isDeckTest()) {
       let showed = false;
       if (whomst == -6969) {
         showed = true;
@@ -2400,7 +2408,7 @@ export class GameHandlerComponent implements OnInit {
    * @param type
    */
   createCounter(type: string) {
-    if (this.user == this.currentPlayer() || this.game_data.type == 6) {
+    if (this.user == this.currentPlayer() || this.isDeckTest()) {
       this.currentPlayer().play_counters.push({
         color: '#' + Math.floor(Math.random()*16777215).toString(16),
         value: 0,
@@ -2419,7 +2427,7 @@ export class GameHandlerComponent implements OnInit {
    * @param counter
    */
   deleteCounter(counter: any) {
-    if (this.user == this.currentPlayer() || this.game_data.type == 6) {
+    if (this.user == this.currentPlayer() || this.isDeckTest()) {
       this.currentPlayer().play_counters.splice(this.currentPlayer().play_counters.indexOf(counter), 1);
       this.updateSocketPlayer();
     }
@@ -2429,7 +2437,7 @@ export class GameHandlerComponent implements OnInit {
    * Clear out all counters.
    */
   deleteAllCounters() {
-    if (this.user == this.currentPlayer() || this.game_data.type == 6) {
+    if (this.user == this.currentPlayer() || this.isDeckTest()) {
       this.currentPlayer().play_counters = [];
       this.updateSocketPlayer();
     }
@@ -2441,7 +2449,7 @@ export class GameHandlerComponent implements OnInit {
    * @param counter the counter being updated
    */
   setCounterPosition(event: any, counter: any) {
-    if (this.user != null && (this.user == this.currentPlayer() || this.game_data.type == 6)) {
+    if (this.user != null && (this.user == this.currentPlayer() || this.isDeckTest())) {
       counter.position = { ...(<any>event.source._dragRef)._passiveTransform };
       this.updateSocketPlayer();
     }
@@ -2478,7 +2486,7 @@ export class GameHandlerComponent implements OnInit {
     if (event.target.nodeName !== "INPUT" &&
       event.target.nodeName !== 'TEXTAREA' &&
       !this.matMenuTrigger.menuOpen &&
-      this.dialog.openDialogs.length == 0 && (this.user == this.currentPlayer() || this.game_data.type == 6)) {
+      this.dialog.openDialogs.length == 0 && (this.user == this.currentPlayer() || this.isDeckTest())) {
       return true;
     }
     return false;
@@ -2602,13 +2610,13 @@ export class GameHandlerComponent implements OnInit {
           this.updateCounter('Loyalty', item.card.loyalty_mod + item.card.loyalty + 1, item.card.loyalty_mod + item.card.loyalty, {card: item.card});
           break;
         case 'command_tax_1':
-          if (this.user == this.currentPlayer() || this.game_data.type == 6) {
+          if (this.user == this.currentPlayer() || this.isDeckTest()) {
             this.currentPlayer().command_tax_1--;
             this.updateCounter('Command Tax', this.currentPlayer().command_tax_1 + 1, this.currentPlayer().command_tax_1);
           }
           break;
         case 'command_tax_2':
-          if (this.user == this.currentPlayer() || this.game_data.type == 6) {
+          if (this.user == this.currentPlayer() || this.isDeckTest()) {
             this.currentPlayer().command_tax_2--;
             this.updateCounter('Command Tax 2', this.currentPlayer().command_tax_2 + 1, this.currentPlayer().command_tax_2);
           }
@@ -2741,7 +2749,7 @@ export class GameHandlerComponent implements OnInit {
 
   @ViewChild('fddp_sidenav') fddp_sidenav: any;
   openSideNav(zone: any, options?: any) {
-    if (this.user == this.currentPlayer() || this.game_data.type == 6) {
+    if (this.user == this.currentPlayer() || this.isDeckTest()) {
       this.sidenav_selected_player = this.currentPlayer();
       this.sidenav_type = zone.name === this.currentPlayer().deck.name ? 'deck': zone.name;
 
@@ -2885,7 +2893,7 @@ export class GameHandlerComponent implements OnInit {
     for (let player of this.game_data.players) {
       if (player.id !== this.currentPlayer().id) {
         for (let card of this.getPlayerZone(player.id, 'exile').cards) {
-          if (card.exiled_for === this.currentPlayer().id || card.exiled_for == -1) {
+          if (card.exiled_for === this.currentPlayer().id || card.exiled_for == -696969) {
             items.push(card);
           }
         }
@@ -2911,7 +2919,7 @@ export class GameHandlerComponent implements OnInit {
    * @param array array to locate
    */
   getContainer(array: any[]) {
-    if (this.user == this.currentPlayer() || this.game_data.type == 6) {
+    if (this.user == this.currentPlayer() || this.isDeckTest()) {
       if (array == this.currentPlayer().deck.cards) {
         return this.currentPlayer().deck;
       }
@@ -3258,7 +3266,7 @@ export class GameHandlerComponent implements OnInit {
    * @param options 'nolog' and 'noupdate'
    */
   drawToX(dest: any, options?: any) {
-    if (this.user != this.currentPlayer() && this.game_data.type != 6) {
+    if (this.user != this.currentPlayer() && !this.isDeckTest()) {
       return;
     }
     let num_count = Number(this.draw_count);
@@ -3290,7 +3298,7 @@ export class GameHandlerComponent implements OnInit {
    * @param count
    */
   mulliganHand(count: any) {
-    if (this.user == this.currentPlayer() || this.game_data.type == 6) {
+    if (this.user == this.currentPlayer() || this.isDeckTest()) {
       this.draw_count = Number(count);
       this.sendAllTo(this.currentPlayer().hand, this.currentPlayer().deck, {nolog: true, noupdate: true});
       this.shuffleDeck(this.currentPlayer().deck.cards, {nolog: true, noupdate: true});
@@ -3305,7 +3313,7 @@ export class GameHandlerComponent implements OnInit {
    * @param value the cmc of the current cascade.
    */
   cascade(value: any) {
-    if (this.user == this.currentPlayer() || this.game_data.type == 6) {
+    if (this.user == this.currentPlayer() || this.isDeckTest()) {
       let cmc = Number(value);
       let count = 0;
       let failed = false;
@@ -3346,7 +3354,7 @@ export class GameHandlerComponent implements OnInit {
    * @param type the type string to look for, or 'permanent', 'historic' or 'unnatural'
    */
   drawUntil(type: string) {
-    if (this.user == this.currentPlayer() || this.game_data.type == 6) {
+    if (this.user == this.currentPlayer() || this.isDeckTest()) {
       let count = 0;
       let failed = false;
       while(true) {
@@ -3411,7 +3419,7 @@ export class GameHandlerComponent implements OnInit {
    * @param count
    */
   scryX(count: any) {
-    if (this.user == this.currentPlayer() || this.game_data.type == 6) {
+    if (this.user == this.currentPlayer() || this.isDeckTest()) {
       this.sidenav_scry_count = Number(count);
       this.openSideNav(this.currentPlayer().deck, {scry: true});
       this.logAction('scry', null);

@@ -521,6 +521,17 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
          Game-Manager-Component
  *****************************************/
 
+.game-manager-game-create {
+  font-family: Beleren, "Helvetica Neue", sans-serif;
+  position: relative;
+  float: left;
+  overflow: hidden;
+  width: 400px;
+  text-align: center;
+  min-height: 350px;
+  border: none;
+}
+
 .game-manager-game-viewer {
   font-family: Beleren, "Helvetica Neue", sans-serif;
   position: relative;
@@ -528,11 +539,11 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   overflow: hidden;
   width: 400px;
   text-align: center;
-  height: 300px;
+  min-height: 300px;
   border: none;
 }
 
-.game-manager-game-viewer .game-manager-content {
+.game-manager-game-viewer .game-manager-content, .game-manager-game-create .game-manager-content {
   position: absolute;
   height: 100%;
   width: 100%;
