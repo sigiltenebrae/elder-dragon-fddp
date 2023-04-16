@@ -91,20 +91,54 @@ export class DeckSelectDialog {
   {
     this.loading = true;
     if (this.data.game_type == 4) {
-      this.fddp_data.getCheapRandomDeck().then((deck) => {
-        if (deck != null) {
-          this.loading = false;
-          this.dialogRef.close(deck);
+      if (this.data.test) {
+        let randomPromises: any[] = [];
+        for(let i = 0; i < this.data.max_players; i++) {
+          randomPromises.push(
+            new Promise<void>((resolve) => {
+              this.fddp_data.getCheapRandomDeck().then((deck) => {
+                this.selected_decks.push(deck);
+                resolve();
+              });
+            }));
         }
-      });
+        Promise.all(randomPromises).then(() => {
+          this.selectMultiple();
+        });
+      }
+      else {
+        this.fddp_data.getCheapRandomDeck().then((deck) => {
+          if (deck != null) {
+            this.loading = false;
+            this.dialogRef.close(deck);
+          }
+        });
+      }
     }
     else if (this.data.game_type == 7) {
-      this.fddp_data.getRegularRandomDeck().then((deck) => {
-        if (deck != null) {
-          this.loading = false;
-          this.dialogRef.close(deck);
+      if (this.data.test) {
+        let randomPromises: any[] = [];
+        for(let i = 0; i < this.data.max_players; i++) {
+          randomPromises.push(
+            new Promise<void>((resolve) => {
+              this.fddp_data.getRegularRandomDeck().then((deck) => {
+                this.selected_decks.push(deck);
+                resolve();
+              });
+            }));
         }
-      });
+        Promise.all(randomPromises).then(() => {
+          this.selectMultiple();
+        });
+      }
+      else {
+        this.fddp_data.getRegularRandomDeck().then((deck) => {
+          if (deck != null) {
+            this.loading = false;
+            this.dialogRef.close(deck);
+          }
+        });
+      }
     }
     else {
 

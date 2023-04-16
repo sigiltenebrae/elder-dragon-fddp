@@ -1196,6 +1196,7 @@ export class GameHandlerComponent implements OnInit {
 
       deckDialogRef.afterClosed().subscribe(result => {
         if (result) {
+          console.log(result);
           this.selectDeck(result);
         }
       })
@@ -1207,26 +1208,36 @@ export class GameHandlerComponent implements OnInit {
    * @param deck
    */
   selectDeck(deck: any) {
-    if (this.game_data.type == 4 || this.game_data.type == 7) { //random
-      this.setupUserForPlay(deck);
-    }
-    else if (this.isDeckTest()) { //deck test
+    if (this.isDeckTest()) { //deck test
       if (deck.length && deck.length == this.game_data.max_players) {
         if (this.game_data.players && this.game_data.players.length && this.game_data.players.length == this.game_data.max_players) {
           let deck_promises = [];
           for (let i = 0; i < deck.length; i++) {
-            deck_promises.push(new Promise<void>((resolve) => {
-              this.initializePlayerDeck(deck[i].id, this.game_data.players[i].id, this.game_data.players[i].name).then(() => {
+            if (this.game_data.type == 4 || this.game_data.type == 7) { //random
+              deck_promises.push(new Promise<void>((resolve) => {
+                this.setupUserForPlay(deck[i], this.game_data.players[i].id, this.game_data.players[i].name);
                 resolve();
-              });
-            }));
+              }));
+            }
+            else {
+              deck_promises.push(new Promise<void>((resolve) => {
+                this.initializePlayerDeck(deck[i].id, this.game_data.players[i].id, this.game_data.players[i].name).then(() => {
+                  resolve();
+                });
+              }));
+            }
           }
           Promise.all(deck_promises);
         }
       }
     }
     else {
-      this.initializePlayerDeck(deck.id);
+      if (this.game_data.type == 4 || this.game_data.type == 7) { //random
+        this.setupUserForPlay(deck);
+      }
+      else {
+        this.initializePlayerDeck(deck.id);
+      }
     }
   }
 

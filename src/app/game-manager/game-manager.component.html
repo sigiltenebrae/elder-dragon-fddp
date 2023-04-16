@@ -12,7 +12,7 @@
                   <input #game_name_input matInput placeholder="08805" value="08805">
                 </mat-form-field>
                 <mat-form-field fxFlex="20" appearance="fill">
-                  <mat-label>Max Players</mat-label>
+                  <mat-label>{{game_test? 'Decks' :'Max Players'}}</mat-label>
                   <input #max_player_input matInput type="number" value="5">
                 </mat-form-field>
               </div>
