@@ -13,7 +13,7 @@
                 </mat-form-field>
                 <mat-form-field fxFlex="20" appearance="fill">
                   <mat-label>{{game_test? 'Decks' :'Max Players'}}</mat-label>
-                  <input #max_player_input matInput type="number" value="5">
+                  <input #max_player_input matInput type="number" value="5" [disabled]="game_type_input.value == 3">
                 </mat-form-field>
               </div>
               <div fxFlex fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px">
@@ -34,7 +34,9 @@
               <mat-checkbox [(ngModel)]="game_test" value="false"> Deck Test</mat-checkbox>
               <mat-checkbox [(ngModel)]="game_fast" value="false"> Fast Game</mat-checkbox>
               &nbsp;
-              <button (click)="createGame(game_name_input.value, max_player_input.value, game_type_input.value)" mat-raised-button color="primary" style="max-width: 80px">Create</button>
+              <button mat-raised-button color="primary" style="max-width: 80px"
+                (click)="createGame(game_name_input.value, max_player_input.value, game_type_input.value)"
+                [disabled]="!allowCreate(game_type_input.value, max_player_input.value)">Create</button>
             </div>
           </div>
         </mat-card-content>

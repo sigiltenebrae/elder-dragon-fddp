@@ -44,16 +44,23 @@ export class GameManagerComponent implements OnInit {
     return `${hours}:${minutes}:${seconds}`;
   }
 
+  allowCreate(game_type, max_players) {
+    if (game_type == 2) {
+      return max_players % 2 == 0 && max_players > 3;
+    }
+    return true;
+  }
+
   createGame(name: string, max_players: any, type?: string) {
     this.sendMsg(
       {
         create: {
           name: name,
-          max_players: Number(max_players),
+          type: type ? Number(type): 1,
+          max_players: Number(type) != 3? Number(max_players): 5,
           keep_active: this.game_keep_active,
           test: this.game_test,
           fast: this.game_fast,
-          type: type ? Number(type): 1
         }
       }
     );
