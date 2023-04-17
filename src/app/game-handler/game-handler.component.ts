@@ -839,6 +839,9 @@ export class GameHandlerComponent implements OnInit {
         else if (name === 'Loyalty') {
           return options.card.loyalty_mod + options.card.loyalty;
         }
+        else if (name === 'Defense') {
+          return options.card.defense_mod + options.card.defense;
+        }
       }
     }
   }
@@ -1067,6 +1070,7 @@ export class GameHandlerComponent implements OnInit {
       card.power_mod = 0;
       card.toughness_mod = 0;
       card.loyalty_mod = 0;
+      card.defense_mod = 0;
       card.locked = false;
       card.primed = false;
       card.triggered = false;
@@ -1698,6 +1702,7 @@ export class GameHandlerComponent implements OnInit {
     card.power_mod = 0;
     card.toughness_mod = 0;
     card.loyalty_mod = 0;
+    card.defense_mod = 0;
     card.counter_1 = false;
     card.counter_1_value = 0;
     card.counter_2 = false;
@@ -1880,6 +1885,7 @@ export class GameHandlerComponent implements OnInit {
       let temp_power = card.power;
       let temp_toughness = card.toughness;
       let temp_loyalty = card.loyalty;
+      let temp_defense = card.defense;
 
       card.image = card.back_image;
       card.mana_cost = card.back_mana_cost;
@@ -1888,6 +1894,7 @@ export class GameHandlerComponent implements OnInit {
       card.power = card.back_power;
       card.toughness = card.back_toughness;
       card.loyalty = card.back_loyalty;
+      card.defense = card.back_defense;
 
       card.back_image = temp_image;
       card.back_mana_cost = temp_mana_cost;
@@ -1896,6 +1903,7 @@ export class GameHandlerComponent implements OnInit {
       card.back_power = temp_power;
       card.back_toughness = temp_toughness;
       card.back_loyalty = temp_loyalty;
+      card.back_defense = temp_defense;
 
       card.alt = !card.alt;
       this.updateSocketPlayer();
@@ -2675,6 +2683,10 @@ export class GameHandlerComponent implements OnInit {
         case 'loyalty':
           item.card.loyalty_mod--;
           this.updateCounter('Loyalty', item.card.loyalty_mod + item.card.loyalty + 1, item.card.loyalty_mod + item.card.loyalty, {card: item.card});
+          break;
+        case 'defense':
+          item.card.defense_mod--;
+          this.updateCounter('Defense', item.card.defense_mod + item.card.defense + 1, item.card.defense_mod + item.card.defense, {card: item.card});
           break;
         case 'command_tax_1':
           if (this.user == this.currentPlayer() || this.isDeckTest()) {
