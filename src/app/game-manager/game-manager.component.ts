@@ -69,6 +69,19 @@ export class GameManagerComponent implements OnInit {
     }, 1000)
   }
 
+  killGame(game_id) {
+    this.sendMsg({
+      game_id: game_id,
+      put: {
+        action:'end',
+        winners: []
+      }
+    });
+    setTimeout(() => {
+      this.refresh();
+    }, 1000)
+  }
+
   refresh() {
     this.sendMsg({get: {
       game: 'All'
