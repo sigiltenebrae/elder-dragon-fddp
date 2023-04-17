@@ -85,16 +85,20 @@
           <button mat-menu-item [matMenuTriggerFor]="sendAll" *ngIf="user != null && (user == currentPlayer() || isDeckTest())">Send All To</button>
         </div>
 
+        <div *ngIf="rightclicked_item.type === 'stickers'">
+          <button mat-menu-item (click)="openSideNav(rightclicked_item.zone, {stickers: true})">View Stickers</button>
+        </div>
+
         <div *ngIf="rightclicked_item.type === 'zone_card'">
-          <button mat-menu-item [matMenuTriggerFor]="sendTo" *ngIf="user != null && (user == currentPlayer() || isDeckTest()) && (currentPlayer().id == rightclicked_item.card.owner)">Send To</button>
+          <button mat-menu-item [matMenuTriggerFor]="sendTo" *ngIf="user != null && (user == currentPlayer() || isDeckTest()) && (currentPlayer().id == rightclicked_item.card.owner) && rightclicked_item.from">Send To</button>
           <button mat-menu-item [matMenuTriggerFor]="changeExile" *ngIf="user != null && (user == currentPlayer() || isDeckTest()) && (currentPlayer().id == rightclicked_item.card.owner) && (rightclicked_item.from != null && rightclicked_item.from.name === 'exile')">Exile To</button>
           <button *ngIf="rightclicked_item.card.back_face && user != null && (user == currentPlayer() || isDeckTest())" mat-menu-item (click)="altFaceCard(rightclicked_item.card)">Alt Face</button>
-          <button *ngIf="(rightclicked_item.from.name === 'exile' || rightclicked_item.from.name === 'temp_zone') && user != null && (user == currentPlayer() || isDeckTest())" mat-menu-item (click)="flipCard(rightclicked_item.card)">Flip Face</button>
-          <button mat-menu-item (click)="cloneCard(rightclicked_item.card)">Clone</button>
-          <button *ngIf="user != null && (user == currentPlayer() || isDeckTest()) && rightclicked_item.from.name === 'play' && rightclicked_item.card.tapped === 'untapped'" mat-menu-item (click)="toggleCardTap(rightclicked_item.card)">Tap</button>
-          <button *ngIf="user != null && (user == currentPlayer() || isDeckTest()) && rightclicked_item.from.name === 'play' && rightclicked_item.card.tapped === 'tapped'" mat-menu-item (click)="toggleCardTap(rightclicked_item.card)">Untap</button>
-          <button [matMenuTriggerFor]="notesOptions" *ngIf="user != null && (user == currentPlayer() || isDeckTest())" mat-menu-item>Notes</button>
-          <button *ngIf="user != null && (user == currentPlayer() || isDeckTest())" mat-menu-item [matMenuTriggerFor]="revealTo">Reveal To</button>
+          <button *ngIf="(rightclicked_item.from && (rightclicked_item.from.name === 'exile' || rightclicked_item.from.name === 'temp_zone')) && user != null && (user == currentPlayer() || isDeckTest())" mat-menu-item (click)="flipCard(rightclicked_item.card)">Flip Face</button>
+          <button mat-menu-item (click)="cloneCard(rightclicked_item.card)" *ngIf="rightclicked_item.from">Clone</button>
+          <button *ngIf="user != null && (user == currentPlayer() || isDeckTest()) && rightclicked_item.from && rightclicked_item.from.name === 'play' && rightclicked_item.card.tapped === 'untapped'" mat-menu-item (click)="toggleCardTap(rightclicked_item.card)">Tap</button>
+          <button *ngIf="user != null && (user == currentPlayer() || isDeckTest()) && rightclicked_item.from && rightclicked_item.from.name === 'play' && rightclicked_item.card.tapped === 'tapped'" mat-menu-item (click)="toggleCardTap(rightclicked_item.card)">Untap</button>
+          <button [matMenuTriggerFor]="notesOptions" *ngIf="user != null && (user == currentPlayer() || isDeckTest())  && rightclicked_item.from" mat-menu-item>Notes</button>
+          <button *ngIf="user != null && (user == currentPlayer() || isDeckTest()) && rightclicked_item.from != null" mat-menu-item [matMenuTriggerFor]="revealTo">Reveal To</button>
           <button mat-menu-item (click)="shakeCard(rightclicked_item.card, sidenav_selected_player.id, rightclicked_item.zone)">Shake</button>
         </div>
 
@@ -264,8 +268,8 @@
   <div *ngIf="game_data != null && user != null && (user == currentPlayer() || isDeckTest())">
     <button mat-menu-item *ngFor="let player of game_data.players" (click)="toggleCardReveal(rightclicked_item.card, player.id)">
       <div *ngIf="rightclicked_item && rightclicked_item.card">
-        <mat-icon *ngIf="rightclicked_item.card.visible.includes(player.id)">visibility</mat-icon>
-        <mat-icon *ngIf="!rightclicked_item.card.visible.includes(player.id)">visibility_off</mat-icon>
+        <mat-icon *ngIf="rightclicked_item.card.visible && rightclicked_item.card.visible.includes(player.id)">visibility</mat-icon>
+        <mat-icon *ngIf="rightclicked_item.card.visible && !rightclicked_item.card.visible.includes(player.id)">visibility_off</mat-icon>
         <span>{{player.name}}</span>
       </div>
     </button>
@@ -361,6 +365,7 @@
         <h2 fxFlex *ngIf="sidenav_type==='deck'">Searching Deck</h2>
         <h2 fxFlex *ngIf="sidenav_type==='scry'">Scrying</h2>
         <h2 fxFlex *ngIf="sidenav_type==='stack'">Stack</h2>
+        <h2 fxFlex *ngIf="sidenav_type==='stickers'">Stickers</h2>
         <button mat-icon-button (click)="closeSideNav()">
           <mat-icon>close</mat-icon>
         </button>
@@ -368,8 +373,8 @@
     </mat-toolbar>
     <div>
       <div fxLayout="column">
-        <div fxLayout="row" style="height: 64px">
-          <mat-form-field appearance="outline" fxFlex style="margin: 5px;" *ngIf="sidenav_type !== 'deck' && sidenav_type !== 'scry' && sidenav_type !== 'stack'">
+        <div fxLayout="row" style="height: 64px" *ngIf="sidenav_type !== 'deck' && sidenav_type !== 'scry' && sidenav_type !== 'stack'">
+          <mat-form-field appearance="outline" fxFlex style="margin: 5px;">
             <mat-label>Player</mat-label>
             <mat-select [(ngModel)]="sidenav_selected_player" name="player_select_sidenav" (ngModelChange)="getSidenavSort()">
               <div *ngFor="let player of game_data.players">
@@ -379,8 +384,8 @@
             </mat-select>
           </mat-form-field>
         </div>
-        <div fxLayout="row" style="height: 64px">
-          <mat-form-field fxFlex style="margin: 5px;" appearance="outline" *ngIf="sidenav_type !== 'scry'">
+        <div fxLayout="row" style="height: 64px" *ngIf="sidenav_type !== 'scry' && sidenav_type !== 'stickers'">
+          <mat-form-field fxFlex style="margin: 5px;" appearance="outline">
             <mat-label>Search</mat-label>
             <input type="text" placeholder="Card Name"
                    matInput [matAutocomplete]="card_name"
@@ -392,8 +397,8 @@
             </mat-autocomplete>
           </mat-form-field>
         </div>
-        <div fxLayout="row" style="height: 64px">
-          <mat-form-field fxFlex appearance="outline" style="margin: 5px;" *ngIf="sidenav_type !== 'scry'">
+        <div fxLayout="row" style="height: 64px" *ngIf="sidenav_type !== 'scry' && sidenav_type !== 'stickers'">
+          <mat-form-field fxFlex appearance="outline" style="margin: 5px;">
             <mat-label>Type</mat-label>
             <input type="text"
                    placeholder="Card Type"
@@ -410,7 +415,7 @@
                [cdkDropListData]="getSidenavList()"
                [cdkDropListEnterPredicate]="sidenavPredicate">
             <div *ngFor="let card of getSidenavList()">
-              <div *ngIf="card.sidenav_visible && sidenav_selected_player != null && (card.visible.includes(currentPlayer().id) || (isDeckTest() && card.visible.includes(currentPlayer().id)) || sidenav_type === 'deck' || sidenav_type === 'scry')" class="sidenav-list-item"
+              <div *ngIf="card.sidenav_visible && sidenav_selected_player != null && ((card.visible && card.visible.includes(currentPlayer().id)) || (isDeckTest() && card.visible.includes(currentPlayer().id)) || sidenav_type === 'deck' || sidenav_type === 'scry' || sidenav_type === 'stickers')" class="sidenav-list-item"
                    (pointerenter)="magnified_card=card"
                    (pointerleave)="magnified_card=null"
                    (cdkDragStarted)="currently_dragging = card"
@@ -429,7 +434,7 @@
                 {{card.name}} ({{getPlayerFromId(card.owner).name}})
                 <span *ngIf="card.notes != null && card.notes !== ''">({{card.notes}})</span>
               </div>
-              <div *ngIf="card.sidenav_visible && !card.visible.includes(currentPlayer().id) && sidenav_type !== 'deck' && sidenav_type!=='scry'" class="sidenav-list-item"
+              <div *ngIf="card.sidenav_visible && !(card.visible && card.visible.includes(currentPlayer().id)) && sidenav_type !== 'deck' && sidenav_type!=='scry' && sidenav_type !== 'stickers'" class="sidenav-list-item"
                    [cdkDragDisabled]="true" (contextmenu)="onRightClick($event, {type: 'zone_card', card: card, from: getSidenavContainer()})"
                    cdkDrag>
                 -------- Hidden --------
@@ -752,7 +757,7 @@
               <mat-list-item *ngFor="let action of game_data.action_log; let i = index" class="game-data-log-list-item">
                 <p>
                 <span *ngFor="let token of action">
-                  <span *ngIf="token.type === 'card' && ((token.card.visible && (token.card.visible.includes(user.id)) || isDeckTest()))" style="color: mediumpurple"
+                  <span *ngIf="token.type === 'card' && ((token.card.visible && (token.card.visible.includes(user.id))) || isDeckTest() || token.card.sticker)" style="color: mediumpurple"
                         (pointerenter)="magnified_card = token.card" (pointerleave)="magnified_card=null">{{token.text}}
                     <span *ngIf="isClone(token.card)"> (clone) </span>
                   </span>
@@ -760,7 +765,7 @@
                         (pointerenter)="magnified_card = token.card" (pointerleave)="magnified_card=null">{{token.text}}
                     <span *ngIf="isClone(token.card)"> (clone) </span>
                   </span>
-                  <span *ngIf="token.type === 'card' && (!token.card.visible || !token.card.visible.includes(user.id)) && !isDeckTest()" style="color: mediumpurple">
+                  <span *ngIf="token.type === 'card' && (!token.card.visible || !token.card.visible.includes(user.id)) && !isDeckTest() && !token.card.sticker" style="color: mediumpurple">
                     --hidden--
                   </span>
                   <span *ngIf="token.type === 'player'" style="color: darkorange">{{token.text}} </span>
@@ -775,9 +780,9 @@
                   </span>
                   <span *ngIf="token.type === 'card_list'">
                     <span *ngFor="let card of token.cards; let k = index" style="color: mediumpurple">
-                      <span *ngIf="card.visible && (card.visible.includes(user.id) || isDeckTest())"
+                      <span *ngIf="(card.visible && card.visible.includes(user.id)) || isDeckTest() || card.sticker"
                           (pointerenter)="magnified_card = card" (pointerleave)="magnified_card=null">{{card.name}}</span>
-                      <span *ngIf="!isDeckTest() && (!card.visible || !card.visible.includes(user.id))">
+                      <span *ngIf="!isDeckTest() && (!card.visible || !card.visible.includes(user.id)) && !card.sticker">
                         --hidden--
                       </span>
                       <span *ngIf="k != token.cards.length - 1">, </span>
@@ -1071,6 +1076,18 @@
              (cdkDragStarted)="currently_dragging=currentPlayer().temp_zone.cards[0]"
              [cdkDragDisabled]="user != currentPlayer() && !isDeckTest()"
              cdkDrag>
+      </div>
+    </div>
+
+    <!-- User Stickers -->
+    <div fxHide.lt-lg class="sticker-user-container">
+      <div class="sticker-user-wrapper"
+           *ngIf="currentPlayer() != null && currentPlayer().deck && currentPlayer().deck.stickers"
+           (contextmenu)="onRightClick($event, {type: 'stickers', zone: this.currentPlayer().deck.stickers})">
+        <img *ngIf="currentPlayer().deck.stickers.length > 0" class="playmat-user-card-mini"
+             (pointerenter)="magnified_card = currentPlayer().deck.stickers[0]"
+             (pointerleave)="magnified_card=null"
+             src="{{currentPlayer().deck.stickers[0].image}}">
       </div>
     </div>
 

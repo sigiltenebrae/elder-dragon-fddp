@@ -1015,6 +1015,9 @@ export class GameHandlerComponent implements OnInit {
     out_player.default_sleeves = this.current_user.default_sleeves;
     out_player.deck = deck;
     out_player.deck.commander = {name: 'commander', cards: [], saved: [], owner: out_player.deck.owner};
+    out_player.deck.stickers.forEach((sticker: any) => {
+      sticker.sticker = true;
+    })
     out_player.name = user_name == null ? this.current_user.name: user_name;
     out_player.id = deck.owner;
     out_player.life = 40;
@@ -2786,8 +2789,12 @@ export class GameHandlerComponent implements OnInit {
   openSideNav(zone: any, options?: any) {
     if (this.user == this.currentPlayer() || this.isDeckTest()) {
       this.sidenav_selected_player = this.currentPlayer();
-      this.sidenav_type = zone.name === this.currentPlayer().deck.name ? 'deck': zone.name;
-
+      if (options && options.stickers) {
+        this.sidenav_type = 'stickers';
+      }
+      else {
+        this.sidenav_type = zone.name === this.currentPlayer().deck.name ? 'deck': zone.name;
+      }
       if (options && options.scry) {
         this.sidenav_type = 'scry';
         let items = this.getSidenavList();
@@ -2865,7 +2872,7 @@ export class GameHandlerComponent implements OnInit {
         }
       }
     }
-    if (this.sidenav_type !== 'deck') {
+    if (this.sidenav_type !== 'deck' && this.sidenav_type !== 'stickers') {
       if ((this.sidenav_sort && this.sidenav_sort !== '') || (this.sidenav_sort_type && this.sidenav_sort_type != '')){
         for (let item of items) {
           if (!item.visible.includes(this.currentPlayer().id)) {
@@ -2913,6 +2920,8 @@ export class GameHandlerComponent implements OnInit {
       case 'stack':
         items = this.sidenav_spot.cards;
         break;
+      case 'stickers':
+        items = this.sidenav_selected_player.deck.stickers;
     }
     return items;
   }

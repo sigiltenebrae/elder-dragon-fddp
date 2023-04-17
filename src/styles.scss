@@ -1543,6 +1543,25 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   pointer-events: none;
 }
 
+//User Stickers
+.sticker-user-container {
+  position: fixed;
+  bottom: 125px;
+  left: 10px;
+  height: 56px;
+  width: 40px;
+  z-index: 3;
+}
+
+.sticker-user-wrapper {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background: rgba(black, 0.2);
+  @include mat.elevation(3);
+  overflow: hidden;
+}
+
 //User Command Zone
 .commander-user-container {
   position: fixed;
