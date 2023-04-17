@@ -9,6 +9,12 @@
   <div>
     <ng-template matMenuContent>
       <div *ngIf="rightclicked_item && rightclicked_item.type">
+        <div *ngIf="rightclicked_item.type === 'background'">
+          <button mat-menu-item (click)="openDeckSelectDialog()">Change Deck</button>
+          <button mat-menu-item *ngIf="game_data && game_data.type != null && game_data.type === 3 && game_data.turn_count == 0" (click)="selectColors()">Set Colors</button>
+          <button mat-menu-item *ngIf="game_data && game_data.type != null && game_data.type === 2 && game_data.turn_count == 0" (click)="selectTeams()">Set Teams</button>
+        </div>
+
         <div *ngIf="rightclicked_item.type === 'user_play'">
           <button *ngIf="user != null && (user == currentPlayer() || isDeckTest())" mat-menu-item (click)="rightclicked_item.card.locked=!rightclicked_item.card.locked">(Un)Lock Tap</button>
           <button *ngIf="user != null" mat-menu-item (click)="shakeCard(rightclicked_item.card, rightclicked_item.card.owner, 'play')">Shake</button>
@@ -436,7 +442,7 @@
       </div>
     </div>
   </mat-sidenav>
-  <mat-sidenav-content>
+  <mat-sidenav-content (contextmenu)="onRightClick($event, {type: 'background'})">
 
     <!-- Magnifier Data -->
     <div fxHide.lt-xl class="magnifier-data-container" *ngIf="magnified_card">
