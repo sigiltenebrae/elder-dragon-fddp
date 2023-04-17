@@ -1111,7 +1111,7 @@
       </div>
     </div>
 
-    <div fxHide.lt-lg class="planes-container">
+    <div fxHide.lt-lg class="planes-container" *ngIf="game_data.planeschase">
       <!-- game_data.current_plane -->
       <div class="planes-wrapper"
            *ngIf="currentPlayer() != null && currentPlayer().temp_zone"

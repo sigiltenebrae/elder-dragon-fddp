@@ -39,6 +39,7 @@
                 <div fxLayout="column" fxLayoutAlign="start">
                   <mat-slide-toggle [(ngModel)]="game_random" value="false"> Random Decks</mat-slide-toggle>
                   <mat-slide-toggle [(ngModel)]="game_expensive" value="false" [disabled]="!game_random"> Any Cost</mat-slide-toggle>
+                  <mat-slide-toggle [(ngModel)]="game_planeschase" value="false"> Planeschase</mat-slide-toggle>
                 </div>
               </div>
               &nbsp;

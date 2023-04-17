@@ -17,6 +17,7 @@ export class GameManagerComponent implements OnInit {
   game_fast = false;
   game_random = false;
   game_expensive = false;
+  game_planeschase = false;
 
   constructor(private WebsocketService: FddpWebsocketService, private tokenStorage: TokenStorageService, private router: Router) {
   }
@@ -63,6 +64,7 @@ export class GameManagerComponent implements OnInit {
           keep_active: this.game_keep_active,
           test: this.game_test,
           fast: this.game_fast,
+          planeschase: this.game_planeschase
         }
       }
     );
