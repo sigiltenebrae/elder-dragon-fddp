@@ -2007,14 +2007,16 @@ export class GameHandlerComponent implements OnInit {
   }
 
   stackRotate(arr, event:any, options?: any) {
-    if (event.wheelDelta < 0) arr.unshift(arr.pop());
-    else arr.push(arr.shift());
-    if (options != null && options.noupdate) {
+    if (arr.length > 0) {
+      if (event.wheelDelta < 0) arr.unshift(arr.pop());
+      else arr.push(arr.shift());
+      if (options != null && options.noupdate) {
 
-    }
-    else {
-      if (this.user == this.currentPlayer() || this.isDeckTest()) {
-        this.updateSocketPlayer();
+      }
+      else {
+        if (this.user == this.currentPlayer() || this.isDeckTest()) {
+          this.updateSocketPlayer();
+        }
       }
     }
   }

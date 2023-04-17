@@ -778,33 +778,33 @@
                       <span *ngIf="k == token.cards.length - 1">&nbsp;</span>
                     </span>
                   </span>
-                  <span *ngIf="token.type === 'invert'">
-                    <mat-icon style="transform: scale(0.75)">swap_vert</mat-icon>
+                  <span style="height: 24px;" *ngIf="token.type === 'invert'">
+                    <mat-icon style="transform: scale(0.75) translateY(8px)">swap_vert</mat-icon>
                   </span>
-                  <span *ngIf="token.type === 'flip'">
-                    <mat-icon style="transform: scale(0.75)">360</mat-icon>
+                  <span style="height: 24px;" *ngIf="token.type === 'flip'">
+                    <mat-icon style="transform: scale(0.75) translateY(8px)">360</mat-icon>
                   </span>
-                  <span *ngIf="token.type === 'alt_face'">
-                    <mat-icon style="transform: scale(0.75)">360</mat-icon>
+                  <span style="height: 24px;" *ngIf="token.type === 'alt_face'">
+                    <mat-icon style="transform: scale(0.75) translateY(8px)">360</mat-icon>
                   </span>
-                  <span *ngIf="token.type === 'shake'">
-                    <mat-icon style="transform: scale(0.75)">vibration</mat-icon>
+                  <span style="height: 24px;" *ngIf="token.type === 'shake'">
+                    <mat-icon style="transform: scale(0.75) translateY(8px)">vibration</mat-icon>
                   </span>
-                  <span *ngIf="token.type === 'shuffle'">
-                    <mat-icon style="transform: scale(0.75)">shuffle</mat-icon>
+                  <span style="height: 24px;" *ngIf="token.type === 'shuffle'">
+                    <mat-icon style="transform: scale(0.75) translateY(8px)">shuffle</mat-icon>
                   </span>
-                  <span *ngIf="token.type === 'scry'">
-                    <mat-icon style="transform: scale(0.75)">remove_red_eye</mat-icon>
+                  <span style="height: 24px;" *ngIf="token.type === 'scry'">
+                    <mat-icon style="transform: scale(0.75) translateY(8px)">remove_red_eye</mat-icon>
                   </span>
-                  <span *ngIf="token.type === 'search'">
-                    <mat-icon style="transform: scale(0.75)">search</mat-icon>
+                  <span style="height: 24px;" *ngIf="token.type === 'search'">
+                    <mat-icon style="transform: scale(0.75) translateY(8px)">search</mat-icon>
                   </span>
-                  <span *ngIf="token.type === 'roll'">
+                  <span style="height: 24px;" *ngIf="token.type === 'roll'">
                     <img src="assets/action_symbols/diceroll.png" style="height: 28px; width: 28px; filter: invert(1); opacity: 0.8">
                   </span>
-                  <span *ngIf="token.type === 'reveal'">
-                    <mat-icon *ngIf="token.showed" style="transform: scale(0.75)">visibility</mat-icon>
-                    <mat-icon *ngIf="!token.showed" style="transform: scale(0.75)">visibility_off</mat-icon>
+                  <span style="height: 24px;" *ngIf="token.type === 'reveal'">
+                    <mat-icon *ngIf="token.showed" style="transform: scale(0.75) translateY(8px)">visibility</mat-icon>
+                    <mat-icon *ngIf="!token.showed" style="transform: scale(0.75) translateY(8px)">visibility_off</mat-icon>
                   </span>
                   <span *ngIf="token.type === 'clone'" style="color: darkgreen">cloned </span>
                 </span>
