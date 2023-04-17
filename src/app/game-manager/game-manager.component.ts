@@ -15,6 +15,8 @@ export class GameManagerComponent implements OnInit {
   game_keep_active = false;
   game_test = false;
   game_fast = false;
+  game_random = false;
+  game_expensive = false;
 
   constructor(private WebsocketService: FddpWebsocketService, private tokenStorage: TokenStorageService, private router: Router) {
   }

@@ -30,11 +30,15 @@
                   </mat-select>
                 </mat-form-field>
               </div>
-              <div fxLayout="row">
+              <div fxLayout="row" fxLayoutGap="10px">
                 <div fxLayout="column" fxLayoutAlign="start">
-                  <mat-slide-toggle [(ngModel)]="game_keep_active" *ngIf="isAdmin()" value="false"> Keep Active</mat-slide-toggle>
                   <mat-slide-toggle [(ngModel)]="game_test" value="false"> Deck Test</mat-slide-toggle>
                   <mat-slide-toggle [(ngModel)]="game_fast" value="false"> Fast Game</mat-slide-toggle>
+                  <mat-slide-toggle [(ngModel)]="game_keep_active" *ngIf="isAdmin()" value="false"> Keep Active</mat-slide-toggle>
+                </div>
+                <div fxLayout="column" fxLayoutAlign="start">
+                  <mat-slide-toggle [(ngModel)]="game_random" value="false"> Random Decks</mat-slide-toggle>
+                  <mat-slide-toggle [(ngModel)]="game_expensive" value="false" [disabled]="!game_random"> Any Cost</mat-slide-toggle>
                 </div>
               </div>
               &nbsp;
