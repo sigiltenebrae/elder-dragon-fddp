@@ -65,6 +65,7 @@ export class GameHandlerComponent implements OnInit {
   //Game Data
   game_id = -1; //The game id (from the url)
   planes: any[] = [];
+  attractions:any[] = [];
   monarch_data: any = null;
   initiative_data: any = null;
   game_data: any = null; //The full game data object
@@ -130,6 +131,10 @@ export class GameHandlerComponent implements OnInit {
 
         this.fddp_data.getPlanes().then((planes: any) => {
           this.planes = planes;
+        });
+
+        this.fddp_data.getAttractions().then((attractions: any) => {
+          this.attractions = attractions;
         });
 
         this.fddp_data.getCardInfo("The Monarch").then((monarch: any) => {
@@ -541,6 +546,15 @@ export class GameHandlerComponent implements OnInit {
             {text: 'created ', type: 'regular'},
             {text: data.card.name, type: 'card', card: JSON.parse(JSON.stringify(data.card))},
             {text: 'token', type: 'regular'}
+          ]
+        }
+        break;
+      case 'attraction':
+        if (data.card) {
+          log_action = [
+            {text: user.name, type: 'player'},
+            {text: 'opened ', type: 'regular'},
+            {text: data.card.name, type: 'card', card: JSON.parse(JSON.stringify(data.card))},
           ]
         }
         break;
@@ -1489,6 +1503,20 @@ export class GameHandlerComponent implements OnInit {
     });
   }
 
+  openAttraction() {
+    let new_attraction = this.attractions[Math.floor(Math.random() * (this.attractions.length))];
+    console.log(new_attraction);
+    let out_attr = JSON.parse(JSON.stringify(new_attraction));
+    out_attr.is_token = true;
+    out_attr.owner = -1;
+    out_attr.attraction = true;
+    this.clearCard(out_attr);
+    this.setVisibility(out_attr, 'play');
+    this.currentPlayer().temp_zone.cards.unshift(out_attr);
+    this.updateSocketPlayer();
+    this.logAction('attraction', {card: out_attr});
+  }
+
   /**
    * Generate a random from 1-6
    */
@@ -1708,7 +1736,7 @@ export class GameHandlerComponent implements OnInit {
    */
   isClone(card: any): boolean {
     if (card.types) {
-      return card.is_token && !card.types.includes('Token') && !card.types.includes('Emblem');
+      return card.is_token && !card.types.includes('Token') && !card.types.includes('Emblem') && !card.attraction;
     }
     else {
       return false;
@@ -3138,6 +3166,7 @@ export class GameHandlerComponent implements OnInit {
    */
   dragCard(card: any, dest: any, event: any, options?: any) {
     if (options && options.top) {
+      console.log(event);
       this.sendCardToZone(card, this.getContainer(event.previousContainer.data), dest,
         event.previousContainer.data.indexOf(card), 0, options);
     }
@@ -3191,6 +3220,14 @@ export class GameHandlerComponent implements OnInit {
       if (dest.name !== 'play' && dest.name !== 'temp_zone' && !(dest.name === 'commander' && !card.iscommander)) {
         if (card.is_token) {
           source.cards.splice(source.cards.indexOf(card), 1);
+          if (options && options.nolog) {}
+          else {
+            this.logAction('move', {card: card, source: source, dest: dest});
+          }
+          if (options && options.noupdate) {}
+          else {
+            this.updateSocketPlayer();
+          }
         }
         else {
           //clear the card of counters etc.

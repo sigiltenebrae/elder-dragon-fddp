@@ -56,6 +56,16 @@ export class FddpApiService {
     })
   }
 
+  public getAttractions(): Promise<any> {
+    return new Promise<any>((resolve) => {
+      this.http.get(environment.fddp_api_url + '/attractions').subscribe((attractions: any) => {
+        resolve(attractions);
+      }, (error) => {
+        resolve([]);
+      })
+    })
+  }
+
   public getArchidektDeck(archidekt_deckid: number): Promise<any> {
     return new Promise<any> ((resolve) => {
       this.http.get(environment.fddp_api_url + '/archidekt/deck/' + archidekt_deckid).subscribe((archidekt_data: any) => {
