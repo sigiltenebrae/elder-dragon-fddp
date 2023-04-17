@@ -47,7 +47,6 @@
           <button *ngIf="user != null && (user == currentPlayer() || isDeckTest()) && game_data != null && currentPlayer().turn == game_data.current_turn" mat-menu-item (click)="endTurn()">End Turn</button>
           <button *ngIf="user != null && (user == currentPlayer() || isDeckTest()) && game_data != null && game_data.type == 2 && game_data.current_turn == getTeam(this.user.id).turn" mat-menu-item (click)="endTurn()">End Turn</button>
           <button mat-menu-item [matMenuTriggerFor]="player_status" *ngIf="(user == currentPlayer() || isDeckTest())">Toggle Status</button>
-          <button *ngIf="user != null && (user == currentPlayer() || isDeckTest())" mat-menu-item (click)="toggleStack(rightclicked_item.from)">Toggle Stack Mode</button>
           <button mat-menu-item (click)="helpMenu()">Help</button>
         </div>
 
