@@ -1504,6 +1504,61 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   pointer-events: none;
 }
 
+//User Stickers
+.sticker-user-container-1 {
+  position: fixed;
+  bottom: 125px;
+  left: 10px;
+  height: 56px;
+  width: 40px;
+  z-index: 3;
+}
+
+.sticker-user-wrapper-1 {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background: rgba(black, 0.2);
+  @include mat.elevation(3);
+  overflow: hidden;
+}
+
+.sticker-user-container-2 {
+  position: fixed;
+  bottom: 125px;
+  left: 55px;
+  height: 56px;
+  width: 40px;
+  z-index: 3;
+}
+
+.sticker-user-wrapper-2 {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background: rgba(black, 0.2);
+  @include mat.elevation(3);
+  overflow: hidden;
+}
+
+.sticker-user-container-3 {
+  position: fixed;
+  bottom: 125px;
+  left: 100px;
+  height: 56px;
+  width: 40px;
+  z-index: 3;
+}
+
+.sticker-user-wrapper-3 {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background: rgba(black, 0.2);
+  @include mat.elevation(3);
+  overflow: hidden;
+}
+
 //User Temp Zone
 .temp-zone-user-container {
   position: fixed;
@@ -1543,23 +1598,42 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   pointer-events: none;
 }
 
-//User Stickers
-.sticker-user-container {
+//Planes
+.planes-container {
   position: fixed;
-  bottom: 125px;
-  left: 10px;
-  height: 56px;
-  width: 40px;
+  bottom: 10px;
+  left: 95px;
+  height: 105px;
+  width: 147px;
   z-index: 3;
 }
 
-.sticker-user-wrapper {
+.planes-wrapper {
   position: relative;
   height: 100%;
   width: 100%;
   background: rgba(black, 0.2);
   @include mat.elevation(3);
   overflow: hidden;
+}
+
+.planes-wrapper .planes-title-text {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  -ms-transform: translateX(-50%);
+  transform: translateX(-50%);
+  margin: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.zone-plane-image {
+  height: 147px;
+  width: 105px;
+  border-radius: 5px;
+  rotate: 90deg;
+  transform: translateX(-20px) translateY(-20px);
 }
 
 //User Command Zone

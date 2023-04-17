@@ -60,6 +60,7 @@ export class GameHandlerComponent implements OnInit {
   menuTopLeftPosition =  {x: '0', y: '0'} //The top left position of the 'right click' menu
   notification_sound: any = null;
   counterupdates: any[] = [];
+  sticker_hide = true;
 
   //Game Data
   game_id = -1; //The game id (from the url)

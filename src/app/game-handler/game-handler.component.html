@@ -85,8 +85,13 @@
           <button mat-menu-item [matMenuTriggerFor]="sendAll" *ngIf="user != null && (user == currentPlayer() || isDeckTest())">Send All To</button>
         </div>
 
+        <div *ngIf="rightclicked_item.type === 'plane'">
+          <button mat-menu-item (click)="setPlane()">Change Plane</button>
+        </div>
+
         <div *ngIf="rightclicked_item.type === 'stickers'">
           <button mat-menu-item (click)="openSideNav(rightclicked_item.zone, {stickers: true})">View Stickers</button>
+          <button mat-menu-item (click)="shakeCard(rightclicked_item.card, this.user.id, null)">Shake</button>
         </div>
 
         <div *ngIf="rightclicked_item.type === 'zone_card'">
@@ -452,7 +457,7 @@
     <!-- Magnifier Data -->
     <div fxHide.lt-xl class="magnifier-data-container" *ngIf="magnified_card">
       <div *ngIf="magnified_card.plane">
-        <div *ngIf="!magnifier_data.shift_pressed" class="magnifier-data-wrapper" style="transform: rotate(90deg) translateY(200px);">
+        <div *ngIf="!magnifier_data.shift_pressed" class="magnifier-data-wrapper" style="transform: rotate(90deg) translateY(55px);">
           <img class="magnifier-data-card-image" [src]="magnified_card.image" [alt]="magnified_card.name">
         </div>
         <div *ngIf="magnifier_data.shift_pressed" class="magnifier-data-wrapper">
@@ -850,14 +855,6 @@
                 <img src="assets/action_symbols/d20.svg" style="height: 64px; width: 64px; margin-top: -20px; margin-left: -4px; filter: invert(1); opacity: 0.8">
               </button>
             </div>
-            <div class="playmat-user-actions-wrapper" fxLayout="row">
-              <button mat-fab class="playmat-user-actions-blue"
-                    (pointerenter)="magnified_card = game_data.current_plane != null? game_data.current_plane: magnified_card"
-                      (pointerleave)="magnified_card=null"
-                    (click)="setPlane()">
-              <mat-icon>gesture</mat-icon>
-            </button>
-            </div>
             <div *ngIf="game_data.type == 2" class="playmat-user-actions-wrapper" fxLayout="row">
               <button  fxHide.lt-lg mat-fab color="primary">
                 <mat-icon *ngIf="!teamview" (click)="teamview=!teamview">keyboard_arrow_right</mat-icon>
@@ -1055,6 +1052,41 @@
       </div>
     </div>
 
+    <!-- User Stickers -->
+    <div fxHide.lt-lg class="sticker-user-container-1">
+      <div class="sticker-user-wrapper-1"
+           *ngIf="currentPlayer() != null && currentPlayer().deck && currentPlayer().deck.stickers"
+           (contextmenu)="onRightClick($event, {type: 'stickers', zone: this.currentPlayer().deck.stickers, card: currentPlayer().deck.stickers[0]})">
+        <img *ngIf="currentPlayer().deck.stickers.length > 0" class="playmat-user-card-mini" style="cursor: pointer"
+             (click)="sticker_hide = !sticker_hide"
+             (pointerenter)="magnified_card = currentPlayer().deck.stickers[0]"
+             (pointerleave)="magnified_card=null"
+             src="{{currentPlayer().deck.stickers[0].image}}">
+      </div>
+    </div>
+
+    <div fxHide.lt-lg class="sticker-user-container-2" *ngIf="!sticker_hide">
+      <div class="sticker-user-wrapper-2"
+           *ngIf="currentPlayer() != null && currentPlayer().deck && currentPlayer().deck.stickers"
+           (contextmenu)="onRightClick($event, {type: 'stickers', zone: this.currentPlayer().deck.stickers, card: currentPlayer().deck.stickers[1]})">
+        <img *ngIf="currentPlayer().deck.stickers.length > 0" class="playmat-user-card-mini"
+             (pointerenter)="magnified_card = currentPlayer().deck.stickers[1]"
+             (pointerleave)="magnified_card=null"
+             src="{{currentPlayer().deck.stickers[1].image}}">
+      </div>
+    </div>
+
+    <div fxHide.lt-lg class="sticker-user-container-3" *ngIf="!sticker_hide">
+      <div class="sticker-user-wrapper-3"
+           *ngIf="currentPlayer() != null && currentPlayer().deck && currentPlayer().deck.stickers"
+           (contextmenu)="onRightClick($event, {type: 'stickers', zone: this.currentPlayer().deck.stickers, card: currentPlayer().deck.stickers[2]})">
+        <img *ngIf="currentPlayer().deck.stickers.length > 0" class="playmat-user-card-mini"
+             (pointerenter)="magnified_card = currentPlayer().deck.stickers[2]"
+             (pointerleave)="magnified_card=null"
+             src="{{currentPlayer().deck.stickers[2].image}}">
+      </div>
+    </div>
+
     <!-- User Temp Zone -->
     <div fxHide.lt-lg class="temp-zone-user-container">
       <div class="temp-zone-user-wrapper"
@@ -1079,15 +1111,16 @@
       </div>
     </div>
 
-    <!-- User Stickers -->
-    <div fxHide.lt-lg class="sticker-user-container">
-      <div class="sticker-user-wrapper"
-           *ngIf="currentPlayer() != null && currentPlayer().deck && currentPlayer().deck.stickers"
-           (contextmenu)="onRightClick($event, {type: 'stickers', zone: this.currentPlayer().deck.stickers})">
-        <img *ngIf="currentPlayer().deck.stickers.length > 0" class="playmat-user-card-mini"
-             (pointerenter)="magnified_card = currentPlayer().deck.stickers[0]"
+    <div fxHide.lt-lg class="planes-container">
+      <!-- game_data.current_plane -->
+      <div class="planes-wrapper"
+           *ngIf="currentPlayer() != null && currentPlayer().temp_zone"
+           (contextmenu)="onRightClick($event, {type: 'plane'})">
+        <h3 class="planes-title-text shadow-text">Plane</h3>
+        <img *ngIf="game_data.current_plane && game_data.current_plane.image" class="zone-plane-image"
+             (pointerenter)="magnified_card = game_data.current_plane"
              (pointerleave)="magnified_card=null"
-             src="{{currentPlayer().deck.stickers[0].image}}">
+             [src]="game_data.current_plane.image">
       </div>
     </div>
 
