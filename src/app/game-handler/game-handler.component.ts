@@ -1760,6 +1760,7 @@ export class GameHandlerComponent implements OnInit {
       return card.types.includes("Creature") ||
         card.types.includes("Artifact") ||
         card.types.includes("Enchantment") ||
+        card.types.includes("Battle") ||
         card.types.includes("Land");
     }
   }
