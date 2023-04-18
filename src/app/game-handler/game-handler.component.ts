@@ -1731,8 +1731,10 @@ export class GameHandlerComponent implements OnInit {
    */
   clearToken(token: any) {
     this.clearCard(token);
-    token.multiplier = true;
     token.multiplier_value = 1;
+    if (!token.types.includes('Battle')) {
+      token.multiplier = true;
+    }
   }
 
   /**
