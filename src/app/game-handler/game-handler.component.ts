@@ -54,6 +54,7 @@ export class GameHandlerComponent implements OnInit {
               private router: Router) { }
 
   default_card_back = 'https://drive.google.com/uc?export=view&id=1-Hp4xnjvn6EU-khUQEHn4R0T7n46Pt84';
+  loading_deck = false;
 
   //Page Interaction
   rightclicked_item: any = null; //Set to the object that triggers the right click event.
@@ -1251,6 +1252,7 @@ export class GameHandlerComponent implements OnInit {
    * @param deck
    */
   selectDeck(deck: any) {
+    this.loading_deck = true;
     if (this.isDeckTest()) { //deck test
       if (deck.length && deck.length == this.game_data.max_players) {
         if (this.game_data.players && this.game_data.players.length && this.game_data.players.length == this.game_data.max_players) {
@@ -1270,16 +1272,21 @@ export class GameHandlerComponent implements OnInit {
               }));
             }
           }
-          Promise.all(deck_promises);
+          Promise.all(deck_promises).then(() => {
+            this.loading_deck = false;
+          });
         }
       }
     }
     else {
       if (this.game_data.type == 4 || this.game_data.type == 7) { //random
         this.setupUserForPlay(deck);
+        this.loading_deck = false;
       }
       else {
-        this.initializePlayerDeck(deck.id);
+        this.initializePlayerDeck(deck.id).then(() => {
+          this.loading_deck = false;
+        });
       }
     }
   }

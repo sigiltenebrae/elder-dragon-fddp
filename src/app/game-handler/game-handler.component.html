@@ -1,3 +1,9 @@
+<div *ngIf="loading_deck"
+     fxFlexFill fxLayout="row" fxLayoutAlign="center center"
+     style="position: fixed; z-index: 1000; pointer-events: none; background-color: rgba(0, 0, 0, 0.4)">
+  <mat-spinner color="accent"></mat-spinner>
+</div>
+
 <!-- Right-Click Menus -->
 <div style="visibility: hidden; position: fixed"
      [style.left]="menuTopLeftPosition.x"
