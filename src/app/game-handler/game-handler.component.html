@@ -462,7 +462,11 @@
              class="magnifier-data-wrapper"
              [style.rotate]="magnified_card.plane || magnified_card.types.includes('Battle')? '90deg': ''"
              [style.transform]="magnified_card.plane || magnified_card.types.includes('Battle')? 'translateY(55px)': 'translateY(0)'">
-          <div fxflex fxLayout="row" fxLayoutAlign="center center" *ngIf="magnified_card.notes != null && magnified_card.notes !== '' && !magnifier_data.shift_pressed && !magnifier_data.command_zone" class="magnifier-data-card-notes">
+          <div fxflex fxLayout="row" fxLayoutAlign="center center"
+               *ngIf="magnified_card.notes != null && magnified_card.notes !== '' && !magnifier_data.shift_pressed && !magnifier_data.command_zone"
+               [style.rotate]="magnified_card.plane || magnified_card.types.includes('Battle')? '-90deg': ''"
+               [style.transform]="magnified_card.plane || magnified_card.types.includes('Battle')? 'translateX(-55px)': 'translateX(0)'"
+               class="magnifier-data-card-notes">
             <h4 class="shadow-text-no-border"><a class="simple-a">{{magnified_card.notes}}</a></h4>
           </div>
           <img class="magnifier-data-card-image"
@@ -479,7 +483,11 @@
              class="magnifier-data-wrapper"
              [style.rotate]="magnified_card.plane || magnified_card.back_types.includes('Battle')? '90deg': ''"
              [style.transform]="magnified_card.plane || magnified_card.back_types.includes('Battle')? 'translateY(55px)': 'translateY(0)'">
-          <div fxflex fxLayout="row" fxLayoutAlign="center center" *ngIf="magnified_card.notes != null && magnified_card.notes !== '' && !magnifier_data.shift_pressed && !magnifier_data.command_zone" class="magnifier-data-card-notes">
+          <div fxflex fxLayout="row" fxLayoutAlign="center center"
+               *ngIf="magnified_card.notes != null && magnified_card.notes !== '' && !magnifier_data.shift_pressed && !magnifier_data.command_zone"
+               [style.rotate]="magnified_card.plane || magnified_card.back_types.includes('Battle')? '-90deg': ''"
+               [style.transform]="magnified_card.plane || magnified_card.back_types.includes('Battle')? 'translateX(-55px)': 'translateX(0)'"
+               class="magnifier-data-card-notes">
             <h4 class="shadow-text-no-border"><a class="simple-a">{{magnified_card.notes}}</a></h4>
           </div>
           <img class="magnifier-data-card-image"
