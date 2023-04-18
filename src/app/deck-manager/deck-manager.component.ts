@@ -29,6 +29,7 @@ export class DeckManagerComponent implements OnInit {
   sort_options = [
     "Name",
     "Last Modified",
+    "Last Played"
   ];
 
 
@@ -178,6 +179,14 @@ export class DeckManagerComponent implements OnInit {
         for(let other_user of this.users ) {
           if (other_user.id != this.user.id && this.decks_others[other_user.id]) {
             this.decks_others[other_user.id].sort((a: any, b: any) => (a.modified > b.modified) ? -1: 1);
+          }
+        }
+        break;
+      case "Last Played":
+        this.decks.sort((a: any, b: any) => (a.last_played > b.last_played) ? -1: 1);
+        for(let other_user of this.users ) {
+          if (other_user.id != this.user.id && this.decks_others[other_user.id]) {
+            this.decks_others[other_user.id].sort((a: any, b: any) => (a.last_played > b.last_played) ? -1: 1);
           }
         }
         break;
