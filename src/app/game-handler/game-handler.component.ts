@@ -2200,7 +2200,7 @@ export class GameHandlerComponent implements OnInit {
    * Open the token creation dialog and insert a token.
    * @param token
    */
-  createToken(token: any) {
+  createToken(token: any, owner?: number) {
     if (this.user == this.currentPlayer() || this.isDeckTest()) {
       let out_tokens: any[] = [];
       for (let tok of this.currentPlayer().deck.tokens) {
