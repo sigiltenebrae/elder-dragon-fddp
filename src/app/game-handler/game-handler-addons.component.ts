@@ -90,7 +90,7 @@ export class DeckSelectDialog {
   )
   {
     this.loading = true;
-    if (this.data.game_type == 4) {
+    if (this.data.random) {
       if (this.data.test) {
         let randomPromises: any[] = [];
         for(let i = 0; i < this.data.max_players; i++) {
@@ -107,7 +107,7 @@ export class DeckSelectDialog {
         });
       }
       else {
-        this.fddp_data.getCheapRandomDeck().then((deck) => {
+        this.fddp_data.getCheapRandomDeck(this.generateStarColors(this.data.star_color, this.data.star_color_count)).then((deck) => {
           if (deck != null) {
             this.loading = false;
             this.dialogRef.close(deck);
@@ -115,7 +115,7 @@ export class DeckSelectDialog {
         });
       }
     }
-    else if (this.data.game_type == 7) {
+    else if (this.data.random && this.data.expensive) {
       if (this.data.test) {
         let randomPromises: any[] = [];
         for(let i = 0; i < this.data.max_players; i++) {
@@ -132,7 +132,7 @@ export class DeckSelectDialog {
         });
       }
       else {
-        this.fddp_data.getRegularRandomDeck().then((deck) => {
+        this.fddp_data.getRegularRandomDeck(this.generateStarColors(this.data.star_color, this.data.star_color_count)).then((deck) => {
           if (deck != null) {
             this.loading = false;
             this.dialogRef.close(deck);
@@ -237,6 +237,87 @@ export class DeckSelectDialog {
     this.dialogRef.close();
   }
 
+
+  generateStarColors(color, count) {
+    switch(color){
+      case "W":
+        switch(count) {
+          case 1:
+            return ['W'];
+          case 2:
+            if (Math.floor(Math.random()) * 2 == 0) {
+              return ['G', 'W'];
+            }
+            else {
+              return ['W', 'U'];
+            }
+          case 3:
+            return ['G', 'W', 'U'];
+        }
+        break;
+      case "U":
+        switch(count) {
+          case 1:
+            return ['U'];
+          case 2:
+            if (Math.floor(Math.random()) * 2 == 0) {
+              return ['W', 'U'];
+            }
+            else {
+              return ['U', 'B'];
+            }
+          case 3:
+            return ['W', 'U', 'B'];
+        }
+        break;
+      case "B":
+        switch(count) {
+          case 1:
+            return ['B'];
+          case 2:
+            if (Math.floor(Math.random()) * 2 == 0) {
+              return ['U', 'B'];
+            }
+            else {
+              return ['B', 'R'];
+            }
+          case 3:
+            return ['U', 'B', 'R'];
+        }
+        break;
+      case "R":
+        switch(count) {
+          case 1:
+            return ['R'];
+          case 2:
+            if (Math.floor(Math.random()) * 2 == 0) {
+              return ['B', 'R'];
+            }
+            else {
+              return ['R', 'G'];
+            }
+          case 3:
+            return ['B', 'R', 'G'];
+        }
+        break;
+      case "G":
+        switch(count) {
+          case 1:
+            return ['G'];
+          case 2:
+            if (Math.floor(Math.random()) * 2 == 0) {
+              return ['R', 'G'];
+            }
+            else {
+              return ['G', 'W'];
+            }
+          case 3:
+            return ['R', 'G', 'W'];
+        }
+        break;
+    }
+    return null;
+  }
 
 
 }

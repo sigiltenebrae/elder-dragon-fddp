@@ -5,13 +5,20 @@
 </div>
 
 <div *ngIf="this.user != null && !this.user.deck && !loading_deck"
-     fxFlexFill fxLayout="row" fxLayoutGap="5px" fxLayoutAlign="center center"
+     fxFlexFill fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="center center"
      style="position: fixed; z-index: 1000;">
-  <button *ngIf="game_data.type != 1000" mat-raised-button color="primary" (click)="openDeckSelectDialog()">Select Deck</button>
-  <button *ngIf="game_data.type == 1000" mat-raised-button color="primary" (click)="openDeckSelectDialog()">Generate Deck</button>
-  <button *ngIf="game_data.type == 3" mat-mini-fab color="primary"
-          (click)="star_color_count = star_color_count + (star_color_count < 3? 1: 0)"
-          (contextmenu)="onRightClick($event, {type: 'star_count'})">{{star_color_count}}</button>
+  <div fxLayout="row">
+    <button *ngIf="!game_data.random" mat-raised-button color="primary" (click)="openDeckSelectDialog()">Select Deck</button>
+    <button *ngIf="game_data.random && game_data.type != 3" mat-raised-button color="primary" (click)="openDeckSelectDialog()">Generate Deck</button>
+    <button *ngIf="game_data.random && game_data.type == 3 && user.star_color != null" mat-raised-button color="primary" (click)="openDeckSelectDialog()">Generate Deck</button>
+    <button *ngIf="game_data.type == 3 && game_data.random && user.star_color != null" mat-mini-fab color="primary"
+            (click)="star_color_count = star_color_count + (star_color_count < 3? 1: 0)"
+            (contextmenu)="onRightClick($event, {type: 'star_count'})">{{star_color_count}}</button>
+  </div>
+  <div fxLayout="row">
+    <button *ngIf="game_data.type == 3" mat-raised-button color="accent" (click)="selectColors()">Set Colors</button>
+    <button *ngIf="game_data.type == 2" mat-raised-button color="accent" (click)="selectTeams()">Set Teams</button>
+  </div>
 </div>
 
 <!-- Right-Click Menus -->

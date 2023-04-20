@@ -64,6 +64,8 @@ export class GameManagerComponent implements OnInit {
           keep_active: this.game_keep_active,
           test: this.game_test,
           fast: this.game_fast,
+          random: this.game_random,
+          expensive: this.game_random? this.game_expensive: false,
           planeschase: this.game_planeschase
         }
       }

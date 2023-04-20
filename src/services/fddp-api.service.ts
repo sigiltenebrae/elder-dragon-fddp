@@ -230,9 +230,11 @@ export class FddpApiService {
     })
   }
 
-  public getCheapRandomDeck(): Promise<any> {
+  public getCheapRandomDeck(colors?: any): Promise<any> {
     return new Promise<any>((resolve) => {
-      this.http.get(environment.fddp_api_url + '/randomdeck/cheap').subscribe((deck_data) => {
+      this.http.post(environment.fddp_api_url + '/randomdeck/cheap',
+        JSON.stringify({colors: colors != null? colors: null}),
+        {headers : new HttpHeaders({'Content-Type': 'application/json'})}).subscribe((deck_data) => {
         resolve(deck_data);
       }, () => {
         resolve(null);
@@ -240,9 +242,11 @@ export class FddpApiService {
     })
   }
 
-  public getRegularRandomDeck(): Promise<any> {
+  public getRegularRandomDeck(colors?: any): Promise<any> {
     return new Promise<any>((resolve) => {
-      this.http.get(environment.fddp_api_url + '/randomdeck/regular').subscribe((deck_data) => {
+      this.http.post(environment.fddp_api_url + '/randomdeck/regular',
+        JSON.stringify({colors: colors != null? colors: null}),
+        {headers : new HttpHeaders({'Content-Type': 'application/json'})}).subscribe((deck_data) => {
         resolve(deck_data);
       }, () => {
         resolve(null);

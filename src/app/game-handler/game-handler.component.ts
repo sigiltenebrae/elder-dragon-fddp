@@ -1256,16 +1256,44 @@ export class GameHandlerComponent implements OnInit {
    */
   openDeckSelectDialog(): void {
     if (this.dialog.openDialogs.length == 0) {
-      const deckDialogRef = this.dialog.open(DeckSelectDialog, {
-        width: '1600px',
-        data: {user: this.current_user.id, game_type: this.game_data.type, test: this.game_data.test, fast: this.game_data.fast, max_players: this.game_data.max_players}
-      });
-
-      deckDialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          this.selectDeck(result);
+      let deckDialogRef = null;
+      if (this.game_data.type === 3 && this.game_data.random) {
+        if (this.user.star_color != null) {
+          deckDialogRef = this.dialog.open(DeckSelectDialog, {
+            width: '1600px',
+            data: {user: this.current_user.id,
+              game_type: this.game_data.type,
+              star_color: this.user.star_color,
+              star_color_count: this.star_color_count,
+              test: this.game_data.test,
+              fast: this.game_data.fast,
+              random: this.game_data.random,
+              expensive: this.game_data.expensive,
+              max_players: this.game_data.max_players}
+          });
         }
-      })
+      }
+      else {
+        deckDialogRef = this.dialog.open(DeckSelectDialog, {
+          width: '1600px',
+          data: {user: this.current_user.id,
+            game_type: this.game_data.type,
+            star_color: this.user.star_color,
+            star_color_count: this.star_color_count,
+            test: this.game_data.test,
+            fast: this.game_data.fast,
+            random: this.game_data.random,
+            expensive: this.game_data.expensive,
+            max_players: this.game_data.max_players}
+        });
+      }
+      if (deckDialogRef) {
+        deckDialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            this.selectDeck(result);
+          }
+        });
+      }
     }
   }
 
@@ -1280,7 +1308,7 @@ export class GameHandlerComponent implements OnInit {
         if (this.game_data.players && this.game_data.players.length && this.game_data.players.length == this.game_data.max_players) {
           let deck_promises = [];
           for (let i = 0; i < deck.length; i++) {
-            if (this.game_data.type == 4 || this.game_data.type == 7) { //random
+            if (this.game_data.random) { //random
               deck_promises.push(new Promise<void>((resolve) => {
                 this.setupUserForPlay(deck[i], this.game_data.players[i].id, this.game_data.players[i].name);
                 resolve();
@@ -1301,7 +1329,7 @@ export class GameHandlerComponent implements OnInit {
       }
     }
     else {
-      if (this.game_data.type == 4 || this.game_data.type == 7) { //random
+      if (this.game_data.random) { //random
         this.setupUserForPlay(deck);
         this.loading_deck = false;
       }
@@ -2745,7 +2773,7 @@ export class GameHandlerComponent implements OnInit {
           this.updateCounter('Infect', item.team.infect + 1, item.team.infect);
           break;
         case 'star_count':
-          this.star_color_count = this.star_color_count - (this.star_color_count > 0? 1: 0);
+          this.star_color_count = this.star_color_count - (this.star_color_count > 1? 1: 0);
           break;
         default:
           this.rightclicked_item = item;

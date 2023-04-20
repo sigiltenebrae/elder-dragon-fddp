@@ -65,9 +65,7 @@
               <h3>{{
                 game.type == 1? 'Commander':
                   game.type == 2? 'Two Headed':
-                    game.type == 3? 'Star':
-                      game.type == 4? 'Randomander':
-                        game.type == 7? 'Randomander Regular': ''}}
+                    game.type == 3? 'Star': ''}}
                 <span *ngIf="game.test">(Deck Test)</span>
                 <span *ngIf="game.fast">(Fast Game)</span></h3>
               <h5>Players: {{game.players.length}} of {{game.max_players}}</h5>
