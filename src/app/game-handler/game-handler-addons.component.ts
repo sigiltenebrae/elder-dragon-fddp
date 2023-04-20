@@ -245,8 +245,6 @@ export class DeckSelectDialog {
     switch(color){
       case "W":
         switch(count) {
-          case 1:
-            return ['W'];
           case 2:
             if (Math.floor(Math.random()) * 2 == 0) {
               return ['G', 'W'];
@@ -256,12 +254,11 @@ export class DeckSelectDialog {
             }
           case 3:
             return ['G', 'W', 'U'];
+          default:
+            return ['W'];
         }
-        break;
       case "U":
         switch(count) {
-          case 1:
-            return ['U'];
           case 2:
             if (Math.floor(Math.random()) * 2 == 0) {
               return ['W', 'U'];
@@ -271,12 +268,11 @@ export class DeckSelectDialog {
             }
           case 3:
             return ['W', 'U', 'B'];
+          default:
+            return ['U'];
         }
-        break;
       case "B":
         switch(count) {
-          case 1:
-            return ['B'];
           case 2:
             if (Math.floor(Math.random()) * 2 == 0) {
               return ['U', 'B'];
@@ -286,12 +282,11 @@ export class DeckSelectDialog {
             }
           case 3:
             return ['U', 'B', 'R'];
+          default:
+            return ['B'];
         }
-        break;
       case "R":
         switch(count) {
-          case 1:
-            return ['R'];
           case 2:
             if (Math.floor(Math.random()) * 2 == 0) {
               return ['B', 'R'];
@@ -301,12 +296,11 @@ export class DeckSelectDialog {
             }
           case 3:
             return ['B', 'R', 'G'];
+          default:
+            return ['R'];
         }
-        break;
       case "G":
         switch(count) {
-          case 1:
-            return ['G'];
           case 2:
             if (Math.floor(Math.random()) * 2 == 0) {
               return ['R', 'G'];
@@ -316,8 +310,9 @@ export class DeckSelectDialog {
             }
           case 3:
             return ['R', 'G', 'W'];
+          default:
+            return ['G'];
         }
-        break;
     }
     return null;
   }
