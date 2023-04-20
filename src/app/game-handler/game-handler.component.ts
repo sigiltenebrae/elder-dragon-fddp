@@ -329,6 +329,9 @@ export class GameHandlerComponent implements OnInit {
             if (json_data.get.plane_data != null) {
               this.game_data.current_plane = json_data.get.plane_data;
             }
+            if (json_data.get.day != null) {
+              this.game_data.day = json_data.get.day;
+            }
           }
           if (json_data.log) {
             this.game_data.action_log.push(json_data.log);
@@ -720,6 +723,13 @@ export class GameHandlerComponent implements OnInit {
           {text: data.plane.name, type: 'plane', card: JSON.parse(JSON.stringify(data.plane))},
         ]
         break;
+      case 'time':
+        log_action = [
+          {text: user.name, type: 'player'},
+          {text: 'set the time to ', type: 'regular'},
+          {text: data.time? 'Day': 'Night', type: 'value'}
+        ]
+        break;
       case 'roll':
         log_action = [
           {text: user.name, type: 'player'},
@@ -909,6 +919,16 @@ export class GameHandlerComponent implements OnInit {
       put: {
         action:'update',
         zone_data: zone
+      }
+    });
+  }
+
+  updateSocketTime(time) {
+    this.messageSocket({
+      game_id: this.game_id,
+      put: {
+        action:'update',
+        day: time
       }
     });
   }
@@ -3538,5 +3558,11 @@ export class GameHandlerComponent implements OnInit {
   toggleInitiative() {
     this.user.initiative = this.user.initiative != null ? !this.user.initiative : true;
     this.updateSocketPlayer();
+  }
+
+  toggleDayNight() {
+    this.game_data.day = !this.game_data.day;
+    this.updateSocketTime(this.game_data.day);
+    this.logAction('time', {time: this.game_data.day});
   }
 }

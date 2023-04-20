@@ -999,6 +999,15 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   filter: invert(1) drop-shadow(0 0 20px #000);
 }
 
+.playmat-user-time-status-wrapper {
+  position: absolute;
+  pointer-events: none;
+  z-index: 50;
+  top: 15px;
+  right: 20px;
+  height: 64px;
+}
+
 .playmat-user-background-image-mini {
   position: absolute;
   top: 0;

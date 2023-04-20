@@ -359,6 +359,7 @@
 <mat-menu #player_status="matMenu">
   <button mat-menu-item (click)="toggleMonarch()">Monarch</button>
   <button mat-menu-item (click)="toggleInitiative()">Initiative</button>
+  <button mat-menu-item (click)="toggleDayNight()">Day/Night</button>
 </mat-menu>
 
 <mat-menu #notesOptions="matMenu">
@@ -917,6 +918,10 @@
         <div class="playmat-user" fxLayout="row wrap" fxLayoutAlign="start start"
         [ngClass]="{'playmat-opponent-turn': currentPlayer().turn == game_data.current_turn}">
           <img class="playmat-user-background-image" *ngIf="currentPlayer() != null && currentPlayer().playmat_image != null && currentPlayer().playmat_image !== ''" src="{{currentPlayer().playmat_image}}">
+          <div class="playmat-user-time-status-wrapper" fxFlex fxLayout="row">
+            <mat-icon *ngIf="game_data.day != null && game_data.day == false;" style="color: white; transform: scale(2)">dark_mode</mat-icon>
+            <mat-icon *ngIf="game_data.day" style="color: white; transform: scale(2)">light_mode</mat-icon>
+          </div>
           <div class="playmat-user-status-wrapper" fxFlex fxLayout="row">
             <img class="playmat-user-status" *ngIf="currentPlayer().monarch" src="/assets/status_symbols/monarch.png">
             <img class="playmat-user-status" *ngIf="currentPlayer().initiative" src="assets/action_symbols/d20.svg">
