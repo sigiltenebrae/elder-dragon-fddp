@@ -63,6 +63,8 @@ export class GameHandlerComponent implements OnInit {
   counterupdates: any[] = [];
   sticker_hide = true;
 
+  star_color_count = 3;
+
   //Game Data
   game_id = -1; //The game id (from the url)
   planes: any[] = [];
@@ -181,7 +183,7 @@ export class GameHandlerComponent implements OnInit {
                       if (this.user.deck) {
                         console.log('user loaded: ' + this.user.name);
                       }
-                      if (this.user != null && !this.user.deck) {
+                      if (this.user != null && !this.user.deck && this.game_data.type !== 2 && this.game_data.type !== 3) {
                         this.openDeckSelectDialog();
                       }
                     }
@@ -2741,6 +2743,9 @@ export class GameHandlerComponent implements OnInit {
         case 'team_infect':
           item.team.infect--;
           this.updateCounter('Infect', item.team.infect + 1, item.team.infect);
+          break;
+        case 'star_count':
+          this.star_color_count = this.star_color_count - (this.star_color_count > 0? 1: 0);
           break;
         default:
           this.rightclicked_item = item;
