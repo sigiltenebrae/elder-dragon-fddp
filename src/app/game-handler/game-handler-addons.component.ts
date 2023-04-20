@@ -167,21 +167,52 @@ export class DeckSelectDialog {
   }
 
   loadOthers() {
-    this.loading_others = true;
-    this.fddp_data.getDecksBasic().then((decks: any) => {
-      decks.forEach((deck: any) => {
-        if (deck.owner !== this.data.user && deck.active) {
-          deck.selected = false;
-          this.decks_others[deck.owner].push(deck);
-        }
-      });
-      this.loading_others = false;
-      this.loaded_others = true;
+    return new Promise<void>((resolve) => {
+      if (this.loaded_others) {
+        resolve();
+      }
+      else {
+        this.loading_others = true;
+        this.fddp_data.getDecksBasic().then((decks: any) => {
+          decks.forEach((deck: any) => {
+            if (deck.owner !== this.data.user && deck.active) {
+              deck.selected = false;
+              this.decks_others[deck.owner].push(deck);
+            }
+          });
+          this.loading_others = false;
+          this.loaded_others = true;
+          resolve();
+        });
+      }
     });
   }
 
   selectMultiple() {
     this.dialogRef.close(this.selected_decks);
+  }
+
+  selectRandom() {
+    let sel = this.decks[Math.floor(Math.random() * this.decks.length)];
+    if (this.data.test && sel.selected) {
+      this.selectRandom();
+    }
+    else {
+      this.selectDeck(sel);
+    }
+  }
+
+  selectRandomAll() {
+    this.loadOthers().then(() => {
+      let selectedUser = this.users[Math.floor(Math.random() * this.users.length)];
+      let sel = this.decks_others[selectedUser.id][Math.floor(Math.random() * this.decks_others[selectedUser.id].length)];
+      if (this.data.test && sel.selected) {
+        this.selectRandomAll();
+      }
+      else {
+        this.selectDeck(sel);
+      }
+    });
   }
 
   selectDeck(deck: any) {

@@ -47,8 +47,9 @@
         <div class="deck-manager-commander-viewer deck-manager-commander-viewer__back"></div>
       </div>
     </div>
-    <div *ngIf="!loading_others && !loaded_others" fxLayout="row" fxFlex fxLayoutAlign="center center" style="margin: 20px;">
-      <button (click)="loadOthers()" mat-raised-button color="warn">Load Others</button>
+    <div fxLayout="row" fxFlex fxLayoutAlign="center center" fxLayoutGap="10px" style="margin: 20px;">
+      <button *ngIf="!loading_others && !loaded_others" (click)="loadOthers()" mat-raised-button color="warn">Load Others</button>
+      <button *ngIf="!loading_others && (!data.test || selected_decks.length != data.max_players)" (click)="selectRandomAll()" mat-raised-button color="warn">Random From All</button>
     </div>
     <div *ngIf="loading_others" fxLayout="row" fxFlex fxLayoutAlign="center center" style="margin: 20px;">
       <mat-spinner style="margin: 20px;" color="accent"></mat-spinner>
@@ -99,6 +100,11 @@
       </div>
     </div>
   </div>
-  <button *ngIf="data.test && selected_decks.length == data.max_players" mat-raised-button color="primary"
-    style="position: absolute; bottom: 10px; right: 10px;" (click)="selectMultiple()">Start</button>
+  <div fxFlex fxLayout="row" fxLayoutGap="10px" style="position: absolute; bottom: 10px; right: 10px;">
+    <button *ngIf="data.test && selected_decks.length == data.max_players" mat-raised-button color="primary"
+            (click)="selectMultiple()">Start</button>
+    <button *ngIf="!data.test || selected_decks.length != data.max_players" mat-raised-button color="accent" (click)="selectRandom()">Random</button>
+  </div>
+
+
 </div>
