@@ -6,9 +6,10 @@
 
 <div *ngIf="this.user != null && !this.user.deck && !loading_deck && game_data.turn_count == 0"
      fxFlexFill fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="center center"
-     style="position: fixed; z-index: 1000;">
+     style="position: fixed; z-index: 1000; background-color: rgba(0, 0, 0, 0.4)">
   <div fxLayout="row">
-    <button *ngIf="!game_data.players.length < game_data.max_players && this.user.spectating" mat-raised-button color="primary">Join Game</button>
+    <h2 *ngIf="game_data.players.length == game_data.max_players && this.user.spectating">Waiting for Game to Start...</h2>
+    <button *ngIf="game_data.players.length < game_data.max_players && this.user.spectating" mat-raised-button color="primary" (click)="joinGame()">Join Game</button>
     <button *ngIf="!this.user.spectating" mat-raised-button color="primary" (click)="scoopDeck()">Spectate</button>
   </div>
 

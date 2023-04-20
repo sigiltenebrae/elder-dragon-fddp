@@ -213,6 +213,25 @@ export class GameHandlerComponent implements OnInit {
                 this.router.navigate(['/games']);
               }
             }
+            if (json_data.get.unscoop_data) {
+              for (let i = 0; i < this.game_data.spectators.length; i++) {
+                if (this.game_data.spectators[i].id === json_data.get.unscoop_data.id) {
+                  this.game_data.spectators.splice(i, 1);
+                  if (json_data.get.unscoop_data.id == this.user.id) {
+                    this.messageSocket({
+                      game_id: this.game_id,
+                      put: {
+                        action: 'update',
+                        player_data: {
+                          id: this.current_user.id,
+                          name: this.current_user.name
+                        }
+                      }});
+                  }
+                  break;
+                }
+              }
+            }
             if (json_data.get.player_data != null) {
               if (this.game_data) {
                 for (let i = 0; i < this.game_data.players.length; i++) {
@@ -1339,6 +1358,19 @@ export class GameHandlerComponent implements OnInit {
         });
       }
     }
+  }
+
+  joinGame(): void {
+    this.messageSocket({
+      game_id: this.game_id,
+      put: {
+        action:'unscoop',
+        player_data: {
+          id: this.current_user.id,
+          name: this.current_user.name
+        }
+      }
+    })
   }
 
   /**
