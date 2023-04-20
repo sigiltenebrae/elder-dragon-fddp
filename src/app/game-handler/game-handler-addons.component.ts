@@ -107,7 +107,8 @@ export class DeckSelectDialog {
         });
       }
       else {
-        this.fddp_data.getCheapRandomDeck(this.generateStarColors(this.data.star_color, this.data.star_color_count)).then((deck) => {
+        let colors = this.generateStarColors(this.data.star_color, this.data.star_color_count);
+        this.fddp_data.getCheapRandomDeck(colors).then((deck) => {
           if (deck != null) {
             this.loading = false;
             this.dialogRef.close(deck);
@@ -132,7 +133,8 @@ export class DeckSelectDialog {
         });
       }
       else {
-        this.fddp_data.getRegularRandomDeck(this.generateStarColors(this.data.star_color, this.data.star_color_count)).then((deck) => {
+        let colors = this.generateStarColors(this.data.star_color, this.data.star_color_count);
+        this.fddp_data.getRegularRandomDeck(colors).then((deck) => {
           if (deck != null) {
             this.loading = false;
             this.dialogRef.close(deck);
@@ -239,6 +241,7 @@ export class DeckSelectDialog {
 
 
   generateStarColors(color, count) {
+    count = Number(count);
     switch(color){
       case "W":
         switch(count) {

@@ -82,7 +82,14 @@
         </div>
 
         <div *ngIf="rightclicked_item.type === 'commander' && user != null && (user == currentPlayer() || isDeckTest())">
-          <button mat-menu-item (click)="openDeckSelectDialog()">Change Deck</button>
+          <button *ngIf="!game_data.random || game_data.type !== 3" mat-menu-item (click)="openDeckSelectDialog()">Change Deck</button>
+          <div *ngIf="game_data.random && game_data.type === 3">
+            <mat-form-field appearance="standard" style="margin: 0 15px 0 15px; width: 125px">
+              <mat-label>Generate Deck</mat-label>
+              <input [(ngModel)]="star_color_count" type="text" matInput (click)="$event.stopPropagation()" value="1">
+              <button matSuffix mat-icon-button aria-label="Star Color" (click)="openDeckSelectDialog()"><mat-icon>navigate_next</mat-icon></button>
+            </mat-form-field>
+          </div>
           <button mat-menu-item *ngIf="game_data && game_data.turn_count == 0 && allowGameStart()" (click)="startGame()">Start Game</button>
           <button mat-menu-item *ngIf="game_data && game_data.type != null && game_data.type === 3 && game_data.turn_count == 0" (click)="selectColors()">Set Colors</button>
           <button mat-menu-item *ngIf="game_data && game_data.type != null && game_data.type === 2 && game_data.turn_count == 0" (click)="selectTeams()">Set Teams</button>
