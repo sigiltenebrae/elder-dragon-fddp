@@ -1345,38 +1345,40 @@ export class GameHandlerComponent implements OnInit {
    * Remove user from the game.
    */
   scoopDeck(): void {
-    if (this.user == this.currentPlayer() || this.isDeckTest()) {
+    if (this.user == this.currentPlayer() || this.isDeckTest() || (this.user.deck == null && this.game_data.turn_count == 0)) {
       if (this.game_data.players.length == 1) {
         this.endGame();
       }
       else {
         let spectator = {
-          id: this.currentPlayer().id,
-          name: this.currentPlayer().name,
+          id: this.user.id,
+          name: this.user.name,
           spectating: true,
           play_counters: [],
-          turn: this.currentPlayer().turn,
-          deck_id: this.currentPlayer().deck.id
+          turn: this.currentPlayer() && this.currentPlayer().turn != null? this.currentPlayer().turn: null,
+          deck_id: this.currentPlayer() && this.currentPlayer().deck != null && this.currentPlayer().deck.id != null? this.currentPlayer().deck.id: null
         }
         this.messageSocket({
           game_id: this.game_id,
           put: {
             action:'scoop',
-            player_data: this.currentPlayer()
+            player_data: spectator
           }
         });
         if (this.game_data.type == 2) {
           let teammate = this.getTeammate();
-          let spectator2 = {
-            id: teammate.id,
-            name: teammate.name,
-            spectating: true,
-            play_counters: [],
-            deck_id: teammate.deck.id
+          if (teammate) {
+            let spectator2 = {
+              id: teammate.id,
+              name: teammate.name,
+              spectating: true,
+              play_counters: [],
+              deck_id: teammate.deck.id
+            }
+            this.game_data.players.splice(this.game_data.players.indexOf(teammate), 1);
+            this.game_data.spectators.push(spectator2);
+            this.getTeam(this.user.id).scooped = true;
           }
-          this.game_data.players.splice(this.game_data.players.indexOf(teammate), 1);
-          this.game_data.spectators.push(spectator2);
-          this.getTeam(this.user.id).scooped = true;
         }
         this.logAction('scoop', null);
         this.game_data.players.splice(this.game_data.players.indexOf(this.currentPlayer()), 1);
@@ -3213,21 +3215,31 @@ export class GameHandlerComponent implements OnInit {
    */
   fixVisibility() {
     for (let player of this.game_data.players) {
-      for (let card of player.grave.cards) {
-        this.setVisibility(card, 'grave');
+      if (player.grave) {
+        for (let card of player.grave.cards) {
+          this.setVisibility(card, 'grave');
+        }
       }
-      for (let card of player.exile.cards) {
-        this.setVisibility(card, 'exile');
+      if (player.exile) {
+        for (let card of player.exile.cards) {
+          this.setVisibility(card, 'exile');
+        }
       }
-      for (let card of player.temp_zone.cards) {
-        this.setVisibility(card, 'temp_zone');
+      if (player.temp_zone) {
+        for (let card of player.temp_zone.cards) {
+          this.setVisibility(card, 'temp_zone');
+        }
       }
-      for (let card of player.deck.commander.cards) {
-        this.setVisibility(card, 'commander');
+      if (player.deck) {
+        for (let card of player.deck.commander.cards) {
+          this.setVisibility(card, 'commander');
+        }
       }
-      for (let spot of player.playmat) {
-        for (let card of spot.cards) {
-          this.setVisibility(card, 'play');
+      if (player.playmat) {
+        for (let spot of player.playmat) {
+          for (let card of spot.cards) {
+            this.setVisibility(card, 'play');
+          }
         }
       }
     }
