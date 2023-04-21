@@ -64,6 +64,7 @@ import { GameHistoryComponent } from './game-history/game-history.component';
 import {MatTableModule} from "@angular/material/table";
 import { GameHistoryManagerComponent } from './game-history-manager/game-history-manager.component';
 import {MatTabsModule} from "@angular/material/tabs";
+import { CommanderGeneratorComponent } from './commander-generator/commander-generator.component';
 
 
 
@@ -94,6 +95,7 @@ import {MatTabsModule} from "@angular/material/tabs";
     BanListComponent,
     GameHistoryComponent,
     GameHistoryManagerComponent,
+    CommanderGeneratorComponent,
   ],
     imports: [
         BrowserModule,
@@ -136,7 +138,8 @@ import {MatTabsModule} from "@angular/material/tabs";
             {path: 'custom', component: CustomImageManagerComponent},
             {path: 'bans', component: BanListComponent},
             {path: 'history', component: GameHistoryComponent},
-            {path: 'history/:gameid', component: GameHistoryManagerComponent}
+            {path: 'history/:gameid', component: GameHistoryManagerComponent},
+            {path: 'generate', component: CommanderGeneratorComponent}
         ]),
         FlexLayoutModule,
         DragDropModule,

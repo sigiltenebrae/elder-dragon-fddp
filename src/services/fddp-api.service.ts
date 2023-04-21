@@ -254,6 +254,18 @@ export class FddpApiService {
     })
   }
 
+  public getRandomCommander(colors?: any): Promise<any> {
+    return new Promise<any>((resolve) => {
+      this.http.post(environment.fddp_api_url + '/randomcommander/',
+        JSON.stringify({colors: colors != null? colors: null}),
+        {headers : new HttpHeaders({'Content-Type': 'application/json'})}).subscribe((cmdr_data) => {
+        resolve(cmdr_data);
+      }, () => {
+        resolve(null);
+      });
+    })
+  }
+
   public createCustomCard(name: any, image: any, creator: number): Promise<void> {
     return new Promise<void>((resolve_card, reject) => {
       this.http.post(environment.fddp_api_url + '/custom_cards',

@@ -57,6 +57,10 @@ export class AppComponent {
     }
   }
 
+  isAdmin() {
+    return this.tokenStorage.getUser().isAdmin;
+  }
+
   signOut() {
     this.tokenStorage.signOut();
     this.reloadPage();
