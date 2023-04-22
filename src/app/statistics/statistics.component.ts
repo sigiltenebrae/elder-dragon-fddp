@@ -58,7 +58,6 @@ export class StatisticsComponent implements OnInit {
           this.fddp_data.getCardUsage(this.user.id).then((card_data: any) => {
             this.fddp_data.getDecksBasic(this.user.id).then((decks: any) => {
               this.decks = decks;
-              console.log(this.decks);
               for (let deck of this.decks) {
                 if (deck.colors) {
                   if (deck.colors.length == 0) {
@@ -99,12 +98,6 @@ export class StatisticsComponent implements OnInit {
               for (let [key, value] of Object.entries(this.color_ratings)) {
                 this.color_ratings[key] = this.color_dist[key] > 0 ? this.color_ratings[key] / this.color_dist[key]: 0;
               }
-
-              console.log(this.color_dist);
-              console.log(this.color_ratings);
-              console.log(this.theme_rating_dict);
-              console.log(this.tribe_rating_dict);
-
               if (card_data && card_data.length) {
                 let carddata_promises = [];
                 this.card_usage = [];
@@ -137,7 +130,6 @@ export class StatisticsComponent implements OnInit {
                     this.loadColorDistData();
                     this.loadColorRatingData();
                     this.loading = false;
-                    //console.log(this.card_usage);
                   });
                 })
               }
