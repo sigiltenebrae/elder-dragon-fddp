@@ -56,7 +56,7 @@ export class CommanderGeneratorComponent implements OnInit {
             Promise.all(rec_promises).then((rec_list) => {
               this.all_recs = rec_list;
               for (let j = 0; j < this.all_recs.length; j++) {
-                if (this.recs.length == 3) {
+                if (this.recs.length == 5) {
                   break;
                 }
                 console.log(this.all_recs[j]);
