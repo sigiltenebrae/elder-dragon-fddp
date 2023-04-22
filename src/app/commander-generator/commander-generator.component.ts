@@ -66,6 +66,7 @@ export class CommanderGeneratorComponent implements OnInit {
                     if (this.all_recs[j + k].oracle_text.includes("Partner") && !this.all_recs[j + k].oracle_text.includes("Partner with")) {
                       this.recs.push([this.all_recs[j], this.all_recs[j + k]]);
                       this.all_recs.splice(j + k, 1);
+                      k = -1;
                       break;
                     }
                     k++;
