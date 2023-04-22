@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {FddpApiService} from "../../services/fddp-api.service";
 import {TokenStorageService} from "../../services/token-storage.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-commander-generator',
@@ -23,69 +24,75 @@ export class CommanderGeneratorComponent implements OnInit {
   all_recs: any[] = [];
   recs: any[] = [];
 
-  constructor(private fddp_data: FddpApiService,  private tokenStorage: TokenStorageService) { }
+  constructor(private fddp_data: FddpApiService,  private tokenStorage: TokenStorageService, private router: Router) { }
 
   ngOnInit(): void {
-    this.fddp_data.getUsers().then((users) => {
-      this.users = users;
-      for (let user of this.users) {
-        if (user.id == this.tokenStorage.getUser().id) {
-          this.user = user;
-          if (this.user.recs && this.user.recs.length) {
-            console.log(this.user.recs);
-            let rec_promises = [];
-            for (let i = 0; i < this.user.recs.length; i++) {
-              if (i == 30) {
-                break;
-              }
-              if (this.user.recs[i].name) {
-                rec_promises.push(
-                  new Promise((resolve) => {
-                    this.fddp_data.getCardInfo(this.user.recs[i].name).then((card_data) => {
-                      this.fddp_data.getImagesForCard(this.user.recs[i].name).then((card_images:any) => {
-                        if (card_images && card_images.images && card_images.images.length) {
-                          card_data.image = card_images.images[card_images.images.length - 1].image;
-                          card_data.count = this.user.recs[i].count;
-                          resolve(card_data);
-                        }
-                      })
-                    })
-                  }));
-              }
-            }
-            Promise.all(rec_promises).then((rec_list) => {
-              this.all_recs = rec_list;
-              for (let j = 0; j < this.all_recs.length; j++) {
-                if (this.recs.length == 5) {
+    if (this.tokenStorage.getUser() == null || this.tokenStorage.getUser() == {} ||
+      this.tokenStorage.getUser().id == null || this.tokenStorage.getUser().id < 0) {
+      this.router.navigate(['login']);
+    }
+    else {
+      this.fddp_data.getUsers().then((users) => {
+        this.users = users;
+        for (let user of this.users) {
+          if (user.id == this.tokenStorage.getUser().id) {
+            this.user = user;
+            if (this.user.recs && this.user.recs.length) {
+              console.log(this.user.recs);
+              let rec_promises = [];
+              for (let i = 0; i < this.user.recs.length; i++) {
+                if (i == 30) {
                   break;
                 }
-                console.log(this.all_recs[j]);
-                if (this.all_recs[j].oracle_text.includes("Partner") && !this.all_recs[j].oracle_text.includes("Partner with")) {
-                  let k = 1;
-                  while(j + k < this.all_recs.length) {
-                    if (this.all_recs[j + k].oracle_text.includes("Partner") && !this.all_recs[j + k].oracle_text.includes("Partner with")) {
-                      this.recs.push([this.all_recs[j], this.all_recs[j + k]]);
-                      this.all_recs.splice(j + k, 1);
-                      k = -1;
-                      break;
-                    }
-                    k++;
+                if (this.user.recs[i].name) {
+                  rec_promises.push(
+                    new Promise((resolve) => {
+                      this.fddp_data.getCardInfo(this.user.recs[i].name).then((card_data) => {
+                        this.fddp_data.getImagesForCard(this.user.recs[i].name).then((card_images:any) => {
+                          if (card_images && card_images.images && card_images.images.length) {
+                            card_data.image = card_images.images[card_images.images.length - 1].image;
+                            card_data.count = this.user.recs[i].count;
+                            resolve(card_data);
+                          }
+                        })
+                      })
+                    }));
+                }
+              }
+              Promise.all(rec_promises).then((rec_list) => {
+                this.all_recs = rec_list;
+                for (let j = 0; j < this.all_recs.length; j++) {
+                  if (this.recs.length == 5) {
+                    break;
                   }
-                  if (j + k == this.all_recs.length) {
+                  console.log(this.all_recs[j]);
+                  if (this.all_recs[j].oracle_text.includes("Partner") && !this.all_recs[j].oracle_text.includes("Partner with")) {
+                    let k = 1;
+                    while(j + k < this.all_recs.length) {
+                      if (this.all_recs[j + k].oracle_text.includes("Partner") && !this.all_recs[j + k].oracle_text.includes("Partner with")) {
+                        this.recs.push([this.all_recs[j], this.all_recs[j + k]]);
+                        this.all_recs.splice(j + k, 1);
+                        k = -1;
+                        break;
+                      }
+                      k++;
+                    }
+                    if (j + k == this.all_recs.length) {
+                      this.recs.push([this.all_recs[j]]);
+                    }
+                  }
+                  else {
                     this.recs.push([this.all_recs[j]]);
                   }
                 }
-                else {
-                  this.recs.push([this.all_recs[j]]);
-                }
-              }
-              console.log(this.recs);
-            })
+                console.log(this.recs);
+              })
+            }
+            break;
           }
-          break;
         }
-      }
-    })
+      })
+    }
   }
 
   generateCommander() {

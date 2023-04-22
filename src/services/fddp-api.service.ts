@@ -477,4 +477,14 @@ export class FddpApiService {
       })
     })
   }
+
+  public getCardUsage(user_id: number) {
+    return new Promise<any>((resolve) => {
+      this.http.get(environment.fddp_api_url + '/users/carddata/' + user_id).subscribe((card_data) => {
+        resolve(card_data);
+      }, () => {
+        resolve(null);
+      })
+    })
+  }
 }
