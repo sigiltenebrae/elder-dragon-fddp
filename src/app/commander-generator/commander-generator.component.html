@@ -4,8 +4,18 @@
   </div>
   <div fxLayout="row" fxLayoutGap="10px" >
     <div class="commander-generator-card-holder" *ngFor="let rec of recs; let i = index">
-      <img class="commander-generator-card" src="{{rec.image}}">
-      <h4 class="commander-generator-card-name">{{rec.name}}</h4>
+      <div *ngIf="rec.length == 1">
+        <img class="commander-generator-card" src="{{rec[0].image}}">
+        <h4 class="commander-generator-card-name">{{rec[0].name}}</h4>
+      </div>
+      <div *ngIf="rec.length == 2">
+        <img class="commander-generator-card-partner-1" src="{{rec[0].image}}">
+        <img class="commander-generator-card-partner-2" src="{{rec[1].image}}">
+        <div class="commander-generator-card-name">
+          <h4 style="margin: 0">{{rec[0].name}} &</h4>
+          <h4 style="margin: 0">{{rec[1].name}}</h4>
+        </div>
+      </div>
     </div>
   </div>
   <div fxLayout="row" *ngIf="!generated">

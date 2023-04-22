@@ -20,6 +20,7 @@ export class CommanderGeneratorComponent implements OnInit {
 
   users: any = null;
   user: any = null;
+  all_recs: any[] = [];
   recs: any[] = [];
 
   constructor(private fddp_data: FddpApiService,  private tokenStorage: TokenStorageService) { }
@@ -31,9 +32,10 @@ export class CommanderGeneratorComponent implements OnInit {
         if (user.id == this.tokenStorage.getUser().id) {
           this.user = user;
           if (this.user.recs && this.user.recs.length) {
+            console.log(this.user.recs);
             let rec_promises = [];
             for (let i = 0; i < this.user.recs.length; i++) {
-              if (i == 3) {
+              if (i == 30) {
                 break;
               }
               if (this.user.recs[i].name) {
@@ -43,6 +45,7 @@ export class CommanderGeneratorComponent implements OnInit {
                       this.fddp_data.getImagesForCard(this.user.recs[i].name).then((card_images:any) => {
                         if (card_images && card_images.images && card_images.images.length) {
                           card_data.image = card_images.images[card_images.images.length - 1].image;
+                          card_data.count = this.user.recs[i].count;
                           resolve(card_data);
                         }
                       })
@@ -51,7 +54,31 @@ export class CommanderGeneratorComponent implements OnInit {
               }
             }
             Promise.all(rec_promises).then((rec_list) => {
-              this.recs = rec_list;
+              this.all_recs = rec_list;
+              for (let j = 0; j < this.all_recs.length; j++) {
+                if (this.recs.length == 3) {
+                  break;
+                }
+                console.log(this.all_recs[j]);
+                if (this.all_recs[j].oracle_text.includes("Partner") && !this.all_recs[j].oracle_text.includes("Partner with")) {
+                  let k = 1;
+                  while(j + k < this.all_recs.length) {
+                    if (this.all_recs[j + k].oracle_text.includes("Partner") && !this.all_recs[j + k].oracle_text.includes("Partner with")) {
+                      this.recs.push([this.all_recs[j], this.all_recs[j + k]]);
+                      this.all_recs.splice(j + k, 1);
+                      break;
+                    }
+                    k++;
+                  }
+                  if (j + k == this.all_recs.length) {
+                    this.recs.push([this.all_recs[j]]);
+                  }
+                }
+                else {
+                  this.recs.push([this.all_recs[j]]);
+                }
+              }
+              console.log(this.recs);
             })
           }
           break;

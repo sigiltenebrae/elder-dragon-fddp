@@ -2136,6 +2136,30 @@ commander-dashboard-select-zone {
   z-index: 1;
 }
 
+.commander-generator-card-holder .commander-generator-card-partner-1 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 180px;
+  height: 251px;
+  border-radius: 11px;
+  z-index: 1;
+}
+
+.commander-generator-card-holder .commander-generator-card-partner-2 {
+  position: absolute;
+  top: 28px;
+  left: 20px;
+  width: 180px;
+  height: 251px;
+  border-radius: 11px;
+  z-index: 5;
+}
+
+.commander-generator-card-holder .commander-generator-card-partner-1:hover {
+  z-index: 10;
+}
+
 .commander-generator-card-holder .commander-generator-card-name {
   position: absolute;
   top: 285px;
