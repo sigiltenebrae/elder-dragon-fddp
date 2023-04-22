@@ -1,36 +1,55 @@
-<div *ngIf="!generated" fxFlexFill fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="center center" style="position: fixed; z-index: 2000">
-  <mat-card class="commander-generator-card">
-    <mat-card-header>
-      <mat-card-title>Commander Generator</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <mat-divider></mat-divider>
-      &nbsp;
-      <div fxLayout="column" fxLayoutGap="10px">
-        <div fxLayout="row" fxLayoutAlign="center">
-          <mat-checkbox [(ngModel)]="color_w" class="commander-generator-checkbox">W</mat-checkbox>
-          <mat-checkbox [(ngModel)]="color_u" class="commander-generator-checkbox">U</mat-checkbox>
-          <mat-checkbox [(ngModel)]="color_b" class="commander-generator-checkbox">B</mat-checkbox>
-          <mat-checkbox [(ngModel)]="color_r" class="commander-generator-checkbox">R</mat-checkbox>
-          <mat-checkbox [(ngModel)]="color_g" class="commander-generator-checkbox">G</mat-checkbox>
-        </div>
-        <div fxLayout="row" fxLayoutAlign="end">
-          <button mat-raised-button color="primary" (click)="generateCommander()">Submit</button>
-        </div>
-      </div>
-    </mat-card-content>
-  </mat-card>
-</div>
-<div *ngIf="generated && commanders" fxFlexFill fxLayout="column" fxLayoutGap="5px" fxLayoutAlign="center center" style="position: fixed; z-index: 3000">
-  <div fxLayout="row" fxLayoutGap="10px">
-    <div class="custom-image-card-holder">
-      <img class="custom-image-card" [src]="commanders[0].image_uris != null && commanders[0].image_uris.png != null? commanders[0].image_uris.png: ''">
-    </div>
-    <div *ngIf="commanders.length == 2 && commanders[1] != null" class="custom-image-card-holder">
-      <img class="custom-image-card" [src]="commanders[1].image_uris != null && commanders[1].image_uris.png != null? commanders[1].image_uris.png: ''">
+<div fxFlexFill fxLayout="column" fxLayoutAlign="start center">
+  <div fxLayout="row" style="margin-top: 40px">
+    <h2>Your Recommendations:</h2>
+  </div>
+  <div fxLayout="row" fxLayoutGap="10px" >
+    <div class="commander-generator-card-holder" *ngFor="let rec of recs; let i = index">
+      <img class="commander-generator-card" src="{{rec.image}}">
+      <h4 class="commander-generator-card-name">{{rec.name}}</h4>
     </div>
   </div>
-  <div fxLayout="row">
-    <button mat-raised-button color="primary" (click)="generated=false; commanders=null">Reset</button>
+  <div fxLayout="row" *ngIf="!generated">
+    <mat-card class="commander-generator-card">
+      <mat-card-header>
+        <mat-card-title>Commander Generator</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <mat-divider></mat-divider>
+        &nbsp;
+        <div fxLayout="column" fxLayoutGap="10px">
+          <div fxLayout="row" fxLayoutAlign="center">
+            <mat-checkbox [(ngModel)]="color_w" class="commander-generator-checkbox">W</mat-checkbox>
+            <mat-checkbox [(ngModel)]="color_u" class="commander-generator-checkbox">U</mat-checkbox>
+            <mat-checkbox [(ngModel)]="color_b" class="commander-generator-checkbox">B</mat-checkbox>
+            <mat-checkbox [(ngModel)]="color_r" class="commander-generator-checkbox">R</mat-checkbox>
+            <mat-checkbox [(ngModel)]="color_g" class="commander-generator-checkbox">G</mat-checkbox>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="end">
+            <button mat-raised-button color="primary" (click)="generateCommander()">Submit</button>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div fxLayout="row" *ngIf="generated && commanders">
+    <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px">
+      <div fxLayout="row">
+        <button mat-raised-button color="primary" (click)="generated=false; commanders=null">Generate Another</button>
+      </div>
+      <div fxLayout="row" fxLayoutGap="10px">
+        <div class="commander-generator-card-holder">
+          <img class="commander-generator-card" [src]="commanders[0].image_uris != null && commanders[0].image_uris.png != null? commanders[0].image_uris.png: ''">
+          <h4 class="commander-generator-card-name">{{commanders[0].name}}</h4>
+        </div>
+        <div *ngIf="commanders.length == 2 && commanders[1] != null" class="commander-generator-card-holder">
+          <img class="commander-generator-card" [src]="commanders[1].image_uris != null && commanders[1].image_uris.png != null? commanders[1].image_uris.png: ''">
+          <h4 class="commander-generator-card-name">{{commanders[1].name}}</h4>
+        </div>
+        <div class="commander-generator-theme-holder" *ngIf="commander_themes.length > 0">
+          <h3>Themes:</h3>
+          <p *ngFor="let theme of commander_themes">{{theme.value}}</p>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

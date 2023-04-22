@@ -468,4 +468,13 @@ export class FddpApiService {
       })
     })
   }
+
+  public getEdhrecCommanderThemes(commander: any, commander2: any) {
+    return new Promise<void>((resolve) => {
+      this.http.post<any>(environment.fddp_api_url + '/edhrec/cmdrthemes', JSON.stringify({commander: commander, commander2: commander2}),
+        {headers : new HttpHeaders({'Content-Type': 'application/json'})}).subscribe((resp: any) => {
+        resolve(resp);
+      })
+    })
+  }
 }

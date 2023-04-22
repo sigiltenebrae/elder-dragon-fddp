@@ -2112,3 +2112,45 @@ commander-dashboard-select-zone {
 .commander-generator-checkbox {
   margin: 0 12px;
 }
+
+.commander-generator-card-holder {
+  position: relative;
+  max-width: 200px;
+  max-height: 320px;
+  min-width: 200px;
+  min-height: 279px;
+  margin-bottom: 100px;
+}
+
+.commander-generator-card-holder .commander-generator-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: 200px;
+  max-height: 279px;
+  min-width: 200px;
+  min-height: 279px;
+  width: 200px;
+  height: 279px;
+  border-radius: 12px;
+  z-index: 1;
+}
+
+.commander-generator-card-holder .commander-generator-card-name {
+  position: absolute;
+  top: 285px;
+  left: 0;
+  max-height: 70px;
+  min-width: 200px;
+  max-width: 200px;
+  text-align: center;
+}
+
+.commander-generator-theme-holder {
+  position: relative;
+  max-width: 400px;
+  max-height: 279px;
+  min-width: 200px;
+  min-height: 279px;
+  margin-bottom: 100px;
+}
