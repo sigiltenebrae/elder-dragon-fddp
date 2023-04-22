@@ -1,1 +1,54 @@
-<p>statistics works!</p>
+<div *ngIf="loading" fxFlexFill fxLayout="column" fxLayoutAlign="center center">
+  <mat-spinner color="warn"></mat-spinner>
+</div>
+<div *ngIf="!loading" fxFlexFill fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px">
+  <div fxLayout="row" style="height: 20px"></div>
+  <div fxLayout="row" fxLayoutGap="20px">
+    <mat-card *ngIf="colorDistChartDatasets" fxFlex fxLayout="column">
+      <mat-card-header>
+        <mat-card-title>Deck Color Distribution</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div style="display: block">
+          <canvas baseChart
+                  [labels]="colorDistChartLabels"
+                  [datasets]="colorDistChartDatasets"
+                  [options]="colorDistChartOptions"
+                  [legend]="false"
+                  [type]="'doughnut'">
+          </canvas>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card *ngIf="colorRatingChartData" fxFlex fxLayout="column">
+      <mat-card-header>
+        <mat-card-title>Average Rating By Color</mat-card-title>
+      </mat-card-header>
+      <mat-card-content fxFlex fxLayout="column" fxLayoutAlign="center center">
+        <canvas baseChart style="height: 200px;"
+                [data]="colorRatingChartData"
+                [options]="colorRatingChartOptions"
+                [plugins]="colorRatingChartPlugins"
+                [legend]="colorRatingChartLegend"
+                [type]="'bar'">
+        </canvas>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div fxLayout="row">
+    <mat-card *ngIf="card_usage" fxFlex fxLayout="column">
+      <mat-card-header>
+        <mat-card-title>Most Used Cards</mat-card-title>
+      </mat-card-header>
+      <mat-card-content fxFlex fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="10px">
+        <div *ngFor="let card of card_usage" fxLayout="column">
+          <div class="statistics-card-holder">
+            <img class="statistics-card" src="{{card.image}}">
+            <h2 class="statistics-card-name">{{card.name}}</h2>
+            <h2 class="statistics-card-percent">{{card.count / decks.length | percent}} of {{decks.length}} decks</h2>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

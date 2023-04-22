@@ -3,6 +3,8 @@ import {FddpApiService} from "../../services/fddp-api.service";
 import {TokenStorageService} from "../../services/token-storage.service";
 import {Router} from "@angular/router";
 
+import {ChartConfiguration} from "chart.js";
+
 @Component({
   selector: 'app-statistics',
   templateUrl: './statistics.component.html',
@@ -14,6 +16,7 @@ export class StatisticsComponent implements OnInit {
 
   user: any = null;
   decks: any[] = [];
+  loading = false;
 
   themes = [];
   tribes = [];
@@ -24,15 +27,27 @@ export class StatisticsComponent implements OnInit {
   tribe_rating_dict = {};
   card_usage: any = null;
 
+  //Data for "Deck Color Distribution" chart
+  public colorDistChartLabels: string[] = [ 'W', 'U', 'B', 'R', 'G' ];
+  public colorDistChartDatasets: ChartConfiguration<'doughnut'>['data']['datasets'] | undefined;
+  public colorDistChartOptions: ChartConfiguration<'doughnut'>['options'];
+
+  //Data for "Average Rating by Color" chart
+  public colorRatingChartData: ChartConfiguration<'bar'>['data'] | undefined;
+  public colorRatingChartLegend = false;
+  public colorRatingChartPlugins = [];
+  public colorRatingChartOptions: ChartConfiguration<'bar'>['options'];
+
   ngOnInit(): void {
     if (this.tokenStorage.getUser() == null || this.tokenStorage.getUser() == {} ||
       this.tokenStorage.getUser().id == null || this.tokenStorage.getUser().id < 0) {
       this.router.navigate(['login']);
     }
     else {
+      this.loading = true;
       //color dist --
       //color ratings --
-      //most used card
+      //most used card --
       //deck theme data --
       //color win data
       this.user = this.tokenStorage.getUser()
@@ -85,10 +100,10 @@ export class StatisticsComponent implements OnInit {
                 this.color_ratings[key] = this.color_dist[key] > 0 ? this.color_ratings[key] / this.color_dist[key]: 0;
               }
 
-              //console.log(this.color_dist);
-              //console.log(this.color_ratings);
-              //console.log(this.theme_rating_dict);
-              //console.log(this.tribe_rating_dict);
+              console.log(this.color_dist);
+              console.log(this.color_ratings);
+              console.log(this.theme_rating_dict);
+              console.log(this.tribe_rating_dict);
 
               if (card_data && card_data.length) {
                 let carddata_promises = [];
@@ -118,6 +133,10 @@ export class StatisticsComponent implements OnInit {
                   }
                   Promise.all(image_promises).then(() => {
                     this.card_usage.sort((a, b) => (a.count < b.count)? 1: -1);
+                    this.card_usage = this.card_usage.slice(0, 5);
+                    this.loadColorDistData();
+                    this.loadColorRatingData();
+                    this.loading = false;
                     //console.log(this.card_usage);
                   });
                 })
@@ -153,6 +172,132 @@ export class StatisticsComponent implements OnInit {
       }
     }
     return null;
+  }
+
+  public loadColorDistData() {
+    this.colorDistChartOptions = {
+      responsive: false,
+      plugins: {
+        title: {
+          display: false,
+          text: 'Deck Color Percentages',
+          color: this.user.theme === "light" ? 'rgb(100, 100, 100)':  'rgb(198, 198, 198)'
+        }
+      }
+    };
+    this.colorDistChartDatasets = [{
+      data: [
+        this.color_dist.W / this.decks.length,
+        this.color_dist.U / this.decks.length,
+        this.color_dist.B / this.decks.length,
+        this.color_dist.R / this.decks.length,
+        this.color_dist.G / this.decks.length,
+      ],
+      backgroundColor: [ //300
+        '#eeeeeebb',
+        '#64b5f6bb',
+        '#9e9e9ebb',
+        '#e57373bb',
+        '#81c784bb'
+      ],
+      borderColor: [ //400
+        '#e0e0e0bb',
+        '#42a5f5bb',
+        '#757575bb',
+        '#ef5350bb',
+        '#66bb6abb'
+      ],
+      hoverBackgroundColor: [ //500
+        '#bdbdbdbb',
+        '#2196f3bb',
+        '#616161bb',
+        '#f44336bb',
+        '#4caf50bb'
+      ],
+      hoverBorderColor: [ //600
+        '#9e9e9ebb',
+        '#1e88e5bb',
+        '#424242bb',
+        '#e53935bb',
+        '#43a047bb'
+      ],
+      borderWidth: 1,
+      label: 'Series A'
+    }];
+  }
+
+  public loadColorRatingData() {
+    this.colorRatingChartData = {
+      labels: [ 'W', 'U', 'B', 'R', 'G' ],
+      datasets: [
+        {
+          data: [
+            this.color_ratings.W,
+            this.color_ratings.U,
+            this.color_ratings.B,
+            this.color_ratings.R,
+            this.color_ratings.G
+          ],
+          backgroundColor: [ //300
+            '#eeeeeebb',
+            '#64b5f6bb',
+            '#9e9e9ebb',
+            '#e57373bb',
+            '#81c784bb'
+          ],
+          borderColor: [ //400
+            '#e0e0e0bb',
+            '#42a5f5bb',
+            '#757575bb',
+            '#ef5350bb',
+            '#66bb6abb'
+          ],
+          hoverBackgroundColor: [ //500
+            '#bdbdbdbb',
+            '#2196f3bb',
+            '#616161bb',
+            '#f44336bb',
+            '#4caf50bb'
+          ],
+          hoverBorderColor: [ //600
+            '#9e9e9ebb',
+            '#1e88e5bb',
+            '#424242bb',
+            '#e53935bb',
+            '#43a047bb'
+          ],
+          borderWidth: 1,
+          label: 'Fun to Play' }
+      ]
+    };
+    this.colorRatingChartOptions = {
+      responsive: false,
+      plugins: {
+        title: {
+          display: false,
+          text: 'Average Rating By Color',
+          color: this.user.theme === "light" ? 'rgb(100, 100, 100)':  'rgb(198, 198, 198)'
+        },
+        legend: {
+          labels: {
+            color: this.user.theme === "light" ? 'rgb(100, 100, 100)': 'rgb(198, 198, 198)'
+          }
+        },
+
+      },
+      scales: {
+        y: {
+          ticks: {
+            color: this.user.theme === "light" ? 'rgb(100, 100, 100)': 'rgb(198, 198, 198)'
+          }
+        },
+        x: {
+          ticks: {
+            color: this.user.theme === "light" ? 'rgb(100, 100, 100)': 'rgb(198, 198, 198)'
+          }
+        }
+      }
+    };
   }
 
 }

@@ -66,6 +66,7 @@ import { GameHistoryManagerComponent } from './game-history-manager/game-history
 import {MatTabsModule} from "@angular/material/tabs";
 import { CommanderGeneratorComponent } from './commander-generator/commander-generator.component';
 import { StatisticsComponent } from './statistics/statistics.component';
+import { NgChartsModule } from 'ng2-charts';
 
 
 
@@ -157,7 +158,8 @@ import { StatisticsComponent } from './statistics/statistics.component';
             registrationStrategy: 'registerWhenStable:30000'
         }),
         MatTableModule,
-        MatTabsModule
+        MatTabsModule,
+        NgChartsModule
     ],
   providers: [
     {provide: LocationStrategy, useClass: HashLocationStrategy}
