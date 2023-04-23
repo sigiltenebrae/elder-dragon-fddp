@@ -1,6 +1,16 @@
 <div fxFlexFill fxLayout="column" fxLayoutAlign="start center">
-  <div fxLayout="row" style="margin-top: 40px">
-    <h2>Your Recommendations:</h2>
+  <div fxLayout="row" fxLayoutGap="20px" style="margin-top: 40px">
+    <div fxLayout="column" fxLayoutAlign="center">
+      <h1>Recommendations for</h1>
+    </div>
+    <div fxLayout="column">
+      <mat-form-field appearance="outline" style="margin: 10px 0 0 0; width: 200px">
+        <mat-label>User</mat-label>
+        <mat-select [(value)]="user" (valueChange)="calculateRecommendations(user)">
+          <mat-option *ngFor="let rec_user of users" [value]="rec_user">{{rec_user.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
   </div>
   <div fxLayout="row" fxLayoutGap="10px" >
     <div class="commander-generator-card-holder" *ngFor="let rec of recs; let i = index">

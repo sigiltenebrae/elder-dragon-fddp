@@ -21,6 +21,8 @@ export class CommanderGeneratorComponent implements OnInit {
 
   users: any = null;
   user: any = null;
+
+  loading_recs = false;
   all_recs: any[] = [];
   recs: any[] = [];
 
@@ -32,60 +34,74 @@ export class CommanderGeneratorComponent implements OnInit {
       this.router.navigate(['login']);
     }
     else {
+      this.loading_recs = true;
       this.fddp_data.getUsers().then((users) => {
         this.users = users;
         for (let user of this.users) {
           if (user.id == this.tokenStorage.getUser().id) {
             this.user = user;
-            if (this.user.recs && this.user.recs.length) {
-              let rec_promises = [];
-              for (let i = 0; i < this.user.recs.length; i++) {
-                if (i == 30) {
-                  break;
-                }
-                if (this.user.recs[i].name) {
-                  rec_promises.push(
-                    new Promise((resolve) => {
-                      this.fddp_data.getCardInfo(this.user.recs[i].name).then((card_data) => {
-                        card_data.image = card_data.default_image;
-                        card_data.count = this.user.recs[i].count;
-                        resolve(card_data);
-                      });
-                    }));
-                }
-              }
-              Promise.all(rec_promises).then((rec_list) => {
-                this.all_recs = rec_list;
-                for (let j = 0; j < this.all_recs.length; j++) {
-                  if (this.recs.length == 5) {
-                    break;
-                  }
-                  if (this.all_recs[j].oracle_text.includes("Partner") && !this.all_recs[j].oracle_text.includes("Partner with")) {
-                    let k = 1;
-                    while(j + k < this.all_recs.length) {
-                      if (this.all_recs[j + k].oracle_text.includes("Partner") && !this.all_recs[j + k].oracle_text.includes("Partner with")) {
-                        this.recs.push([this.all_recs[j], this.all_recs[j + k]]);
-                        this.all_recs.splice(j + k, 1);
-                        k = -1;
-                        break;
-                      }
-                      k++;
-                    }
-                    if (j + k == this.all_recs.length) {
-                      this.recs.push([this.all_recs[j]]);
-                    }
-                  }
-                  else {
-                    this.recs.push([this.all_recs[j]]);
-                  }
-                }
-              })
-            }
-            break;
+            this.calculateRecommendations(this.user).then(() => {
+              this.loading_recs = false;
+            });
           }
         }
       })
     }
+  }
+
+  calculateRecommendations(rec_user) {
+    return new Promise<void>((resolve) => {
+      if (rec_user.recs && rec_user.recs.length) {
+        this.all_recs = [];
+        this.recs = [];
+        let rec_promises = [];
+        for (let i = 0; i < rec_user.recs.length; i++) {
+          if (i == 30) {
+            break;
+          }
+          if (rec_user.recs[i].name) {
+            rec_promises.push(
+              new Promise((resolve) => {
+                this.fddp_data.getCardInfo(rec_user.recs[i].name).then((card_data) => {
+                  card_data.image = card_data.default_image;
+                  card_data.count = rec_user.recs[i].count;
+                  resolve(card_data);
+                });
+              }));
+          }
+        }
+        Promise.all(rec_promises).then((rec_list) => {
+          this.all_recs = rec_list;
+          for (let j = 0; j < this.all_recs.length; j++) {
+            if (this.recs.length == 5) {
+              break;
+            }
+            if (this.all_recs[j].oracle_text.includes("Partner") && !this.all_recs[j].oracle_text.includes("Partner with")) {
+              let k = 1;
+              while(j + k < this.all_recs.length) {
+                if (this.all_recs[j + k].oracle_text.includes("Partner") && !this.all_recs[j + k].oracle_text.includes("Partner with")) {
+                  this.recs.push([this.all_recs[j], this.all_recs[j + k]]);
+                  this.all_recs.splice(j + k, 1);
+                  k = -1;
+                  break;
+                }
+                k++;
+              }
+              if (j + k == this.all_recs.length) {
+                this.recs.push([this.all_recs[j]]);
+              }
+            }
+            else {
+              this.recs.push([this.all_recs[j]]);
+            }
+          }
+          resolve();
+        })
+      }
+      else{
+        resolve();
+      }
+    })
   }
 
   generateCommander() {

@@ -15,6 +15,7 @@ export class StatisticsComponent implements OnInit {
   constructor(private fddp_data: FddpApiService, private tokenStorage: TokenStorageService, private router: Router) { }
 
   user: any = null;
+  users = [];
   decks: any[] = [];
   loading_cards = false;
   loading = false;
@@ -53,19 +54,45 @@ export class StatisticsComponent implements OnInit {
       this.router.navigate(['login']);
     }
     else {
-      this.loading = true;
+
       //color dist --
       //color ratings --
       //most used card --
       //deck theme data --
       //color win data
-      this.user = this.tokenStorage.getUser()
-      if(this.user && this.user.id) {
+      this.fddp_data.getUsers().then((users) => {
+        this.users = users;
+        for (let user of this.users) {
+          if (user.id == this.tokenStorage.getUser().id) {
+            this.user = user;
+            this.calculateStatistics(this.user).then(() => {
+              console.log('done!');
+            });
+          }
+        }
+      });
+    }
+  }
+
+  calculateStatistics(stat_user) {
+    return new Promise<void>((resolve) => {
+      if(stat_user && stat_user.id) {
+        this.loading_finished = 0;
+        this.loading_total = 100;
+        this.color_dist = {W: 0, U: 0, B: 0, R: 0, G: 0, C: 0};
+        this.color_ratings = {W: 0, U: 0, B: 0, R: 0, G: 0, C: 0};
+        this.color_usage = {W: 0, U: 0, B: 0, R: 0, G: 0};
+        this.theme_rating_dict = {};
+        this.tribe_rating_dict = {};
+        this.card_usage = null;
+
+        this.loading = true;
+
         this.fddp_data.getThemes().then((theme_data) => {
           this.themes = theme_data.themes;
           this.tribes = theme_data.tribes;
-          this.fddp_data.getCardUsage(this.user.id).then((card_data: any) => {
-            this.fddp_data.getDecksBasic(this.user.id).then((decks: any) => {
+          this.fddp_data.getCardUsage(stat_user.id).then((card_data: any) => {
+            this.fddp_data.getDecksBasic(stat_user.id).then((decks: any) => {
               this.decks = decks;
               for (let deck of this.decks) {
                 if (deck.colors) {
@@ -147,7 +174,10 @@ export class StatisticsComponent implements OnInit {
           });
         });
       }
-    }
+      else {
+        resolve();
+      }
+    })
   }
 
   /**
@@ -183,7 +213,7 @@ export class StatisticsComponent implements OnInit {
         title: {
           display: false,
           text: 'Deck Color Percentages',
-          color: this.user.theme === "light" ? 'rgb(100, 100, 100)':  'rgb(198, 198, 198)'
+          color: this.tokenStorage.getUser().theme === "light" ? 'rgb(100, 100, 100)':  'rgb(198, 198, 198)'
         }
       }
     };
@@ -235,7 +265,7 @@ export class StatisticsComponent implements OnInit {
         title: {
           display: false,
           text: 'Deck Color Percentages',
-          color: this.user.theme === "light" ? 'rgb(100, 100, 100)':  'rgb(198, 198, 198)'
+          color: this.tokenStorage.getUser().theme === "light" ? 'rgb(100, 100, 100)':  'rgb(198, 198, 198)'
         }
       }
     };
@@ -330,11 +360,11 @@ export class StatisticsComponent implements OnInit {
         title: {
           display: false,
           text: 'Average Rating By Color',
-          color: this.user.theme === "light" ? 'rgb(100, 100, 100)':  'rgb(198, 198, 198)'
+          color: this.tokenStorage.getUser().theme === "light" ? 'rgb(100, 100, 100)':  'rgb(198, 198, 198)'
         },
         legend: {
           labels: {
-            color: this.user.theme === "light" ? 'rgb(100, 100, 100)': 'rgb(198, 198, 198)'
+            color: this.tokenStorage.getUser().theme === "light" ? 'rgb(100, 100, 100)': 'rgb(198, 198, 198)'
           }
         },
 
@@ -342,12 +372,12 @@ export class StatisticsComponent implements OnInit {
       scales: {
         y: {
           ticks: {
-            color: this.user.theme === "light" ? 'rgb(100, 100, 100)': 'rgb(198, 198, 198)'
+            color: this.tokenStorage.getUser().theme === "light" ? 'rgb(100, 100, 100)': 'rgb(198, 198, 198)'
           }
         },
         x: {
           ticks: {
-            color: this.user.theme === "light" ? 'rgb(100, 100, 100)': 'rgb(198, 198, 198)'
+            color: this.tokenStorage.getUser().theme === "light" ? 'rgb(100, 100, 100)': 'rgb(198, 198, 198)'
           }
         }
       }
