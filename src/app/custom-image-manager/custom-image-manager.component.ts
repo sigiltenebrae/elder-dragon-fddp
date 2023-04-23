@@ -14,8 +14,10 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog
 export class CustomImageManagerComponent implements OnInit {
 
   search_term = '';
+  card_search_type = 'cards'
 
   cards: any[] = [];
+  tokens: any[] = [];
 
   name: any = null;
   image: string = '';
@@ -62,9 +64,14 @@ export class CustomImageManagerComponent implements OnInit {
     }
     else {
       this.fddp_data.getCustomCards().then((cards: any) => {
-        this.cards = cards;
-        this.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
-        this.cards.forEach((card: any) => { card.deleting = false; card.visible = true; });
+        this.fddp_data.getCustomTokens().then((tokens: any) => {
+          this.cards = cards;
+          this.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+          this.cards.forEach((card: any) => { card.deleting = false; card.visible = true; });
+          this.tokens = tokens;
+          this.tokens.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+          this.tokens.forEach((card: any) => { card.deleting = false; card.visible = true; });
+        })
       });
     }
   }
@@ -128,16 +135,23 @@ export class CustomImageManagerComponent implements OnInit {
       for (let card of this.cards) {
         card.visible = card.name.toLowerCase().includes(this.search_term.toLowerCase());
       }
+      for (let token of this.tokens) {
+        token.visible = token.name.toLowerCase().includes(this.search_term.toLowerCase());
+      }
     }
     else {
       for (let card of this.cards) {
         card.visible = true;
       }
+      for (let token of this.tokens) {
+        token.visible = true;
+      }
     }
   }
 
-  getVisible(list) {
+  getVisible() {
     let out_list = [];
+    let list = this.card_search_type === 'cards'? this.cards: this.tokens;
     for (let item of list) {
       if (item.visible) {
         out_list.push(item);

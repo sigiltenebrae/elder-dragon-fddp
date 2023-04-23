@@ -320,6 +320,28 @@ export class FddpApiService {
     });
   }
 
+  public getCustomTokens(): Promise<any> {
+    return new Promise<any>((resolve) => {
+      this.http.get(environment.fddp_api_url + '/custom_tokens').subscribe((cards: any) => {
+        resolve(cards);
+      }, () => {
+        resolve([]);
+      });
+    });
+  }
+
+  public deleteCustomCard(cardid: number): Promise<void> {
+    return new Promise<void>((resolve) => {
+      this.http.delete(environment.fddp_api_url + '/custom_cards/' + cardid).subscribe(() => { resolve(); })
+    });
+  }
+
+  public deleteCustomToken(cardid: number): Promise<void> {
+    return new Promise<void>((resolve) => {
+      this.http.delete(environment.fddp_api_url + '/custom_tokens/' + cardid).subscribe(() => { resolve(); })
+    });
+  }
+
   public getBanList(): Promise<any> {
     return new Promise<any>((resolve) => {
       this.http.get(environment.fddp_api_url + '/bans/list').subscribe((cards: any) => {
@@ -337,12 +359,6 @@ export class FddpApiService {
       }, () => {
         resolve([]);
       });
-    });
-  }
-
-  public deleteCustomCard(cardid: number): Promise<void> {
-    return new Promise<void>((resolve) => {
-      this.http.delete(environment.fddp_api_url + '/custom_cards/' + cardid).subscribe(() => { resolve(); })
     });
   }
 

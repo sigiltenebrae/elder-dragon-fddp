@@ -70,14 +70,21 @@
     </div>
   </div>
   <div fxLayout="row" style="min-height: 50px;"></div>
-  <div fxLayout="row" fxLayoutAlign="start">
+  <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="10px">
     <mat-form-field appearance="outline" style="width: 400px">
       <mat-label>Search Card</mat-label>
       <input type="text" placeholder="Search Card" matInput [(ngModel)]="search_term" (ngModelChange)="updateVisibility()">
     </mat-form-field>
+    <mat-form-field appearance="outline" style="width: 150px">
+      <mat-label>Type</mat-label>
+      <mat-select [(value)]="card_search_type" (valueChange)="updateVisibility()">
+        <mat-option value="cards">Cards</mat-option>
+        <mat-option value="tokens">Tokens</mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
   <div fxLayout="row wrap" fxLayoutGap="10px" fxLayoutAlign="center">
-    <div *ngFor="let card of getVisible(cards)">
+    <div *ngFor="let card of getVisible()">
       <div *ngIf="card.visible" class="custom-image-card-holder">
         <button *ngIf="!card.deleting && isAdmin()" (click)="card.deleting=true" mat-raised-button color="warn" class="custom-image-card-delete">Delete</button>
         <button *ngIf="card.deleting" (click)="deleteCustomCard(card)" mat-raised-button color="warn" class="custom-image-card-delete">Confirm</button>
