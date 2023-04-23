@@ -3,23 +3,27 @@
     <mat-spinner></mat-spinner>
   </div>
   <div *ngIf="!loading">
-    <div *ngIf="isAdmin()" fxLayout="row" fxLayoutAlign="start" fxLayoutGap="10px" style="margin: 0 20px 0 20px;">
+    <div *ngIf="isAdmin()" fxLayout="row" fxLayoutAlign="space-between" style="margin: 0 20px 0 20px;">
       <div fxLayout="column">
-        <mat-form-field appearance="outline" style="margin: 10px 0 0 0; width: 400px">
-          <mat-label>Ban Card</mat-label>
-          <input type="text" placeholder="Ban Card" matInput [ngbTypeahead]="card_search" [(ngModel)]="new_ban_name" [editable]="false">
-        </mat-form-field>
-      </div>
-      <div fxLayout="column">
-        <mat-form-field appearance="outline" style="margin: 10px 0 0 0; width: 200px">
-          <mat-label>Type</mat-label>
-          <mat-select [(value)]="new_ban_type">
-            <mat-option *ngFor="let ban_type of types" value="{{ban_type.id}}">{{ban_type.type}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div fxLayout="column" fxLayoutAlign="center">
-        <button mat-raised-button style="height: 48px; margin: -10px 0 0 0;" (click)="submitBan()">Submit</button>
+        <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="10px">
+          <div fxLayout="column">
+            <mat-form-field appearance="outline" style="margin: 10px 0 0 0; width: 400px">
+              <mat-label>Ban Card</mat-label>
+              <input type="text" placeholder="Ban Card" matInput [ngbTypeahead]="card_search" [(ngModel)]="new_ban_name" [editable]="false">
+            </mat-form-field>
+          </div>
+          <div fxLayout="column">
+            <mat-form-field appearance="outline" style="margin: 10px 0 0 0; width: 200px">
+              <mat-label>Type</mat-label>
+              <mat-select [(value)]="new_ban_type">
+                <mat-option *ngFor="let ban_type of types" value="{{ban_type.id}}">{{ban_type.type}}</mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div fxLayout="column" fxLayoutAlign="center">
+            <button mat-raised-button style="height: 48px; margin: -10px 0 0 0;" (click)="submitBan()">Submit</button>
+          </div>
+        </div>
       </div>
     </div>
     <div fxLayout="row" fxLayoutAlign="space-between">
@@ -60,6 +64,12 @@
           </mat-expansion-panel>
         </div>
       </mat-accordion>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start">
+      <div fxLayout="column" style="margin: 20px 20px 0 20px; width: 400px">
+        <h2>Recent Bans:</h2>
+        <h4 *ngFor="let card of changelog">&emsp;'{{card.name}}' was {{getBanType(card.ban_type)}}</h4>
+      </div>
     </div>
   </div>
 </div>

@@ -27,6 +27,8 @@ export class BanListComponent implements OnInit {
 
   search_term = '';
 
+  changelog: any[] = [];
+
   constructor(private fddp_data: FddpApiService,  private tokenStorage: TokenStorageService, private router: Router, public dialog: MatDialog) { }
 
   isAdmin() {
@@ -42,6 +44,13 @@ export class BanListComponent implements OnInit {
       this.loading = true;
       this.fddp_data.getBanList().then((cards: any) => {
         this.cards = cards;
+        this.cards.sort((a: any, b: any) => (a.created < b.created) ? 1: -1);
+        for (let i = 0; i < this.cards.length; i++) {
+          if (i == 5) {
+            break;
+          }
+          this.changelog.push(this.cards[i]);
+        }
         this.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
         let card_promises = [];
         this.cards.forEach((card: any) => {
@@ -61,6 +70,15 @@ export class BanListComponent implements OnInit {
         });
       });
     }
+  }
+
+  getBanType(id) {
+    for (let type of this.types) {
+      if (type.id == id) {
+        return type.type;
+      }
+    }
+    return null;
   }
 
   /**
