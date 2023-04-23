@@ -1,10 +1,11 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {FddpApiService} from "../../services/fddp-api.service";
 import {TokenStorageService} from "../../services/token-storage.service";
 import {Router} from "@angular/router";
 import {debounceTime, distinctUntilChanged, Observable, OperatorFunction, switchMap, tap} from "rxjs";
 import * as Scry from "scryfall-sdk";
 import {MatAccordion} from "@angular/material/expansion";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-ban-list',
@@ -26,7 +27,7 @@ export class BanListComponent implements OnInit {
 
   search_term = '';
 
-  constructor(private fddp_data: FddpApiService,  private tokenStorage: TokenStorageService, private router: Router) { }
+  constructor(private fddp_data: FddpApiService,  private tokenStorage: TokenStorageService, private router: Router, public dialog: MatDialog) { }
 
   isAdmin() {
     return this.tokenStorage.getUser().isAdmin;
@@ -113,8 +114,7 @@ export class BanListComponent implements OnInit {
   submitBan() {
     if (this.new_ban_name != null) {
       this.fddp_data.banCard({name: this.new_ban_name, ban_type: this.new_ban_type}).then(() => {
-        this.new_ban_name = null;
-        console.log('banned!');
+        this.reloadPage();
       })
     }
   }
@@ -122,11 +122,27 @@ export class BanListComponent implements OnInit {
   deleteBan(card: any) {
     this.fddp_data.removeBan(card).then(() => {
       console.log('ban removed!');
+      this.reloadPage();
     })
   }
 
   changeImage(card: any) {
-
+    this.fddp_data.getImagesForCard(card.name).then((image_data:any) => {
+      if (image_data.images && image_data.images.length > 0) {
+        const imgDialogRef = this.dialog.open(BanlistImageDialog, {
+          width: '800px',
+          data: {name: card.name, images: image_data.images},
+        });
+        imgDialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            card.image = result.image;
+            this.fddp_data.setBanImage(card).then(() => {
+              this.reloadPage();
+            });
+          }
+        })
+      }
+    })
   }
 
   getVisible(list) {
@@ -165,4 +181,30 @@ export class BanListComponent implements OnInit {
     return true;
   }
 
+  reloadPage(): void {
+    window.location.reload();
+  }
+
+}
+
+@Component({
+  selector: 'ban-list-image-dialog',
+  templateUrl: 'ban-list-image-dialog.html',
+})
+export class BanlistImageDialog {
+  constructor(
+    public dialogRef: MatDialogRef<BanlistImageDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+  ) {}
+
+  images: any[] = this.data.images;
+  card_name = this.data.name;
+
+  onNoClick(): void {
+    this.dialogRef.close(null);
+  }
+
+  selectImage(res: any) {
+    this.dialogRef.close(res);
+  }
 }

@@ -39,7 +39,8 @@ import {
   CounterSetDialog,
   TwoHeadedTeamsDialog,
   SelectColorsDialog,
-  EndGameDialog, HelpDialog
+  EndGameDialog,
+  HelpDialog
 } from './game-handler/game-handler-addons.component'
 import {MatMenuModule} from "@angular/material/menu";
 import {FormsModule} from "@angular/forms";
@@ -59,7 +60,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import {HashLocationStrategy, LocationStrategy} from "@angular/common";
 import { environment } from '../environments/environment';
-import {BanListComponent} from "./ban-list/ban-list.component";
+import {BanListComponent, BanlistImageDialog} from "./ban-list/ban-list.component";
 import { GameHistoryComponent } from './game-history/game-history.component';
 import {MatTableModule} from "@angular/material/table";
 import { GameHistoryManagerComponent } from './game-history-manager/game-history-manager.component';
@@ -96,6 +97,7 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
     ChangePasswordComponent,
     ProfileComponent,
     BanListComponent,
+    BanlistImageDialog,
     GameHistoryComponent,
     GameHistoryManagerComponent,
     CommanderGeneratorComponent,

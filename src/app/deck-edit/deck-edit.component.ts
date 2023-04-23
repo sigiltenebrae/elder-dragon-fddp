@@ -7,7 +7,6 @@ import * as Scry from "scryfall-sdk";
 import {ActivatedRoute, Router} from "@angular/router";
 import {TokenStorageService} from "../../services/token-storage.service";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
-import {CustomTokenDialog} from "../custom-images/custom-images.component";
 import {MatChipInputEvent} from "@angular/material/chips";
 
 @Component({

@@ -78,7 +78,7 @@ export class FddpApiService {
     })
   }
 
-  public getImagesForCard(card: string): Promise<any[]> {
+  public getImagesForCard(card: string): Promise<any> {
     return new Promise<any[]>((resolve_images, reject) => {
       this.http.post(environment.fddp_api_url + '/cards/images',
         JSON.stringify({name: card}),
