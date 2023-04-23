@@ -1,8 +1,90 @@
-<div fxFlexFill fxLayout="row wrap" fxLayoutGap="10px" fxLayoutAlign="center">
-  <div class="custom-image-card-holder" *ngFor="let card of cards">
-    <button *ngIf="!card.deleting && isAdmin()" (click)="card.deleting=true" mat-raised-button color="warn" class="custom-image-card-delete">Delete</button>
-    <button *ngIf="card.deleting" (click)="deleteCustomCard(card)" mat-raised-button color="warn" class="custom-image-card-delete">Confirm</button>
-    <img (mouseleave)="card.deleting=false;" class="custom-image-card" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
-    <h3 class="custom-image-card-name">{{card.name}}</h3>
+<div fxLayout="column" fxFlexFill style="padding: 20px">
+  <div fxLayout="row" fxLayoutGap="40px">
+    <div fxLayout="column">
+      <mat-form-field appearance="outline" style="margin-top: 10px; width: 400px">
+        <mat-label>Type</mat-label>
+        <mat-select [(value)]="card_type">
+          <mat-option value="cards">Cards</mat-option>
+          <mat-option value="tokens">Tokens</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field *ngIf="card_type === 'tokens'" appearance="outline" style="margin-top: 10px;">
+        <mat-label>Name</mat-label>
+        <input type="text" placeholder="Enter Card Name" matInput
+               [(ngModel)]="name">
+        <button type="button" mat-icon-button matSuffix (click)="openTokenDialog()">
+          <mat-icon>search</mat-icon>
+        </button>
+      </mat-form-field>
+      <mat-form-field *ngIf="card_type === 'tokens'" appearance="outline" style="margin-top: 10px;">
+        <mat-label>Type Line</mat-label>
+        <input matInput placeholder="'Token Creature - Bird'" [type]="'text'" [(ngModel)]="token_type">
+      </mat-form-field>
+      <div *ngIf="card_type === 'tokens'" fxLayout="row" fxLayoutAlign="space-between">
+        <mat-checkbox [(ngModel)]="token_colors.w">W</mat-checkbox>
+        <mat-checkbox [(ngModel)]="token_colors.u">U</mat-checkbox>
+        <mat-checkbox [(ngModel)]="token_colors.b">B</mat-checkbox>
+        <mat-checkbox [(ngModel)]="token_colors.r">R</mat-checkbox>
+        <mat-checkbox [(ngModel)]="token_colors.g">G</mat-checkbox>
+      </div>
+      <mat-form-field *ngIf="card_type === 'tokens'" appearance="outline" style="margin-top: 10px;">
+        <mat-label>Text</mat-label>
+        <textarea matInput placeholder="'Flying'" [type]="'text'" [(ngModel)]="token_text"></textarea>
+      </mat-form-field>
+      <div *ngIf="card_type === 'tokens'" fxLayout="row" fxLayoutGap="10px">
+        <mat-form-field fxFlex appearance="outline" style="margin-top: 10px;">
+          <mat-label>Power</mat-label>
+          <input matInput placeholder="Power" [type]="'text'" [(ngModel)]="token_power">
+        </mat-form-field>
+        <mat-form-field fxFlex appearance="outline" style="margin-top: 10px;">
+          <mat-label>Toughness</mat-label>
+          <input matInput placeholder="Toughness" [type]="'text'" [(ngModel)]="token_toughness">
+        </mat-form-field>
+      </div>
+      <mat-form-field *ngIf="card_type === 'cards'" appearance="outline" style="margin-top: 10px;">
+        <mat-label>Add Card</mat-label>
+        <input type="text" placeholder="Enter Card" matInput
+               [ngbTypeahead]="card_search" [(ngModel)]="name" [editable]="false">
+      </mat-form-field>
+      <mat-form-field appearance="outline" style="margin-top: 10px;">
+        <mat-label>Google Drive Share Link Formatter (optional)</mat-label>
+        <input matInput [type]="'text'" name="imageurl" [(ngModel)]="image_google" (ngModelChange)="formatLink('google')">
+      </mat-form-field>
+      <mat-form-field appearance="outline" style="margin-top: 10px;">
+        <mat-label>Custom Image Url</mat-label>
+        <input matInput [type]="'text'" name="imageurl" [(ngModel)]="image" required minlength="1">
+      </mat-form-field>
+      <div fxLayout="row" fxLayoutAlign="end">
+        <button *ngIf="card_type==='cards'" mat-raised-button (click)="createCustomCard()">Submit</button>
+        <button *ngIf="card_type==='tokens'" mat-raised-button (click)="createCustomToken()">Submit</button>
+      </div>
+    </div>
+    <div fxLayout="column">
+      <div fxLayout="row" fxFlex fxLayoutAlign="center">
+        <div class="custom-images-card-preview">
+          <img class="custom-images-card" src="{{image}}"
+               alt="If image does not display below, it will not display in game! Try getting it from another source."
+               loading="lazy">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div fxLayout="row" style="min-height: 50px;"></div>
+  <div fxLayout="row" fxLayoutAlign="start">
+    <mat-form-field appearance="outline" style="width: 400px">
+      <mat-label>Search Card</mat-label>
+      <input type="text" placeholder="Search Card" matInput [(ngModel)]="search_term" (ngModelChange)="updateVisibility()">
+    </mat-form-field>
+  </div>
+  <div fxLayout="row wrap" fxLayoutGap="10px" fxLayoutAlign="center">
+    <div *ngFor="let card of getVisible(cards)">
+      <div *ngIf="card.visible" class="custom-image-card-holder">
+        <button *ngIf="!card.deleting && isAdmin()" (click)="card.deleting=true" mat-raised-button color="warn" class="custom-image-card-delete">Delete</button>
+        <button *ngIf="card.deleting" (click)="deleteCustomCard(card)" mat-raised-button color="warn" class="custom-image-card-delete">Confirm</button>
+        <img (mouseleave)="card.deleting=false;" class="custom-image-card" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
+        <h3 class="custom-image-card-name">{{card.name}}</h3>
+      </div>
+    </div>
   </div>
 </div>
+

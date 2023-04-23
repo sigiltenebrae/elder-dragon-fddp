@@ -47,8 +47,7 @@ import {FormsModule} from "@angular/forms";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import { DeckEditComponent, TokenFinderDialog } from './deck-edit/deck-edit.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { CustomImagesComponent, CustomTokenDialog } from './custom-images/custom-images.component';
-import { CustomImageManagerComponent } from './custom-image-manager/custom-image-manager.component';
+import { CustomImageManagerComponent, CustomTokenDialog } from './custom-image-manager/custom-image-manager.component';
 import { DeckManagerComponent } from './deck-manager/deck-manager.component';
 import { MatSnackBarModule } from "@angular/material/snack-bar";
 import { MatDialogModule } from "@angular/material/dialog";
@@ -78,7 +77,6 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
     GameHandlerComponent,
     DeckEditComponent,
     TokenFinderDialog,
-    CustomImagesComponent,
     CustomTokenDialog,
     CustomImageManagerComponent,
     DeckManagerComponent,
@@ -140,7 +138,6 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
             {path: 'games', component: GameManagerComponent},
             {path: 'games/:gameid', component: GameHandlerComponent},
             {path: 'decks/:deckid', component: DeckEditComponent},
-            {path: 'upload', component: CustomImagesComponent},
             {path: 'custom', component: CustomImageManagerComponent},
             {path: 'bans', component: BanListComponent},
             {path: 'history', component: GameHistoryComponent},
