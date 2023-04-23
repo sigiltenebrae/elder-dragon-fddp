@@ -95,6 +95,7 @@ export class CommanderGeneratorComponent implements OnInit {
               this.recs.push([this.all_recs[j]]);
             }
           }
+          console.log(this.all_recs);
           resolve();
         })
       }
