@@ -67,6 +67,7 @@ import {MatTabsModule} from "@angular/material/tabs";
 import { CommanderGeneratorComponent } from './commander-generator/commander-generator.component';
 import { StatisticsComponent } from './statistics/statistics.component';
 import { NgChartsModule } from 'ng2-charts';
+import {MatProgressBarModule} from "@angular/material/progress-bar";
 
 
 
@@ -159,7 +160,8 @@ import { NgChartsModule } from 'ng2-charts';
         }),
         MatTableModule,
         MatTabsModule,
-        NgChartsModule
+        NgChartsModule,
+        MatProgressBarModule
     ],
   providers: [
     {provide: LocationStrategy, useClass: HashLocationStrategy}

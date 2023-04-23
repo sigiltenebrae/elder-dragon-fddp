@@ -1586,15 +1586,12 @@ export class GameHandlerComponent implements OnInit {
   setPlane() {
     let new_plane = this.planes[Math.floor(Math.random() * (this.planes.length))];
     this.fddp_data.getCardInfo(new_plane).then((plane_data: any) => {
-      this.getCardImages(new_plane).then((image_data: any) => {
-        let images = image_data;
-        let new_plane: any = plane_data;
-        new_plane.plane = true;
-        new_plane.image = images.length > 0 ? images[0].image: null;
-        this.game_data.current_plane = plane_data;
-        this.updateSocketPlane(plane_data);
-        this.logAction('plane', {plane: plane_data});
-      });
+      let new_plane: any = plane_data;
+      new_plane.plane = true;
+      new_plane.image = new_plane.default_image;
+      this.game_data.current_plane = plane_data;
+      this.updateSocketPlane(plane_data);
+      this.logAction('plane', {plane: plane_data});
     });
   }
 

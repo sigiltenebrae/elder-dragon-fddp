@@ -38,7 +38,6 @@ export class CommanderGeneratorComponent implements OnInit {
           if (user.id == this.tokenStorage.getUser().id) {
             this.user = user;
             if (this.user.recs && this.user.recs.length) {
-              console.log(this.user.recs);
               let rec_promises = [];
               for (let i = 0; i < this.user.recs.length; i++) {
                 if (i == 30) {
@@ -48,14 +47,10 @@ export class CommanderGeneratorComponent implements OnInit {
                   rec_promises.push(
                     new Promise((resolve) => {
                       this.fddp_data.getCardInfo(this.user.recs[i].name).then((card_data) => {
-                        this.fddp_data.getImagesForCard(this.user.recs[i].name).then((card_images:any) => {
-                          if (card_images && card_images.images && card_images.images.length) {
-                            card_data.image = card_images.images[card_images.images.length - 1].image;
-                            card_data.count = this.user.recs[i].count;
-                            resolve(card_data);
-                          }
-                        })
-                      })
+                        card_data.image = card_data.default_image;
+                        card_data.count = this.user.recs[i].count;
+                        resolve(card_data);
+                      });
                     }));
                 }
               }
@@ -65,7 +60,6 @@ export class CommanderGeneratorComponent implements OnInit {
                   if (this.recs.length == 5) {
                     break;
                   }
-                  console.log(this.all_recs[j]);
                   if (this.all_recs[j].oracle_text.includes("Partner") && !this.all_recs[j].oracle_text.includes("Partner with")) {
                     let k = 1;
                     while(j + k < this.all_recs.length) {
@@ -85,7 +79,6 @@ export class CommanderGeneratorComponent implements OnInit {
                     this.recs.push([this.all_recs[j]]);
                   }
                 }
-                console.log(this.recs);
               })
             }
             break;

@@ -1,12 +1,17 @@
 <div *ngIf="loading" fxFlexFill fxLayout="column" fxLayoutAlign="center center">
-  <mat-spinner color="warn"></mat-spinner>
+  <div fxLayout="row">
+    <mat-card style="min-width: 400px; max-width: 400px">
+      <h4 style="text-align: center; width: 100%">Calculating Data...</h4>
+      <mat-progress-bar mode="determinate" [value]="(loading_finished / loading_total) * 100" color="accent"></mat-progress-bar>
+    </mat-card>
+  </div>
 </div>
 <div *ngIf="!loading" fxFlexFill fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px">
   <div fxLayout="row" style="height: 20px"></div>
   <div fxLayout="row" fxLayoutGap="20px">
     <mat-card *ngIf="colorDistChartDatasets" fxFlex fxLayout="column">
       <mat-card-header>
-        <mat-card-title>Deck Color Distribution</mat-card-title>
+        <mat-card-title>Commander Color Distribution</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <div style="display: block">
@@ -14,6 +19,22 @@
                   [labels]="colorDistChartLabels"
                   [datasets]="colorDistChartDatasets"
                   [options]="colorDistChartOptions"
+                  [legend]="false"
+                  [type]="'doughnut'">
+          </canvas>
+        </div>
+      </mat-card-content>
+    </mat-card>
+    <mat-card *ngIf="colorUsageChartDatasets" fxFlex fxLayout="column">
+      <mat-card-header>
+        <mat-card-title>Deck Color Distribution</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div style="display: block">
+          <canvas baseChart
+                  [labels]="colorUsageChartLabels"
+                  [datasets]="colorUsageChartDatasets"
+                  [options]="colorUsageChartOptions"
                   [legend]="false"
                   [type]="'doughnut'">
           </canvas>
