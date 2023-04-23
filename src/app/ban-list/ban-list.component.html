@@ -3,33 +3,63 @@
     <mat-spinner></mat-spinner>
   </div>
   <div *ngIf="!loading">
-    <div *ngIf="isAdmin" fxLayout="row" fxLayoutAlign="center" fxLayoutGap="10px">
-      <mat-form-field appearance="fill" style="margin-top: 10px;">
-        <mat-label>Select Card</mat-label>
-        <input type="text" placeholder="Enter Card" matInput
-               [ngbTypeahead]="card_search" [(ngModel)]="new_ban_name" [editable]="false">
-      </mat-form-field>
-      <mat-form-field appearance="fill" style="margin-top: 10px;">
-        <mat-label>Type</mat-label>
-        <mat-select [(value)]="new_ban_type">
-          <mat-option *ngFor="let ban_type of types" value="{{ban_type.id}}">{{ban_type.type}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <button mat-raised-button color="primary" style="height: 48px" (click)="submitBan()">Submit</button>
-    </div>
-    <div *ngFor="let ban_type of types">
-      <div fxLayout="row" fxLayoutAlign="center">
-        <h2 style="text-decoration: underline; text-transform: capitalize">{{ban_type.type}}</h2>
+    <div *ngIf="isAdmin" fxLayout="row" fxLayoutAlign="start" fxLayoutGap="10px" style="margin: 0 20px 0 20px;">
+      <div fxLayout="column">
+        <mat-form-field appearance="outline" style="margin: 10px 0 0 0; width: 400px">
+          <mat-label>Ban Card</mat-label>
+          <input type="text" placeholder="Ban Card" matInput [ngbTypeahead]="card_search" [(ngModel)]="new_ban_name" [editable]="false">
+        </mat-form-field>
       </div>
-      <div fxLayout="row wrap" fxLayoutGap="10px" fxLayoutAlign="center">
-        <div class="custom-image-card-holder" *ngFor="let card of ban_list[ban_type.id - 1]">
-          <button *ngIf="!card.deleting && isAdmin()" (click)="card.deleting=true" mat-raised-button color="warn" class="custom-image-card-delete">Delete</button>
-          <button *ngIf="card.deleting" mat-raised-button color="warn" class="custom-image-card-delete" (click)="deleteBan(card)">Confirm</button>
-          <button *ngIf="isAdmin()" mat-raised-button color="primary" (click)="changeImage(card)" class="custom-image-card-image-button">Image</button>
-          <img (mouseleave)="card.deleting=false;" class="custom-image-card" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
-          <h3 class="custom-image-card-name">{{card.name}}</h3>
+      <div fxLayout="column">
+        <mat-form-field appearance="outline" style="margin: 10px 0 0 0; width: 200px">
+          <mat-label>Type</mat-label>
+          <mat-select [(value)]="new_ban_type">
+            <mat-option *ngFor="let ban_type of types" value="{{ban_type.id}}">{{ban_type.type}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div fxLayout="column" fxLayoutAlign="center">
+        <button mat-raised-button style="height: 48px; margin: -10px 0 0 0;" (click)="submitBan()">Submit</button>
+      </div>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="space-between">
+      <div fxLayout="column" fxLayoutAlign="end">
+        <mat-form-field appearance="outline" style="margin: 0 20px 0 20px; width: 400px">
+          <mat-label>Search Card</mat-label>
+          <input type="text" placeholder="Search Card" matInput [(ngModel)]="search_term" (ngModelChange)="updateVisibility()">
+        </mat-form-field>
+      </div>
+      <div fxLayout="column" fxLayoutAlign="end">
+        <div style="margin: 0 20px 0 20px">
+          <button mat-button (click)="accordion.openAll()">Expand All</button>
+          <button mat-button (click)="accordion.closeAll()">Collapse All</button>
         </div>
       </div>
+    </div>
+    <div fxLayout="row">
+      <div *ngIf="noneVisible()" style="width: 100%; margin: 0 20px 0 20px">
+        <h3>No card name containing '{{search_term}}' exists in the ban list.</h3>
+      </div>
+      <mat-accordion multi style="width: 100%; margin: 0 20px 0 20px">
+        <div *ngFor="let ban_type of types">
+          <mat-expansion-panel *ngIf="getVisible(ban_list[ban_type.id - 1]).length > 0" expanded="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title style="text-transform: capitalize">{{ban_type.type}}</mat-panel-title>
+            </mat-expansion-panel-header>
+            <div fxLayout="row wrap" fxLayoutGap="10px" fxLayoutAlign="start">
+              <div *ngFor="let card of getVisible(ban_list[ban_type.id - 1])">
+                <div class="banlist-card-holder" *ngIf="card.visible">
+                  <h2 class="banlist-card-name">{{card.name}}</h2>
+                  <button *ngIf="!card.deleting && isAdmin()" (click)="card.deleting=true" mat-raised-button color="warn" class="banlist-card-delete-button">Delete</button>
+                  <button *ngIf="card.deleting" mat-raised-button color="warn" class="banlist-card-delete-button" (click)="deleteBan(card)">Confirm</button>
+                  <button *ngIf="isAdmin()" mat-raised-button color="primary" (click)="changeImage(card)" class="banlist-card-image-button">Image</button>
+                  <img (mouseleave)="card.deleting=false;" class="banlist-card" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
+                </div>
+              </div>
+            </div>
+          </mat-expansion-panel>
+        </div>
+      </mat-accordion>
     </div>
   </div>
 </div>

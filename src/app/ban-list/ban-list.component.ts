@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {FddpApiService} from "../../services/fddp-api.service";
 import {TokenStorageService} from "../../services/token-storage.service";
 import {Router} from "@angular/router";
 import {debounceTime, distinctUntilChanged, Observable, OperatorFunction, switchMap, tap} from "rxjs";
 import * as Scry from "scryfall-sdk";
+import {MatAccordion} from "@angular/material/expansion";
 
 @Component({
   selector: 'app-ban-list',
@@ -11,6 +12,8 @@ import * as Scry from "scryfall-sdk";
   styleUrls: ['./ban-list.component.scss']
 })
 export class BanListComponent implements OnInit {
+
+  @ViewChild(MatAccordion) accordion: MatAccordion;
 
   cards: any[] = [];
   types: any[] = [];
@@ -20,6 +23,8 @@ export class BanListComponent implements OnInit {
 
   new_ban_name = null;
   new_ban_type = 1;
+
+  search_term = '';
 
   constructor(private fddp_data: FddpApiService,  private tokenStorage: TokenStorageService, private router: Router) { }
 
@@ -39,6 +44,7 @@ export class BanListComponent implements OnInit {
         this.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
         let card_promises = [];
         this.cards.forEach((card: any) => {
+          card.visible = true;
           card_promises.push(this.getCardImage(card));
         });
         this.fddp_data.getBanTypes().then((types: any) => {
@@ -122,4 +128,41 @@ export class BanListComponent implements OnInit {
   changeImage(card: any) {
 
   }
+
+  getVisible(list) {
+    let out_list = [];
+    for (let item of list) {
+      if (item.visible) {
+        out_list.push(item);
+      }
+    }
+    return out_list;
+  }
+
+  updateVisibility() {
+    if (this.search_term && this.search_term !== '') {
+      for (let ban_type of this.types) {
+        for (let card of this.ban_list[ban_type.id - 1]) {
+          card.visible = card.name.toLowerCase().includes(this.search_term.toLowerCase());
+        }
+      }
+    }
+    else {
+      for (let ban_type of this.types) {
+        for (let card of this.ban_list[ban_type.id - 1]) {
+          card.visible = true;
+        }
+      }
+    }
+  }
+
+  noneVisible() {
+    for(let ban_type of this.types) {
+      if (this.getVisible(this.ban_list[ban_type.id - 1]).length > 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
 }
