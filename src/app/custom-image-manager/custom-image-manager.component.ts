@@ -3,7 +3,6 @@ import {FddpApiService} from "../../services/fddp-api.service";
 import {TokenStorageService} from "../../services/token-storage.service";
 import {Router} from "@angular/router";
 import {debounceTime, distinctUntilChanged, Observable, OperatorFunction, switchMap, tap} from "rxjs";
-import * as Scry from "scryfall-sdk";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 
 @Component({
@@ -45,7 +44,7 @@ export class CustomImageManagerComponent implements OnInit {
       // @ts-ignore
       switchMap(async term => {
         this.searching = true;
-        return await Scry.Cards.autoCompleteName(term);
+        return await this.fddp_data.autocompleteCard(term);
       }),
       tap(() => {
         this.searching = false;
@@ -67,10 +66,10 @@ export class CustomImageManagerComponent implements OnInit {
         this.fddp_data.getCustomTokens().then((tokens: any) => {
           this.cards = cards;
           this.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
-          this.cards.forEach((card: any) => { card.deleting = false; card.visible = true; });
+          this.cards.forEach((card: any) => { card.deleting = false; card.visible = false; });
           this.tokens = tokens;
           this.tokens.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
-          this.tokens.forEach((card: any) => { card.deleting = false; card.visible = true; });
+          this.tokens.forEach((card: any) => { card.deleting = false; card.visible = false; });
         })
       });
     }
@@ -141,10 +140,10 @@ export class CustomImageManagerComponent implements OnInit {
     }
     else {
       for (let card of this.cards) {
-        card.visible = true;
+        card.visible = false;
       }
       for (let token of this.tokens) {
-        token.visible = true;
+        token.visible = false;
       }
     }
   }

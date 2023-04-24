@@ -3,7 +3,6 @@ import {FddpApiService} from "../../services/fddp-api.service";
 import {TokenStorageService} from "../../services/token-storage.service";
 import {Router} from "@angular/router";
 import {debounceTime, distinctUntilChanged, Observable, OperatorFunction, switchMap, tap} from "rxjs";
-import * as Scry from "scryfall-sdk";
 import {MatAccordion} from "@angular/material/expansion";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 
@@ -123,7 +122,7 @@ export class BanListComponent implements OnInit {
       // @ts-ignore
       switchMap(async term => {
         this.searching = true;
-        return await Scry.Cards.autoCompleteName(term);
+        return await this.fddp_data.autocompleteCard(term);
       }),
       tap(() => {
         this.searching = false;

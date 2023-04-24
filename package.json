@@ -36,7 +36,6 @@
     "ngx-scrollbar": "^10.0.1",
     "reconnecting-websocket": "^4.4.0",
     "rxjs": "~7.5.0",
-    "scryfall-sdk": "^3.2.1",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   },
@@ -46,6 +45,7 @@
     "@angular/compiler-cli": "^14.2.4",
     "@types/crypto-js": "^4.1.1",
     "@types/jasmine": "~4.0.0",
+    "@types/node": "^18.16.0",
     "jasmine-core": "~4.2.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.1.0",

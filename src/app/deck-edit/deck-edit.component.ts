@@ -3,7 +3,6 @@ import {Component, Inject, OnInit} from '@angular/core';
 import { debounceTime, distinctUntilChanged, map, Observable, OperatorFunction, startWith, switchMap, tap } from "rxjs";
 import { FormControl } from "@angular/forms";
 import { FddpApiService } from "../../services/fddp-api.service";
-import * as Scry from "scryfall-sdk";
 import {ActivatedRoute, Router} from "@angular/router";
 import {TokenStorageService} from "../../services/token-storage.service";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
@@ -123,7 +122,7 @@ export class DeckEditComponent implements OnInit {
       // @ts-ignore
       switchMap(async term => {
         this.searching = true;
-        return await Scry.Cards.autoCompleteName(term);
+        return await this.fddp_data.autocompleteCard(term);
       }),
       tap(() => {
         this.searching = false;

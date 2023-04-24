@@ -78,6 +78,30 @@ export class FddpApiService {
     })
   }
 
+  public searchCard(card:string): Promise<any[]> {
+    return new Promise<any[]>((resolve) => {
+      this.http.post(environment.fddp_api_url + '/cards/search',
+        JSON.stringify({name: card}),
+        {headers : new HttpHeaders({'Content-Type': 'application/json'})}).subscribe((card_list: any[]) => {
+        resolve(card_list);
+      }, () => {
+        resolve([]);
+      });
+    })
+  }
+
+  public autocompleteCard(card:string, options?: any): Promise<string[]> {
+    return new Promise<string[]>((resolve) => {
+      this.http.post(environment.fddp_api_url + '/cards/autocomplete',
+        JSON.stringify({name: card, options: options? options: null}),
+        {headers : new HttpHeaders({'Content-Type': 'application/json'})}).subscribe((card_list: string[]) => {
+        resolve(card_list);
+      }, () => {
+        resolve([]);
+      });
+    })
+  }
+
   public getImagesForCard(card: string): Promise<any> {
     return new Promise<any[]>((resolve_images, reject) => {
       this.http.post(environment.fddp_api_url + '/cards/images',

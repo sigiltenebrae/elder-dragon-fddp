@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+declare var require: any;
 const CryptoJS = require('crypto-js');
 const TOKEN_KEY = 'auth-token';
 const USER_KEY = 'auth-user';
