@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {FddpApiService} from "../../services/fddp-api.service";
 import {TokenStorageService} from "../../services/token-storage.service";
 import {Router} from "@angular/router";
+import {debounceTime, distinctUntilChanged, Observable, OperatorFunction, switchMap, tap} from "rxjs";
 
 @Component({
   selector: 'app-commander-generator',
@@ -25,8 +26,31 @@ export class CommanderGeneratorComponent implements OnInit {
   loading_recs = false;
   all_recs: any[] = [];
   recs: any[] = [];
+  cmdr_list = [];
+
+  commander_search = null;
 
   constructor(private fddp_data: FddpApiService,  private tokenStorage: TokenStorageService, private router: Router) { }
+
+  searching = false;
+  /**
+   * OperatorFunction for Scryfall autocomplete on typeahead.
+   * @param text$ string to autocomplete
+   */
+    // @ts-ignore
+  public card_search: OperatorFunction<string, readonly string[]> = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      tap(() => this.searching = true),
+      // @ts-ignore
+      switchMap(async term => {
+        this.searching = true;
+        return await this.fddp_data.autocompleteCard(term);
+      }),
+      tap(() => {
+        this.searching = false;
+      }));
 
   ngOnInit(): void {
     if (this.tokenStorage.getUser() == null || this.tokenStorage.getUser() == {} ||
@@ -51,58 +75,90 @@ export class CommanderGeneratorComponent implements OnInit {
 
   calculateRecommendations(rec_user) {
     return new Promise<void>((resolve) => {
-      if (rec_user.recs && rec_user.recs.length) {
-        this.all_recs = [];
-        this.recs = [];
-        let rec_promises = [];
-        for (let i = 0; i < rec_user.recs.length; i++) {
-          if (i == 30) {
-            break;
-          }
-          if (rec_user.recs[i].name) {
-            rec_promises.push(
-              new Promise((resolve) => {
-                this.fddp_data.getCardInfo(rec_user.recs[i].name).then((card_data) => {
-                  card_data.image = card_data.default_image;
-                  card_data.count = rec_user.recs[i].count;
-                  resolve(card_data);
-                });
-              }));
-          }
-        }
-        Promise.all(rec_promises).then((rec_list) => {
-          this.all_recs = rec_list;
-          for (let j = 0; j < this.all_recs.length; j++) {
-            if (this.recs.length == 5) {
+      this.fddp_data.getCommanders(rec_user.id).then((cmdr_data) => {
+        this.cmdr_list = cmdr_data;
+        if (rec_user.recs && rec_user.recs.length) {
+          this.all_recs = [];
+          this.recs = [];
+          let rec_promises = [];
+          for (let i = 0; i < rec_user.recs.length; i++) {
+            if (i == 30) {
               break;
             }
-            if (this.all_recs[j].oracle_text.includes("Partner") && !this.all_recs[j].oracle_text.includes("Partner with")) {
-              let k = 1;
-              while(j + k < this.all_recs.length) {
-                if (this.all_recs[j + k].oracle_text.includes("Partner") && !this.all_recs[j + k].oracle_text.includes("Partner with")) {
-                  this.recs.push([this.all_recs[j], this.all_recs[j + k]]);
-                  this.all_recs.splice(j + k, 1);
-                  k = -1;
-                  break;
-                }
-                k++;
+            if (rec_user.recs[i].name) {
+              rec_promises.push(
+                new Promise((resolve) => {
+                  this.fddp_data.getCardInfo(rec_user.recs[i].name).then((card_data) => {
+                    card_data.image = card_data.default_image;
+                    card_data.count = rec_user.recs[i].count;
+                    resolve(card_data);
+                  });
+                }));
+            }
+          }
+          Promise.all(rec_promises).then((rec_list) => {
+            this.all_recs = rec_list;
+            for (let j = 0; j < this.all_recs.length; j++) {
+              if (this.recs.length == 5) {
+                break;
               }
-              if (j + k == this.all_recs.length) {
+              if (this.all_recs[j].oracle_text.includes("Partner") && !this.all_recs[j].oracle_text.includes("Partner with")) {
+                let k = 1;
+                while(j + k < this.all_recs.length) {
+                  if (this.all_recs[j + k].oracle_text.includes("Partner") && !this.all_recs[j + k].oracle_text.includes("Partner with")) {
+                    this.recs.push([this.all_recs[j], this.all_recs[j + k]]);
+                    this.all_recs.splice(j + k, 1);
+                    k = -1;
+                    break;
+                  }
+                  k++;
+                }
+                if (j + k == this.all_recs.length) {
+                  this.recs.push([this.all_recs[j]]);
+                }
+              }
+              else {
                 this.recs.push([this.all_recs[j]]);
               }
             }
-            else {
-              this.recs.push([this.all_recs[j]]);
-            }
-          }
-          console.log(this.all_recs);
+            resolve();
+          })
+        }
+        else{
           resolve();
-        })
-      }
-      else{
-        resolve();
-      }
+        }
+      });
     })
+  }
+
+  checkCompatibility() {
+    if (this.commander_search != null) {
+      let ind = -1;
+      let neg_ind = -1;
+      for (let i = 0; i < this.user.recs.length; i++) {
+        if (this.user.recs[i].name === this.commander_search) {
+          ind = i;
+        }
+        if (neg_ind < 0 && this.user.recs[i].count <= 0) {
+          neg_ind = i;
+        }
+      }
+
+      if (ind < neg_ind) {
+        let compat = ((neg_ind - (ind)) / neg_ind)
+        if (ind< 0) {
+          console.log('There is a 0% chance of you liking it.')
+        }
+        else {
+          console.log('There is a ' + Math.floor(compat * 100) + '% chance of you liking it.')
+        }
+
+      }
+      else {
+        console.log(ind);
+        console.log('Card is too popular!');
+      }
+    }
   }
 
   generateCommander() {

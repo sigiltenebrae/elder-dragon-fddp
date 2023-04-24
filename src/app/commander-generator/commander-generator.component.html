@@ -28,6 +28,20 @@
       </div>
     </div>
   </div>
+  <div fxLayout="row" fxLayoutGap="20px">
+    <div fxLayout="column" fxLayoutAlign="center">
+      <h1>Compatibility Check: </h1>
+    </div>
+    <div fxLayout="column">
+      <mat-form-field appearance="outline" style="width: 400px">
+        <mat-label>Commander Lookup</mat-label>
+        <input type="text" placeholder="Search Card" matInput [ngbTypeahead]="card_search" [(ngModel)]="commander_search" [editable]="false">
+        <button type="button" mat-icon-button matSuffix (click)="checkCompatibility()">
+          <mat-icon>search</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+  </div>
   <div fxLayout="row" *ngIf="!generated">
     <mat-card class="commander-generator-card">
       <mat-card-header>

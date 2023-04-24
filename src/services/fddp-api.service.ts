@@ -527,4 +527,17 @@ export class FddpApiService {
       })
     })
   }
+
+  public getCommanders(user_id: number) {
+    return new Promise<any[]>((resolve) => {
+      this.http.get(environment.fddp_api_url + '/users/commanders/' + user_id).subscribe((cmdr_list: any[]) => {
+        if (cmdr_list) {
+          resolve(cmdr_list);
+        }
+        else {
+          resolve([]);
+        }
+      })
+    })
+  }
 }
