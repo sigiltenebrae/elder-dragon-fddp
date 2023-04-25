@@ -68,13 +68,16 @@
           <mat-select [(value)]="card_type">
             <mat-option value="cards">Cards</mat-option>
             <mat-option value="tokens">Tokens</mat-option>
+            <mat-option value="companions">Companions</mat-option>
+            <mat-option value="sideboard">Sideboard</mat-option>
           </mat-select>
         </mat-form-field>
+
         <mat-form-field appearance="fill" *ngIf="card_type === 'cards'">
           <mat-label>Add Card</mat-label>
-          <input (keydown.enter)="addCardToDeck()" type="text" placeholder="Enter Card" matInput
+          <input (keydown.enter)="addCardToDeck('deck')" type="text" placeholder="Enter Card" matInput
                  [ngbTypeahead]="card_search" [(ngModel)]="new_card_temp" [editable]="false">
-          <button mat-icon-button matSuffix type="button" (click)="addCardToDeck()"><mat-icon>add</mat-icon></button>
+          <button mat-icon-button matSuffix type="button" (click)="addCardToDeck('deck')"><mat-icon>add</mat-icon></button>
         </mat-form-field>
         <h4 *ngIf="card_type === 'cards'">Cards: {{getTotal(deck.cards)}}/{{deck.cards.length}}</h4>
         <div *ngIf="card_type === 'cards'" class="deck-edit-card-list">
@@ -96,6 +99,65 @@
             </div>
           </mat-list>
         </div>
+
+
+
+        <mat-form-field appearance="fill" *ngIf="card_type === 'companions'">
+          <mat-label>Add Card</mat-label>
+          <input (keydown.enter)="addCardToDeck('companions')" type="text" placeholder="Enter Card" matInput
+                 [ngbTypeahead]="card_search" [(ngModel)]="new_card_temp" [editable]="false">
+          <button mat-icon-button matSuffix type="button" (click)="addCardToDeck('companions')"><mat-icon>add</mat-icon></button>
+        </mat-form-field>
+        <h4 *ngIf="card_type === 'companions'">Cards: {{getTotal(deck.companions)}}</h4>
+        <div *ngIf="card_type === 'companions'" class="deck-edit-card-list">
+          <mat-list>
+            <div *ngFor="let card of deck.companions; let i = index" class="deck-edit-card-display">
+              <mat-list-item [ngClass]="{'deck-edit-card-list-commander': card.iscommander}">
+                <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
+                  <div fxLayout="column" fxFlex="100">
+                    <button mat-button style="text-align: start"
+                            (click)="selected_card=card; changing_image=false; changing_back_image=false; image_options=[]; token_options=[]">{{card.name}}</button>
+                  </div>
+                  <div fxLayout="column" fxFlex>
+                    <button mat-button
+                            (contextmenu)="onRightClick($event, {type: 'companion_count', card: card})">{{card.count}}</button>
+                  </div>
+                </div>
+              </mat-list-item>
+              <mat-divider *ngIf="i != deck.companions.length - 1"></mat-divider>
+            </div>
+          </mat-list>
+        </div>
+
+
+
+        <mat-form-field appearance="fill" *ngIf="card_type === 'sideboard'">
+          <mat-label>Add Card</mat-label>
+          <input (keydown.enter)="addCardToDeck('sideboard')" type="text" placeholder="Enter Card" matInput
+                 [ngbTypeahead]="card_search" [(ngModel)]="new_card_temp" [editable]="false">
+          <button mat-icon-button matSuffix type="button" (click)="addCardToDeck('sideboard')"><mat-icon>add</mat-icon></button>
+        </mat-form-field>
+        <h4 *ngIf="card_type === 'sideboard'">Cards: {{getTotal(deck.sideboard)}}/{{deck.sideboard.length}}</h4>
+        <div *ngIf="card_type === 'sideboard'" class="deck-edit-card-list">
+          <mat-list>
+            <div *ngFor="let card of deck.sideboard; let i = index" class="deck-edit-card-display">
+              <mat-list-item [ngClass]="{'deck-edit-card-list-commander': card.iscommander}">
+                <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
+                  <div fxLayout="column" fxFlex="100">
+                    <button mat-button style="text-align: start"
+                            (click)="selected_card=card; changing_image=false; changing_back_image=false; image_options=[]; token_options=[]">{{card.name}}</button>
+                  </div>
+                  <div fxLayout="column" fxFlex>
+                    <button mat-button (click)="card.count = card.count + 1;"
+                            (contextmenu)="onRightClick($event, {type: 'sideboard_count', card: card})">{{card.count}}</button>
+                  </div>
+                </div>
+              </mat-list-item>
+              <mat-divider *ngIf="i != deck.sideboard.length - 1"></mat-divider>
+            </div>
+          </mat-list>
+        </div>
+
 
 
         <mat-form-field appearance="fill" *ngIf="card_type === 'tokens'">
@@ -172,7 +234,7 @@
           </div>
         </div>
       </div>
-      <div *ngIf="selected_card && (changing_image || changing_back_image) && card_type === 'cards'" fxLayout="column" fxFlex fxLayoutAlign="center center">
+      <div *ngIf="selected_card && (changing_image || changing_back_image) && (card_type === 'cards' || card_type === 'companions' || card_type === 'sideboard')" fxLayout="column" fxFlex fxLayoutAlign="center center">
         <div fxLayout="row" fxLayoutAlign="start" style="margin-top: 10px" fxLayoutGap="10px">
           <mat-form-field appearance="fill">
             <mat-label>Sort</mat-label>
@@ -262,18 +324,37 @@
       <div fxFlex="100" fxLayout="row" fxLayoutAlign="center">
         <h1>{{deck.name}}</h1>
       </div>
+      <div fxFlex="100" fxLayout="row" fxLayoutAlign="center"><h3>Commanders:</h3></div>
       <div fxFlex="100" fxLayout="row" fxLayoutAlign="center">
         <div class="custom-image-card-holder" *ngFor="let card of commanders">
           <img class="custom-image-card" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
           <h3 class="custom-image-card-name">{{card.name}}</h3>
         </div>
       </div>
+      <div *ngIf="deck.companions && deck.companions.length > 0" fxFlex="100" fxLayout="row" fxLayoutAlign="center"><h3>Commanders:</h3></div>
+      <div *ngIf="deck.companions && deck.companions.length > 0" fxFlex="100" fxLayout="row wrap" fxLayoutGap="10px" fxLayoutAlign="center">
+        <div class="custom-image-card-holder" *ngFor="let card of deck.companions">
+          <img class="custom-image-card" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
+          <h3 class="custom-image-card-name">{{card.name}}</h3>
+        </div>
+      </div>
+
+      <div fxFlex="100" fxLayout="row" fxLayoutAlign="center"><h3>Cards:</h3></div>
       <div fxFlex="100" fxLayout="row wrap" fxLayoutGap="10px" fxLayoutAlign="center">
         <div class="custom-image-card-holder" *ngFor="let card of notcommanders">
           <img class="custom-image-card" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
           <h3 class="custom-image-card-name">{{card.name}}</h3>
         </div>
       </div>
+
+      <div *ngIf="deck.sideboard && deck.sideboard.length > 0" fxFlex="100" fxLayout="row" fxLayoutAlign="center"><h3>Commanders:</h3></div>
+      <div *ngIf="deck.sideboard && deck.sideboard.length > 0" fxFlex="100" fxLayout="row wrap" fxLayoutGap="10px" fxLayoutAlign="center">
+        <div class="custom-image-card-holder" *ngFor="let card of deck.companions">
+          <img class="custom-image-card" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
+          <h3 class="custom-image-card-name">{{card.name}}</h3>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>

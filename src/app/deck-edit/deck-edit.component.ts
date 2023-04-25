@@ -80,6 +80,8 @@ export class DeckEditComponent implements OnInit {
           this.deck.rating = 3;
           this.deck.cards = [];
           this.deck.tokens = [];
+          this.deck.sideboard = [];
+          this.deck.companions = [];
           this.deck.themes = [];
           this.deck.tribes = [];
           this.deck.owner = this.current_user.id;
@@ -97,10 +99,16 @@ export class DeckEditComponent implements OnInit {
             this.deck = deck;
             this.deck.delete = [];
             this.deck.token_delete = [];
-            this.deck.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+            this.deck.sideboard_delete = [];
+            this.deck.companions_delete = [];
+            this.deck.cards.sort((a: any, b: any) => (a.iscommander < b.iscommander || a.name > b.name) ? 1: -1);
             this.deck.tokens.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+            this.deck.sideboard.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+            this.deck.companions.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+            this.deck.companions.forEach((card: any) => card.count = 1);
             this.getCommanders();
             this.loading = false;
+            console.log(this.deck);
           });
         });
       }
@@ -156,29 +164,61 @@ export class DeckEditComponent implements OnInit {
         this.deck.link.substring(this.deck.link.indexOf('/decks/') + 7);
       this.fddp_data.getArchidektDeck(archidekt_deckid).then((archidekt_deck: any) => {
         if (archidekt_deck) {
+          console.log(archidekt_deck);
           this.deck.name = archidekt_deck.name;
           for (let card of archidekt_deck.cards) {
             let iscommander = false;
-            if (card.categories.includes('Commander')){
-              iscommander = true;
-            }
-            if (!this.hasCard(card.card.oracleCard.name)) {
-              this.deck.cards.push(
-                {
-                  name: card.card.oracleCard.name,
-                  image: '',
-                  back_image: null,
-                  count: card.quantity,
-                  iscommander: iscommander
-                });
-            }
-            else {
-              this.getCard(card.card.oracleCard.name).count = card.quantity;
+            if (!card.categories.includes("Maybeboard")) {
+              if (card.categories.includes('Commander')){
+                iscommander = true;
+              }
+              if (card.categories.includes("Sideboard")) {
+                if (!this.hasCard(card.card.oracleCard.name, this.deck.sideboard)) {
+                  this.deck.sideboard.push(
+                    {
+                      name: card.card.oracleCard.name,
+                      image: '',
+                      back_image: null,
+                      count: card.quantity,
+                      iscommander: iscommander
+                    });
+                }
+                else {
+                  this.getCard(card.card.oracleCard.name, this.deck.sideboard).count = card.quantity;
+                }
+              }
+              else if (card.categories.includes("Companion")) {
+                if (!this.hasCard(card.card.oracleCard.name, this.deck.companions)) {
+                  this.deck.companions.push(
+                    {
+                      name: card.card.oracleCard.name,
+                      image: '',
+                      back_image: null,
+                      count: 1,
+                      iscommander: false
+                    });
+                }
+              }
+              else {
+                if (!this.hasCard(card.card.oracleCard.name, this.deck.cards)) {
+                  this.deck.cards.push(
+                    {
+                      name: card.card.oracleCard.name,
+                      image: '',
+                      back_image: null,
+                      count: card.quantity,
+                      iscommander: iscommander
+                    });
+                }
+                else {
+                  this.getCard(card.card.oracleCard.name, this.deck.cards).count = card.quantity;
+                }
+              }
             }
           }
           let remove_cards: any[] = [];
           for (let card of this.deck.cards) {
-            if (this.removeCard(card.name, archidekt_deck.cards)) {
+            if (this.removeCard(card.name, archidekt_deck.cards, "deck")) {
               remove_cards.push(card);
             }
           }
@@ -186,6 +226,28 @@ export class DeckEditComponent implements OnInit {
             this.deck.cards.splice(this.deck.cards.indexOf(card), 1);
           });
           this.deck.delete = remove_cards;
+
+          let remove_sideboard: any[] = [];
+          for (let card of this.deck.sideboard) {
+            if (this.removeCard(card.name, archidekt_deck.cards, "sideboard")) {
+              remove_sideboard.push(card);
+            }
+          }
+          remove_sideboard.forEach((card: any) => {
+            this.deck.sideboard.splice(this.deck.sideboard.indexOf(card), 1);
+          });
+          this.deck.sideboard_delete = remove_sideboard;
+
+          let remove_companions: any[] = [];
+          for (let card of this.deck.companions) {
+            if (this.removeCard(card.name, archidekt_deck.cards, "companion")) {
+              remove_companions.push(card);
+            }
+          }
+          remove_companions.forEach((card: any) => {
+            this.deck.companions.splice(this.deck.companions.indexOf(card), 1);
+          });
+          this.deck.companions_delete = remove_companions;
         }
         let card_image_promises = [];
         this.deck.cards.forEach((card: any) => {
@@ -203,14 +265,44 @@ export class DeckEditComponent implements OnInit {
           }
         });
         Promise.all(card_image_promises).then(() => {
-          this.deck.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
-          let token_promises: any[] = [];
-          this.deck.cards.forEach((card: any) => {
-            token_promises.push(this.getTokens(card));
+          let sideboard_image_promises = [];
+          this.deck.sideboard.forEach((card: any) => {
+            if (card.image === '' || card.image == null) {
+              sideboard_image_promises.push(new Promise<void>((resolve) => {
+                this.getCardImage(card).then(() => {
+                  resolve();
+                });
+              }))
+            }
           });
-          Promise.all(token_promises).then(() => {
-            this.deck.tokens.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
-            this.syncing = false;
+          Promise.all(sideboard_image_promises).then(() => {
+            let companion_image_promises = [];
+            this.deck.companions.forEach((card: any) => {
+              if (card.image === '' || card.image == null) {
+                companion_image_promises.push(new Promise<void>((resolve) => {
+                  this.getCardImage(card).then(() => {
+                    resolve();
+                  });
+                }))
+              }
+            });
+            Promise.all(companion_image_promises).then(() => {
+              this.deck.cards.sort((a: any, b: any) => (a.iscommander < b.iscommander || a.name > b.name) ? 1: -1);
+              this.deck.sideboard.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+              this.deck.companions.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+              let token_promises: any[] = [];
+              this.deck.cards.forEach((card: any) => {
+                token_promises.push(this.getTokens(card));
+              });
+              this.deck.companions.forEach((card: any) => {
+                token_promises.push(this.getTokens(card));
+              });
+              Promise.all(token_promises).then(() => {
+                this.deck.tokens.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+                this.syncing = false;
+                console.log(this.deck);
+              });
+            });
           });
         });
       });
@@ -253,8 +345,8 @@ export class DeckEditComponent implements OnInit {
    * Checks to see if the card is already in the deck
    * @param name string name of card to search
    */
-  hasCard(name: string): boolean {
-    for (let card of this.deck.cards) {
+  hasCard(name: string, cards: any[]): boolean {
+    for (let card of cards) {
       if (card.name === name) {
         return true;
       }
@@ -266,8 +358,8 @@ export class DeckEditComponent implements OnInit {
    * Return the card object from the deck, or null if dne
    * @param name string name of card to search
    */
-  getCard(name: string) {
-    for (let card of this.deck.cards) {
+  getCard(name: string, cards: any[]) {
+    for (let card of cards) {
       if (card.name === name) {
         return card;
       }
@@ -280,10 +372,18 @@ export class DeckEditComponent implements OnInit {
    * @param name string name to search
    * @param cards card object array
    */
-  removeCard(name: string, cards: any[]): boolean {
+  removeCard(name: string, cards: any[], mode): boolean {
     for (let card of cards) {
       if (card.card.oracleCard.name === name) {
-        return false;
+        if (mode === 'deck') {
+          return card.categories.includes("Sideboard") || card.categories.includes("Companion") || card.categories.includes('Maybeboard');
+        }
+        else if (mode === 'sideboard') {
+          return !card.categories.includes("Sideboard") || card.categories.includes('Maybeboard');
+        }
+        else if (mode === 'companion') {
+          return !card.categories.includes("Companion") || card.categories.includes('Maybeboard');
+        }
       }
     }
     return true;
@@ -343,7 +443,7 @@ export class DeckEditComponent implements OnInit {
       }
     }
 
-    if (this.card_type === 'cards') {
+    if (this.card_type === 'cards' || this.card_type === 'companions' || this.card_type === 'sideboard') {
       let image_data: any = await this.fddp_data.getImagesForCard(card.name);
       this.image_options = image_data.images;
       this.back_image_options = image_data.back_images;
@@ -420,9 +520,19 @@ export class DeckEditComponent implements OnInit {
   /**
    * Inserts the new card into the deck, or increases count if already exists.
    */
-  addCardToDeck() {
-    if (this.new_card_temp) {
-      for (let card of this.deck.cards) {
+  addCardToDeck(mode) {
+    let zone = null;
+    if (mode === 'deck') {
+      zone = this.deck.cards;
+    }
+    else if (mode === 'sideboard'){
+      zone = this.deck.sideboard;
+    }
+    else if (mode === 'companions') {
+      zone = this.deck.companions;
+    }
+    if (this.new_card_temp && zone) {
+      for (let card of zone) {
         if (card.name === this.new_card_temp) {
           card.count++;
           this.new_card_temp = null;
@@ -435,10 +545,10 @@ export class DeckEditComponent implements OnInit {
         count: 1,
         iscommander: false
       }
-      this.deck.cards.push(
+      zone.push(
         temp_card
       );
-      this.deck.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+      zone.sort((a: any, b: any) => (a.iscommander < b.iscommander || a.name > b.name) ? 1: -1);
       this.getCardImage(temp_card);
       this.new_card_temp = null;
     }
@@ -538,6 +648,20 @@ export class DeckEditComponent implements OnInit {
         if (item.card.count == 0) {
           this.deck.delete.push(item.card);
           this.deck.cards.splice(this.deck.cards.indexOf(item.card), 1);
+        }
+      }
+      if (item.type == 'sideboard_count') {
+        item.card.count--;
+        if (item.card.count == 0) {
+          this.deck.sideboard_delete.push(item.card);
+          this.deck.sideboard.splice(this.deck.sideboard.indexOf(item.card), 1);
+        }
+      }
+      if (item.type == 'companion_count') {
+        item.card.count--;
+        if (item.card.count == 0) {
+          this.deck.companions_delete.push(item.card);
+          this.deck.companions.splice(this.deck.companions.indexOf(item.card), 1);
         }
       }
     }
