@@ -78,6 +78,18 @@ export class FddpApiService {
     })
   }
 
+  public getMoxfieldDeck(moxfield_deckid: string): Promise<any> {
+    return new Promise<any>((resolve) => {
+      this.http.get(environment.fddp_api_url + '/moxfield/deck/' + moxfield_deckid).subscribe((moxfield_data: any) => {
+        resolve(moxfield_data);
+      }, (error) => {
+        console.log('Error pulling data from moxfield');
+        console.log(error);
+        resolve(null);
+      })
+    })
+  }
+
   public searchCard(card:string): Promise<any[]> {
     return new Promise<any[]>((resolve) => {
       this.http.post(environment.fddp_api_url + '/cards/search',
