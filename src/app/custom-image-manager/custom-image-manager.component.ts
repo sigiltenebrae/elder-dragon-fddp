@@ -12,6 +12,9 @@ import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog
 })
 export class CustomImageManagerComponent implements OnInit {
 
+  history = [];
+  users = [];
+
   search_term = '';
   card_search_type = 'cards'
 
@@ -62,16 +65,21 @@ export class CustomImageManagerComponent implements OnInit {
       this.router.navigate(['login']);
     }
     else {
-      this.fddp_data.getCustomCards().then((cards: any) => {
-        this.fddp_data.getCustomTokens().then((tokens: any) => {
-          this.cards = cards;
-          this.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
-          this.cards.forEach((card: any) => { card.deleting = false; card.visible = false; });
-          this.tokens = tokens;
-          this.tokens.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
-          this.tokens.forEach((card: any) => { card.deleting = false; card.visible = false; });
-        })
-      });
+      this.fddp_data.getUsers().then((users: any) => {
+        this.users = users;
+        this.fddp_data.getCustomCards().then((cards: any) => {
+          this.fddp_data.getCustomTokens().then((tokens: any) => {
+            this.history = [];
+            this.cards = cards;
+            this.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+            this.cards.forEach((card: any) => { card.deleting = false; card.visible = false; this.history.push(card)});
+            this.tokens = tokens;
+            this.tokens.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
+            this.tokens.forEach((card: any) => { card.deleting = false; card.visible = false; this.history.push(card)});
+            this.history.sort((a: any, b: any) => (a.created < b.created ? 1: -1));
+          })
+        });
+      })
     }
   }
 
@@ -193,6 +201,14 @@ export class CustomImageManagerComponent implements OnInit {
 
   reloadPage(): void {
     window.location.reload();
+  }
+
+  getUserFromId(id) {
+    for (let user of this.users) {
+      if (user.id === id) {
+        return user;
+      }
+    }
   }
 
 }

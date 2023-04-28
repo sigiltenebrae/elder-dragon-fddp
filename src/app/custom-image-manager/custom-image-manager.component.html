@@ -68,6 +68,14 @@
         </div>
       </div>
     </div>
+    <div fxLayout="column">
+      <div *ngIf="history && history.length > 0">
+        <h2>Recent:</h2>
+        <h3 *ngFor="let i of [0, 1, 2, 3, 4]">
+          {{history[i].name}} by {{getUserFromId(history[i].creator).name}}
+        </h3>
+      </div>
+    </div>
   </div>
   <div fxLayout="row" style="min-height: 50px;"></div>
   <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="10px">
