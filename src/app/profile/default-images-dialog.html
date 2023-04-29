@@ -1,0 +1,8 @@
+<div fxLayout="row wrap" fxLayoutGap="20px">
+  <div fxLayout="column" *ngFor="let image of image_data">
+    <div class="hover_card_text">
+      <a href="#" class="simple-a">{{image.name}}</a>
+      <button mat-icon-button (click)="deleteDefaultImage(image)"><mat-icon>close</mat-icon></button>
+    </div>
+  </div>
+</div>

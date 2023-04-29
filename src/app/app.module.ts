@@ -55,7 +55,7 @@ import { GameManagerComponent } from './game-manager/game-manager.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { ChangePasswordComponent } from './change-password/change-password.component';
-import { ProfileComponent } from './profile/profile.component';
+import { ProfileComponent, DefaultImagesDialog } from './profile/profile.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import {HashLocationStrategy, LocationStrategy} from "@angular/common";
 import { environment } from '../environments/environment';
@@ -68,7 +68,6 @@ import { CommanderGeneratorComponent } from './commander-generator/commander-gen
 import { StatisticsComponent } from './statistics/statistics.component';
 import { NgChartsModule } from 'ng2-charts';
 import {MatProgressBarModule} from "@angular/material/progress-bar";
-import { DefaultImagesComponent } from './default-images/default-images.component';
 
 
 
@@ -95,13 +94,13 @@ import { DefaultImagesComponent } from './default-images/default-images.componen
     RegisterComponent,
     ChangePasswordComponent,
     ProfileComponent,
+    DefaultImagesDialog,
     BanListComponent,
     BanlistImageDialog,
     GameHistoryComponent,
     GameHistoryManagerComponent,
     CommanderGeneratorComponent,
     StatisticsComponent,
-    DefaultImagesComponent,
   ],
     imports: [
         BrowserModule,
@@ -137,7 +136,6 @@ import { DefaultImagesComponent } from './default-images/default-images.componen
             {path: 'register', component: RegisterComponent},
             {path: 'password', component: ChangePasswordComponent},
             {path: 'profile', component: ProfileComponent},
-            {path: 'default_images', component:DefaultImagesComponent},
             {path: 'games', component: GameManagerComponent},
             {path: 'games/:gameid', component: GameHandlerComponent},
             {path: 'decks/:deckid', component: DeckEditComponent},
