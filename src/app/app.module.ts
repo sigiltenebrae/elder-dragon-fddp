@@ -68,6 +68,7 @@ import { CommanderGeneratorComponent } from './commander-generator/commander-gen
 import { StatisticsComponent } from './statistics/statistics.component';
 import { NgChartsModule } from 'ng2-charts';
 import {MatProgressBarModule} from "@angular/material/progress-bar";
+import { DefaultImagesComponent } from './default-images/default-images.component';
 
 
 
@@ -100,6 +101,7 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
     GameHistoryManagerComponent,
     CommanderGeneratorComponent,
     StatisticsComponent,
+    DefaultImagesComponent,
   ],
     imports: [
         BrowserModule,
@@ -135,6 +137,7 @@ import {MatProgressBarModule} from "@angular/material/progress-bar";
             {path: 'register', component: RegisterComponent},
             {path: 'password', component: ChangePasswordComponent},
             {path: 'profile', component: ProfileComponent},
+            {path: 'default_images', component:DefaultImagesComponent},
             {path: 'games', component: GameManagerComponent},
             {path: 'games/:gameid', component: GameHandlerComponent},
             {path: 'decks/:deckid', component: DeckEditComponent},
