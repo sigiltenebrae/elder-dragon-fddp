@@ -734,6 +734,7 @@ export class DeckEditComponent implements OnInit {
           tokDialogRef.afterClosed().subscribe(result => {
             if (result) {
               this.deck.tokens.push(result);
+              this.deck.tokens.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
             }
           })
         }
@@ -768,6 +769,7 @@ export class DeckEditComponent implements OnInit {
   saveDeck() {
     this.saving = true;
     if (this.deckid == -1) { //create
+      console.log(this.deck);
       this.fddp_data.createDeck(this.deck).then((deckid) => {
         if (deckid) {
           this.fddp_data.updateDeckThemes(deckid, this.deck.themes, this.deck.tribes).then(() => {
