@@ -177,12 +177,12 @@ export class DeckEditComponent implements OnInit {
   syncDeck(type: string) {
     if (this.deck.link && !this.saving) {
       this.syncing = true;
-      //if (this.deck.link.toLowerCase().includes('archidekt')) {
       let deck_promise = null;
       if (type === 'archidekt') {
         let archidekt_deckid = this.deck.link.indexOf('#') > 0 ?
           this.deck.link.substring(0, this.deck.link.indexOf('#')).substring(this.deck.link.indexOf('/decks/') + 7):
           this.deck.link.substring(this.deck.link.indexOf('/decks/') + 7);
+        archidekt_deckid = archidekt_deckid.substring(0, archidekt_deckid.indexOf('/'));
         deck_promise = this.fddp_data.getArchidektDeck(archidekt_deckid);
       }
       else if (type === 'moxfield') {
@@ -195,52 +195,27 @@ export class DeckEditComponent implements OnInit {
             this.deck.name = deck_data.name;
             if (type === 'archidekt') {
               for (let card of deck_data.cards) {
-                let iscommander = false;
                 if (!card.categories.includes("Maybeboard")) {
-                  if (card.categories.includes('Commander')){
-                    iscommander = true;
-                  }
-                  if (card.categories.includes("Sideboard")) {
-                    if (!this.hasCard(card.card.oracleCard.name, this.deck.sideboard)) {
-                      this.deck.sideboard.push(
-                        {
-                          name: card.card.oracleCard.name,
-                          image: '',
-                          back_image: null,
-                          count: card.quantity,
-                          iscommander: iscommander
-                        });
-                    }
-                    else {
-                      this.getCard(card.card.oracleCard.name, this.deck.sideboard).count = card.quantity;
-                    }
-                  }
-                  else if (card.categories.includes("Companion")) {
-                    if (!this.hasCard(card.card.oracleCard.name, this.deck.companions)) {
-                      this.deck.companions.push(
-                        {
-                          name: card.card.oracleCard.name,
-                          image: '',
-                          back_image: null,
-                          count: 1,
-                          iscommander: false
-                        });
-                    }
+                  let card_cat = null;
+                  //if (card.categories.includes("Commander")){ card_cat = 'commanders'; }
+                  if (card.categories.includes("Companion")) { card_cat = 'companions'; }
+                  else if (card.categories.includes("Sideboard")) { card_cat = 'sideboard'; }
+                  else if (card.categories.includes("Contraption")) { card_cat = 'contraptions'; }
+                  else if (card.categories.includes("Attraction")) { card_cat = 'attractions'; }
+                  else if (card.categories.includes("Stickers")) { card_cat = 'stickers'; }
+                  if (card_cat == null) { card_cat = 'cards'; }
+                  if (!this.hasCard(card.card.oracleCard.name, this.deck[card_cat])) {
+                    this.deck[card_cat].push(
+                      {
+                        name: card.card.oracleCard.name,
+                        image: '',
+                        back_image: null,
+                        count: card.quantity,
+                        iscommander: card_cat === 'cards' && card.categories.includes("Commander")
+                      });
                   }
                   else {
-                    if (!this.hasCard(card.card.oracleCard.name, this.deck.cards)) {
-                      this.deck.cards.push(
-                        {
-                          name: card.card.oracleCard.name,
-                          image: '',
-                          back_image: null,
-                          count: card.quantity,
-                          iscommander: iscommander
-                        });
-                    }
-                    else {
-                      this.getCard(card.card.oracleCard.name, this.deck.cards).count = card.quantity;
-                    }
+                    this.getCard(card.card.oracleCard.name, this.deck[card_cat]).count = card.quantity;
                   }
                 }
               }
@@ -281,19 +256,11 @@ export class DeckEditComponent implements OnInit {
             remove_cards.stickers = [];
 
             if (type === 'archidekt') {
-              for (let card of this.deck.cards) {
-                if (this.removeArchidektCard(card.name, deck_data.cards, "deck")) {
-                  remove_cards.push(card);
-                }
-              }
-              for (let card of this.deck.sideboard) {
-                if (this.removeArchidektCard(card.name, deck_data.cards, "sideboard")) {
-                  //remove_sideboard.push(card);
-                }
-              }
-              for (let card of this.deck.companions) {
-                if (this.removeArchidektCard(card.name, deck_data.cards, "companion")) {
-                  //remove_companions.push(card);
+              for (let zone of ['cards', 'companions', 'sideboard', 'contraptions', 'attractions', 'stickers']) {
+                for (let card of this.deck[zone]) {
+                  if (this.removeArchidektCard(card.name, deck_data.cards, zone)) {
+                    remove_cards[zone !== 'cards'? zone: 'mainboard'].push(card);
+                  }
                 }
               }
             }
@@ -309,8 +276,6 @@ export class DeckEditComponent implements OnInit {
                 }
               }
             }
-
-
             for (let zone of ['companions', 'mainboard', 'sideboard', 'contraptions', 'attractions', 'stickers']) {
               let add_zone = zone === 'mainboard'? 'cards': zone;
               remove_cards[zone].forEach((card: any) => {
@@ -404,6 +369,7 @@ export class DeckEditComponent implements OnInit {
   /**
    * Return the card object from the deck, or null if dne
    * @param name string name of card to search
+   * @param cards the list to search
    */
   getCard(name: string, cards: any[]) {
     for (let card of cards) {
@@ -418,18 +384,33 @@ export class DeckEditComponent implements OnInit {
    * Remove the card with the given name from the given card array
    * @param name string name to search
    * @param cards card object array
+   * @param mode the mode to check remove status for
    */
   removeArchidektCard(name: string, cards: any[], mode): boolean {
     for (let card of cards) {
       if (card.card.oracleCard.name === name) {
-        if (mode === 'deck') {
-          return card.categories.includes("Sideboard") || card.categories.includes("Companion") || card.categories.includes('Maybeboard');
+        if (mode === 'cards') {
+          return card.categories.includes('Maybeboard') ||
+            card.categories.includes("Companion") ||
+            card.categories.includes("Sideboard") ||
+            card.categories.includes("Contraption") ||
+            card.categories.includes("Attraction") ||
+            card.categories.includes("Stickers");
+        }
+        else if (mode === 'companions') {
+          return !card.categories.includes("Companion") || card.categories.includes('Maybeboard');
         }
         else if (mode === 'sideboard') {
           return !card.categories.includes("Sideboard") || card.categories.includes('Maybeboard');
         }
-        else if (mode === 'companion') {
-          return !card.categories.includes("Companion") || card.categories.includes('Maybeboard');
+        else if (mode === 'contraptions') {
+          return !card.categories.includes("Contraption") || card.categories.includes('Maybeboard');
+        }
+        else if (mode === 'attractions') {
+          return !card.categories.includes("Attraction") || card.categories.includes('Maybeboard');
+        }
+        else if (mode === 'stickers') {
+          return !card.categories.includes("Stickers") || card.categories.includes('Maybeboard');
         }
       }
     }
@@ -682,9 +663,9 @@ export class DeckEditComponent implements OnInit {
    * Save the deck to the db and recheck its legality.
    */
   saveDeck() {
+    console.log(this.deck);
     this.saving = true;
     if (this.deckid == -1) { //create
-      console.log(this.deck);
       this.fddp_data.createDeck(this.deck).then((deckid) => {
         if (deckid) {
           this.fddp_data.updateDeckThemes(deckid, this.deck.themes, this.deck.tribes).then(() => {
