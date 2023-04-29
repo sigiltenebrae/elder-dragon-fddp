@@ -163,6 +163,7 @@
         <mat-form-field appearance="fill" *ngIf="card_type === 'tokens'">
           <mat-label>Add Token</mat-label>
           <input (keydown.enter)="addTokenToDeck()" type="text" placeholder="Enter Token" matInput
+                 [ngbTypeahead]="card_search" [editable]="true"
                  [(ngModel)]="new_token_temp">
           <button mat-icon-button matSuffix type="button" (click)="addTokenToDeck()"><mat-icon>search</mat-icon></button>
         </mat-form-field>
