@@ -46,6 +46,66 @@ export class FddpApiService {
     });
   }
 
+  public getDefaultImage(userid, card_name) {
+    return new Promise<any>((resolve) => {
+      this.http.post<any>(environment.fddp_api_url + '/users/default_image/' + userid,
+        JSON.stringify({card_name: card_name}),
+        {headers : new HttpHeaders({'Content-Type': 'application/json'})}).subscribe((card_data: any) => {
+          resolve(card_data);
+      }, () => {
+          resolve(null);
+      });
+    })
+  }
+
+  public getDefaultImages(userid) {
+    return new Promise<any>((resolve) => {
+      this.http.post<any>(environment.fddp_api_url + '/users/default_images/' + userid,
+        JSON.stringify({}),
+        {headers : new HttpHeaders({'Content-Type': 'application/json'})}).subscribe((card_data: any) => {
+        resolve(card_data);
+      }, () => {
+        resolve(null);
+      });
+    })
+  }
+
+  public setDefaultImage(userid, card) {
+    return new Promise<void>((resolve) => {
+      this.http.post<any>(environment.fddp_api_url + '/users/default_image/insert/' + userid,
+        JSON.stringify({card: card}),
+        {headers : new HttpHeaders({'Content-Type': 'application/json'})}).subscribe(() => {
+        resolve();
+      }, () => {
+        resolve();
+      });
+    })
+  }
+
+  public updateDefaultImage(userid, card) {
+    return new Promise<void>((resolve) => {
+      this.http.post<any>(environment.fddp_api_url + '/users/default_image/update/' + userid,
+        JSON.stringify({card: card}),
+        {headers : new HttpHeaders({'Content-Type': 'application/json'})}).subscribe(() => {
+        resolve();
+      }, () => {
+        resolve();
+      });
+    })
+  }
+
+  public deleteDefaultImage(userid, card) {
+    return new Promise<void>((resolve) => {
+      this.http.post<any>(environment.fddp_api_url + '/users/default_image/delete/' + userid,
+        JSON.stringify({card: card}),
+        {headers : new HttpHeaders({'Content-Type': 'application/json'})}).subscribe(() => {
+        resolve();
+      }, () => {
+        resolve();
+      });
+    })
+  }
+
   public getPlanes(): Promise<any> {
     return new Promise<any>((resolve) => {
       this.http.get(environment.fddp_api_url + '/planes').subscribe((planes: any) => {

@@ -48,6 +48,7 @@ export class DeckEditComponent implements OnInit {
 
   syncing = false;
   saving = false;
+  setting_default = false;
 
   constructor(private fddp_data: FddpApiService, private route: ActivatedRoute, private router: Router, private tokenStorage: TokenStorageService, public dialog: MatDialog) {
     this.router.routeReuseStrategy.shouldReuseRoute = () => false;
@@ -537,12 +538,20 @@ export class DeckEditComponent implements OnInit {
    */
   getCardImage(card: any): Promise<void> {
     return new Promise<void>((resolve) => {
-      this.fddp_data.getImagesForCard(card.name).then((card_image_data: any) => {
-        let card_images = card_image_data.images;
-        let card_back_images = card_image_data.back_images
-        card.image = card_images && card_images.length > 0? card_images[card_images.length - 1].image: '';
-        card.back_image = card_back_images && card_back_images.length > 0? card_back_images[card_back_images.length - 1].image: '';
-        resolve();
+      this.fddp_data.getDefaultImage(this.current_user.id, card.name).then((default_data: any) => {
+        if (default_data != null) {
+          card.image = default_data.image != null? default_data.image: ''
+          card.back_image = default_data.back_image != null? default_data.back_image: ''
+        }
+        else {
+          this.fddp_data.getImagesForCard(card.name).then((card_image_data: any) => {
+            let card_images = card_image_data.images;
+            let card_back_images = card_image_data.back_images
+            card.image = card_images && card_images.length > 0? card_images[card_images.length - 1].image: '';
+            card.back_image = card_back_images && card_back_images.length > 0? card_back_images[card_back_images.length - 1].image: '';
+            resolve();
+          });
+        }
       });
     });
   }
@@ -948,8 +957,15 @@ export class DeckEditComponent implements OnInit {
     }
   }
 
-}
+  setDefaultImage(card) {
+    this.setting_default = true;
+    this.fddp_data.setDefaultImage(this.current_user.id, card).then(() => {
+      this.setting_default = false;
+      console.log('default image set');
+    })
+  }
 
+}
 
 
 @Component({

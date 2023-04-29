@@ -198,6 +198,10 @@
           <button *ngIf="selected_card.back_image" mat-raised-button color="primary" (click)="changing_back_image=true; getCardImages(selected_card)">Change Back Image</button>
           <button mat-raised-button color="warn" (click)="resetCard(selected_card)"><mat-icon>refresh</mat-icon></button>
         </div>
+        <div fxLayout="row" fxLayoutAlign="center">
+          <button *ngIf="!setting_default" mat-raised-button (click)="setDefaultImage(selected_card)">Set Default</button>
+          <mat-spinner *ngIf="setting_default" diameter="32"></mat-spinner>
+        </div>
         <div fxLayout="row" fxLayoutGap="10px">
           <mat-form-field appearance="fill">
             <mat-label>Input Manually</mat-label>
