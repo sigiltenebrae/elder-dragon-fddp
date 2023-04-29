@@ -81,6 +81,9 @@ export class DeckEditComponent implements OnInit {
           this.deck.tokens = [];
           this.deck.sideboard = [];
           this.deck.companions = [];
+          this.deck.contraptions = [];
+          this.deck.attractions = [];
+          this.deck.stickers = [];
           this.deck.themes = [];
           this.deck.tribes = [];
           this.deck.owner = this.current_user.id;
@@ -96,16 +99,21 @@ export class DeckEditComponent implements OnInit {
           this.tribes = theme_data.tribes;
           this.fddp_data.getDeckForPlay(this.deckid).then((deck) => {
             this.deck = deck;
-            this.deck.delete = [];
-            this.deck.token_delete = [];
-            this.deck.sideboard_delete = [];
-            this.deck.companions_delete = [];
+            this.deck.delete_cards = [];
+            this.deck.delete_tokens = [];
+            this.deck.delete_sideboard = [];
+            this.deck.delete_companions = [];
+            this.deck.delete_contraptions = [];
+            this.deck.delete_attractions = [];
+            this.deck.delete_stickers = [];
             this.deck.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
             this.deck.cards.sort((a: any, b: any) => (a.iscommander < b.iscommander) ? 1: -1);
             this.deck.tokens.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
             this.deck.sideboard.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
             this.deck.companions.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
-            this.deck.companions.forEach((card: any) => card.count = 1);
+            this.deck.contraptions.forEach((card: any) => card.count = 1);
+            this.deck.attractions.forEach((card: any) => card.count = 1);
+            this.deck.stickers.forEach((card: any) => card.count = 1);
             this.getCommanders();
             this.loading = false;
           });
@@ -577,7 +585,12 @@ export class DeckEditComponent implements OnInit {
       }
     }
 
-    if (this.card_type === 'cards' || this.card_type === 'companions' || this.card_type === 'sideboard') {
+    if (this.card_type === 'cards' ||
+      this.card_type === 'companions' ||
+      this.card_type === 'sideboard' ||
+      this.card_type === 'contraptions' ||
+      this.card_type === 'attractions' ||
+      this.card_type === 'stickers') {
       let image_data: any = await this.fddp_data.getImagesForCard(card.name);
       this.image_options = image_data.images;
       this.back_image_options = image_data.back_images;
@@ -664,6 +677,15 @@ export class DeckEditComponent implements OnInit {
     }
     else if (mode === 'companions') {
       zone = this.deck.companions;
+    }
+    else if (mode === 'contraptions') {
+      zone = this.deck.contraptions;
+    }
+    else if (mode === 'attractions') {
+      zone = this.deck.attractions;
+    }
+    else if (mode === 'stickers') {
+      zone = this.deck.stickers;
     }
     if (this.new_card_temp && zone) {
       for (let card of zone) {
@@ -781,22 +803,43 @@ export class DeckEditComponent implements OnInit {
       if (item.type == 'card_count') {
         item.card.count--;
         if (item.card.count == 0) {
-          this.deck.delete.push(item.card);
+          this.deck.delete_cards.push(item.card);
           this.deck.cards.splice(this.deck.cards.indexOf(item.card), 1);
         }
       }
       if (item.type == 'sideboard_count') {
         item.card.count--;
         if (item.card.count == 0) {
-          this.deck.sideboard_delete.push(item.card);
+          this.deck.delete_sideboard.push(item.card);
           this.deck.sideboard.splice(this.deck.sideboard.indexOf(item.card), 1);
         }
       }
       if (item.type == 'companion_count') {
         item.card.count--;
         if (item.card.count == 0) {
-          this.deck.companions_delete.push(item.card);
+          this.deck.delete_companions.push(item.card);
           this.deck.companions.splice(this.deck.companions.indexOf(item.card), 1);
+        }
+      }
+      if (item.type == 'contraption_count') {
+        item.card.count--;
+        if (item.card.count == 0) {
+          this.deck.delete_contraptions.push(item.card);
+          this.deck.contraptions.splice(this.deck.contraptions.indexOf(item.card), 1);
+        }
+      }
+      if (item.type == 'attraction_count') {
+        item.card.count--;
+        if (item.card.count == 0) {
+          this.deck.delete_attractions.push(item.card);
+          this.deck.attractions.splice(this.deck.attractions.indexOf(item.card), 1);
+        }
+      }
+      if (item.type == 'sticker_count') {
+        item.card.count--;
+        if (item.card.count == 0) {
+          this.deck.delete_stickers.push(item.card);
+          this.deck.stickers.splice(this.deck.stickers.indexOf(item.card), 1);
         }
       }
     }
