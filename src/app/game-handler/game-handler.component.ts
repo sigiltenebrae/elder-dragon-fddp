@@ -1075,7 +1075,7 @@ export class GameHandlerComponent implements OnInit {
     out_player.default_sleeves = this.current_user.default_sleeves;
     out_player.deck = deck;
     out_player.deck.commander = {name: 'commander', cards: [], saved: [], owner: out_player.deck.owner};
-    out_player.deck.stickers.forEach((sticker: any) => {
+    out_player.deck.play_stickers.forEach((sticker: any) => {
       sticker.sticker = true;
     })
     out_player.name = user_name == null ? this.current_user.name: user_name;
@@ -3056,7 +3056,7 @@ export class GameHandlerComponent implements OnInit {
         items = this.sidenav_spot.cards;
         break;
       case 'stickers':
-        items = this.sidenav_selected_player.deck.stickers;
+        items = this.sidenav_selected_player.deck.play_stickers;
     }
     return items;
   }
