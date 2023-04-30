@@ -121,79 +121,78 @@
         <mat-spinner style="margin: 20px;"></mat-spinner>
       </div>
 
-      <div *ngIf="loaded_others && show_others" style="margin: 20px;">
-        <div *ngFor="let other_user of users" fxLayout="column">
-          <div *ngIf="other_user.id !== user.id &&
+
+      <mat-accordion *ngIf="loaded_others && show_others" multi style="width: 100%;">
+        <div *ngFor="let other_user of users">
+          <mat-expansion-panel *ngIf="other_user.id !== user.id &&
           other_user.visible &&
           decks_others[other_user.id].length &&
-          decks_others[other_user.id].length > 0" fxLayout="row" fxLayoutAlign="center center" fxFlex="100">
-            <h1>{{other_user.name}}</h1>
-          </div>
-          <div *ngIf="other_user.id !== user.id &&
-          other_user.visible &&
-          decks_others[other_user.id].length &&
-          decks_others[other_user.id].length > 0" fxFlexFill fxLayout="row wrap" fxLayoutAlign="center center">
-            &nbsp;
-            <div *ngFor="let deck of decks_others[other_user.id]" fxLayout="column" style="margin: 10px;" class="deck-manager-commander-viewer-holder" [@flipState]="deck.flipped" (dblclick)="toggleFlip(deck)">
-              <div class="deck-manager-commander-viewer deck-manager-commander-viewer__front" matRipple [matRippleCentered]="false" [matRippleDisabled]="!deck.hovered">
-                <div [ngClass]="{'deck-manager-background-card-closed': deck.hovered, 'deck-manager-background-card-open': !deck.hovered}">
-                  <div style="position: relative; width: 300px; height: 200px; clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);" >
-                    <img src="{{deck.image}}" alt="{{deck.name}}" class="deck-manager-commander-crop" loading="lazy">
+          decks_others[other_user.id].length > 0" expanded="false">
+            <mat-expansion-panel-header>
+              <mat-panel-title style="text-transform: capitalize">{{other_user.name}}</mat-panel-title>
+            </mat-expansion-panel-header>
+            <div fxFlex fxLayout="row wrap" fxLayoutAlign="center center">
+              <div *ngFor="let deck of decks_others[other_user.id]" fxLayout="column" style="margin: 10px;" class="deck-manager-commander-viewer-holder" [@flipState]="deck.flipped" (dblclick)="toggleFlip(deck)">
+                <div class="deck-manager-commander-viewer deck-manager-commander-viewer__front" matRipple [matRippleCentered]="false" [matRippleDisabled]="!deck.hovered">
+                  <div [ngClass]="{'deck-manager-background-card-closed': deck.hovered, 'deck-manager-background-card-open': !deck.hovered}">
+                    <div style="position: relative; width: 300px; height: 200px; clip-path: polygon(0 0, 100% 0, 100% 80%, 0 100%);" >
+                      <img src="{{deck.image}}" alt="{{deck.name}}" class="deck-manager-commander-crop" loading="lazy">
+                    </div>
+                    <button class="deck-manager-commander-edit" mat-icon-button [routerLink]="['/decks', deck.id]"><mat-icon>visibility</mat-icon></button>
                   </div>
-                  <button class="deck-manager-commander-edit" mat-icon-button [routerLink]="['/decks', deck.id]"><mat-icon>visibility</mat-icon></button>
+                  <mat-card-content class="deck-manager-content">
+                    <div class="deck-manager-content-holder">
+                      <h2 *ngIf="deck.link != null && deck.link !== ''"><a href="{{deck.link}}" target="_blank" style="text-decoration: none">{{deck.name}}</a></h2>
+                      <h2 *ngIf="deck.link == null || deck.url === ''">{{deck.name}}</h2>
+                      <h4 *ngFor="let commander of deck.commander" class="deck-manager-commander-name">{{commander.name}}</h4>
+                      <p style="margin-top: -10px">Win: {{deck.wins != null ? deck.wins: 0}} Loss: {{deck.losses != null ? deck.losses: 0}}</p>
+                      <div *ngIf="deck.colors && deck.colors != null" fxLayout="row" fxLayoutAlign="center" class="deck-manager-commander-colors">
+                        <img *ngIf="deck.colors.includes('W');" class="deck-manager-commander-color" src="assets/color_symbols/W.png" loading="lazy">
+                        <img *ngIf="deck.colors.includes('U');" class="deck-manager-commander-color" src="assets/color_symbols/U.png" loading="lazy">
+                        <img *ngIf="deck.colors.includes('B');" class="deck-manager-commander-color" src="assets/color_symbols/B.png" loading="lazy">
+                        <img *ngIf="deck.colors.includes('R');" class="deck-manager-commander-color" src="assets/color_symbols/R.png" loading="lazy">
+                        <img *ngIf="deck.colors.includes('G');" class="deck-manager-commander-color" src="assets/color_symbols/G.png" loading="lazy">
+                        <img *ngIf="deck.colors.length == 0" class="deck-manager-commander-color" src="assets/color_symbols/C.png" loading="lazy">
+                      </div>
+                      <div *ngIf="!deck.colors || deck.colors == null" fxLayout="row" fxLayoutAlign="center" class="deck-manager-commander-colors">
+                        <mat-spinner class="deck-manager-commander-color" [diameter]="16"></mat-spinner>
+                      </div>
+                      <div fxLayout="row" fxLayoutAlign="end" class="deck-manager-commander-legality">
+                        <mat-spinner *ngIf="deck.legality == null" class="deck-manager-commander-color" [diameter]="16"></mat-spinner>
+                        <p *ngIf="deck.legality != null && deck.legality.length == 0" style="color: #63a785">legal</p>
+                        <p *ngIf="deck.legality != null && deck.legality.length > 0" style="color: #d23632; cursor: pointer"
+                           [matMenuTriggerFor]="errorMenu" (click)="current_errors=deck.legality">illegal</p>
+                      </div>
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="center" class="deck-manager-commander-ratings-holder">
+                      <mat-icon [color]="'primary'" *ngFor="let i of [].constructor(deck.rating)" class="deck-manager-commander-rating">star</mat-icon>
+                      <mat-icon [color]="'primary'" style="filter: brightness(60%);" *ngFor="let i of [].constructor(5 - deck.rating)" class="deck-manager-commander-rating">star</mat-icon>
+                    </div>
+                  </mat-card-content>
                 </div>
-                <mat-card-content class="deck-manager-content">
-                  <div class="deck-manager-content-holder">
-                    <h2 *ngIf="deck.link != null && deck.link !== ''"><a href="{{deck.link}}" target="_blank" style="text-decoration: none">{{deck.name}}</a></h2>
-                    <h2 *ngIf="deck.link == null || deck.url === ''">{{deck.name}}</h2>
-                    <h4 *ngFor="let commander of deck.commander" class="deck-manager-commander-name">{{commander.name}}</h4>
-                    <p style="margin-top: -10px">Win: {{deck.wins != null ? deck.wins: 0}} Loss: {{deck.losses != null ? deck.losses: 0}}</p>
-                    <div *ngIf="deck.colors && deck.colors != null" fxLayout="row" fxLayoutAlign="center" class="deck-manager-commander-colors">
-                      <img *ngIf="deck.colors.includes('W');" class="deck-manager-commander-color" src="assets/color_symbols/W.png" loading="lazy">
-                      <img *ngIf="deck.colors.includes('U');" class="deck-manager-commander-color" src="assets/color_symbols/U.png" loading="lazy">
-                      <img *ngIf="deck.colors.includes('B');" class="deck-manager-commander-color" src="assets/color_symbols/B.png" loading="lazy">
-                      <img *ngIf="deck.colors.includes('R');" class="deck-manager-commander-color" src="assets/color_symbols/R.png" loading="lazy">
-                      <img *ngIf="deck.colors.includes('G');" class="deck-manager-commander-color" src="assets/color_symbols/G.png" loading="lazy">
-                      <img *ngIf="deck.colors.length == 0" class="deck-manager-commander-color" src="assets/color_symbols/C.png" loading="lazy">
-                    </div>
-                    <div *ngIf="!deck.colors || deck.colors == null" fxLayout="row" fxLayoutAlign="center" class="deck-manager-commander-colors">
-                      <mat-spinner class="deck-manager-commander-color" [diameter]="16"></mat-spinner>
-                    </div>
-                    <div fxLayout="row" fxLayoutAlign="end" class="deck-manager-commander-legality">
-                      <mat-spinner *ngIf="deck.legality == null" class="deck-manager-commander-color" [diameter]="16"></mat-spinner>
-                      <p *ngIf="deck.legality != null && deck.legality.length == 0" style="color: #63a785">legal</p>
-                      <p *ngIf="deck.legality != null && deck.legality.length > 0" style="color: #d23632; cursor: pointer"
-                         [matMenuTriggerFor]="errorMenu" (click)="current_errors=deck.legality">illegal</p>
-                    </div>
+                <div class="deck-manager-commander-viewer deck-manager-commander-viewer__back">
+                  <div style="margin: 10px">
+                    <mat-chip-list>
+                      <mat-chip *ngFor="let theme of deck.themes" color="primary" selected>
+                        <a class="simple-a" href="https://edhrec.com{{getTheme(theme.theme_id).url}}" target="_blank">
+                          {{getTheme(theme.theme_id).name}}
+                        </a>
+                      </mat-chip>
+                    </mat-chip-list>
+                    <mat-chip-list>
+                      <mat-chip *ngFor="let tribe of deck.tribes" color="accent" selected>
+                        <a class="simple-a" href="https://edhrec.com{{getTribe(tribe.tribe_id).url}}" target="_blank">
+                          {{getTribe(tribe.tribe_id).name}}
+                        </a>
+                      </mat-chip>
+                    </mat-chip-list>
                   </div>
-                  <div fxLayout="row" fxLayoutAlign="center" class="deck-manager-commander-ratings-holder">
-                    <mat-icon [color]="'primary'" *ngFor="let i of [].constructor(deck.rating)" class="deck-manager-commander-rating">star</mat-icon>
-                    <mat-icon [color]="'primary'" style="filter: brightness(60%);" *ngFor="let i of [].constructor(5 - deck.rating)" class="deck-manager-commander-rating">star</mat-icon>
-                  </div>
-                </mat-card-content>
-              </div>
-              <div class="deck-manager-commander-viewer deck-manager-commander-viewer__back">
-                <div style="margin: 10px">
-                  <mat-chip-list>
-                    <mat-chip *ngFor="let theme of deck.themes" color="primary" selected>
-                      <a class="simple-a" href="https://edhrec.com{{getTheme(theme.theme_id).url}}" target="_blank">
-                        {{getTheme(theme.theme_id).name}}
-                      </a>
-                    </mat-chip>
-                  </mat-chip-list>
-                  <mat-chip-list>
-                    <mat-chip *ngFor="let tribe of deck.tribes" color="accent" selected>
-                      <a class="simple-a" href="https://edhrec.com{{getTribe(tribe.tribe_id).url}}" target="_blank">
-                        {{getTribe(tribe.tribe_id).name}}
-                      </a>
-                    </mat-chip>
-                  </mat-chip-list>
                 </div>
               </div>
             </div>
-          </div>
+          </mat-expansion-panel>
         </div>
-      </div>
+      </mat-accordion>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

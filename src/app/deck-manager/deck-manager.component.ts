@@ -77,6 +77,7 @@ export class DeckManagerComponent implements OnInit {
             this.users.forEach((user: any) => {
               user.visible = true;
             })
+            this.users.sort((a: any, b: any) => (a.name > b.name)? 1: -1);
             this.fddp_data.getDecksBasic(this.user.id).then((decks: any) => {
               this.decks = decks;
               this.loading = false;
