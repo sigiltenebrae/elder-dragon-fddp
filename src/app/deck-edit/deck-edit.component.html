@@ -86,21 +86,23 @@
           <h4 *ngIf="card_type === type_item">Cards: {{getTotal(deck[type_item])}}/{{deck[type_item].length}}</h4>
           <div *ngIf="card_type === type_item" class="deck-edit-card-list">
             <mat-list>
-              <div *ngFor="let card of deck[type_item]; let i = index" class="deck-edit-card-display">
-                <mat-list-item [ngClass]="{'deck-edit-card-list-commander': card.iscommander}">
-                  <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
-                    <div fxLayout="column" fxFlex="100">
-                      <button mat-button style="text-align: start"
-                              (click)="selected_card=card; changing_image=false; changing_back_image=false; image_options=[]; token_options=[]">{{card.name}}</button>
+              <ng-scrollbar #card_scroll track="vertical" visibility="hover" pointerEventsMethod="scrollbar" [style.height.px]="getViewHeight() > 400? getViewHeight() - 220: 180">
+                <div *ngFor="let card of deck[type_item]; let i = index" class="deck-edit-card-display">
+                  <mat-list-item [ngClass]="{'deck-edit-card-list-commander': card.iscommander}">
+                    <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
+                      <div fxLayout="column" fxFlex="100">
+                        <button mat-button style="text-align: start"
+                                (click)="selected_card=card; changing_image=false; changing_back_image=false; image_options=[]; token_options=[]">{{card.name}}</button>
+                      </div>
+                      <div fxLayout="column" fxFlex>
+                        <button mat-button (click)="card.count = card.count + 1;"
+                                (contextmenu)="onRightClick($event, {type: type_item + '_count', card: card})">{{card.count}}</button>
+                      </div>
                     </div>
-                    <div fxLayout="column" fxFlex>
-                      <button mat-button (click)="card.count = card.count + 1;"
-                              (contextmenu)="onRightClick($event, {type: type_item + '_count', card: card})">{{card.count}}</button>
-                    </div>
-                  </div>
-                </mat-list-item>
-                <mat-divider *ngIf="i != deck.cards.length - 1"></mat-divider>
-              </div>
+                  </mat-list-item>
+                  <mat-divider *ngIf="i != deck.cards.length - 1"></mat-divider>
+                </div>
+              </ng-scrollbar>
             </mat-list>
           </div>
         </div>

@@ -123,6 +123,10 @@ export class DeckEditComponent implements OnInit {
     }
   }
 
+  public getViewHeight() {
+    return window.innerHeight;
+  }
+
 
   searching = false;
   /**
