@@ -180,14 +180,18 @@
             </mat-select>
           </mat-form-field>
         </div>
-        <div fxFlex fxLayout="column" style="overflow-y: scroll; min-height: 640px; max-height: 640px; margin-top: 10px;">
-          <div fxLayout="row wrap" fxLayoutAlign="center">
-            <div *ngFor="let token of token_options" fxLayout="column" style="margin: 5px;">
-              <img *ngIf="token.visible" class="deck-edit-card-select" src="{{token.image}}" (click)="copyToSelected(token); changing_image=false" loading="lazy">
+        <div fxFlex fxLayout="column" style="height: 100%; width: 100%; margin-top: 10px;">
+          <ng-scrollbar #image_scroll track="vertical" visibility="hover" pointerEventsMethod="scrollbar" [style.height.px]="getViewHeight() > 400? getViewHeight() - 200: 200">
+            <div fxLayout="row wrap" fxLayoutAlign="center">
+              <div *ngFor="let token of token_options" fxLayout="column" style="margin: 5px;">
+                <img *ngIf="token.visible" class="deck-edit-card-select" src="{{token.image}}" (click)="copyToSelected(token); changing_image=false" loading="lazy">
+              </div>
             </div>
-          </div>
+          </ng-scrollbar>
         </div>
+        <button mat-raised-button color="warn" (click)="changing_image=false; changing_back_image=false;" style="margin-top: 10px;">Cancel</button>
       </div>
+
       <div *ngIf="selected_card && (changing_image || changing_back_image) && (card_type === 'cards' || card_type === 'companions' || card_type === 'sideboard')" fxLayout="column" fxFlex fxLayoutAlign="center center">
         <div fxLayout="row" fxLayoutAlign="start" style="margin-top: 10px" fxLayoutGap="10px">
           <mat-form-field appearance="fill">
@@ -206,7 +210,7 @@
           </mat-form-field>
         </div>
         <div fxFlex fxLayout="column" style="margin-top: 10px; height: 100%; width: 100%">
-          <ng-scrollbar #token_scroll track="vertical" visibility="hover" pointerEventsMethod="scrollbar" [style.height.px]="getViewHeight() > 400? getViewHeight() - 200: 200">
+          <ng-scrollbar #image_scroll track="vertical" visibility="hover" pointerEventsMethod="scrollbar" [style.height.px]="getViewHeight() > 400? getViewHeight() - 200: 200">
             <div *ngIf="changing_image" fxLayout="row wrap" fxLayoutAlign="center">
               <div *ngFor="let card_image of image_options" fxLayout="column" style="margin: 5px;">
                 <img *ngIf="card_image.visible" class="deck-edit-card-select" src="{{card_image.image}}" (click)="selected_card.image=card_image.image; changing_image=false;" loading="lazy">
