@@ -280,41 +280,23 @@
     </div>
   </div>
   <div *ngIf="!loading && deck && deck.owner != current_user.id" fxLayout="row" fxLayoutAlign="start">
-    <div fxLayout="column" fxLayoutAlign="start" fxFlex="100">
+    <div fxLayout="column" fxLayoutAlign="start" fxFlex="100" style="margin: 20px">
       <div fxFlex="100" fxLayout="row" fxLayoutAlign="center">
         <h1>{{deck.name}}</h1>
       </div>
-      <div fxFlex="100" fxLayout="row" fxLayoutAlign="center"><h3>Commanders:</h3></div>
-      <div fxFlex="100" fxLayout="row" fxLayoutAlign="center">
-        <div class="custom-image-card-holder" *ngFor="let card of commanders">
-          <img class="custom-image-card" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
-          <h3 class="custom-image-card-name">{{card.name}}</h3>
+      <div fxLayout="row" fxLayoutAlign="center" *ngFor="let zone of ['commanders', 'companions', 'cards', 'contraptions', 'attractions', 'stickers', 'tokens', 'sideboard']">
+        <div fxLayout="column">
+          <div *ngIf="((zone === 'commanders' && commanders.length > 0) || (zone === 'cards' && notcommanders.length > 0) || (deck[zone].length > 0))" fxFlex="100" fxLayout="row" fxLayoutAlign="center">
+            <h3 style="text-transform: capitalize">{{zone}}</h3>
+          </div>
+          <div fxFlex="100" fxLayout="row wrap" fxLayoutAlign="center" fxLayoutGap="10px">
+            <div class="custom-image-card-holder" *ngFor="let card of (zone === 'commanders'? commanders: zone === 'cards'? notcommanders: deck[zone])">
+              <img class="custom-image-card" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
+              <h3 class="custom-image-card-name">{{card.name}}</h3>
+            </div>
+          </div>
         </div>
       </div>
-      <div *ngIf="deck.companions && deck.companions.length > 0" fxFlex="100" fxLayout="row" fxLayoutAlign="center"><h3>Commanders:</h3></div>
-      <div *ngIf="deck.companions && deck.companions.length > 0" fxFlex="100" fxLayout="row wrap" fxLayoutGap="10px" fxLayoutAlign="center">
-        <div class="custom-image-card-holder" *ngFor="let card of deck.companions">
-          <img class="custom-image-card" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
-          <h3 class="custom-image-card-name">{{card.name}}</h3>
-        </div>
-      </div>
-
-      <div fxFlex="100" fxLayout="row" fxLayoutAlign="center"><h3>Cards:</h3></div>
-      <div fxFlex="100" fxLayout="row wrap" fxLayoutGap="10px" fxLayoutAlign="center">
-        <div class="custom-image-card-holder" *ngFor="let card of notcommanders">
-          <img class="custom-image-card" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
-          <h3 class="custom-image-card-name">{{card.name}}</h3>
-        </div>
-      </div>
-
-      <div *ngIf="deck.sideboard && deck.sideboard.length > 0" fxFlex="100" fxLayout="row" fxLayoutAlign="center"><h3>Commanders:</h3></div>
-      <div *ngIf="deck.sideboard && deck.sideboard.length > 0" fxFlex="100" fxLayout="row wrap" fxLayoutGap="10px" fxLayoutAlign="center">
-        <div class="custom-image-card-holder" *ngFor="let card of deck.companions">
-          <img class="custom-image-card" src="{{card.image}}" alt="{{card.name}}" loading="lazy">
-          <h3 class="custom-image-card-name">{{card.name}}</h3>
-        </div>
-      </div>
-
     </div>
   </div>
 </div>
