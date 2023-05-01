@@ -117,20 +117,22 @@
         <h4 *ngIf="card_type === 'tokens'">Cards: {{deck.tokens.length}}</h4>
         <div *ngIf="card_type === 'tokens'" class="deck-edit-card-list">
           <mat-list>
-            <div *ngFor="let card of deck.tokens; let i = index" class="deck-edit-card-display">
-              <mat-list-item>
-                <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
-                  <div fxLayout="column" fxFlex="100">
-                    <button mat-button style="text-align: start"
-                            (click)="selected_card=card; changing_image=false; changing_back_image=false; image_options=[]; token_options=[];">{{card.name}}</button>
+            <ng-scrollbar #token_scroll track="vertical" visibility="hover" pointerEventsMethod="scrollbar" [style.height.px]="getViewHeight() > 400? getViewHeight() - 220: 180">
+              <div *ngFor="let card of deck.tokens; let i = index" class="deck-edit-card-display">
+                <mat-list-item>
+                  <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
+                    <div fxLayout="column" fxFlex="100">
+                      <button mat-button style="text-align: start"
+                              (click)="selected_card=card; changing_image=false; changing_back_image=false; image_options=[]; token_options=[];">{{card.name}}</button>
+                    </div>
+                    <div fxLayout="column" fxFlex>
+                      <button mat-button (click)="deleteToken(card)"><mat-icon>close</mat-icon></button>
+                    </div>
                   </div>
-                  <div fxLayout="column" fxFlex>
-                    <button mat-button (click)="deleteToken(card)"><mat-icon>close</mat-icon></button>
-                  </div>
-                </div>
-              </mat-list-item>
-              <mat-divider *ngIf="i != deck.tokens.length - 1"></mat-divider>
-            </div>
+                </mat-list-item>
+                <mat-divider *ngIf="i != deck.tokens.length - 1"></mat-divider>
+              </div>
+            </ng-scrollbar>
           </mat-list>
         </div>
       </div>
