@@ -1135,37 +1135,25 @@
     </div>
 
     <!-- User Stickers -->
-    <div fxHide.lt-lg class="sticker-user-container-1">
-      <div class="sticker-user-wrapper-1"
-           *ngIf="currentPlayer() != null && currentPlayer().deck && currentPlayer().deck.play_stickers"
-           (contextmenu)="onRightClick($event, {type: 'stickers', zone: this.currentPlayer().deck.play_stickers, card: currentPlayer().deck.play_stickers[0]})">
-        <img *ngIf="currentPlayer().deck.play_stickers.length > 0" class="playmat-user-card-mini" style="cursor: pointer"
-             (click)="sticker_hide = !sticker_hide"
-             (pointerenter)="magnified_card = currentPlayer().deck.play_stickers[0]"
-             (pointerleave)="magnified_card=null"
-             src="{{currentPlayer().deck.play_stickers[0].image}}">
+    <div *ngIf="!sticker_hide">
+      <div fxHide.lt-lg *ngFor="let stick of [1, 2, 3]" class="sticker-user-container-{{stick}}">
+        <div class="sticker-user-wrapper-{{stick}}"
+             *ngIf="currentPlayer() != null && currentPlayer().deck && currentPlayer().deck.play_stickers"
+             (contextmenu)="onRightClick($event, {type: 'stickers', zone: this.currentPlayer().deck.play_stickers, card: currentPlayer().deck.play_stickers[stick - 1]})">
+          <img *ngIf="currentPlayer().deck.play_stickers.length > 0" class="playmat-user-card-mini" style="cursor: pointer"
+               (pointerenter)="magnified_card = currentPlayer().deck.play_stickers[0]"
+               (pointerleave)="magnified_card=null"
+               src="{{currentPlayer().deck.play_stickers[stick - 1].image}}">
+        </div>
       </div>
     </div>
 
-    <div fxHide.lt-lg class="sticker-user-container-2" *ngIf="!sticker_hide">
-      <div class="sticker-user-wrapper-2"
-           *ngIf="currentPlayer() != null && currentPlayer().deck && currentPlayer().deck.play_stickers"
-           (contextmenu)="onRightClick($event, {type: 'stickers', zone: this.currentPlayer().deck.play_stickers, card: currentPlayer().deck.play_stickers[1]})">
-        <img *ngIf="currentPlayer().deck.play_stickers.length > 0" class="playmat-user-card-mini"
-             (pointerenter)="magnified_card = currentPlayer().deck.play_stickers[1]"
-             (pointerleave)="magnified_card=null"
-             src="{{currentPlayer().deck.play_stickers[1].image}}">
-      </div>
-    </div>
-
-    <div fxHide.lt-lg class="sticker-user-container-3" *ngIf="!sticker_hide">
-      <div class="sticker-user-wrapper-3"
-           *ngIf="currentPlayer() != null && currentPlayer().deck && currentPlayer().deck.play_stickers"
-           (contextmenu)="onRightClick($event, {type: 'stickers', zone: this.currentPlayer().deck.play_stickers, card: currentPlayer().deck.play_stickers[2]})">
-        <img *ngIf="currentPlayer().deck.play_stickers.length > 0" class="playmat-user-card-mini"
-             (pointerenter)="magnified_card = currentPlayer().deck.play_stickers[2]"
-             (pointerleave)="magnified_card=null"
-             src="{{currentPlayer().deck.play_stickers[2].image}}">
+    <!--User Contraptions -->
+    <div *ngIf="!gear_hide">
+      <div fxHide.lt-lg *ngFor="let gear of ['1', '2', '3']" class="{{!sticker_hide? 'gear-user-container-with-sticker-' + gear: 'gear-user-container-without-sticker-' + gear}}">
+        <div class="gear-user-wrapper">
+          <img class="gear-image" src="/assets/contraptions/gear{{gear}}.png">
+        </div>
       </div>
     </div>
 

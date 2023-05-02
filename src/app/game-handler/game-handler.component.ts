@@ -61,7 +61,8 @@ export class GameHandlerComponent implements OnInit {
   menuTopLeftPosition =  {x: '0', y: '0'} //The top left position of the 'right click' menu
   notification_sound: any = null;
   counterupdates: any[] = [];
-  sticker_hide = true;
+  sticker_hide = false;
+  gear_hide = false;
 
   star_color_count = 3;
 

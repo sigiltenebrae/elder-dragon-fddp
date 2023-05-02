@@ -1588,6 +1588,74 @@ deck-manager-commander-viewer .deck-manager-background-card-open {
   overflow: hidden;
 }
 
+//User Contraption Gears
+.gear-image {
+  height: 56px;
+  width: 56px;
+}
+
+.gear-user-container-with-sticker-1 {
+  position: fixed;
+  bottom: 125px;
+  left: 145px;
+  height: 56px;
+  width: 56px;
+  z-index: 3;
+
+}.gear-user-container-without-sticker-1 {
+   position: fixed;
+   bottom: 125px;
+   left: 10px;
+   height: 56px;
+   width: 56px;
+   z-index: 3;
+ }
+
+.gear-user-container-with-sticker-2 {
+  position: fixed;
+  bottom: 125px;
+  left: 206px;
+  height: 56px;
+  width: 56px;
+  z-index: 3;
+}
+
+.gear-user-container-without-sticker-2 {
+  position: fixed;
+  bottom: 125px;
+  left: 71px;
+  height: 56px;
+  width: 56px;
+  z-index: 3;
+}
+
+.gear-user-container-with-sticker-3 {
+  position: fixed;
+  bottom: 125px;
+  left: 267px;
+  height: 56px;
+  width: 56px;
+  z-index: 3;
+}
+
+.gear-user-container-without-sticker-3 {
+  position: fixed;
+  bottom: 125px;
+  left: 132px;
+  height: 56px;
+  width: 56px;
+  z-index: 3;
+}
+
+.gear-user-wrapper {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+
+
 //User Temp Zone
 .temp-zone-user-container {
   position: fixed;
