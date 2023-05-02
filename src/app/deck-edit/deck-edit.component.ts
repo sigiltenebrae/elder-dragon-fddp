@@ -480,26 +480,20 @@ export class DeckEditComponent implements OnInit {
   async getCardImages(card: any) {
     this.available_sets = [];
     this.selected_set = "";
+    this.image_options = [];
     if (this.card_type === 'tokens') {
-      this.token_options = [];
       let token_data = await this.fddp_data.getAllOfToken(card.name);
       for (let token of token_data) {
         if (this.tokensEqual(card, token)) {
           token.visible = true;
-          this.token_options.push(token);
+          this.image_options.push(token);
           if (!this.available_sets.includes(token.set_name)) {
             this.available_sets.push(token.set_name);
           }
         }
       }
     }
-
-    if (this.card_type === 'cards' ||
-      this.card_type === 'companions' ||
-      this.card_type === 'sideboard' ||
-      this.card_type === 'contraptions' ||
-      this.card_type === 'attractions' ||
-      this.card_type === 'stickers') {
+    else {
       let image_data: any = await this.fddp_data.getImagesForCard(card.name);
       this.image_options = image_data.images;
       this.back_image_options = image_data.back_images;
@@ -553,13 +547,26 @@ export class DeckEditComponent implements OnInit {
    * @param card
    */
   copyToSelected(card: any) {
-    this.selected_card.name = card.name;
-    this.selected_card.image = card.image;
-    this.selected_card.types = card.types;
-    this.selected_card.power = card.power;
-    this.selected_card.toughness = card.toughness;
-    this.selected_card.oracle_text = card.oracle_text;
-    this.selected_card.colors = card.colors;
+    if (this.card_type === 'tokens') {
+      this.selected_card.name = card.name;
+      this.selected_card.image = card.image;
+      this.selected_card.types = card.types;
+      this.selected_card.power = card.power;
+      this.selected_card.toughness = card.toughness;
+      this.selected_card.oracle_text = card.oracle_text;
+      this.selected_card.colors = card.colors;
+      this.changing_image = false;
+    }
+    else {
+      if (this.changing_image) {
+        this.selected_card.image = card.image;
+        this.changing_image = false;
+      }
+      else if (this.changing_back_image) {
+        this.selected_card.back_image = card.image;
+        this.changing_back_image = false;
+      }
+    }
   }
 
   /**

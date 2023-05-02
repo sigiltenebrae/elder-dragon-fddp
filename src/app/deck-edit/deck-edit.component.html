@@ -22,14 +22,6 @@
           <mat-label>Deck Sleeves</mat-label>
           <input matInput [type]="'text'" name="decksleeves" [(ngModel)]="deck.sleeves">
         </mat-form-field>
-        <!--<mat-form-field appearance="fill">
-          <mat-label>Owner</mat-label>
-          <mat-select [(ngModel)]="deck.owner">
-            <mat-option *ngFor="let user of users" [value]="user.id">
-              {{user.name}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>-->
         <div fxLayout="row" fxLayoutAlign="space-between center">
           <div fxLayout="column">
             <ngb-rating [(rate)]="deck.rating" [max]="5">
@@ -66,9 +58,9 @@
         <mat-form-field appearance="fill" style="margin-top: 10px;">
           <mat-label>Type</mat-label>
           <mat-select [(value)]="card_type">
+            <mat-option value="companions">Companions</mat-option>
             <mat-option value="cards">Cards</mat-option>
             <mat-option value="tokens">Tokens</mat-option>
-            <mat-option value="companions">Companions</mat-option>
             <mat-option value="sideboard">Sideboard</mat-option>
             <mat-option value="contraptions">Contraptions</mat-option>
             <mat-option value="attractions">Attractions</mat-option>
@@ -76,14 +68,15 @@
           </mat-select>
         </mat-form-field>
 
-        <div *ngFor="let type_item of ['cards', 'companions', 'sideboard', 'contraptions', 'attractions', 'stickers']">
+        <div *ngFor="let type_item of ['companions', 'cards', 'tokens', 'sideboard', 'contraptions', 'attractions', 'stickers']">
           <mat-form-field appearance="fill" *ngIf="card_type === type_item" style="width:100%">
-            <mat-label>Add Card</mat-label>
-            <input (keydown.enter)="addCardToDeck(type_item)" type="text" placeholder="Enter Card" matInput
+            <mat-label style="text-transform: capitalize">Add To {{type_item}}</mat-label>
+            <input (keydown.enter)="type_item === 'tokens'? addTokenToDeck(): addCardToDeck(type_item)" type="text" placeholder="Enter Card" matInput
                    [ngbTypeahead]="card_search" [(ngModel)]="new_card_temp" [editable]="false">
-            <button mat-icon-button matSuffix type="button" (click)="addCardToDeck(type_item)"><mat-icon>add</mat-icon></button>
+            <button mat-icon-button matSuffix type="button" (click)="type_item === 'tokens'? addTokenToDeck(): addCardToDeck(type_item)"><mat-icon>add</mat-icon></button>
           </mat-form-field>
-          <h4 *ngIf="card_type === type_item">Cards: {{getTotal(deck[type_item])}}/{{deck[type_item].length}}</h4>
+          <h4 *ngIf="card_type === type_item && type_item !== 'tokens'">Cards: {{getTotal(deck[type_item])}}/{{deck[type_item].length}}</h4>
+          <h4 *ngIf="card_type === type_item && type_item === 'tokens'">Cards: {{deck.tokens.length}}</h4>
           <div *ngIf="card_type === type_item" class="deck-edit-card-list">
             <mat-list>
               <ng-scrollbar #card_scroll track="vertical" visibility="hover" pointerEventsMethod="scrollbar" [style.height.px]="getViewHeight() > 400? getViewHeight() - 220: 180">
@@ -95,8 +88,9 @@
                                 (click)="selected_card=card; changing_image=false; changing_back_image=false; image_options=[]; token_options=[]">{{card.name}}</button>
                       </div>
                       <div fxLayout="column" fxFlex>
-                        <button mat-button (click)="card.count = card.count + 1;"
+                        <button *ngIf="type_item !== 'tokens'" mat-button (click)="card.count = card.count + 1;"
                                 (contextmenu)="onRightClick($event, {type: type_item + '_count', card: card})">{{card.count}}</button>
+                        <button *ngIf="type_item === 'tokens'" mat-button (click)="deleteToken(card)"><mat-icon>close</mat-icon></button>
                       </div>
                     </div>
                   </mat-list-item>
@@ -105,35 +99,6 @@
               </ng-scrollbar>
             </mat-list>
           </div>
-        </div>
-
-        <mat-form-field appearance="fill" *ngIf="card_type === 'tokens'">
-          <mat-label>Add Token</mat-label>
-          <input (keydown.enter)="addTokenToDeck()" type="text" placeholder="Enter Token" matInput
-                 [ngbTypeahead]="card_search" [editable]="true"
-                 [(ngModel)]="new_token_temp">
-          <button mat-icon-button matSuffix type="button" (click)="addTokenToDeck()"><mat-icon>search</mat-icon></button>
-        </mat-form-field>
-        <h4 *ngIf="card_type === 'tokens'">Cards: {{deck.tokens.length}}</h4>
-        <div *ngIf="card_type === 'tokens'" class="deck-edit-card-list">
-          <mat-list>
-            <ng-scrollbar #token_scroll track="vertical" visibility="hover" pointerEventsMethod="scrollbar" [style.height.px]="getViewHeight() > 400? getViewHeight() - 220: 180">
-              <div *ngFor="let card of deck.tokens; let i = index" class="deck-edit-card-display">
-                <mat-list-item>
-                  <div fxLayout="row" fxLayoutAlign="space-between center" fxFlexFill>
-                    <div fxLayout="column" fxFlex="100">
-                      <button mat-button style="text-align: start"
-                              (click)="selected_card=card; changing_image=false; changing_back_image=false; image_options=[]; token_options=[];">{{card.name}}</button>
-                    </div>
-                    <div fxLayout="column" fxFlex>
-                      <button mat-button (click)="deleteToken(card)"><mat-icon>close</mat-icon></button>
-                    </div>
-                  </div>
-                </mat-list-item>
-                <mat-divider *ngIf="i != deck.tokens.length - 1"></mat-divider>
-              </div>
-            </ng-scrollbar>
-          </mat-list>
         </div>
       </div>
       <div *ngIf="selected_card && !changing_image && !changing_back_image" fxLayout="column" fxFlex fxLayoutAlign="center center" fxLayoutGap="20">
@@ -149,7 +114,7 @@
           <button mat-raised-button color="warn" (click)="resetCard(selected_card)"><mat-icon>refresh</mat-icon></button>
         </div>
         <div fxLayout="row" fxLayoutAlign="center">
-          <button *ngIf="!setting_default" mat-raised-button (click)="setDefaultImage(selected_card)">Set Default</button>
+          <button *ngIf="!setting_default && card_type !== 'tokens'" mat-raised-button (click)="setDefaultImage(selected_card)">Set Default</button>
           <mat-spinner *ngIf="setting_default" diameter="32"></mat-spinner>
         </div>
         <div fxLayout="row" fxLayoutGap="10px">
@@ -163,36 +128,7 @@
           <button *ngIf="selected_card.back_image" mat-raised-button color="accent" (click)="deck.image=selected_card.back_image">Set Back As Deck Image</button>
         </div>
       </div>
-      <div *ngIf="selected_card && changing_image && card_type === 'tokens'" fxLayout="column" fxFlex fxLayoutAlign="center center">
-        <div fxLayout="row" fxLayoutAlign="start" style="margin-top: 10px" fxLayoutGap="10px">
-          <mat-form-field appearance="fill">
-            <mat-label>Sort</mat-label>
-            <mat-select [(ngModel)]="image_sort" (ngModelChange)="sortImages()">
-              <mat-option value="dateasc">Date Asc</mat-option>
-              <mat-option value="datedesc">Date Desc</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <mat-form-field appearance="fill">
-            <mat-label>Set</mat-label>
-            <mat-select [(ngModel)]="selected_set" (ngModelChange)="selectSet()">
-              <mat-option value="all">All</mat-option>
-              <mat-option *ngFor="let set of available_sets" [value]="set">{{set}}</mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-        <div fxFlex fxLayout="column" style="height: 100%; width: 100%; margin-top: 10px;">
-          <ng-scrollbar #image_scroll track="vertical" visibility="hover" pointerEventsMethod="scrollbar" [style.height.px]="getViewHeight() > 400? getViewHeight() - 200: 200">
-            <div fxLayout="row wrap" fxLayoutAlign="center">
-              <div *ngFor="let token of token_options" fxLayout="column" style="margin: 5px;">
-                <img *ngIf="token.visible" class="deck-edit-card-select" src="{{token.image}}" (click)="copyToSelected(token); changing_image=false" loading="lazy">
-              </div>
-            </div>
-          </ng-scrollbar>
-        </div>
-        <button mat-raised-button color="warn" (click)="changing_image=false; changing_back_image=false;" style="margin-top: 10px;">Cancel</button>
-      </div>
-
-      <div *ngIf="selected_card && (changing_image || changing_back_image) && (card_type === 'cards' || card_type === 'companions' || card_type === 'sideboard')" fxLayout="column" fxFlex fxLayoutAlign="center center">
+      <div *ngIf="selected_card && (changing_image || changing_back_image)" fxLayout="column" fxFlex fxLayoutAlign="center center">
         <div fxLayout="row" fxLayoutAlign="start" style="margin-top: 10px" fxLayoutGap="10px">
           <mat-form-field appearance="fill">
             <mat-label>Sort</mat-label>
@@ -213,12 +149,12 @@
           <ng-scrollbar #image_scroll track="vertical" visibility="hover" pointerEventsMethod="scrollbar" [style.height.px]="getViewHeight() > 400? getViewHeight() - 200: 200">
             <div *ngIf="changing_image" fxLayout="row wrap" fxLayoutAlign="center">
               <div *ngFor="let card_image of image_options" fxLayout="column" style="margin: 5px;">
-                <img *ngIf="card_image.visible" class="deck-edit-card-select" src="{{card_image.image}}" (click)="selected_card.image=card_image.image; changing_image=false;" loading="lazy">
+                <img *ngIf="card_image.visible" class="deck-edit-card-select" src="{{card_image.image}}" (click)="copyToSelected(card_image);" loading="lazy">
               </div>
             </div>
             <div *ngIf="changing_back_image" fxLayout="row wrap" fxLayoutAlign="center">
               <div *ngFor="let card_image of back_image_options" fxLayout="column" style="margin: 5px;">
-                <img *ngIf="card_image.visible" class="deck-edit-card-select" src="{{card_image.image}}" (click)="selected_card.back_image=card_image.image; changing_back_image=false;" loading="lazy">
+                <img *ngIf="card_image.visible" class="deck-edit-card-select" src="{{card_image.image}}" (click)="copyToSelected(card_image);" loading="lazy">
               </div>
             </div>
           </ng-scrollbar>
