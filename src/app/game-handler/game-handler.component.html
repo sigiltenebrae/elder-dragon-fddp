@@ -71,6 +71,7 @@
             <input (keydown.enter)="quickCreateToken(quick_token.value)" #quick_token type="text" matInput (click)="$event.stopPropagation()">
             <button matSuffix mat-icon-button aria-label="Draw" (click)="createToken({name: quick_token.value})"><mat-icon>add</mat-icon></button>
           </mat-form-field>
+          <button *ngIf="user != null && (user == currentPlayer() || isDeckTest())" mat-menu-item (click)="assembleContraption()">Assemble Contraption</button>
           <button *ngIf="user != null && (user == currentPlayer() || isDeckTest())" mat-menu-item (click)="openAttraction()">Open Attraction</button>
           <button mat-menu-item [matMenuTriggerFor]="play_counter" *ngIf="(user == currentPlayer() || isDeckTest())">Insert Counter</button>
           <button *ngIf="user != null && (user == currentPlayer() || isDeckTest()) && game_data != null && currentPlayer().turn == game_data.current_turn" mat-menu-item (click)="endTurn()">End Turn</button>
@@ -117,6 +118,8 @@
 
         <div *ngIf="rightclicked_item.type === 'zone'">
           <button mat-menu-item (click)="openSideNav(rightclicked_item.zone)">View Zone</button>
+          <button *ngIf="rightclicked_item.isGrave" mat-menu-item (click)="openSideNav(this.currentPlayer().scrapyard)">View Scrapyard</button>
+          <button *ngIf="rightclicked_item.isGrave" mat-menu-item (click)="openSideNav(this.currentPlayer().junkyard)">View Junkyard</button>
           <button mat-menu-item (click)="selectRandom(rightclicked_item.zone)" *ngIf="user != null && (user == currentPlayer() || isDeckTest())">Select Random</button>
           <button mat-menu-item [matMenuTriggerFor]="sendAll" *ngIf="user != null && (user == currentPlayer() || isDeckTest())">Send All To</button>
         </div>
@@ -139,7 +142,7 @@
           <button *ngIf="user != null && (user == currentPlayer() || isDeckTest()) && rightclicked_item.from && rightclicked_item.from.name === 'play' && rightclicked_item.card.tapped === 'untapped'" mat-menu-item (click)="toggleCardTap(rightclicked_item.card)">Tap</button>
           <button *ngIf="user != null && (user == currentPlayer() || isDeckTest()) && rightclicked_item.from && rightclicked_item.from.name === 'play' && rightclicked_item.card.tapped === 'tapped'" mat-menu-item (click)="toggleCardTap(rightclicked_item.card)">Untap</button>
           <button [matMenuTriggerFor]="notesOptions" *ngIf="user != null && (user == currentPlayer() || isDeckTest())  && rightclicked_item.from" mat-menu-item>Notes</button>
-          <button *ngIf="user != null && (user == currentPlayer() || isDeckTest()) && rightclicked_item.from != null" mat-menu-item [matMenuTriggerFor]="revealTo">Reveal To</button>
+          <button *ngIf="user != null && (user == currentPlayer() || isDeckTest()) && rightclicked_item.from != null && !rightclicked_item.card.sticker" mat-menu-item [matMenuTriggerFor]="revealTo">Reveal To</button>
           <button mat-menu-item (click)="shakeCard(rightclicked_item.card, sidenav_selected_player.id, rightclicked_item.zone)">Shake</button>
         </div>
 
@@ -402,6 +405,8 @@
     <mat-toolbar color="primary">
       <div fxFlex="100" fxLayout="row" fxLayoutAlign="space-between center">
         <h2 fxFlex *ngIf="sidenav_type==='grave'">Graveyards</h2>
+        <h2 fxFlex *ngIf="sidenav_type==='scrapyard'">Scrapyards</h2>
+        <h2 fxFlex *ngIf="sidenav_type==='junkyard'">Junkyards</h2>
         <h2 fxFlex *ngIf="sidenav_type==='exile'">Exile</h2>
         <h2 fxFlex *ngIf="sidenav_type==='temp_zone'">Temp Zones</h2>
         <h2 fxFlex *ngIf="sidenav_type==='deck'">Searching Deck</h2>
@@ -1054,7 +1059,7 @@
     <div fxHide.lt-lg class="grave-user-container">
       <div class="grave-user-wrapper"
            *ngIf="currentPlayer() != null && currentPlayer().grave"
-           (contextmenu)="onRightClick($event, {type: 'zone', zone: this.currentPlayer().grave})"
+           (contextmenu)="onRightClick($event, {type: 'zone', zone: this.currentPlayer().grave, isGrave: true})"
            [cdkDropListData]="currentPlayer().grave.cards"
            (cdkDropListDropped)="dragCard(currently_dragging, currentPlayer().grave, $event, {top: true})"
            cdkDropListOrientation="horizontal"

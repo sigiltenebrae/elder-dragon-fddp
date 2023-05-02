@@ -68,7 +68,6 @@ export class GameHandlerComponent implements OnInit {
   //Game Data
   game_id = -1; //The game id (from the url)
   planes: any[] = [];
-  attractions:any[] = [];
   monarch_data: any = null;
   initiative_data: any = null;
   game_data: any = null; //The full game data object
@@ -134,10 +133,6 @@ export class GameHandlerComponent implements OnInit {
 
         this.fddp_data.getPlanes().then((planes: any) => {
           this.planes = planes;
-        });
-
-        this.fddp_data.getAttractions().then((attractions: any) => {
-          this.attractions = attractions;
         });
 
         this.fddp_data.getCardInfo("The Monarch").then((monarch: any) => {
@@ -272,6 +267,12 @@ export class GameHandlerComponent implements OnInit {
                       break;
                     case 'grave':
                       player.grave = json_data.get.zone_data;
+                      break;
+                    case 'junkyard':
+                      player.junkyard = json_data.get.zone_data;
+                      break;
+                    case 'scrapyard':
+                      player.scrapyard = json_data.get.zone_data;
                       break;
                     case 'exile':
                       player.exile = json_data.get.zone_data;
@@ -582,6 +583,27 @@ export class GameHandlerComponent implements OnInit {
             {text: data.card.name, type: 'card', card: JSON.parse(JSON.stringify(data.card))},
           ]
         }
+        break;
+      case 'attraction_fail':
+        log_action = [
+          {text: user.name, type: 'player'},
+          {text: 'cannot open any more attractions!', type: 'regular'},
+        ]
+        break;
+      case 'contraption':
+        if (data.card) {
+          log_action = [
+            {text: user.name, type: 'player'},
+            {text: 'assembled ', type: 'regular'},
+            {text: data.card.name, type: 'card', card: JSON.parse(JSON.stringify(data.card))},
+          ]
+        }
+        break;
+      case 'contraption_fail':
+        log_action = [
+          {text: user.name, type: 'player'},
+          {text: 'cannot assemble any more contraptions!', type: 'regular'},
+        ]
         break;
       case 'random':
         if (data.card && data.zone) {
@@ -1096,9 +1118,11 @@ export class GameHandlerComponent implements OnInit {
     }
     out_player.hand = {owner: out_player.deck.owner, name: 'hand', cards: []};
     out_player.hand_preview = [out_player.id];
-    out_player.grave = {owner: out_player.deck.owner, name: 'grave', cards: []};;
-    out_player.exile = {owner: out_player.deck.owner, name: 'exile', cards: []};;
-    out_player.temp_zone = {owner: out_player.deck.owner, name: 'temp_zone', cards: []};;
+    out_player.grave = {owner: out_player.deck.owner, name: 'grave', cards: []};
+    out_player.junkyard = {owner: out_player.deck.owner, name: 'junkyard', cards: []};
+    out_player.scrapyard = {owner: out_player.deck.owner, name: 'scrapyard', cards: []};
+    out_player.exile = {owner: out_player.deck.owner, name: 'exile', cards: []};
+    out_player.temp_zone = {owner: out_player.deck.owner, name: 'temp_zone', cards: []};
     out_player.deck.cards.forEach((card: any) => {
       card.counter_1 = false;
       card.counter_2 = false;
@@ -1145,6 +1169,8 @@ export class GameHandlerComponent implements OnInit {
         break;
       }
     }
+    this.shuffleDeck(out_player.deck.play_contraptions, {nolog: true, noupdate: true});
+    this.shuffleDeck(out_player.deck.play_attractions, {nolog: true, noupdate: true});
     this.updateSocketPlayer(out_player);
   }
 
@@ -1596,17 +1622,39 @@ export class GameHandlerComponent implements OnInit {
   }
 
   openAttraction() {
-    let new_attraction = this.attractions[Math.floor(Math.random() * (this.attractions.length))];
-    console.log(new_attraction);
-    let out_attr = JSON.parse(JSON.stringify(new_attraction));
-    out_attr.is_token = true;
-    out_attr.owner = -1;
-    out_attr.attraction = true;
-    this.clearCard(out_attr);
-    this.setVisibility(out_attr, 'play');
-    this.currentPlayer().temp_zone.cards.unshift(out_attr);
-    this.updateSocketPlayer();
-    this.logAction('attraction', {card: out_attr});
+    if (this.currentPlayer().deck.play_attractions.length > 0) {
+      let out_attr = JSON.parse(JSON.stringify(this.currentPlayer().deck.play_attractions[0]));
+      this.currentPlayer().deck.play_attractions.splice(0, 1);
+      out_attr.is_token = false;
+      out_attr.owner = this.currentPlayer().id;
+      out_attr.attraction = true;
+      this.clearCard(out_attr);
+      this.setVisibility(out_attr, 'play');
+      this.currentPlayer().temp_zone.cards.unshift(out_attr);
+      this.updateSocketPlayer();
+      this.logAction('attraction', {card: out_attr});
+    }
+    else {
+      this.logAction('attraction_fail', {});
+    }
+  }
+
+  assembleContraption() {
+    if (this.currentPlayer().deck.play_contraptions.length > 0) {
+      let out_cont = JSON.parse(JSON.stringify(this.currentPlayer().deck.play_contraptions[0]));
+      this.currentPlayer().deck.play_contraptions.splice(0, 1);
+      out_cont.is_token = false;
+      out_cont.owner = this.currentPlayer().id;
+      out_cont.contraption = true;
+      this.clearCard(out_cont);
+      this.setVisibility(out_cont, 'play');
+      this.currentPlayer().temp_zone.cards.unshift(out_cont);
+      this.updateSocketPlayer();
+      this.logAction('contraption', {card: out_cont});
+    }
+    else {
+      this.logAction('contraption_fail', {});
+    }
   }
 
   /**
@@ -1831,7 +1879,7 @@ export class GameHandlerComponent implements OnInit {
    */
   isClone(card: any): boolean {
     if (card.types) {
-      return card.is_token && !card.types.includes('Token') && !card.types.includes('Emblem') && !card.attraction;
+      return card.is_token && !card.types.includes('Token') && !card.types.includes('Emblem') && !card.attraction && !card.contraption;
     }
     else {
       return false;
@@ -3035,6 +3083,12 @@ export class GameHandlerComponent implements OnInit {
       case 'grave':
         items = this.sidenav_selected_player.grave.cards;
         break;
+      case 'junkyard':
+        items = this.sidenav_selected_player.junkyard.cards;
+        break;
+      case 'scrapyard':
+        items = this.sidenav_selected_player.scrapyard.cards;
+        break;
       case 'exile':
         if (this.sidenav_selected_player == null) {
           items = this.getSharedExile();
@@ -3105,6 +3159,12 @@ export class GameHandlerComponent implements OnInit {
       else if (array == this.currentPlayer().grave.cards) {
         return this.currentPlayer().grave;
       }
+      else if (array == this.currentPlayer().junkyard.cards) {
+        return this.currentPlayer().junkyard;
+      }
+      else if (array == this.currentPlayer().scrapyard.cards) {
+        return this.currentPlayer().scrapyard;
+      }
       else if (array == this.currentPlayer().exile.cards) {
         return this.currentPlayer().exile;
       }
@@ -3141,6 +3201,10 @@ export class GameHandlerComponent implements OnInit {
           return this.getPlayerFromId(id).deck;
         case 'grave':
           return this.getPlayerFromId(id).grave;
+        case 'junkyard':
+          return this.getPlayerFromId(id).junkyard;
+        case 'scrapyard':
+          return this.getPlayerFromId(id).scrapyard;
         case 'exile':
           return this.getPlayerFromId(id).exile;
         case 'commander':
@@ -3155,6 +3219,8 @@ export class GameHandlerComponent implements OnInit {
           return this.getPlayerFromId(id).deck;
         case 'stack':
           return this.sidenav_spot;
+        case 'stickers':
+          return this.getPlayerFromId(id).deck.play_stickers;
       }
     }
     else {
@@ -3173,6 +3239,8 @@ export class GameHandlerComponent implements OnInit {
         card.visible = [];
         break;
       case 'grave':
+      case 'junkyard':
+      case 'scrapyard':
         card.visible = [];
         if (this.game_data.players) {
           for (let player of this.game_data.players) {
@@ -3249,6 +3317,16 @@ export class GameHandlerComponent implements OnInit {
           this.setVisibility(card, 'grave');
         }
       }
+      if (player.junkyard) {
+        for (let card of player.junkyard.cards) {
+          this.setVisibility(card, 'junkyard');
+        }
+      }
+      if (player.scrapyard) {
+        for (let card of player.scrapyard.cards) {
+          this.setVisibility(card, 'scrapyard');
+        }
+      }
       if (player.exile) {
         for (let card of player.exile.cards) {
           this.setVisibility(card, 'exile');
@@ -3282,7 +3360,6 @@ export class GameHandlerComponent implements OnInit {
    */
   dragCard(card: any, dest: any, event: any, options?: any) {
     if (options && options.top) {
-      console.log(event);
       this.sendCardToZone(card, this.getContainer(event.previousContainer.data), dest,
         event.previousContainer.data.indexOf(card), 0, options);
     }
@@ -3312,7 +3389,7 @@ export class GameHandlerComponent implements OnInit {
     //need to write an insert predicate for sidenav cdkdroplist that prevents dragging in once list is sorted.
     //Also prevents dragging in while scrying
 
-    if (dest.name === 'hand' || dest.name === 'grave' || dest.name === 'exile') {
+    if (dest.name === 'hand' || dest.name === 'grave' || dest.name === 'exile' || dest.name === 'junkyard' || dest.name === 'scrapyard') {
       this.clearCard(card, options);
     }
 
@@ -3336,20 +3413,42 @@ export class GameHandlerComponent implements OnInit {
       if (dest.name !== 'play' && dest.name !== 'temp_zone' && !(dest.name === 'commander' && !card.iscommander)) {
         if (card.is_token) {
           source.cards.splice(source.cards.indexOf(card), 1);
-          if (options && options.nolog) {}
-          else {
+          if (options && options.nolog) {
+          } else {
             this.logAction('move', {card: card, source: source, dest: dest});
           }
-          if (options && options.noupdate) {}
-          else {
+          if (options && options.noupdate) {
+          } else {
             this.updateSocketPlayer();
           }
         }
         else {
-          //clear the card of counters etc.
-          this.setVisibility(card, dest.name);
           if (card.owner == dest.owner) {
-            if (options && options.deck && options.deck === 'bottom') {
+            //clear the card of counters etc.
+            this.setVisibility(card, dest.name);
+            if (card.contraption && dest.name !== 'exile') {
+              transferArrayItem(source.cards, this.currentPlayer().scrapyard.cards, previousIndex, this.currentPlayer().scrapyard.length);
+              if (options && options.nolog) {}
+              else {
+                this.logAction('move', {card: card, source: source, dest: this.currentPlayer().scrapyard});
+              }
+              if (options && options.noupdate) {}
+              else {
+                this.updateSocketPlayer();
+              }
+            }
+            else if (card.attraction && dest.name !== 'exile') {
+              transferArrayItem(source.cards, this.currentPlayer().junkyard.cards, previousIndex, this.currentPlayer().junkyard.length);
+              if (options && options.nolog) {}
+              else {
+                this.logAction('move', {card: card, source: source, dest: this.currentPlayer().junkyard});
+              }
+              if (options && options.noupdate) {}
+              else {
+                this.updateSocketPlayer();
+              }
+            }
+            else if (options && options.deck && options.deck === 'bottom') {
               transferArrayItem(source.cards, dest.cards, previousIndex, dest.cards.length);
               if (options && options.nolog) {}
               else {
