@@ -3448,7 +3448,7 @@ export class GameHandlerComponent implements OnInit {
                 this.updateSocketPlayer();
               }
             }
-            else if (options && options.deck && options.deck === 'bottom') {
+            else if (options && options.deck && options.deck === 'bottom' && dest.name !== 'junkyard' && dest.name !== 'scrapyard') {
               transferArrayItem(source.cards, dest.cards, previousIndex, dest.cards.length);
               if (options && options.nolog) {}
               else {
@@ -3460,14 +3460,16 @@ export class GameHandlerComponent implements OnInit {
               }
             }
             else {
-              transferArrayItem(source.cards, dest.cards, previousIndex, currentIndex);
-              if (options && options.nolog) {}
-              else {
-                this.logAction('move', {card: card, source: source, dest: dest, hand_fix: dest == this.currentPlayer().hand && source != this.currentPlayer().deck});
-              }
-              if (options && options.noupdate) {}
-              else {
-                this.updateSocketPlayer();
+              if (dest.name !== 'junkyard' && dest.name !== 'scrapyard') {
+                transferArrayItem(source.cards, dest.cards, previousIndex, currentIndex);
+                if (options && options.nolog) {}
+                else {
+                  this.logAction('move', {card: card, source: source, dest: dest, hand_fix: dest == this.currentPlayer().hand && source != this.currentPlayer().deck});
+                }
+                if (options && options.noupdate) {}
+                else {
+                  this.updateSocketPlayer();
+                }
               }
             }
           }
