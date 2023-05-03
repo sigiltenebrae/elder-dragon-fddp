@@ -11,14 +11,14 @@
       <mat-form-field *ngIf="card_type === 'tokens'" appearance="outline" style="margin-top: 10px;">
         <mat-label>Name</mat-label>
         <input type="text" placeholder="Enter Card Name" matInput
-               [(ngModel)]="name">
+               [(ngModel)]="name" [ngbTypeahead]="card_search" [editable]="true">
         <button type="button" mat-icon-button matSuffix (click)="openTokenDialog()">
           <mat-icon>search</mat-icon>
         </button>
       </mat-form-field>
       <mat-form-field *ngIf="card_type === 'tokens'" appearance="outline" style="margin-top: 10px;">
         <mat-label>Type Line</mat-label>
-        <input matInput placeholder="'Token Creature - Bird'" [type]="'text'" [(ngModel)]="token_type">
+        <input matInput placeholder="'Token Creature - Bird'" [type]="'text'" [(ngModel)]="token_type" >
       </mat-form-field>
       <div *ngIf="card_type === 'tokens'" fxLayout="row" fxLayoutAlign="space-between">
         <mat-checkbox [(ngModel)]="token_colors.w">W</mat-checkbox>
@@ -41,6 +41,8 @@
           <input matInput placeholder="Toughness" [type]="'text'" [(ngModel)]="token_toughness">
         </mat-form-field>
       </div>
+
+
       <mat-form-field *ngIf="card_type === 'cards'" appearance="outline" style="margin-top: 10px;">
         <mat-label>Add Card</mat-label>
         <input type="text" placeholder="Enter Card" matInput

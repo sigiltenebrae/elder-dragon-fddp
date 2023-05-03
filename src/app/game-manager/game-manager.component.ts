@@ -47,6 +47,10 @@ export class GameManagerComponent implements OnInit {
     return `${hours}:${minutes}:${seconds}`;
   }
 
+  getDefaultName() {
+    return this.tokenStorage.getUser().name + "'s Game";
+  }
+
   allowCreate(game_type, max_players) {
     if (game_type == 2) {
       return max_players % 2 == 0 && max_players > 3;

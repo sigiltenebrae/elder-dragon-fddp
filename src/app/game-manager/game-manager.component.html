@@ -9,7 +9,7 @@
               <div fxFlex fxLayout="row" fxLayoutAlign="center" fxLayoutGap="20">
                 <mat-form-field fxFlex="50" appearance="fill">
                   <mat-label>Game Name</mat-label>
-                  <input #game_name_input matInput placeholder="08805" value="08805">
+                  <input #game_name_input matInput placeholder="{{getDefaultName()}}" value="{{getDefaultName()}}">
                 </mat-form-field>
                 <mat-form-field fxFlex="20" appearance="fill">
                   <mat-label>{{game_test? 'Decks' :'Max Players'}}</mat-label>
