@@ -212,6 +212,7 @@ export class DeckEditComponent implements OnInit {
                     this.deck[card_cat].push(
                       {
                         name: card.card.oracleCard.name,
+                        scryfall_id: card.card.uid,
                         image: '',
                         back_image: null,
                         count: card.quantity,
@@ -235,6 +236,7 @@ export class DeckEditComponent implements OnInit {
                         this.deck[add_zone].push(
                           {
                             name: card.card.name,
+                            scryfall_id: card.card.scryfall_id,
                             image: '',
                             back_image: '',
                             count: card.quantity != null? card.quantity: 1,
@@ -444,13 +446,24 @@ export class DeckEditComponent implements OnInit {
           card.back_image = default_data.back_image != null? default_data.back_image: ''
         }
         else {
-          this.fddp_data.getImagesForCard(card.name).then((card_image_data: any) => {
-            let card_images = card_image_data.images;
-            let card_back_images = card_image_data.back_images
-            card.image = card_images && card_images.length > 0? card_images[card_images.length - 1].image: '';
-            card.back_image = card_back_images && card_back_images.length > 0? card_back_images[card_back_images.length - 1].image: '';
-            resolve();
-          });
+          this.fddp_data.getCardById(card.scryfall_id).then((card_data) => {
+            if (card_data) {
+              card.image = card_data.default_image;
+              card.back_image = card_data.default_back_image;
+            }
+            if (card.image == null || card.image === '') {
+              this.fddp_data.getImagesForCard(card.name).then((card_image_data: any) => {
+                let card_images = card_image_data.images;
+                let card_back_images = card_image_data.back_images
+                card.image = card_images && card_images.length > 0? card_images[card_images.length - 1].image: '';
+                card.back_image = card_back_images && card_back_images.length > 0? card_back_images[card_back_images.length - 1].image: '';
+                resolve();
+              });
+            }
+            else {
+              resolve();
+            }
+          })
         }
       });
     });
