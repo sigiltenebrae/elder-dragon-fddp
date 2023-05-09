@@ -186,7 +186,7 @@ export class DeckEditComponent implements OnInit {
         let archidekt_deckid = this.deck.link.indexOf('#') > 0 ?
           this.deck.link.substring(0, this.deck.link.indexOf('#')).substring(this.deck.link.indexOf('/decks/') + 7):
           this.deck.link.substring(this.deck.link.indexOf('/decks/') + 7);
-        archidekt_deckid = archidekt_deckid.substring(0, archidekt_deckid.indexOf('/'));
+        archidekt_deckid = archidekt_deckid.indexOf('/') > 0? archidekt_deckid.substring(0, archidekt_deckid.indexOf('/')): archidekt_deckid;
         deck_promise = this.fddp_data.getArchidektDeck(archidekt_deckid);
       }
       else if (type === 'moxfield') {
