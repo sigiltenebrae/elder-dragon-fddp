@@ -2250,6 +2250,12 @@ export class GameHandlerComponent implements OnInit {
    * @param card2
    */
   isEqualToken(card1: any, card2: any) {
+    if (card1.colors == null) {
+      return card2.colors == null;
+    }
+    if (card2.colors == null) {
+      return card1.colors == null;
+    }
     return card1.name.toLowerCase() === card2.name.toLowerCase() &&
       card1.power === card2.power &&
       card1.toughness === card2.toughness &&

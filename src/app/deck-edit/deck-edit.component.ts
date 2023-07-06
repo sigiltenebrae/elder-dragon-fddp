@@ -32,7 +32,6 @@ export class DeckEditComponent implements OnInit {
   token_options: any[] = [];
   back_image_options: any[] = [];
   new_card_temp: any = null;
-  new_token_temp = '';
   deleting = false;
   card_type = 'cards';
 
@@ -317,6 +316,7 @@ export class DeckEditComponent implements OnInit {
                   this.deck[zone].sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
                 }
                 this.deck.cards.sort((a: any, b: any) => (a.iscommander < b.iscommander) ? 1: -1);
+                this.deck.delete_tokens = [];
                 this.syncing = false;
               });
             });
@@ -336,6 +336,9 @@ export class DeckEditComponent implements OnInit {
         if (card_info.tokens && card_info.tokens.length > 0) {
           card_info.tokens.forEach((token: any) => {
             if (!this.hasToken(token)) {
+              if (token.image == null) {
+                token.image = "";
+              }
               this.deck.tokens.push(token);
             }
           });
@@ -475,6 +478,12 @@ export class DeckEditComponent implements OnInit {
    * @param card2
    */
   tokensEqual(card1: any, card2: any): boolean {
+    if (card1.colors == null) {
+      return card2.colors == null;
+    }
+    if (card2.colors == null) {
+      return card1.colors == null;
+    }
     return card1.name.toLowerCase() === card2.name.toLowerCase() &&
       card1.oracle_text === card2.oracle_text &&
       card1.power === card2.power &&
@@ -644,15 +653,17 @@ export class DeckEditComponent implements OnInit {
    * Inserts the token into the deck.
    */
   addTokenToDeck() {
-    if (this.new_token_temp !== '') {
-      this.fddp_data.getAllOfToken(this.new_token_temp).then((token_list) => {
+    if (this.new_card_temp !== '') {
+      this.fddp_data.getAllOfToken(this.new_card_temp).then((token_list) => {
         if (token_list.length > 0) {
           const tokDialogRef = this.dialog.open(TokenFinderDialog, {
             width: '800px',
             data: {tokens: token_list},
           });
           tokDialogRef.afterClosed().subscribe(result => {
-            if (result) {
+            if (result) {if (result.image == null) {
+              result.image = "";
+            }
               this.deck.tokens.push(result);
               this.deck.tokens.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
             }
@@ -667,7 +678,7 @@ export class DeckEditComponent implements OnInit {
    * @param token
    */
   deleteToken(token: any) {
-    this.deck.token_delete.push(token);
+    this.deck.delete_tokens.push(token);
     this.deck.tokens.splice(this.deck.tokens.indexOf(token), 1);
   }
 

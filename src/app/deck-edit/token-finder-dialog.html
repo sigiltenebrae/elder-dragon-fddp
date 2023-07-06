@@ -8,8 +8,7 @@
     </div>
     <div fxLayout="row wrap" fxLayoutAlign="center" style="max-height: 200px; overflow-y: scroll">
       <div *ngFor="let token of tokens">
-        <img *ngIf="token.image != null"
-             [src]="token.image" style="width: 150px; height: 210px; margin: 5px; cursor: pointer" (click)="selectToken(token)" loading="lazy">
+        <img [src]="token.image" alt="Image Not Found" style="width: 150px; height: 210px; margin: 5px; cursor: pointer" (click)="selectToken(token)" loading="lazy">
       </div>
     </div>
   </div>
