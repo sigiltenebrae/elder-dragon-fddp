@@ -58,6 +58,7 @@
         <mat-form-field appearance="fill" style="margin-top: 10px;">
           <mat-label>Type</mat-label>
           <mat-select [(value)]="card_type">
+            <mat-option value="commanders">Commanders</mat-option>
             <mat-option value="companions">Companions</mat-option>
             <mat-option value="cards">Cards</mat-option>
             <mat-option value="tokens">Tokens</mat-option>
@@ -68,7 +69,7 @@
           </mat-select>
         </mat-form-field>
 
-        <div *ngFor="let type_item of ['companions', 'cards', 'tokens', 'sideboard', 'contraptions', 'attractions', 'stickers']">
+        <div *ngFor="let type_item of ['commanders', 'companions', 'cards', 'tokens', 'sideboard', 'contraptions', 'attractions', 'stickers']">
           <mat-form-field appearance="fill" *ngIf="card_type === type_item" style="width:100%">
             <mat-label style="text-transform: capitalize">Add To {{type_item}}</mat-label>
             <input (keydown.enter)="type_item === 'tokens'? addTokenToDeck(): addCardToDeck(type_item)" type="text" placeholder="Enter Card" matInput

@@ -1097,7 +1097,7 @@ export class GameHandlerComponent implements OnInit {
     out_player.playmat_image = this.current_user.playmat;
     out_player.default_sleeves = this.current_user.default_sleeves;
     out_player.deck = deck;
-    out_player.deck.commander = {name: 'commander', cards: [], saved: [], owner: out_player.deck.owner};
+    out_player.deck.commander = {name: 'commander', cards: deck.commanders, saved: [], owner: out_player.deck.owner};
     out_player.deck.play_stickers.forEach((sticker: any) => {
       sticker.sticker = true;
     })
@@ -1152,11 +1152,9 @@ export class GameHandlerComponent implements OnInit {
       card.inverted = false;
       card.notes = '';
       card.exiled_for = null;
-      if (card.iscommander) {
-        out_player.deck.commander.cards.push(card);
-      }
     })
     out_player.deck.commander.cards.forEach((card: any) => {
+      card.iscommander = true;
       out_player.deck.commander.saved.push(card);
       out_player.deck.cards.splice(deck.cards.indexOf(card), 1);
     });

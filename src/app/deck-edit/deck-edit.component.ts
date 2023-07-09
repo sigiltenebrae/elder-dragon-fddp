@@ -77,6 +77,7 @@ export class DeckEditComponent implements OnInit {
           this.deck.sleeves = '';
           this.deck.link = '';
           this.deck.rating = 3;
+          this.deck.commanders = [];
           this.deck.cards = [];
           this.deck.tokens = [];
           this.deck.sideboard = [];
@@ -100,6 +101,7 @@ export class DeckEditComponent implements OnInit {
           this.fddp_data.getDeckForPlay(this.deckid).then((deck) => {
             this.deck = deck;
             this.deck.delete_cards = [];
+            this.deck.delete_commanders = [];
             this.deck.delete_tokens = [];
             this.deck.delete_sideboard = [];
             this.deck.delete_companions = [];
@@ -107,14 +109,14 @@ export class DeckEditComponent implements OnInit {
             this.deck.delete_attractions = [];
             this.deck.delete_stickers = [];
             this.deck.cards.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
-            this.deck.cards.sort((a: any, b: any) => (a.iscommander < b.iscommander) ? 1: -1);
+            this.deck.commanders.sort((a: any, b: any) => (a.name > b.name)? 1: -1);
+            //this.deck.cards.sort((a: any, b: any) => (a.iscommander < b.iscommander) ? 1: -1);
             this.deck.tokens.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
             this.deck.sideboard.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
             this.deck.companions.sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
             this.deck.contraptions.forEach((card: any) => card.count = 1);
             this.deck.attractions.forEach((card: any) => card.count = 1);
             this.deck.stickers.forEach((card: any) => card.count = 1);
-            this.getCommanders();
             this.loading = false;
           });
         });
@@ -147,23 +149,6 @@ export class DeckEditComponent implements OnInit {
         this.searching = false;
       }));
 
-  /**
-   * Helper function for viewing the deck if you aren't the owner. Pulls out the commanders to display at the top.
-   */
-  getCommanders() {
-    this.commanders = [];
-    this.notcommanders = [];
-    for (let card of this.deck.cards) {
-      if (card.iscommander) {
-        this.commanders.push(card);
-      }
-      else {
-        this.notcommanders.push(card);
-      }
-    }
-  }
-
-
   deckSync() {
     if (this.deck.link.toLowerCase().includes('archidekt')) {
       this.syncDeck('archidekt');
@@ -195,13 +180,14 @@ export class DeckEditComponent implements OnInit {
       if (deck_promise) {
         deck_promise.then((deck_data: any) => {
           if (deck_data) {
+            console.log(deck_data);
             this.deck.name = deck_data.name;
             if (type === 'archidekt') {
               for (let card of deck_data.cards) {
                 if (!card.categories.includes("Maybeboard")) {
                   let card_cat = null;
-                  //if (card.categories.includes("Commander")){ card_cat = 'commanders'; }
-                  if (card.categories.includes("Companion")) { card_cat = 'companions'; }
+                  if (card.categories.includes("Commander")){ card_cat = 'commanders'; }
+                  else if (card.categories.includes("Companion")) { card_cat = 'companions'; }
                   else if (card.categories.includes("Sideboard")) { card_cat = 'sideboard'; }
                   else if (card.categories.includes("Contraption")) { card_cat = 'contraptions'; }
                   else if (card.categories.includes("Attraction")) { card_cat = 'attractions'; }
@@ -215,7 +201,7 @@ export class DeckEditComponent implements OnInit {
                         image: '',
                         back_image: null,
                         count: card.quantity,
-                        iscommander: card_cat === 'cards' && card.categories.includes("Commander")
+                        iscommander: card_cat === 'commanders'
                       });
                   }
                   else {
@@ -226,9 +212,11 @@ export class DeckEditComponent implements OnInit {
             }
             else if (type === 'moxfield') {
               for (let zone of ['commanders', 'companions', 'mainboard', 'sideboard', 'contraptions', 'attractions', 'stickers']) {
-                let add_zone = zone === 'commanders' || zone === 'mainboard'? 'cards': zone;
+                let add_zone = zone === 'mainboard'? 'cards': zone;
                 if (Object.entries(deck_data.boards[zone].cards)) {
+                  console.log(zone);
                   for (let [key, value] of Object.entries(deck_data.boards[zone].cards)) {
+                    console.log(zone + '2');
                     if (key !== "count") {
                       let card:any = value;
                       if (!this.hasCard(card.card.name, this.deck[add_zone])) {
@@ -253,6 +241,7 @@ export class DeckEditComponent implements OnInit {
               }
             }
             let remove_cards: any = {};
+            remove_cards.commanders = [];
             remove_cards.mainboard = [];
             remove_cards.sideboard = [];
             remove_cards.companions = [];
@@ -261,7 +250,7 @@ export class DeckEditComponent implements OnInit {
             remove_cards.stickers = [];
 
             if (type === 'archidekt') {
-              for (let zone of ['cards', 'companions', 'sideboard', 'contraptions', 'attractions', 'stickers']) {
+              for (let zone of ['cards', 'commanders', 'companions', 'sideboard', 'contraptions', 'attractions', 'stickers']) {
                 for (let card of this.deck[zone]) {
                   if (this.removeArchidektCard(card.name, deck_data.cards, zone)) {
                     remove_cards[zone !== 'cards'? zone: 'mainboard'].push(card);
@@ -270,7 +259,7 @@ export class DeckEditComponent implements OnInit {
               }
             }
             else if (type === 'moxfield') {
-              for (let zone of ['companions', 'mainboard', 'sideboard', 'contraptions', 'attractions', 'stickers']) {
+              for (let zone of ['commanders', 'companions', 'mainboard', 'sideboard', 'contraptions', 'attractions', 'stickers']) {
                 let add_zone = zone === 'mainboard'? 'cards': zone;
                 for (let card of this.deck[add_zone]) {
                   if (this.removeMoxfieldCard(card.name, deck_data.boards[zone].cards)) {
@@ -281,7 +270,7 @@ export class DeckEditComponent implements OnInit {
                 }
               }
             }
-            for (let zone of ['companions', 'mainboard', 'sideboard', 'contraptions', 'attractions', 'stickers']) {
+            for (let zone of ['commanders', 'companions', 'mainboard', 'sideboard', 'contraptions', 'attractions', 'stickers']) {
               let add_zone = zone === 'mainboard'? 'cards': zone;
               remove_cards[zone].forEach((card: any) => {
                 this.deck[add_zone].splice(this.deck[add_zone].indexOf(card), 1);
@@ -291,7 +280,7 @@ export class DeckEditComponent implements OnInit {
             let card_image_promises = [];
             let token_promises = [];
 
-            for (let zone of ['cards', 'companions', 'sideboard', 'contraptions', 'attractions', 'stickers']) {
+            for (let zone of ['cards', 'commanders', 'companions', 'sideboard', 'contraptions', 'attractions', 'stickers']) {
               this.deck[zone].forEach((card: any) => {
                 if (card.image === '' || card.image == null) {
                   card_image_promises.push(
@@ -312,7 +301,7 @@ export class DeckEditComponent implements OnInit {
 
             Promise.all(card_image_promises).then(() => {
               Promise.all(token_promises).then(() => {
-                for (let zone of ['cards', 'companions', 'sideboard', 'contraptions', 'attractions', 'stickers', 'tokens']) {
+                for (let zone of ['cards', 'commanders', 'companions', 'sideboard', 'contraptions', 'attractions', 'stickers', 'tokens']) {
                   this.deck[zone].sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
                 }
                 this.deck.cards.sort((a: any, b: any) => (a.iscommander < b.iscommander) ? 1: -1);
@@ -367,13 +356,17 @@ export class DeckEditComponent implements OnInit {
    * @param cards list of cards to search
    */
   hasCard(name: string, cards: any[]): boolean {
-    for (let card of cards) {
-      if (card.name === name) {
-        return true;
+    if (cards) {
+      for (let card of cards) {
+        if (card.name === name) {
+          return true;
+        }
       }
+      return false;
     }
     return false;
   }
+
 
   /**
    * Return the card object from the deck, or null if dne
@@ -400,11 +393,15 @@ export class DeckEditComponent implements OnInit {
       if (card.card.oracleCard.name === name) {
         if (mode === 'cards') {
           return card.categories.includes('Maybeboard') ||
+            card.categories.includes('Commander') ||
             card.categories.includes("Companion") ||
             card.categories.includes("Sideboard") ||
             card.categories.includes("Contraption") ||
             card.categories.includes("Attraction") ||
             card.categories.includes("Stickers");
+        }
+        else if (mode === 'commanders') {
+          return !card.categories.includes("Commander") || card.categories.includes('Maybeboard');
         }
         else if (mode === 'companions') {
           return !card.categories.includes("Companion") || card.categories.includes('Maybeboard');

@@ -367,7 +367,6 @@ export class StatisticsComponent implements OnInit {
             color: this.tokenStorage.getUser().theme === "light" ? 'rgb(100, 100, 100)': 'rgb(198, 198, 198)'
           }
         },
-
       },
       scales: {
         y: {
