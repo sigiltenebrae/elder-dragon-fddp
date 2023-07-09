@@ -180,7 +180,6 @@ export class DeckEditComponent implements OnInit {
       if (deck_promise) {
         deck_promise.then((deck_data: any) => {
           if (deck_data) {
-            console.log(deck_data);
             this.deck.name = deck_data.name;
             if (type === 'archidekt') {
               for (let card of deck_data.cards) {
@@ -214,9 +213,7 @@ export class DeckEditComponent implements OnInit {
               for (let zone of ['commanders', 'companions', 'mainboard', 'sideboard', 'contraptions', 'attractions', 'stickers']) {
                 let add_zone = zone === 'mainboard'? 'cards': zone;
                 if (Object.entries(deck_data.boards[zone].cards)) {
-                  console.log(zone);
                   for (let [key, value] of Object.entries(deck_data.boards[zone].cards)) {
-                    console.log(zone + '2');
                     if (key !== "count") {
                       let card:any = value;
                       if (!this.hasCard(card.card.name, this.deck[add_zone])) {
@@ -304,9 +301,19 @@ export class DeckEditComponent implements OnInit {
                 for (let zone of ['cards', 'commanders', 'companions', 'sideboard', 'contraptions', 'attractions', 'stickers', 'tokens']) {
                   this.deck[zone].sort((a: any, b: any) => (a.name > b.name) ? 1: -1);
                 }
-                this.deck.cards.sort((a: any, b: any) => (a.iscommander < b.iscommander) ? 1: -1);
                 this.deck.delete_tokens = [];
-                this.syncing = false;
+                let cmdr_promises = [];
+                for (let commander of this.deck.commanders) {
+                  cmdr_promises.push(new Promise<void>((reeee) => {
+                    this.fddp_data.getCardInfo(commander.name).then((cmdr_data) => {
+                      commander.color_identity = cmdr_data.color_identity;
+                      reeee();
+                    });
+                  }));
+                }
+                Promise.all(cmdr_promises).then(() => {
+                  this.syncing = false;
+                });
               });
             });
           }
@@ -696,6 +703,18 @@ export class DeckEditComponent implements OnInit {
    */
   saveDeck() {
     console.log(this.deck);
+    this.deck.colors = [];
+    for (let commander of this.deck.commanders) {
+      if (commander.color_identity) {
+        for (let color of commander.color_identity) {
+          if (!this.deck.colors.includes(color)) {
+            this.deck.colors.push(color);
+          }
+        }
+      }
+    }
+    console.log(this.deck);
+
     this.saving = true;
     if (this.deckid == -1) { //create
       this.fddp_data.createDeck(this.deck).then((deckid) => {
