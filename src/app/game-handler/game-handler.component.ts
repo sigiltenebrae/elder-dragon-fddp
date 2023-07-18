@@ -1155,8 +1155,34 @@ export class GameHandlerComponent implements OnInit {
     })
     out_player.deck.commander.cards.forEach((card: any) => {
       card.iscommander = true;
+      card.counter_1 = false;
+      card.counter_2 = false;
+      card.counter_3 = false;
+      card.multiplier = false;
+      card.counter_1_value = 0;
+      card.counter_2_value = 0;
+      card.counter_3_value = 0;
+      card.multiplier_value = 0;
+      card.owner = out_player.deck.owner;
+      card.power_mod = 0;
+      card.toughness_mod = 0;
+      card.loyalty_mod = 0;
+      card.defense_mod = 0;
+      card.locked = false;
+      card.primed = false;
+      card.triggered = false;
+      card.triggering = false;
+      card.is_token = false;
+      card.tapped = 'untapped';
+      card.visible = [];
+      card.sidenav_visible = false;
+      card.alt = false;
+      card.facedown = false;
+      card.shaken = false;
+      card.inverted = false;
+      card.notes = '';
+      card.exiled_for = null;
       out_player.deck.commander.saved.push(card);
-      out_player.deck.cards.splice(deck.cards.indexOf(card), 1);
     });
     this.shuffleDeck(out_player.deck.cards, {nolog: true, noupdate: true});
     for (let i = 0; i < this.game_data.players.length; i++) {
